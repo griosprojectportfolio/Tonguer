@@ -1,0 +1,18 @@
+//
+//  TonguerPrefixHeader.pch
+//  Tonguer
+//
+//  Created by GrepRuby on 21/04/15.
+//  Copyright (c) 2015 GrepRuby3. All rights reserved.
+//
+
+#ifndef Tonguer_TonguerPrefixHeader_pch
+#define Tonguer_TonguerPrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+
+#import <CoreData+MagicalRecord.h>
+
+#endif

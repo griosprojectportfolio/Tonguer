@@ -1,0 +1,128 @@
+//
+//  OrderConfViewController.swift
+//  Tonguer
+//
+//  Created by GrepRuby on 06/04/15.
+//  Copyright (c) 2015 GrepRuby3. All rights reserved.
+//
+
+import UIKit
+
+class OrderConfViewController: UIViewController,UITextFieldDelegate {
+  
+  var barBackBtn :UIBarButtonItem!
+  var imgVw :UIImageView!
+  var lblDetail :UILabel!
+  var lblmoney :UILabel!
+  var lblVaild :UILabel!
+  var txtFieldMoney : CustomTextFieldBlurView!
+  var txtFieldContact : CustomTextFieldBlurView!
+  var btnConfirmpay :UIButton!
+  
+  var lblNeed :UILabel!
+  var lblNeedmoney :UILabel!
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    self.defaultUIDesign()
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  
+  func defaultUIDesign(){
+    self.title = "Order Confirm"
+    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
+    
+    self.navigationItem.setHidesBackButton(true, animated:false)
+    
+    var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
+    backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
+    backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
+    
+    barBackBtn = UIBarButtonItem(customView: backbtn)
+    self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    
+    imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x+30, self.view.frame.origin.y+84, 80, 60))
+    imgVw.image = UIImage(named: "imgblur.png")
+    self.view.addSubview(imgVw)
+    
+    lblDetail = UILabel(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.size.width+10,imgVw.frame.origin.y+(imgVw.frame.height-40)/2, self.view.frame.width-150,40))
+    lblDetail.numberOfLines = 2
+    //lblDetail.backgroundColor = UIColor.redColor()
+    lblDetail.textColor = UIColor.darkGrayColor()
+    lblDetail.font = lblDetail.font.fontWithSize(12)
+    lblDetail.text = "This is a preliminary document for an API or technology in development. Apple is supplying this information to help you plan for."
+    
+    self.view.addSubview(lblDetail)
+    
+    lblmoney = UILabel(frame: CGRectMake(imgVw.frame.origin.x+(imgVw.frame.width - 70)/2,imgVw.frame.origin.y+imgVw.frame.height+5,70,50))
+    lblmoney.text = "$15.00"
+    lblmoney.font = lblmoney.font.fontWithSize(20)
+    lblmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
+    self.view.addSubview(lblmoney)
+    
+    lblVaild = UILabel(frame: CGRectMake((self.view.frame.width-150)-20, lblmoney.frame.origin.y,150, 40))
+    lblVaild.text = "Vaild to 03-04-2015"
+    lblVaild.font = lblmoney.font.fontWithSize(12)
+    lblVaild.textColor = UIColor.grayColor()
+    self.view.addSubview(lblVaild)
+    
+
+    
+    var txtmoneyframe:CGRect = CGRectMake(self.view.frame.origin.x+20,lblmoney.frame.origin.y+lblmoney.frame.size.height+20, self.view.frame.width-40, 40)
+    
+    txtFieldMoney = CustomTextFieldBlurView(frame:txtmoneyframe, imgName:"")
+    txtFieldMoney.attributedPlaceholder = NSAttributedString(string:"Money",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
+    // custxtEmail.returnKeyType = UIReturnType.Done
+    txtFieldMoney.delegate = self;
+    txtFieldMoney.returnKeyType = UIReturnKeyType.Done
+    txtFieldMoney.clearButtonMode = UITextFieldViewMode.Always
+    self.view.addSubview(txtFieldMoney)
+    
+    var txtcontactframe:CGRect = CGRectMake(txtmoneyframe.origin.x,txtmoneyframe.origin.y + txtmoneyframe.height+10, txtmoneyframe.width, 40)
+    
+    txtFieldContact = CustomTextFieldBlurView(frame:txtcontactframe, imgName:"")
+    txtFieldContact.attributedPlaceholder = NSAttributedString(string:"Contact No.",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
+    // custxtEmail.returnKeyType = UIReturnType.Done
+    txtFieldContact.delegate = self;
+    txtFieldContact.returnKeyType = UIReturnKeyType.Done
+    txtFieldContact.clearButtonMode = UITextFieldViewMode.Always
+    self.view.addSubview(txtFieldContact)
+    
+    lblNeed = UILabel(frame: CGRectMake(txtFieldContact.frame.origin.x,txtFieldContact.frame.origin.y+txtFieldContact.frame.size.height+20, 100, 40))
+    lblNeed.text = "You Need to Pay"
+    lblNeed.font = lblmoney.font.fontWithSize(12)
+    lblNeed.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    self.view.addSubview(lblNeed)
+    
+    lblNeedmoney = UILabel(frame: CGRectMake(txtFieldContact.frame.width-40, lblNeed.frame.origin.y,70,40))
+    lblNeedmoney.text = "$15.00"
+    lblNeedmoney.font = lblmoney.font.fontWithSize(20)
+    lblNeedmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
+    self.view.addSubview(lblNeedmoney)
+    
+    btnConfirmpay = UIButton(frame: CGRectMake(txtFieldContact.frame.origin.x, self.view.frame.size.height-50, txtFieldContact.frame.width, 40))
+    btnConfirmpay.setTitle("Confirm Pay", forState: UIControlState.Normal)
+    btnConfirmpay.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+    btnConfirmpay.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    btnConfirmpay.addTarget(self, action: "btnConfirmpayTapped", forControlEvents: UIControlEvents.TouchUpInside)
+    self.view.addSubview(btnConfirmpay)
+
+
+
+  }
+  
+  func btnConfirmpayTapped(){
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PayID") as PayViewController
+    self.navigationController?.pushViewController(vc, animated: true)
+  }
+
+func btnBackTapped(){
+    self.navigationController?.popViewControllerAnimated(true)
+  }
+}
