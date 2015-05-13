@@ -28,7 +28,7 @@ class CourseDetailTableViewCell: UITableViewCell {
       switch (id){
       case "0":
           var lblclassname: UILabel = UILabel(frame: CGRectMake(10, 0,self.frame.width,30))
-          //lblclassname.text = dict.objectForKey("coursename") as NSString
+          lblclassname.text = dict.objectForKey("coursename") as NSString
           //lblclassname.backgroundColor = UIColor.redColor()
           lblclassname.font = lblclassname.font.fontWithSize(16)
           lblclassname.textColor = UIColor.blackColor()

@@ -77,7 +77,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     txtViewQues = UITextView(frame:CGRectMake(vWLine.frame.origin.x+5, 0, vWQues.frame.width-40, vWQues.frame.height-5))
     txtViewQues.text = dictTopic.valueForKey("content") as NSString
     //txtViewQues.backgroundColor = UIColor.grayColor()
-    txtViewQues.userInteractionEnabled = false
+    txtViewQues.userInteractionEnabled = true
+    txtViewQues.editable = false
     txtViewQues.textColor = UIColor.grayColor()
     txtViewQues.allowsEditingTextAttributes = false
     vWQues.addSubview(txtViewQues)
@@ -97,10 +98,13 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     txtViewAddAns.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     txtViewAddAns.layer.borderWidth = 1
     txtViewAddAns.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
+  
     scrollview.addSubview(txtViewAddAns)
     
     adAnstableView = UITableView(frame: CGRectMake(scrollview.frame.origin.x+20,vWQues.frame.origin.y+vWQues.frame.size.height+10,scrollview.frame.width-40 ,txtViewAddAns.frame.origin.y-txtViewAddAns.frame.size.height-80))
     //adAnstableView.backgroundColor = UIColor.redColor()
+    adAnstableView.separatorStyle = UITableViewCellSeparatorStyle.None
+    adAnstableView.rowHeight = 50
     adAnstableView.delegate = self
     adAnstableView.dataSource = self
   
@@ -132,9 +136,9 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     
     var data: NSString! = dict.valueForKey("comment") as NSString
     
-    var rect: CGRect! = data.boundingRectWithSize(CGSize(width:300,height:CGFloat.max), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
-    
-    return rect.height+60
+    var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+    print("****\(rect.height+70)")
+    return (rect.height+70)
   }
   
   
@@ -167,7 +171,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   
   func btnSendButtonTapped(semder:AnyObject){
     self.postCommentTopicApiCall()
-    self.dataFetchFromDatabaseDiscus()
+   // self.dataFetchFromDatabaseDiscus()
     adAnstableView.reloadData()
   }
   
@@ -206,7 +210,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
     self.api.discusTopicPostComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      
+    self.dataFetchFromDatabaseDiscus()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -231,7 +235,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
       dict.setValue(clsObject.name, forKey: "by")
       arrCommentData.addObject(dict)
     }
-
+   
     
   }
   

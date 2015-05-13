@@ -84,6 +84,13 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
   override func viewWillAppear(animated: Bool) {
     //self.userClassApiCall()
+    arrclass.removeAllObjects()
+    arrClsLearn.removeAllObjects()
+    arrClsLearned.removeAllObjects()
+    self.fetchDataFromdataBase()
+    self.fetchDataFromDBforDefaultCls()
+    self.fetchDataFromDBforLearnCls()
+    self.fetchDataFromDBforLearnedCls()
   }
   
   func rightswipeGestureRecognizer(){
@@ -289,10 +296,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     hometableVw.registerClass(LearnTableViewCell.self, forCellReuseIdentifier: "LearnCell")
     hometableVw.registerClass(LearnedTableViewCell.self, forCellReuseIdentifier: "LearnedCell")
     
-    self.fetchDataFromdataBase()
-    self.fetchDataFromDBforDefaultCls()
-    self.fetchDataFromDBforLearnCls()
-    self.fetchDataFromDBforLearnedCls()
+    
     
   }
   

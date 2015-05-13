@@ -270,7 +270,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
      aParams.setValue(auth_token[0], forKey: "auth_token")
-     aParams.setValue(/*dictClasses.valueForKey("id")*/4, forKey: "class_id")
+     aParams.setValue(dictClasses.valueForKey("id"), forKey: "class_id")
     self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       },

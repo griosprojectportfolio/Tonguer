@@ -18,6 +18,7 @@ class PayViewController: UIViewController {
   var btnpaypal : UIButton!
   var btnmakesure : UIButton!
   var strMoney: NSString! = "0"
+  var clsDict: NSDictionary!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -44,22 +45,15 @@ class PayViewController: UIViewController {
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-//    var btnforword:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-//    btnforword.setImage(UIImage(named: "whiteforward.png"), forState: UIControlState.Normal)
-//    btnforword.addTarget(self, action: "btnforwardTapped", forControlEvents: UIControlEvents.TouchUpInside)
-//    
-//    barforwordBtn = UIBarButtonItem(customView: btnforword)
-//    
-//    self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
-    
     lblText = UILabel(frame: CGRectMake(self.view.frame.origin.x+30, self.view.frame.origin.y+84, 150, 30))
     lblText.text = "You Need to Pay"
     lblText.font = lblText.font.fontWithSize(15)
     lblText.textColor = UIColor.grayColor()
     self.view.addSubview(lblText)
     
-    lblmoney = UILabel(frame: CGRectMake(lblText.frame.origin.x,lblText.frame.origin.y+lblText.frame.size.height, 50, 50))
-    lblmoney.text = "$"+strMoney
+    var str1: NSString = "$"
+    lblmoney = UILabel(frame: CGRectMake(lblText.frame.origin.x,lblText.frame.origin.y+lblText.frame.size.height,200, 50))
+    lblmoney.text = str1 + " " + NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
     lblmoney.font = lblmoney.font.fontWithSize(30)
     lblmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblmoney)

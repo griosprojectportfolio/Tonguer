@@ -63,15 +63,16 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     lblDetail.text = clsDict.objectForKey("name") as NSString
     
     self.view.addSubview(lblDetail)
-    
-    lblmoney = UILabel(frame: CGRectMake(imgVw.frame.origin.x+(imgVw.frame.width - 70)/2,imgVw.frame.origin.y+imgVw.frame.height+5,70,50))
-    lblmoney.text = "$15.00"
+     var str: NSString = "$"
+    lblmoney = UILabel(frame: CGRectMake(imgVw.frame.origin.x+(imgVw.frame.width - 70)/2,imgVw.frame.origin.y+imgVw.frame.height+5,100,50))
+    lblmoney.text = str + "  " + NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
     lblmoney.font = lblmoney.font.fontWithSize(20)
     lblmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblmoney)
     
+    var strValid: NSString = "Vaild to"
     lblVaild = UILabel(frame: CGRectMake((self.view.frame.width-150)-20, lblmoney.frame.origin.y,150, 40))
-    lblVaild.text = "Vaild to"//clsDict.objectForKey("day") as NSString
+    lblVaild.text = strValid + "  " + NSString(format: "%i",(clsDict.objectForKey("day")?.integerValue)!)
     lblVaild.font = lblmoney.font.fontWithSize(12)
     lblVaild.textColor = UIColor.grayColor()
     self.view.addSubview(lblVaild)
@@ -102,8 +103,9 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     lblNeed.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     self.view.addSubview(lblNeed)
     
-    lblNeedmoney = UILabel(frame: CGRectMake(txtFieldContact.frame.width-40, lblNeed.frame.origin.y,70,40))
-    lblNeedmoney.text = "$15.00"
+    var str1: NSString = "$"
+    lblNeedmoney = UILabel(frame: CGRectMake(txtFieldContact.frame.width-40, lblNeed.frame.origin.y,100,40))
+    lblNeedmoney.text = str1 + "  " + NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
     lblNeedmoney.font = lblmoney.font.fontWithSize(20)
     lblNeedmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblNeedmoney)
@@ -119,6 +121,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   
   func btnConfirmpayTapped(){
     var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PayID") as PayViewController
+        vc.clsDict = clsDict
     self.navigationController?.pushViewController(vc, animated: true)
   }
 

@@ -14,7 +14,7 @@ class AdAnsTableViewCell: BaseTableViewCell {
   var lblAns :UILabel!
   var lblBy :UILabel!
   var lblname :UILabel!
-
+  
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -22,31 +22,43 @@ class AdAnsTableViewCell: BaseTableViewCell {
   
   func defaultUIDesign(aParam:NSDictionary){
     
-    
-    if(isiPhone5orLower){
-      lblAns = UILabel(frame: CGRectMake(5,0,320-20,30))
-      lblBy = UILabel(frame: CGRectMake(200,40,20, 20))
-      lblname = UILabel(frame: CGRectMake(225,40,150, 20))
-    }
-    if(isiPhone6){
-       lblAns = UILabel(frame: CGRectMake(20,0,375-80,30))
-       lblBy = UILabel(frame: CGRectMake(250,40,100, 20))
-      lblname = UILabel(frame: CGRectMake(275,40,50, 20))
-    }
-    if(isiPhone6plus){
-       lblAns = UILabel(frame: CGRectMake(5,0,414-20,30))
-      lblBy = UILabel(frame: CGRectMake(300,40,20, 20))
-      lblname = UILabel(frame: CGRectMake(320,40,150, 20))
+    var width:CGFloat = 320;
+    if(isiPhone5orLower) {
+      width = 320 - 60;
+    } else if (isiPhone6) {
+      width = 375 - 60;
+    } else if (isiPhone6plus) {
+      width = 414 - 60;
     }
     
-    lblAns.backgroundColor = UIColor.lightGrayColor()
-    lblAns.layer.cornerRadius = 5
-    lblAns.layer.borderWidth = 1
+    var strAnswer = aParam.valueForKey("comment") as NSString
+    var rect: CGRect! = strAnswer.boundingRectWithSize(CGSize(width:width-20,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+    
+    print("****\(rect), *** \(width)")
+
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
+    
+    
+       vWcell = UIView(frame:CGRectMake(10,0, width, rect.size.height + 4))
+       lblAns = UILabel(frame: CGRectMake(5,2, vWcell.frame.size.width - 10, rect.size.height))
+      lblBy = UILabel(frame: CGRectMake(width - 180,rect.size.height+5,20, 20))
+      lblname = UILabel(frame: CGRectMake(width - 150,rect.size.height+5,150, 20))
+    
+    
+    //vWcell.backgroundColor = UIColor.lightGrayColor()
+    vWcell.layer.cornerRadius = 5
+    vWcell.layer.borderWidth = 1
+    self.contentView.addSubview(vWcell)
+    
     lblAns.numberOfLines = 0
     lblAns.text = aParam.valueForKey("comment") as NSString
     lblAns.textColor = UIColor.blackColor()
     lblAns.font = lblAns.font.fontWithSize(12)
-    self.contentView.addSubview(lblAns)
+    vWcell.addSubview(lblAns)
     
     
     lblBy.text = "By-"

@@ -53,7 +53,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     var strName: NSString! = clsDictDe.objectForKey("name") as NSString
     //var price: NSInteger! = clsDictDe.objectForKey("price") as NSInteger
     
-    dict1 = NSDictionary(objects: [strName,"0","0"], forKeys: ["coursename","courserate","id"])
+    dict1 = NSDictionary(objects: [clsDictDe.objectForKey("name") as NSString,"0","0"], forKeys: ["coursename","courserate","id"])
     dict2 = NSDictionary(objects: ["course.png","Arrange",clsDictDe.valueForKey("arrange") as NSString,"1"], forKeys: ["image","tilte","data","id"])
     dict3 = NSDictionary(objects: ["userred.png","Suitable for user",clsDictDe.valueForKey("suitable") as NSString,"2"], forKeys: ["image","tilte","data","id"])
     dict4 = NSDictionary(objects: ["target.png","Target for",clsDictDe.valueForKey("target") as NSString,"3"], forKeys: ["image","tilte","data","id"])

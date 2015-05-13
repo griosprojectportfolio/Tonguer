@@ -109,7 +109,7 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
-    aParams.setValue(/*dictClasses.valueForKey("id")*/4, forKey: "class_id")
+    aParams.setValue(classID, forKey: "class_id")
     aParams.setValue(txtTitle.text, forKey:"topic[title]")
     aParams.setValue(txtVwContent.text, forKey:"topic[content]")
     self.api.createClassTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
