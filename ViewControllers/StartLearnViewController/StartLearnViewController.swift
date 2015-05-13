@@ -10,8 +10,11 @@ import UIKit
 
 class StartLearnViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
-  var sartlTableview :UITableView!
+  var api: AppApi!
   
+  var dictClasses: NSDictionary! = NSDictionary()
+  var authToken: NSString!
+  var sartlTableview :UITableView!
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
   var imgVwAlpha :UIImageView!
@@ -33,13 +36,16 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   var dict2:NSMutableDictionary!
   var dict3:NSMutableDictionary!
   var dict4:NSMutableDictionary!
+  var arrAdmin:NSMutableArray! = NSMutableArray()
+  var arrUser:NSMutableArray! = NSMutableArray()
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    api = AppApi.sharedClient()
     dict1 = NSMutableDictionary()
     dict1.setObject("Courselist.png", forKey: "image")
-    dict1.setObject("Course Class list", forKey: "name")
+    dict1.setObject("Class Video list", forKey: "name")
     
     dict2 = NSMutableDictionary()
     dict2.setObject("homework.png", forKey: "image")
@@ -47,16 +53,17 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     dict3 = NSMutableDictionary()
     dict3.setObject("discuss.png", forKey: "image")
-    dict3.setObject("Discuss", forKey: "name")
+    dict3.setObject("Discus", forKey: "name")
+   
     
     dict4 = NSMutableDictionary()
     dict4.setObject("notes.png", forKey: "image")
     dict4.setObject("Notes", forKey: "name")
     
     dataArr = NSArray(objects:dict1,dict2,dict3,dict4)
-
-    
     self.defaultUIDesign()
+    self.getClsTopicApiCall()
+    self.dataFetchFromDatabaseDiscus()
     }
   
   override func didReceiveMemoryWarning() {
@@ -66,7 +73,10 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   
   func defaultUIDesign(){
     
+    print(dictClasses)
+    
     self.title = "Start To Learn"
+    
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
@@ -79,13 +89,6 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-//    var btnforword:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-//    btnforword.setImage(UIImage(named: "whiteforward.png"), forState: UIControlState.Normal)
-//    btnforword.addTarget(self, action: "btnforwardTapped", forControlEvents: UIControlEvents.TouchUpInside)
-//    
-//    barforwordBtn = UIBarButtonItem(customView: btnforword)
-//    
-//    self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
     
     imgVwblur = UIImageView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64,self.view.frame.width,180))
     imgVwblur.image = UIImage(named: "imgblur.png")
@@ -105,11 +108,13 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     imgVwAlpha.addSubview(lblClassScore)
     
     lblClassScoreDigit = UILabel(frame: CGRectMake((lblClassScore.frame.width-40)/2+10,lblClassScore.frame.origin.y+lblClassScore.frame.height, 40, 40))
-    lblClassScoreDigit.text = "0"
+    print(dictClasses.objectForKey("class_score")?.integerValue)
+   // var str: NSString! =
+    lblClassScoreDigit.text = NSString(format: "%i",(dictClasses.objectForKey("score")?.integerValue)!)
     //lblClassScoreDigit.backgroundColor = UIColor.greenColor()
     lblClassScoreDigit.textAlignment = NSTextAlignment.Center
     lblClassScoreDigit.textColor = UIColor(red: 241.0/255.0, green: 132.0/255.0, blue: 131.0/255.0,alpha:1.0)
-    lblClassScoreDigit.font = lblClassScoreDigit.font.fontWithSize(40)
+    lblClassScoreDigit.font = lblClassScoreDigit.font.fontWithSize(30)
     imgVwAlpha.addSubview(lblClassScoreDigit)
     
     circVw = UIView(frame: CGRectMake((imgVwAlpha.frame.width-120)/2, (imgVwAlpha.frame.height-120)/2, 120, 120))
@@ -134,12 +139,12 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     lblDayLeft.font = lblDayLeft.font.fontWithSize(12)
     imgVwAlpha.addSubview(lblDayLeft)
     
-    lblDayLeftDigit = UILabel(frame: CGRectMake(lblDayLeft.frame.origin.x+30,lblDayLeft.frame.origin.y+lblDayLeft.frame.size.height , 40, 40))
-    lblDayLeftDigit.text = "0"
+    lblDayLeftDigit = UILabel(frame: CGRectMake(lblDayLeft.frame.origin.x,lblDayLeft.frame.origin.y+lblDayLeft.frame.size.height,100, 40))
+    lblDayLeftDigit.text =  NSString(format: "%i",(dictClasses.objectForKey("days")?.integerValue)!)
     //lblDayLeftDigit.backgroundColor = UIColor.greenColor()
     lblDayLeftDigit.textAlignment = NSTextAlignment.Center
     lblDayLeftDigit.textColor = UIColor(red: 241.0/255.0, green: 132.0/255.0, blue: 131.0/255.0,alpha:1.0)
-    lblDayLeftDigit.font = lblDayLeftDigit.font.fontWithSize(40)
+    lblDayLeftDigit.font = lblDayLeftDigit.font.fontWithSize(30)
     imgVwAlpha.addSubview(lblDayLeftDigit)
 
     
@@ -153,14 +158,14 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     
     lblProNum = UILabel(frame: CGRectMake(lblprogress.frame.origin.x+5,lblprogress.frame.origin.y+20,50,50))
-    lblProNum.text = "2"
+    lblProNum.text = NSString(format: "%i",(dictClasses.objectForKey("progress")?.integerValue)!)
     //lblProNum.backgroundColor = UIColor.greenColor()
     lblProNum.textAlignment = NSTextAlignment.Center
     lblProNum.textColor = UIColor(red: 241.0/255.0, green: 132.0/255.0, blue: 131.0/255.0,alpha:1.0)
-    lblProNum.font = lblProNum.font.fontWithSize(40)
+    lblProNum.font = lblProNum.font.fontWithSize(30)
     circVw.addSubview(lblProNum)
     
-    lblPerZ = UILabel(frame: CGRectMake(lblProNum.frame.origin.x+35,lblProNum.frame.origin.y+10,20, 20))
+    lblPerZ = UILabel(frame: CGRectMake(lblProNum.frame.origin.x+50,lblProNum.frame.origin.y+10,20, 20))
     lblPerZ.text = "%"
     //lblProNum.backgroundColor = UIColor.greenColor()
     lblPerZ.textAlignment = NSTextAlignment.Center
@@ -168,7 +173,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     lblPerZ.font = lblPerZ.font.fontWithSize(13)
     circVw.addSubview(lblPerZ)
     
-    btnFreeOpen = UIButton(frame: CGRectMake(self.view.frame.origin.x+20, self.view.frame.height-60,self.view.frame.width-40, 40))
+    btnFreeOpen = UIButton(frame: CGRectMake(self.view.frame.origin.x+20, self.view.frame.height-50,self.view.frame.width-40, 40))
     
     btnFreeOpen.setTitle("Free Open try Class", forState: UIControlState.Normal)
     btnFreeOpen.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
@@ -179,7 +184,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     sartlTableview = UITableView(frame:CGRectMake(btnFreeOpen.frame.origin.x,btnStartLearn.frame.origin.y+btnFreeOpen.frame.height+5, btnFreeOpen.frame.width,btnFreeOpen.frame.origin.y-btnFreeOpen.frame.height-imgVwAlpha.frame.height-80))
     sartlTableview.delegate = self
     sartlTableview.dataSource = self
-    sartlTableview.scrollEnabled = false
+    sartlTableview.scrollEnabled = true
     //sartlTableview.backgroundColor = UIColor.grayColor()
     self.view.addSubview(sartlTableview)
     sartlTableview.registerClass(StartLearnTableViewCell.self, forCellReuseIdentifier: "cell")
@@ -197,6 +202,8 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   
   func btnStartLearnTapped(){
     var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
+    vc.classID = dictClasses.objectForKey("id") as NSInteger
+    vc.isActive = "Paied"
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
@@ -223,18 +230,8 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
       
     }
     
-    cell.defaultCellContent(dataArr.objectAtIndex(indexPath.row) as NSDictionary)
+    cell.defaultCellContent(dataArr.objectAtIndex(indexPath.row) as NSDictionary,index:indexPath.row)
     
-//    if(indexPath.row == 2){
-//      var lbldiscount: UILabel! = UILabel(frame: CGRectMake(cell.contentView.frame.width-30,cell.frame.origin.y+20,20,20))
-//      lbldiscount.text = "0"
-//      lbldiscount.textAlignment = NSTextAlignment.Center
-//      //lbldiscount.backgroundColor = UIColor.redColor()
-//      lbldiscount.textColor = UIColor.darkGrayColor()
-//      lbldiscount.font = lbldiscount.font.fontWithSize(12)
-//      cell.contentView.addSubview(lbldiscount)
-//    }
-
     
     return cell
   }
@@ -242,6 +239,78 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     return 60
   }
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    switch (indexPath.row){
+    case 0:
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
+       vc.classID = dictClasses.objectForKey("id") as NSInteger
+       vc.isActive = "Paied"
+      self.navigationController?.pushViewController(vc, animated: true)
+    case 1:
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID") as QesAndAnsViewController
+      vc.classID =  dictClasses.objectForKey("id") as NSInteger
+      self.navigationController?.pushViewController(vc, animated: true)
+    case 2:
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("DiscussID") as DiscussViewController
+      vc.classID = dictClasses.objectForKey("id") as NSInteger
+      self.navigationController?.pushViewController(vc, animated: true)
+    case 3:
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("NotesID") as NotesViewController
+      self.navigationController?.pushViewController(vc, animated: true)
+
+    default:
+      print("*********Error********")
+    }
+  }
+  
+  //**************Discus topic Api Calling***********
+  
+  func getClsTopicApiCall(){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+     aParams.setValue(auth_token[0], forKey: "auth_token")
+     aParams.setValue(/*dictClasses.valueForKey("id")*/4, forKey: "class_id")
+    self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
+  //***************Fetching Data From Database Discus *********
+  
+  func dataFetchFromDatabaseDiscus(){
+    let arrFetchAdmin: NSArray = DisAdminTopic.MR_findAll()
+    let arrFetchUser: NSArray = DisUserToic.MR_findAll()
+    var count: NSInteger = arrFetchAdmin.count + arrFetchUser.count
+    print(count)
+    dict3.setObject(count, forKey: "count")
+    
+    for var index = 0; index < arrFetchAdmin.count; ++index{
+      let clsObject: DisAdminTopic = arrFetchAdmin.objectAtIndex(index) as DisAdminTopic
+      var dict: NSMutableDictionary! = NSMutableDictionary()
+      dict.setValue(clsObject.topic_id, forKey: "id")
+      dict.setValue(clsObject.topic_name, forKey: "name")
+      dict.setValue(clsObject.topic_content, forKey: "content")
+      arrAdmin.addObject(dict)
+    }
+    
+    for var index = 0; index < arrFetchUser.count; ++index{
+      let clsObject: DisUserToic = arrFetchUser.objectAtIndex(index) as DisUserToic
+      var dict: NSMutableDictionary! = NSMutableDictionary()
+      dict.setValue(clsObject.topic_id, forKey: "id")
+      dict.setValue(clsObject.topic_name, forKey: "name")
+      dict.setValue(clsObject.topic_content, forKey: "content")
+      arrUser.addObject(dict)
+    }
+
+    
+  }
+
   
   
 }

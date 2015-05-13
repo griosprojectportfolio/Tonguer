@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AdAnsTableViewCell: UITableViewCell {
+class AdAnsTableViewCell: BaseTableViewCell {
   
   var vWcell :UIView!
   var lblAns :UILabel!
@@ -20,31 +20,46 @@ class AdAnsTableViewCell: UITableViewCell {
         // Initialization code
     }
   
-  func defaultUIDesign(){
+  func defaultUIDesign(aParam:NSDictionary){
     
-//    vWcell = UIView(frame: CGRectMake(self.frame.origin.x+10, self.frame.origin.x+10, self.frame.size.width,150))
-//    //vWcell.backgroundColor = UIColor.redColor()
-//    self.contentView.addSubview(vWcell)
-//    
-    lblAns = UILabel(frame: CGRectMake(0,20,self.frame.size.width,self.frame.size.height))
-    //lblAns.backgroundColor = UIColor.grayColor()
+    
+    if(isiPhone5orLower){
+      lblAns = UILabel(frame: CGRectMake(5,0,320-20,30))
+      lblBy = UILabel(frame: CGRectMake(200,40,20, 20))
+      lblname = UILabel(frame: CGRectMake(225,40,150, 20))
+    }
+    if(isiPhone6){
+       lblAns = UILabel(frame: CGRectMake(20,0,375-80,30))
+       lblBy = UILabel(frame: CGRectMake(250,40,100, 20))
+      lblname = UILabel(frame: CGRectMake(275,40,50, 20))
+    }
+    if(isiPhone6plus){
+       lblAns = UILabel(frame: CGRectMake(5,0,414-20,30))
+      lblBy = UILabel(frame: CGRectMake(300,40,20, 20))
+      lblname = UILabel(frame: CGRectMake(320,40,150, 20))
+    }
+    
+    lblAns.backgroundColor = UIColor.lightGrayColor()
+    lblAns.layer.cornerRadius = 5
+    lblAns.layer.borderWidth = 1
     lblAns.numberOfLines = 0
-    lblAns.text = "This is a preliminary document for an API or technology in development. Apple is supplying this information to help you plan for the adoption of the technologies"
-    lblAns.textColor = UIColor.grayColor()
+    lblAns.text = aParam.valueForKey("comment") as NSString
+    lblAns.textColor = UIColor.blackColor()
     lblAns.font = lblAns.font.fontWithSize(12)
     self.contentView.addSubview(lblAns)
     
-    lblBy = UILabel(frame: CGRectMake(self.frame.width-130,80,20, 20))
+    
     lblBy.text = "By-"
     //lblBy.backgroundColor = UIColor.redColor()
     lblBy.textColor = UIColor.grayColor()
     lblBy.font = lblBy.font.fontWithSize(10)
     self.contentView.addSubview(lblBy)
     
-    lblname = UILabel(frame: CGRectMake(lblBy.frame.origin.x+lblBy.frame.size.width,lblBy.frame.origin.y,150, 20))
-    lblname.text = "preliminary document"
-    //lblname.backgroundColor = UIColor.greenColor()
+    
+    lblname.text = aParam.valueForKey("by") as NSString
+    lblname.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     lblname.textColor = UIColor.blackColor()
+    lblname.textAlignment = NSTextAlignment.Center
     lblname.font = lblBy.font.fontWithSize(10)
     self.contentView.addSubview(lblname)
 

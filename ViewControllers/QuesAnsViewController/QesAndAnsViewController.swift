@@ -8,16 +8,28 @@
 
 import UIKit
 
-class QesAndAnsViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var tableview: UITableView!
   var btnAddQues: UIButton!
+  var classID: NSInteger!
+  var api: AppApi!
+  var arrQuestion: NSMutableArray! = NSMutableArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    api = AppApi.sharedClient()
     self.defaultUIDesign()
+    self.getQuestionApiCall()
   }
+  
+  override func viewWillAppear(animated: Bool) {
+    arrQuestion.removeAllObjects()
+    self.dataFetchFromDataBaseQuestion()
+  }
+  
+  
   
   func defaultUIDesign(){
     self.title = "Question and Answer"
@@ -37,12 +49,14 @@ class QesAndAnsViewController: UIViewController,UITableViewDataSource,UITableVie
     btnAddQues.setTitle("Add Your Question", forState: UIControlState.Normal)
     btnAddQues.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
     btnAddQues.titleLabel?.font = btnAddQues.titleLabel?.font.fontWithSize(12)
+    btnAddQues.hidden = true
     self.view.addSubview(btnAddQues)
     
     tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width,btnAddQues.frame.origin.y - btnAddQues.frame.height-30))
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self
+    tableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(tableview)
     
     tableview.registerClass(QuesAnsTableViewCell.self, forCellReuseIdentifier: "cell")
@@ -50,7 +64,7 @@ class QesAndAnsViewController: UIViewController,UITableViewDataSource,UITableVie
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 4
+    return arrQuestion.count
   }
   
  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -59,10 +73,12 @@ class QesAndAnsViewController: UIViewController,UITableViewDataSource,UITableVie
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as QuesAnsTableViewCell
-    
-    cell.defaultUIDesign()
-    cell.cellbtnAddAns.addTarget(self, action: "btnAddAnswerTapped", forControlEvents: UIControlEvents.TouchUpInside)
-    cell.cellbtnAns.addTarget(self, action: "btnAnswerTapped", forControlEvents: UIControlEvents.TouchUpInside)
+    cell.selectionStyle = UITableViewCellSelectionStyle.None
+    cell.defaultUIDesign(arrQuestion.objectAtIndex(indexPath.row) as NSDictionary)
+    cell.cellbtnAddAns.tag = indexPath.row
+    cell.cellbtnAddAns.addTarget(self, action: "btnAddAnswerTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    cell.cellbtnAns.tag = indexPath.row
+    cell.cellbtnAns.addTarget(self, action: "btnAnswerTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     
     return cell
     
@@ -72,25 +88,69 @@ class QesAndAnsViewController: UIViewController,UITableViewDataSource,UITableVie
     self.navigationController?.popViewControllerAnimated(true)
   }
   
-  func btnAddAnswerTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddAnsID") as AddAnsViewController
+  func btnAddAnswerTapped(sender:AnyObject){
+    let btn = sender as UIButton
+    print(btn.tag)
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AdAnswerID") as AdAnsViewController
+    var dict :NSDictionary! = arrQuestion.objectAtIndex(btn.tag) as NSDictionary
+     vc.dictQus = dict
     self.navigationController?.pushViewController(vc, animated:true)
   }
   
   
-  func btnAnswerTapped(){
+  func btnAnswerTapped(sender:AnyObject){
+    
+    let btn = sender as UIButton
+    print(btn.tag)
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AnswerID") as AnswersViewController
+     var dict :NSDictionary! = arrQuestion.objectAtIndex(btn.tag) as NSDictionary
+    vc.dictQues = dict
     self.navigationController?.pushViewController(vc, animated:true)
   }
 
-  
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
   
+  //********Question Api calling Methode*********
   
+  func getQuestionApiCall(){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(/*dictClasses.valueForKey("id")*/4, forKey: "class_id")
+    self.api.clsQuestion(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })    
+  }
+  
+  
+  
+  
+  
+  
+  //********Data Fetch frome Database *********
+  
+  func dataFetchFromDataBaseQuestion(){
+    
+     let arrFetchQues: NSArray = Questions.MR_findAll()
+    
+    for var index = 0 ; index < arrFetchQues.count ; index++ {
+      let clsObj: Questions! = arrFetchQues.objectAtIndex(index) as Questions
+      
+      var dict: NSMutableDictionary! = NSMutableDictionary()
+      dict.setValue(clsObj.ques_id, forKey: "id")
+      dict.setValue(clsObj.question, forKey:"question")
+     arrQuestion.addObject(dict)
+    }
+    
+  }
   
   
 }

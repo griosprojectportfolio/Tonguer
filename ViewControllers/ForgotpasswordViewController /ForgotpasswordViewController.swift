@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ForgotpasswordViewController: UIViewController,UITextFieldDelegate {
+class ForgotpasswordViewController: BaseViewController,UITextFieldDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var imgVwLogo : UIImageView!
@@ -40,13 +40,7 @@ class ForgotpasswordViewController: UIViewController,UITextFieldDelegate {
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    var btnforword:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-    btnforword.setImage(UIImage(named: "whiteforward.png"), forState: UIControlState.Normal)
-    btnforword.addTarget(self, action: "btnforwardTapped", forControlEvents: UIControlEvents.TouchUpInside)
-    
-    barforwordBtn = UIBarButtonItem(customView: btnforword)
-    
-    self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
+  
     
     imgVwLogo = UIImageView(frame: CGRectMake((self.view.frame.width-140)/2,self.view.frame.origin.y+100,140,150))
     imgVwLogo.image = UIImage(named: "Splash.png")
@@ -106,5 +100,9 @@ class ForgotpasswordViewController: UIViewController,UITextFieldDelegate {
     
   }
   
+  func textFieldShouldReturn(textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    return false
+  }
   
 }

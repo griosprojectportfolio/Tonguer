@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StartLearnTableViewCell: UITableViewCell {
+class StartLearnTableViewCell: BaseTableViewCell {
   
   var imgVw: UIImageView!
   var lblTilte: UILabel!
@@ -20,7 +20,7 @@ class StartLearnTableViewCell: UITableViewCell {
         // Initialization code
     }
   
-  func defaultCellContent(dict : NSDictionary){
+  func defaultCellContent(dict : NSDictionary, index:NSInteger){
     
     println(dict)
 
@@ -36,7 +36,26 @@ class StartLearnTableViewCell: UITableViewCell {
     lblTilte.textColor = UIColor.darkGrayColor()
     lblTilte.font = lblTilte.font.fontWithSize(12)
     self.contentView.addSubview(lblTilte)
+    
+    if(index == 2){
+      var lbldiscount: UILabel! = UILabel()
+      if(isiPhone5orLower){
+           lbldiscount.frame = CGRectMake(320-90, 20, 20, 20)
+        }else if(isiPhone6){
+           lbldiscount.frame = CGRectMake(375-90, 20, 20, 20)
+      }else if(isiPhone6plus){
+          lbldiscount.frame = CGRectMake(414-90, 20, 20, 20)
+      }
+      
+      lbldiscount.text = NSString(format: "%i",(dict.objectForKey("count")?.integerValue)!)
+      lbldiscount.textAlignment = NSTextAlignment.Center
+      //lbldiscount.backgroundColor = UIColor.redColor()
+      lbldiscount.textColor = UIColor.darkGrayColor()
+      lbldiscount.font = lbldiscount.font.fontWithSize(12)
+      self.contentView.addSubview(lbldiscount)
 
+      
+    }
     
   }
 

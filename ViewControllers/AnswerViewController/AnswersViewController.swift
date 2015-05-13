@@ -9,18 +9,22 @@
 import UIKit
 import Foundation
 
-class AnswersViewController: UIViewController{
+class AnswersViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate{
   
   var barBackBtn :UIBarButtonItem!
   var txtViewQues :UITextView!
   var imgVw :UIImageView!
   var vWLine :  UIView!
   var ansTableview:UITableView!
-  
+  var dictQues: NSDictionary!
+  var api: AppApi!
+  var arrComments: NSMutableArray! = NSMutableArray()
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    api = AppApi.sharedClient()
     self.defaultUIDesign()
+    self.getQuesCommentApiCall()
+    //self.dataFetchFromDataBaseQuestion()
   }
   
   func defaultUIDesign(){
@@ -47,17 +51,20 @@ class AnswersViewController: UIViewController{
     self.view.addSubview(vWLine)
     
     txtViewQues = UITextView(frame: CGRectMake(imgVw.frame.size.width+vWLine.frame.size.width+30,80, self.view.frame.size.width-80,(self.view.frame.height-250)/2))
-    txtViewQues.text = "This is a preliminary document for an API or technology in development. Apple is supplying this information to help you plan for the adoption of the technologies and programming interfaces described herein for use on Apple-branded products. This information is subject to change, and software implemented according to this document should be tested with final operating system software and final documentation. Newer versions of this document may be."
+    txtViewQues.text = dictQues.valueForKey("question") as NSString
     //txtViewQues.backgroundColor = UIColor.grayColor()
     txtViewQues.textColor = UIColor.grayColor()
     txtViewQues.allowsEditingTextAttributes = false
+   
     self.view.addSubview(txtViewQues)
     
     ansTableview = UITableView(frame: CGRectMake(self.view.frame.origin.x+20, txtViewQues.frame.height+100,self.view.frame.width-40,(self.view.frame.height-50)/2))
-    // ansTableview.delegate = self
-    //ansTableview.dataSource = self
+     ansTableview.delegate = self
+     ansTableview.dataSource = self
     ansTableview.scrollEnabled = true
+    ansTableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(ansTableview)
+    ansTableview.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
   }
   
   func btnBackTapped(){
@@ -70,14 +77,57 @@ class AnswersViewController: UIViewController{
   }
   
   
-  /*
-  // MARK: - Navigation
-  
-  // In a storyboard-based application, you will often want to do a little preparation before navigation
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-  // Get the new view controller using segue.destinationViewController.
-  // Pass the selected object to the new view controller.
+  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return arrComments.count
   }
-  */
+  
+  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return 50
+  }
+  
+  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    var cell: UITableViewCell! = ansTableview.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+    var dict: NSDictionary! = arrComments.objectAtIndex(indexPath.row) as NSDictionary
+     cell.textLabel.text = dict.valueForKey("comment") as NSString
+    return cell
+  }
+  
+  //********Question Comment Api calling Methode*********
+  
+  func getQuesCommentApiCall(){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(dictQues.valueForKey("id"), forKey: "question_id")
+    self.api.clsQueaComment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+     self.dataFetchFromDataBaseQuestion()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+  }
+
+  //*******Data Fetching from DataBase ***********
+  
+  
+  func dataFetchFromDataBaseQuestion(){
+    
+    let arrFetchQues: NSArray = QuestionComment.MR_findAll()
+    
+    for var index = 0 ; index < arrFetchQues.count ; index++ {
+      let clsObj: QuestionComment! = arrFetchQues.objectAtIndex(index) as QuestionComment
+      
+      var dict: NSMutableDictionary! = NSMutableDictionary()
+      dict.setValue(clsObj.comt_id, forKey: "id")
+      dict.setValue(clsObj.comment, forKey:"comment")
+      arrComments.addObject(dict)
+      ansTableview.reloadData()
+    }
+    
+  }
+
+  
   
 }

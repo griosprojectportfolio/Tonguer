@@ -17,6 +17,7 @@ class PayViewController: UIViewController {
   var lblmoney : UILabel!
   var btnpaypal : UIButton!
   var btnmakesure : UIButton!
+  var strMoney: NSString! = "0"
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -58,7 +59,7 @@ class PayViewController: UIViewController {
     self.view.addSubview(lblText)
     
     lblmoney = UILabel(frame: CGRectMake(lblText.frame.origin.x,lblText.frame.origin.y+lblText.frame.size.height, 50, 50))
-    lblmoney.text = "$5"
+    lblmoney.text = "$"+strMoney
     lblmoney.font = lblmoney.font.fontWithSize(30)
     lblmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblmoney)

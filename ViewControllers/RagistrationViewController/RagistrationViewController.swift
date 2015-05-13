@@ -8,9 +8,9 @@
 
 import UIKit
 
-class RagistrationViewController: UIViewController,UITextFieldDelegate {
+class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   
-  @IBOutlet weak var scrollview : UIScrollView!
+  var scrollview : UIScrollView!
   
   var imgVwLogo : UIImageView!
   
@@ -50,13 +50,19 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
+    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.width, self.view.frame.height))
+    //scrollview.backgroundColor = UIColor.grayColor()
+    scrollview.userInteractionEnabled = true
+    scrollview.contentSize = CGSize(width: self.view.frame.width, height:self.view.frame.height+100)
+    self.view.addSubview(scrollview)
+    
     imgVwLogo = UIImageView()
-    imgVwLogo.frame = CGRectMake((self.view.frame.size.width-100)/2,84, 100, 100)
+    imgVwLogo.frame = CGRectMake((scrollview.frame.size.width-100)/2,10, 100, 100)
     imgVwLogo.image = UIImage(named: "Splash.png")
-    self.view.addSubview(imgVwLogo)
+    scrollview.addSubview(imgVwLogo)
 
     
-    var framefname:CGRect = CGRectMake(self.view.frame.origin.x+20, self.imgVwLogo.frame.origin.y+120, self.view.frame.size.width-40, 40)
+    var framefname:CGRect = CGRectMake(scrollview.frame.origin.x+20, self.imgVwLogo.frame.origin.y+120, scrollview.frame.size.width-40, 40)
     custxtFname = CustomTextFieldBlurView(frame:framefname, imgName:"user.png")
     custxtFname.attributedPlaceholder = NSAttributedString(string:"First Name",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
     // custxtEmail.returnKeyType = UIReturnType.Done
@@ -64,7 +70,7 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
     custxtFname.returnKeyType = UIReturnKeyType.Done
     custxtFname.clearButtonMode = UITextFieldViewMode.Always
     custxtFname.keyboardType = .EmailAddress
-    self.view.addSubview(custxtFname)
+    scrollview.addSubview(custxtFname)
     
     var framelname:CGRect = CGRectMake(framefname.origin.x,framefname.origin.y+framefname.size.height+10, framefname.size.width,framefname.size.height)
     custxtLname = CustomTextFieldBlurView(frame:framelname, imgName:"user.png")
@@ -74,7 +80,7 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
     custxtLname.returnKeyType = UIReturnKeyType.Done
     custxtLname.clearButtonMode = UITextFieldViewMode.Always
     custxtLname.keyboardType = .EmailAddress
-    self.view.addSubview(custxtLname)
+    scrollview.addSubview(custxtLname)
     
     var frameEmail:CGRect = CGRectMake(framelname.origin.x,framelname.origin.y+framelname.size.height+10, framelname.width, framelname.height)
     custxtEmail = CustomTextFieldBlurView(frame:frameEmail, imgName:"emailicon.png")
@@ -84,7 +90,7 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
     custxtEmail.returnKeyType = UIReturnKeyType.Done
     custxtEmail.clearButtonMode = UITextFieldViewMode.Always
     custxtEmail.keyboardType = .EmailAddress
-    self.view.addSubview(custxtEmail)
+    scrollview.addSubview(custxtEmail)
     
     var framePass:CGRect = CGRectMake(frameEmail.origin.x,frameEmail.origin.y+frameEmail.height+10,frameEmail.width, frameEmail.height)
     custxtPassword = CustomTextFieldBlurView(frame:framePass, imgName:"passicon.png")
@@ -94,7 +100,7 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
     custxtPassword.returnKeyType = UIReturnKeyType.Done
     custxtPassword.secureTextEntry = true
     custxtPassword.clearButtonMode = UITextFieldViewMode.Always
-    self.view.addSubview(custxtPassword)
+   scrollview.addSubview(custxtPassword)
 
     var frameConPass:CGRect = CGRectMake(framePass.origin.x, framePass.origin.y+framePass.height+10, framePass.width, framePass.height)
     custxtConpass = CustomTextFieldBlurView(frame:frameConPass, imgName:"passicon.png")
@@ -104,7 +110,7 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
     custxtConpass.returnKeyType = UIReturnKeyType.Done
     custxtConpass.secureTextEntry = true
     custxtConpass.clearButtonMode = UITextFieldViewMode.Always
-    self.view.addSubview(custxtConpass)
+   scrollview.addSubview(custxtConpass)
     
     var framedob:CGRect = CGRectMake(frameConPass.origin.x,frameConPass.origin.y+frameConPass.height+10, frameConPass.width, frameConPass.height)
     custxtDOB = CustomTextFieldBlurView(frame:framedob, imgName:"calander.png")
@@ -113,7 +119,7 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
     custxtDOB.delegate = self;
     custxtDOB.returnKeyType = UIReturnKeyType.Done
     custxtDOB.clearButtonMode = UITextFieldViewMode.Always
-    self.view.addSubview(custxtDOB)
+    scrollview.addSubview(custxtDOB)
     
     btnSignUp = UIButton()
     btnSignUp.frame = CGRectMake(self.custxtDOB.frame.origin.x,(self.custxtDOB.frame.origin.y), self.custxtDOB.frame.size.width, 40)
@@ -121,7 +127,7 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
     btnSignUp.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     btnSignUp.tintColor = UIColor.whiteColor()
     btnSignUp.addTarget(self, action: "btnSignupTapped", forControlEvents: UIControlEvents.TouchUpInside)
-    self.view.addSubview(btnSignUp)
+    scrollview.addSubview(btnSignUp)
   }
   
     override func didReceiveMemoryWarning() {
@@ -132,6 +138,17 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
   }
+  
+  func textFieldShouldReturn(textField: UITextField) -> Bool {
+    scrollview.contentOffset = CGPoint(x: 0, y: 0)
+    textField.resignFirstResponder()
+    return false
+  }
+  
+  func textFieldDidBeginEditing(textField: UITextField) {
+    scrollview.contentOffset = CGPoint(x: 0, y: 80)
+  }
+  
   
   func btnSignupTapped(){
     
@@ -157,20 +174,30 @@ class RagistrationViewController: UIViewController,UITextFieldDelegate {
       println(responseObject)
       var dict: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
       var auth_token: NSString! = dict.objectForKey("auth_token") as NSString
-      self.apiDataAccess(auth_token)
+      self.auth_token = [auth_token]
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+      self.navigationController?.pushViewController(vc, animated: true)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        self.signUpValidation()
     })
 
     
   }
   
-  func apiDataAccess(token:NSString){
-    println(token)
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
-    vc.authToken = token
-    self.navigationController?.pushViewController(vc, animated: true)
+  
+  func signUpValidation(){
+    if(custxtEmail.text == "" && custxtPassword.text == "" && custxtFname.text == "" && custxtLname.text == "" && custxtConpass.text == ""){
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Don't Left any feild", delegate: self, cancelButtonTitle: "Ok")
+      alert.show()
+    }else{
+      
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Something Worng", delegate: self, cancelButtonTitle: "Ok")
+      alert.show()
+      
+    }
+
   }
   
   

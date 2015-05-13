@@ -8,11 +8,9 @@
 
 import UIKit
 
-class LoginViewController: UIViewController,UITextFieldDelegate {
+class LoginViewController:BaseViewController,UITextFieldDelegate {
   
    var imgVwLogo : UIImageView!
-  @IBOutlet weak var txtFieldEmail : UITextField!
-   var txtFieldPassword : UITextField!
   
    var btnLogin : UIButton!
    var btnSignup : UIButton!
@@ -20,7 +18,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
   var btnForgotpass : UIButton!
   
   var api: AppApi!
-  
+  var actiIndecatorVw: ActivityIndicatorView!
   var custxtEmail:CustomTextFieldBlurView!
   var custxtPassword:CustomTextFieldBlurView!
 
@@ -29,6 +27,8 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
       api = AppApi.sharedClient()
       self.defaultUIDesign()
     }
+  
+  
   
   func defaultUIDesign(){
     
@@ -77,13 +77,13 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     btnLogin.addTarget(self, action: "loginButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btnLogin)
     
-    btnForgotpass = UIButton(frame: CGRectMake((self.view.frame.size.width-150), self.btnLogin.frame.origin.y+100, 150, 40))
+    btnForgotpass = UIButton(frame: CGRectMake((self.view.frame.size.width-150),self.view.frame.size.height-50, 150, 40))
     btnForgotpass.setTitle("Forgotpassword?", forState: UIControlState.Normal)
    // btnForgotpass.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     btnForgotpass.setTitleColor(UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0), forState: UIControlState.Normal)
     btnForgotpass.addTarget(self, action: "forgotpassButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btnForgotpass)
-
+   
      }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -113,27 +113,36 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     }
   
   func loginApiCall(){
-    var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
+    //var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
     
+    var aParams: NSDictionary = ["user[email]" : "test01@rails.com", "user[password]" : "gr123456"]
+    
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+
     self.api.loginUser(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      
       println(responseObject)
       var dict: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-     var auth_token: NSString! = dict.objectForKey("auth_token") as NSString
-      self.apiDataAccess(auth_token)
+      var aParam: NSDictionary! = responseObject?.objectForKey("user") as NSDictionary
+      self.auth_token = [dict.objectForKey("auth_token") as NSString];
+  
+      self.getFreeClassApiCall()
+      self.getPayClassApiCall()
+      self.userClassApiCall()
+      self.userLearnClsApiCall()
+      self.userLearnedClsApiCall()
+      self.getHostPayClsApiCall()
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
         self.loginValidation()
     })
     
+    
     }
   
-  func apiDataAccess(token:NSString){
-    println(token)
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
-    vc.authToken = token
-    self.navigationController?.pushViewController(vc, animated: true)
-  }
   
   func loginValidation(){
     
@@ -146,8 +155,112 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     alert.show()
       
     }
+  }
+  
+  //************ Data Store in the Database And Api Calling Methodes****************
+  
+  func userClassApiCall(){
+    
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    
+    self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
     
   }
   
+  func userLearnClsApiCall(){
+    
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    
+    self.api.userLearnCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+  
+  func userLearnedClsApiCall(){
+    
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    
+    self.api.userLearnedCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+      self.navigationController?.pushViewController(vc, animated: true)
+
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
+
+  
+  func getFreeClassApiCall(){
+    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]]     
+    self.api.freeClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
+      //self.hometableVw.reloadData()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+  
+  func getPayClassApiCall(){
+    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    self.api.payClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
+      //self.hometableVw.reloadData()
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+  
+  func getHostPayClsApiCall(){
+    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    self.api.hostpayClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
+      //self.hometableVw.reloadData()
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
   
 }

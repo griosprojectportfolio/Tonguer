@@ -144,6 +144,20 @@
             </objects>
             <point key="canvasLocation" x="1636" y="766"/>
         </scene>
+        <!--Class View Controller-->
+        <scene sceneID="RBO-sv-Vip">
+            <objects>
+                <viewController storyboardIdentifier="ClassID" id="Qk2-3g-9qe" customClass="ClassViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uMZ-Ww-pEu">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2s2-DW-O79" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-452" y="890"/>
+        </scene>
         <!--Class Center View Controller-->
         <scene sceneID="7SU-se-7JY">
             <objects>
@@ -171,6 +185,48 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K7j-n3-nr0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-86" y="1510"/>
+        </scene>
+        <!--Add Notes View Controller-->
+        <scene sceneID="iWh-Zf-E2G">
+            <objects>
+                <viewController storyboardIdentifier="AddNotesID" id="sE0-vK-1tx" customClass="AddNotesViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nKg-oY-TgK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uKU-eg-Tkx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-67" y="2196"/>
+        </scene>
+        <!--Courselist View Controller-->
+        <scene sceneID="Zgp-h7-CJX">
+            <objects>
+                <viewController storyboardIdentifier="CourseListID" id="6r9-Mv-4Ok" customClass="CourselistViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ads-sY-e90">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Bgw-1d-7eb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="389" y="2180"/>
+        </scene>
+        <!--Notes Detail View Controller-->
+        <scene sceneID="tmH-oO-56G">
+            <objects>
+                <viewController storyboardIdentifier="NotesDetailID" id="Z8E-Wh-uQF" customClass="NotesDetailViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nbl-D9-0bc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="i2q-ba-mrf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="845" y="2172"/>
         </scene>
         <!--My Order View Controller-->
         <scene sceneID="txJ-0w-rOp">
@@ -256,6 +312,20 @@
             </objects>
             <point key="canvasLocation" x="2476" y="-140"/>
         </scene>
+        <!--Ad Ans View Controller-->
+        <scene sceneID="TeS-4e-Wk8">
+            <objects>
+                <viewController storyboardIdentifier="AdAnswerID" id="zEy-hW-fp7" customClass="AdAnsViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pyl-A0-HAH">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IOs-Wa-exo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3090" y="-236"/>
+        </scene>
         <!--Answers View Controller-->
         <scene sceneID="uI1-K3-lt8">
             <objects>
@@ -268,7 +338,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yLW-zg-dSC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2591" y="545"/>
+            <point key="canvasLocation" x="2481" y="555"/>
         </scene>
         <!--Ad Question View Controller-->
         <scene sceneID="bR1-ku-41a">
@@ -282,12 +352,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VAb-wd-nap" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2590" y="1229"/>
+            <point key="canvasLocation" x="2554" y="1289"/>
         </scene>
-        <!--Chat View Controller-->
+        <!--Discuss View Controller-->
         <scene sceneID="jxO-df-uhK">
             <objects>
-                <viewController storyboardIdentifier="ChatID" id="LSA-5t-8DF" customClass="ChatViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DiscussID" id="LSA-5t-8DF" customClass="DiscussViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ud8-dd-jaR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -296,7 +366,49 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nu2-Dg-zCZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2966" y="545"/>
+            <point key="canvasLocation" x="3062" y="1171"/>
+        </scene>
+        <!--Add Topic View Controller-->
+        <scene sceneID="ME6-oO-O72">
+            <objects>
+                <viewController storyboardIdentifier="AddTopicID" id="IPS-zM-YYg" customClass="AddTopicViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="b7R-WD-ByE">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SGl-Sg-BiN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3506" y="1160"/>
+        </scene>
+        <!--Topic Detail View Controller-->
+        <scene sceneID="gdc-yO-fJY">
+            <objects>
+                <viewController storyboardIdentifier="TopicDetailID" id="5EW-67-UwM" customClass="TopicDetailViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="CXP-4L-Nom">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x6U-Xe-wdE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3475" y="1791"/>
+        </scene>
+        <!--Notes View Controller-->
+        <scene sceneID="W3O-M2-5mb">
+            <objects>
+                <viewController storyboardIdentifier="NotesID" id="EPq-Cz-2au" customClass="NotesViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="U1C-fP-Bpt">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KWP-J6-wcA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3046" y="440"/>
         </scene>
         <!--Course Detail View Controller-->
         <scene sceneID="rRI-fI-BnG">

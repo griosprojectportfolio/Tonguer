@@ -8,9 +8,8 @@
 
 import UIKit
 
-class ClassCenterViewController: UIViewController,UITableViewDataSource,UITableViewDelegate{
+class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate{
   
-  var flag: Bool!
   
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
@@ -18,16 +17,24 @@ class ClassCenterViewController: UIViewController,UITableViewDataSource,UITableV
   var lbldeatil :UILabel!
   var imgVw :UIImageView!
   var tableview: UITableView!
-  
-  var img1TapGest: UITapGestureRecognizer!
-  var img2TapGest: UITapGestureRecognizer!
-
-  var haderArr: NSArray! = NSArray(objects: "LblTile1","LblTile2","LblTile3")
-  
+  var api: AppApi!
+  var haderArr: NSMutableArray! = NSMutableArray()
+  var subCatArr: NSMutableArray! = NSMutableArray()
+  var dataArr: NSMutableArray! = NSMutableArray()
+  var dictParam: NSMutableDictionary!
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    api = AppApi.sharedClient()
     self.defaultUIDesign()
+    //self.getFreeClassApiCall()
+    self.dataFetchFromDataBase()
+    //self.getAddvertiesmentApiCall()
+    
+  }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    
   }
   
   func defaultUIDesign(){
@@ -68,59 +75,75 @@ class ClassCenterViewController: UIViewController,UITableViewDataSource,UITableV
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self
+    tableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(tableview)
    tableview.registerClass(CalssCenterCell.self, forCellReuseIdentifier: "cell")
     
-    img1TapGest = UITapGestureRecognizer(target: self, action: "img1TapGestureSelecter")
-    img2TapGest = UITapGestureRecognizer(target: self, action: "img2TapGestureSelecter")
   }
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
+    var cellArr: NSArray! = dict.objectForKey("array") as NSArray
+    return cellArr.count//subCatArr.count
   }
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return 3
+    return dataArr.count
   }
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     var vWheader: UIView! = UIView(frame: CGRectMake(5, 5, 100, 40))
-    vWheader.backgroundColor = UIColor.whiteColor()
+    vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWheader.layer.borderWidth = 0.5
     vWheader.layer.borderColor = UIColor.lightGrayColor().CGColor
+    var dict:NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
+    var lblTilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
+    lblTilte.text = dict.valueForKey("name") as NSString
+    lblTilte.font = lblTilte.font.fontWithSize(12)
+    lblTilte.textColor = UIColor.whiteColor()
+    vWheader.addSubview(lblTilte)
     
-    var lbltilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
-    lbltilte.text = haderArr.objectAtIndex(section) as NSString
-    lbltilte.font = lbltilte.font.fontWithSize(12)
-    lbltilte.textColor = UIColor.blackColor()
-    vWheader.addSubview(lbltilte)
-    
-    var btnmore: UIButton! = UIButton(frame: CGRectMake(tableview.frame.width-80, 5, 60, 20))
-    btnmore.setTitle("more", forState: UIControlState.Normal)
-    btnmore.setTitleColor(UIColor.redColor(), forState: UIControlState.Normal)
-    btnmore.titleLabel?.font = btnmore.titleLabel?.font.fontWithSize(12)
+    var btnMore: UIButton! = UIButton(frame: CGRectMake(tableview.frame.width-80, 5, 60, 20))
+    btnMore.setTitle("more", forState: UIControlState.Normal)
+    btnMore.setTitleColor(UIColor.redColor(), forState: UIControlState.Normal)
+    btnMore.titleLabel?.font = btnMore.titleLabel?.font.fontWithSize(12)
+    btnMore.tag = section
     //btnmore.backgroundColor = UIColor.blueColor()
-    btnmore.addTarget(self, action: "", forControlEvents:UIControlEvents.TouchUpInside)
-    vWheader.addSubview(btnmore)
+    btnMore.addTarget(self, action: "btnMoreTapped:", forControlEvents:UIControlEvents.TouchUpInside)
+    //vWheader.addSubview(btnMore)
     return vWheader
   }
   
   func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    return "Host"
+    var dict:NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
+    return dict.valueForKey("name") as NSString
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as CalssCenterCell
-   cell.defaultCellContent()
-   cell.imgVw1.addGestureRecognizer(img1TapGest)
-   cell.imgVw2.addGestureRecognizer(img2TapGest)
-    
+     cell.selectionStyle = UITableViewCellSelectionStyle.None
+    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+    var cellArr: NSArray! = dict.objectForKey("array") as NSArray
+    var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
+     cell.textLabel.text = dictSub.valueForKey("name") as NSString
+     cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
     return cell
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    return 100
+    return 50
+  }
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    
+    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+    var cellArr: NSArray! = dict.objectForKey("array") as NSArray
+    var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassID") as ClassViewController
+    vc.sub_cat_id = dictSub.objectForKey("id") as NSInteger
+    vc.flgClass = "Free"
+    self.navigationController?.pushViewController(vc, animated: true)
   }
   
   override func didReceiveMemoryWarning() {
@@ -132,19 +155,60 @@ class ClassCenterViewController: UIViewController,UITableViewDataSource,UITableV
     self.navigationController?.popViewControllerAnimated(true)
   }
   
-  func img1TapGestureSelecter(){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
-    self.navigationController?.pushViewController(vc, animated: true)
-  }
   
-  func img2TapGestureSelecter(){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
-    self.navigationController?.pushViewController(vc, animated: true)
-  }
+  //*************** Call Free Class Api**************
   
-  func btnMoreTapped(){
+  func getAddvertiesmentApiCall(){
+    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]] //NSDictionary(objects: [auth_token], forKeys: ["auth_token"])
+    
+    self.api.addvertiesment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("advertiesment") as NSDictionary
+      
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
     
   }
-
+  
+  //*************** Data feching Form DataBase **************
+  
+  func dataFetchFromDataBase(){
+    let arrFetchCat : NSArray = FreeClsCat.MR_findAll()
+    print(arrFetchCat.count)
+    for var index = 0; index < arrFetchCat.count; ++index {
+      //println("index is \(index)")
+      let catObject : FreeClsCat = arrFetchCat.objectAtIndex(index) as FreeClsCat
+      var str_cat_id = catObject.cat_id
+      var strName = catObject.cat_name as NSString
+       var dictData: NSMutableDictionary! = NSMutableDictionary()
+      dictData.setObject(str_cat_id, forKey: "id")
+      dictData.setObject(strName, forKey: "name")
+      
+      let sub_CatFilter : NSPredicate = NSPredicate(format: "sub_cat_id CONTAINS %@",str_cat_id)!
+      let subcatData : NSArray = FreeSubCat.MR_findAllWithPredicate(sub_CatFilter)
+      
+      for var index = 0; index < subcatData.count; ++index {
+        let subCatObject : FreeSubCat = subcatData.objectAtIndex(index) as FreeSubCat
+        var strID = subCatObject.sub_cat_id
+        var strName = subCatObject.sub_cat_name as NSString
+        var catDict2: NSMutableDictionary! = NSMutableDictionary()
+        catDict2.setObject(strID, forKey: "id")
+        catDict2.setObject(strName, forKey: "name")
+        //subCatArr.addObject(catDict2)
+        var subCatArr: NSMutableArray! = NSMutableArray(object: catDict2)
+        dictData.setObject(subCatArr, forKey: "array")
+        print(subCatArr.count)
+      }
+      dataArr.addObject(dictData)
+      tableview.reloadData()
+    }
+    
+  }
+  
   
 }

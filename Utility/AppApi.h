@@ -40,14 +40,85 @@
                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
 
-- (AFHTTPRequestOperation *)userClass:(NSDictionary *)aParams
+- (AFHTTPRequestOperation *)userDefaultCls:(NSDictionary *)aParams
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
+- (AFHTTPRequestOperation *)userLearnCls:(NSDictionary *)aParams
+                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)userLearnedCls:(NSDictionary *)aParams
+                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
 
+- (AFHTTPRequestOperation *)freeClass:(NSDictionary *)aParams
+                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
 
+- (AFHTTPRequestOperation *)userClassVideo:(NSDictionary *)aParams
+                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)freeClsList:(NSDictionary *)aParams
+                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+
+- (AFHTTPRequestOperation *)freeClsVideoList:(NSDictionary *)aParams
+                                success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+
+- (AFHTTPRequestOperation *)payClass:(NSDictionary *)aParams
+                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)payClsList:(NSDictionary *)aParams
+                                success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)hostpayClass:(NSDictionary *)aParams
+                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)addvertiesment:(NSDictionary *)aParams
+                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)discusAllTopic:(NSDictionary *)aParams
+                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)discusTopicComments:(NSDictionary *)aParams
+                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)discusTopicPostComments:(NSDictionary *)aParams
+                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)createClassTopic:(NSDictionary *)aParams
+                                            success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                            failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)clsQuestion:(NSDictionary *)aParams
+                                     success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                     failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)clsQueaAnswer:(NSDictionary *)aParams
+                                success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)clsQueaComment:(NSDictionary *)aParams
+                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (void)downloadMediaData:(NSDictionary *)aParams
+                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
 
 @end

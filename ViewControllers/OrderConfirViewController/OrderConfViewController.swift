@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OrderConfViewController: UIViewController,UITextFieldDelegate {
+class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var imgVw :UIImageView!
@@ -18,12 +18,14 @@ class OrderConfViewController: UIViewController,UITextFieldDelegate {
   var txtFieldMoney : CustomTextFieldBlurView!
   var txtFieldContact : CustomTextFieldBlurView!
   var btnConfirmpay :UIButton!
+  var clsDict: NSDictionary!
   
   var lblNeed :UILabel!
   var lblNeedmoney :UILabel!
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    print(clsDict)
     
     self.defaultUIDesign()
   }
@@ -48,7 +50,9 @@ class OrderConfViewController: UIViewController,UITextFieldDelegate {
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
     imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x+30, self.view.frame.origin.y+84, 80, 60))
-    imgVw.image = UIImage(named: "imgblur.png")
+    let url = NSURL(string: clsDict.objectForKey("image") as NSString)
+    let data = NSData(contentsOfURL: url!)
+    imgVw.image = UIImage(data: data!)
     self.view.addSubview(imgVw)
     
     lblDetail = UILabel(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.size.width+10,imgVw.frame.origin.y+(imgVw.frame.height-40)/2, self.view.frame.width-150,40))
@@ -56,7 +60,7 @@ class OrderConfViewController: UIViewController,UITextFieldDelegate {
     //lblDetail.backgroundColor = UIColor.redColor()
     lblDetail.textColor = UIColor.darkGrayColor()
     lblDetail.font = lblDetail.font.fontWithSize(12)
-    lblDetail.text = "This is a preliminary document for an API or technology in development. Apple is supplying this information to help you plan for."
+    lblDetail.text = clsDict.objectForKey("name") as NSString
     
     self.view.addSubview(lblDetail)
     
@@ -67,12 +71,10 @@ class OrderConfViewController: UIViewController,UITextFieldDelegate {
     self.view.addSubview(lblmoney)
     
     lblVaild = UILabel(frame: CGRectMake((self.view.frame.width-150)-20, lblmoney.frame.origin.y,150, 40))
-    lblVaild.text = "Vaild to 03-04-2015"
+    lblVaild.text = "Vaild to"//clsDict.objectForKey("day") as NSString
     lblVaild.font = lblmoney.font.fontWithSize(12)
     lblVaild.textColor = UIColor.grayColor()
     self.view.addSubview(lblVaild)
-    
-
     
     var txtmoneyframe:CGRect = CGRectMake(self.view.frame.origin.x+20,lblmoney.frame.origin.y+lblmoney.frame.size.height+20, self.view.frame.width-40, 40)
     
@@ -112,8 +114,6 @@ class OrderConfViewController: UIViewController,UITextFieldDelegate {
     btnConfirmpay.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     btnConfirmpay.addTarget(self, action: "btnConfirmpayTapped", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btnConfirmpay)
-
-
 
   }
   

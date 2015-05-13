@@ -9,7 +9,7 @@
 
 import UIKit
 
-class CourseListCell: UITableViewCell {
+class CourseListCell: BaseTableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()

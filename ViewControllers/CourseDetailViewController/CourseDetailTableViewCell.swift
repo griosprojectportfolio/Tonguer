@@ -28,7 +28,7 @@ class CourseDetailTableViewCell: UITableViewCell {
       switch (id){
       case "0":
           var lblclassname: UILabel = UILabel(frame: CGRectMake(10, 0,self.frame.width,30))
-          lblclassname.text = dict.objectForKey("coursename") as NSString
+          //lblclassname.text = dict.objectForKey("coursename") as NSString
           //lblclassname.backgroundColor = UIColor.redColor()
           lblclassname.font = lblclassname.font.fontWithSize(16)
           lblclassname.textColor = UIColor.blackColor()
@@ -41,7 +41,7 @@ class CourseDetailTableViewCell: UITableViewCell {
           self.contentView.addSubview(lblSym)
         
           var lblrate: UILabel = UILabel(frame: CGRectMake(40,lblSym.frame.origin.y+5,100, 40))
-          lblrate.text = dict.objectForKey("courserate") as NSString
+          lblrate.text = "0.0"//NSString(format: "%i",(dict.objectForKey("price")?.integerValue)!)
           lblrate.font = lblrate.font.fontWithSize(22)
           lblrate.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
           self.contentView.addSubview(lblrate)

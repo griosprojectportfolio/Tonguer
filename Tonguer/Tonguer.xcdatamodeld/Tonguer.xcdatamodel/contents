@@ -1,14 +1,167 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14A389" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Addvertiesment" representedClassName="Addvertiesment" syncable="YES">
+        <attribute name="add_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="add_img" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="add_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="add_video" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="DisAdminTopic" representedClassName="DisAdminTopic" syncable="YES">
+        <attribute name="topic_content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="topic_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="topic_name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="DisTopicComments" representedClassName="DisTopicComments" syncable="YES">
+        <attribute name="comment_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="commment" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="DisUserToic" representedClassName="DisUserToic" syncable="YES">
+        <attribute name="topic_content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="topic_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="topic_name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FreeCls" representedClassName="FreeCls" syncable="YES">
+        <attribute name="cls_arrange" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_day" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_progress" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_score" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_suitable" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_target" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="img_url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="freesubcat" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FreeSubCat" inverseName="freecls" inverseEntity="FreeSubCat" syncable="YES"/>
+    </entity>
+    <entity name="FreeClsCat" representedClassName="FreeClsCat" syncable="YES">
+        <attribute name="cat_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="cat_name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="freesubcat" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="FreeSubCat" inverseName="freeclscat" inverseEntity="FreeSubCat" syncable="YES"/>
+    </entity>
+    <entity name="FreeClssVideo" representedClassName="FreeClssVideo" syncable="YES">
+        <attribute name="video_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="video_img_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="video_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="video_url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FreeSubCat" representedClassName="FreeSubCat" syncable="YES">
+        <attribute name="sub_cat_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="sub_cat_name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="freecls" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FreeCls" inverseName="freesubcat" inverseEntity="FreeCls" syncable="YES"/>
+        <relationship name="freeclscat" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FreeClsCat" inverseName="freesubcat" inverseEntity="FreeClsCat" syncable="YES"/>
+    </entity>
+    <entity name="HostPayCls" representedClassName="HostPayCls" syncable="YES">
+        <attribute name="cls_arrange" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_days" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_img" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_price" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_progress" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_score" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_suitable" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_target" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="PayClassVideo" syncable="YES">
+        <attribute name="video_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="video_img_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="video_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="video_url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="PayCls" representedClassName="PayCls" syncable="YES">
+        <attribute name="cls_arrange" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_days" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_img_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_price" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_progress" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_score" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_suitable" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_target" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="paysubcat" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="PaySubCat" inverseName="paycls" inverseEntity="PaySubCat" syncable="YES"/>
+    </entity>
+    <entity name="PayClsCat" representedClassName="PayClsCat" syncable="YES">
+        <attribute name="cat_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="cat_name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="paysubcat" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PaySubCat" inverseName="payclscat" inverseEntity="PaySubCat" syncable="YES"/>
+    </entity>
+    <entity name="PaySubCat" representedClassName="PaySubCat" syncable="YES">
+        <attribute name="sub_cat_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="sub_cat_name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="paycls" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PayCls" inverseName="paysubcat" inverseEntity="PayCls" syncable="YES"/>
+        <relationship name="payclscat" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="PayClsCat" inverseName="paysubcat" inverseEntity="PayClsCat" syncable="YES"/>
+    </entity>
+    <entity name="QuestionComment" representedClassName="QuestionComment" syncable="YES">
+        <attribute name="comment" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="comt_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="Questions" representedClassName="Questions" syncable="YES">
+        <attribute name="ques_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="User" representedClassName="User" syncable="YES">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fname" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lname" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="money" optional="YES" attributeType="Decimal" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="profileimg" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="money" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="pro_img" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="score" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="user_id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="UserClsVideo" representedClassName="UserClsVideo" syncable="YES">
+        <attribute name="vdo_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="vdo_img" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="vdo_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="vdo_url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="UserDefaultClsList" representedClassName="UserDefaultClsList" syncable="YES">
+        <attribute name="cls_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_img_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_price" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_progress" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_score" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_vaild_days" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="UserLearnClsList" representedClassName="UserLearnClsList" syncable="YES">
+        <attribute name="cls_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_img_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_price" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_progress" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_score" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_vaild_days" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="UserLearnedClsList" representedClassName="UserLearnedClsList" syncable="YES">
+        <attribute name="cls_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_img_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cls_price" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_progress" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_score" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_vaild_days" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
-        <element name="User" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="Addvertiesment" positionX="-216" positionY="-72" width="128" height="105"/>
+        <element name="DisAdminTopic" positionX="-234" positionY="-90" width="128" height="88"/>
+        <element name="DisTopicComments" positionX="-234" positionY="-90" width="128" height="90"/>
+        <element name="DisUserToic" positionX="-225" positionY="-81" width="128" height="88"/>
+        <element name="FreeCls" positionX="-432" positionY="57" width="128" height="195"/>
+        <element name="FreeClsCat" positionX="-2" positionY="65" width="128" height="88"/>
+        <element name="FreeClssVideo" positionX="-234" positionY="-90" width="128" height="105"/>
+        <element name="FreeSubCat" positionX="-225" positionY="68" width="128" height="103"/>
+        <element name="HostPayCls" positionX="-225" positionY="-81" width="128" height="193"/>
+        <element name="PayClassVideo" positionX="-234" positionY="-90" width="128" height="103"/>
+        <element name="PayCls" positionX="-198" positionY="-27" width="128" height="208"/>
+        <element name="PayClsCat" positionX="25" positionY="-108" width="128" height="88"/>
+        <element name="PaySubCat" positionX="-153" positionY="-54" width="128" height="103"/>
+        <element name="User" positionX="-378" positionY="-234" width="128" height="150"/>
+        <element name="UserClsVideo" positionX="-234" positionY="-90" width="128" height="105"/>
+        <element name="UserDefaultClsList" positionX="-234" positionY="-90" width="128" height="150"/>
+        <element name="UserLearnClsList" positionX="-234" positionY="-90" width="128" height="148"/>
+        <element name="UserLearnedClsList" positionX="-225" positionY="-81" width="128" height="148"/>
+        <element name="Questions" positionX="-234" positionY="-90" width="128" height="73"/>
+        <element name="QuestionComment" positionX="-225" positionY="-81" width="128" height="75"/>
     </elements>
 </model>
