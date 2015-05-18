@@ -24,13 +24,19 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   var strdata: NSString!
   var dictTopic: NSDictionary!
   var arrCommentData: NSMutableArray! = NSMutableArray()
-  var lbltitle: UILabel!
+  var lblContent: UILabel!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
     self.defaultUIDesign()
     self.getCommentTopicApiCall()
+    self.dataFetchFromDatabaseDiscus()
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    arrCommentData.removeAllObjects()
     self.dataFetchFromDatabaseDiscus()
   }
   
@@ -48,44 +54,47 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.size.width, self.view.frame.height-64))
+    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.height))
     
     scrollview.showsHorizontalScrollIndicator = true
     scrollview.scrollEnabled = true
     scrollview.userInteractionEnabled = true
     //scrollview.backgroundColor = UIColor.grayColor()
-    scrollview.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height-70)
+    
     
     self.view.addSubview(scrollview)
     
     
-    vWQues = UIView(frame: CGRectMake(scrollview.frame.origin.x+20,0, scrollview.frame.width-40,100))
-    vWQues.layer.borderWidth = 1
-    vWQues.layer.borderColor = UIColor.lightGrayColor().CGColor
-    scrollview.addSubview(vWQues)
-    
-    imgVw = UIImageView(frame: CGRectMake(5,5, 20, 20))
+    imgVw = UIImageView(frame: CGRectMake(10,10, 20, 20))
     imgVw.backgroundColor = UIColor.grayColor()
     imgVw.image = UIImage(named: "Q.png")
-    vWQues.addSubview(imgVw)
+    scrollview.addSubview(imgVw)
     
     
     vWLine = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width+10, imgVw.frame.origin.y, 1, imgVw.frame.height))
     vWLine.backgroundColor = UIColor.lightGrayColor()
-    vWQues.addSubview(vWLine)
+   scrollview.addSubview(vWLine)
     
-    txtViewQues = UITextView(frame:CGRectMake(vWLine.frame.origin.x+5, 0, vWQues.frame.width-40, vWQues.frame.height-5))
-    txtViewQues.text = dictTopic.valueForKey("content") as NSString
-    //txtViewQues.backgroundColor = UIColor.grayColor()
-    txtViewQues.userInteractionEnabled = true
-    txtViewQues.editable = false
-    txtViewQues.textColor = UIColor.grayColor()
-    txtViewQues.allowsEditingTextAttributes = false
-    vWQues.addSubview(txtViewQues)
-  
+    var strContent: NSString = dictTopic.valueForKey("content") as NSString
+    
+     var rect: CGRect! = strContent.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+    
+    scrollview.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+rect.height)
+    
+    lblContent = UILabel(frame: CGRectMake(vWLine.frame.origin.x+5,vWLine.frame.origin.y-5,self.view.frame.width-50,rect.height))
+    
+    lblContent.text = strContent
+    lblContent.numberOfLines = 0
+    lblContent.textAlignment = NSTextAlignment.Justified
+    lblContent.font = lblContent.font.fontWithSize(12)
+    lblContent.textColor = UIColor.grayColor()
+    //lblContent.backgroundColor = UIColor.greenColor()
+    scrollview.addSubview(lblContent)
+
+    
 
     btnSend = UIButton(frame: CGRectMake(scrollview.frame.origin.x+20,scrollview.frame.size.height-60,scrollview.frame.width-40, 40))
-    self.btnSend.setTitle("Add Your Answer", forState: UIControlState.Normal)
+    self.btnSend.setTitle("Send", forState: UIControlState.Normal)
     self.btnSend.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0);
     self.btnSend.tintColor = UIColor.whiteColor()
     btnSend.addTarget(self, action: "btnSendButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -101,8 +110,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   
     scrollview.addSubview(txtViewAddAns)
     
-    adAnstableView = UITableView(frame: CGRectMake(scrollview.frame.origin.x+20,vWQues.frame.origin.y+vWQues.frame.size.height+10,scrollview.frame.width-40 ,txtViewAddAns.frame.origin.y-txtViewAddAns.frame.size.height-80))
-    //adAnstableView.backgroundColor = UIColor.redColor()
+    adAnstableView = UITableView(frame: CGRectMake(scrollview.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.size.height+10,scrollview.frame.width ,txtViewAddAns.frame.origin.y - txtViewAddAns.frame.height-50))
+   // adAnstableView.backgroundColor = UIColor.yellowColor()
     adAnstableView.separatorStyle = UITableViewCellSeparatorStyle.None
     adAnstableView.rowHeight = 50
     adAnstableView.delegate = self
@@ -123,7 +132,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     var cell:AdAnsTableViewCell! = nil
     
        cell = adAnstableView.dequeueReusableCellWithIdentifier("cell") as AdAnsTableViewCell
-       //cell.backgroundColor = UIColor.redColor()
+      // cell.backgroundColor = UIColor.redColor()
        cell.selectionStyle = UITableViewCellSelectionStyle.None
        cell.defaultUIDesign(arrCommentData.objectAtIndex(indexPath.row) as NSDictionary)
     
@@ -172,6 +181,10 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   func btnSendButtonTapped(semder:AnyObject){
     self.postCommentTopicApiCall()
    // self.dataFetchFromDatabaseDiscus()
+    var dict: NSMutableDictionary! = NSMutableDictionary()
+    dict.setValue(txtViewAddAns.text, forKey: "comment")
+    dict.setValue("User", forKey: "by")
+    arrCommentData.addObject(dict)
     adAnstableView.reloadData()
   }
   

@@ -6,6 +6,11 @@
         <attribute name="add_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="add_video" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Answer" representedClassName="Answer" syncable="YES">
+        <attribute name="ans_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ques_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
     <entity name="DisAdminTopic" representedClassName="DisAdminTopic" syncable="YES">
         <attribute name="topic_content" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="topic_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -146,7 +151,7 @@
         <element name="Addvertiesment" positionX="-216" positionY="-72" width="128" height="105"/>
         <element name="DisAdminTopic" positionX="-234" positionY="-90" width="128" height="88"/>
         <element name="DisTopicComments" positionX="-234" positionY="-90" width="128" height="90"/>
-        <element name="DisUserToic" positionX="-225" positionY="-81" width="128" height="88"/>
+        <element name="DisUserToic" positionX="-225" positionY="-81" width="128" height="90"/>
         <element name="FreeCls" positionX="-432" positionY="57" width="128" height="195"/>
         <element name="FreeClsCat" positionX="-2" positionY="65" width="128" height="88"/>
         <element name="FreeClssVideo" positionX="-234" positionY="-90" width="128" height="105"/>
@@ -156,12 +161,13 @@
         <element name="PayCls" positionX="-198" positionY="-27" width="128" height="208"/>
         <element name="PayClsCat" positionX="25" positionY="-108" width="128" height="88"/>
         <element name="PaySubCat" positionX="-153" positionY="-54" width="128" height="103"/>
+        <element name="QuestionComment" positionX="-225" positionY="-81" width="128" height="75"/>
+        <element name="Questions" positionX="-234" positionY="-90" width="128" height="73"/>
         <element name="User" positionX="-378" positionY="-234" width="128" height="150"/>
         <element name="UserClsVideo" positionX="-234" positionY="-90" width="128" height="105"/>
         <element name="UserDefaultClsList" positionX="-234" positionY="-90" width="128" height="150"/>
         <element name="UserLearnClsList" positionX="-234" positionY="-90" width="128" height="148"/>
         <element name="UserLearnedClsList" positionX="-225" positionY="-81" width="128" height="148"/>
-        <element name="Questions" positionX="-234" positionY="-90" width="128" height="73"/>
-        <element name="QuestionComment" positionX="-225" positionY="-81" width="128" height="75"/>
+        <element name="Answer" positionX="-234" positionY="-90" width="128" height="88"/>
     </elements>
 </model>

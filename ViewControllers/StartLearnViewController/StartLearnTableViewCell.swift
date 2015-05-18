@@ -23,6 +23,11 @@ class StartLearnTableViewCell: BaseTableViewCell {
   func defaultCellContent(dict : NSDictionary, index:NSInteger){
     
     println(dict)
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
 
     
     imgVw = UIImageView(frame: CGRectMake(0,20, 30, 30))

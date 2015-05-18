@@ -146,20 +146,30 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
-    var cell: UITableViewCell!
+    var cell: UITableViewCell! = nil
     
     if(tapTag == 1){
+      var cell: MyNotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("MyNotesCell") as MyNotesTableViewCell
-      cell.textLabel.text = "My Notes"
-      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+//      cell.textLabel.text = "My Notes"
+//      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+      cell.defaultUIDesign()
+       return cell
       
     }else if(tapTag == 2){
+      var cell: NotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
       cell.textLabel.text = "Notes"
       cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+       return cell
     }
     
     return cell
+    
+  }
+  
+  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return 100
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

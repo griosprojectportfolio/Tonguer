@@ -25,6 +25,13 @@ class CourseListCell: BaseTableViewCell {
   func defaultCellContenforCourselist(dict: NSDictionary){
     println(dict)
     
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
+
+    
     var imgVw1: UIImageView! = UIImageView(frame: CGRectMake(0, 0, 90, 90))
     imgVw1.image = UIImage(named: dict.objectForKey("image") as NSString)
     imgVw1.layer.borderWidth = 0.5

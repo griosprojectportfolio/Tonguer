@@ -12,13 +12,20 @@ class SettingTableViewCell:BaseTableViewCell {
   
   var lbltitle: UILabel!
   var vWCell: UIView!
-  
+  var swtRemind: UISwitch!
   override func awakeFromNib() {
     super.awakeFromNib()
     // Initialization code
   }
   
   func defaultUICellContent(name: NSString , index: NSInteger){
+    
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
+    
     if(isiPhone5orLower){
       vWCell = UIView(frame: CGRectMake(20, 10,320-50,60))
       setcellContentProperties(name,index: index)
@@ -45,7 +52,7 @@ class SettingTableViewCell:BaseTableViewCell {
     vWCell.addSubview(lbltitle)
     
     if(index == 2){
-      var swtRemind: UISwitch! = UISwitch(frame: CGRectMake(vWCell.frame.width - 40,25, 30,30))
+       swtRemind = UISwitch(frame: CGRectMake(vWCell.frame.width - 40,25, 30,30))
       self.contentView.addSubview(swtRemind)
     }
     

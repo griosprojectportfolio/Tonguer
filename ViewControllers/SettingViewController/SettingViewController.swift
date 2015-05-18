@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class SettingViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var tableview: UITableView!
@@ -18,14 +18,14 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
   var btnLogout: UIButton!
   
   var userDict: NSDictionary!
-  var arrsettdata: NSArray!
+  var arrSettData: NSArray!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     userDict = NSDictionary(objects: ["img2","Test User"], forKeys: ["image","name"])
     
-    arrsettdata = NSArray(objects:"Alreday down","Option for video","Download reminder","Feedback","Recommand to friend","About us")
+    arrSettData = NSArray(objects:"Alreday downloaded","Option for video","Download reminder","Feedback","Recommand to friend","About us")
     
     self.defaultUIDesign()
     
@@ -55,7 +55,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     imgVwPPic.image = UIImage(named: userDict.objectForKey("image")as NSString)
     VwUserDetail.addSubview(imgVwPPic)
     
-    lblname = UILabel(frame: CGRectMake(imgVwPPic.frame.origin.x + imgVwPPic.frame.width+2,10,VwUserDetail.frame.width-120,40))
+    lblname = UILabel(frame: CGRectMake(imgVwPPic.frame.origin.x+10 + imgVwPPic.frame.width+2,10,VwUserDetail.frame.width-120,40))
     //lblname.backgroundColor = UIColor.grayColor()
     lblname.text = userDict.objectForKey("name") as NSString
     lblname.font = lblname.font.fontWithSize(15)
@@ -65,6 +65,8 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     btnLogout.setTitle("Logout", forState: UIControlState.Normal)
     btnLogout.setTitleColor(UIColor.redColor(), forState: UIControlState.Normal)
     btnLogout.titleLabel?.font = btnLogout.titleLabel?.font.fontWithSize(12)
+    btnLogout.layer.borderWidth = 1
+    btnLogout.layer.borderColor = UIColor.lightGrayColor().CGColor
     btnLogout.addTarget(self, action:"btnLogoutTapped", forControlEvents: UIControlEvents.TouchUpInside)
     //btnLogout.backgroundColor = UIColor.blackColor()
     VwUserDetail.addSubview(btnLogout)
@@ -73,6 +75,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self
+    tableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(tableview)
     tableview.registerClass(SettingTableViewCell.self, forCellReuseIdentifier: "cell")
   }
@@ -83,7 +86,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return arrsettdata.count
+    return arrSettData.count
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -94,9 +97,45 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as SettingTableViewCell
     cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
     cell.selectionStyle = UITableViewCellSelectionStyle.None
-    cell.defaultUICellContent(arrsettdata.objectAtIndex(indexPath.row) as NSString, index: indexPath.row)
+    cell.defaultUICellContent(arrSettData.objectAtIndex(indexPath.row) as NSString, index: indexPath.row)
     return cell
   }
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    
+   switch (indexPath.row){
+    
+   case 0:
+    print(arrSettData.objectAtIndex(indexPath.row))
+    
+   case 1:
+    print(arrSettData.objectAtIndex(indexPath.row))
+    
+   case 2:
+    print(arrSettData.objectAtIndex(indexPath.row))
+    
+   case 3:
+    print(arrSettData.objectAtIndex(indexPath.row))
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("FeedbackID") as FeedbackViewController
+    self.navigationController?.pushViewController(vc, animated: true)
+   case 4:
+    print(arrSettData.objectAtIndex(indexPath.row))
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("ShareID") as ShareViewController
+    self.navigationController?.pushViewController(vc, animated: true)
+    
+   case 5:
+    print(arrSettData.objectAtIndex(indexPath.row))
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AppFlowID") as AppFlowViewController
+    self.navigationController?.pushViewController(vc, animated: true)
+   default:
+     print("******** Error**********")
+    
+    
+    }
+    
+    
+  }
+  
   
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)

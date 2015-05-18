@@ -141,6 +141,7 @@ class DiscussViewController: UIViewController,UITableViewDataSource,UITableViewD
     var arrTopc: NSArray! = dict.valueForKey("array") as NSArray
     var aParams:NSDictionary! = arrTopc.objectAtIndex(indexPath.row) as NSDictionary
     vc.dictTopic = aParams
+    vc.title = aParams.valueForKey("name") as NSString
     self.navigationController?.pushViewController(vc, animated: true)
   }
   

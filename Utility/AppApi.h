@@ -11,8 +11,11 @@
 #import "AFNetworking.h"
 #import "AFHTTPSessionManager.h"
 #import "AFNetworkActivityIndicatorManager.h"
+#import <UIProgressView+AFNetworking.h>
 
 @interface AppApi : AFHTTPRequestOperationManager
+
+
 
 + (AppApi *)sharedClient ;
 + (AppApi *)sharedAuthorizedClient;
@@ -119,6 +122,11 @@
 - (void)downloadMediaData:(NSDictionary *)aParams
                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)userAnswer:(NSDictionary *)aParams
+                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
 
 
 @end

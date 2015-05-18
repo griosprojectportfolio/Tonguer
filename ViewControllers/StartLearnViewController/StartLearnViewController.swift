@@ -186,6 +186,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     sartlTableview.dataSource = self
     sartlTableview.scrollEnabled = true
     //sartlTableview.backgroundColor = UIColor.grayColor()
+    sartlTableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(sartlTableview)
     sartlTableview.registerClass(StartLearnTableViewCell.self, forCellReuseIdentifier: "cell")
     

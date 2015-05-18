@@ -14,7 +14,7 @@ class AdAnsTableViewCell: BaseTableViewCell {
   var lblAns :UILabel!
   var lblBy :UILabel!
   var lblname :UILabel!
-  
+  var imgVW: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -43,37 +43,49 @@ class AdAnsTableViewCell: BaseTableViewCell {
     }
     
     
-       vWcell = UIView(frame:CGRectMake(10,0, width, rect.size.height + 4))
-       lblAns = UILabel(frame: CGRectMake(5,2, vWcell.frame.size.width - 10, rect.size.height))
+       vWcell = UIView(frame:CGRectMake(20,5, width, rect.size.height + 20))
+      imgVW = UIImageView(frame: CGRectMake(2,(vWcell.frame.height-20)/2,20,20))
+       lblAns = UILabel(frame: CGRectMake(5,0, vWcell.frame.size.width-10, rect.size.height))
       lblBy = UILabel(frame: CGRectMake(width - 180,rect.size.height+5,20, 20))
       lblname = UILabel(frame: CGRectMake(width - 150,rect.size.height+5,150, 20))
     
     
+    var strName: NSString! = aParam.valueForKey("by") as NSString
+    
+    if(strName.isEqualToString("Admin")){
+      imgVW.image = UIImage(named: "adminChtImg.png")
+    }else {
+      imgVW.image = UIImage(named: "userChtImg.png")
+    }
+    
+    self.contentView.addSubview(imgVW)
+    
     //vWcell.backgroundColor = UIColor.lightGrayColor()
-    vWcell.layer.cornerRadius = 5
-    vWcell.layer.borderWidth = 1
+    vWcell.layer.cornerRadius = 2
+    vWcell.layer.borderWidth = 0.5
+    vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
     self.contentView.addSubview(vWcell)
     
     lblAns.numberOfLines = 0
     lblAns.text = aParam.valueForKey("comment") as NSString
-    lblAns.textColor = UIColor.blackColor()
+    lblAns.textColor = UIColor.grayColor()
     lblAns.font = lblAns.font.fontWithSize(12)
     vWcell.addSubview(lblAns)
     
     
-    lblBy.text = "By-"
-    //lblBy.backgroundColor = UIColor.redColor()
-    lblBy.textColor = UIColor.grayColor()
-    lblBy.font = lblBy.font.fontWithSize(10)
-    self.contentView.addSubview(lblBy)
-    
-    
-    lblname.text = aParam.valueForKey("by") as NSString
-    lblname.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
-    lblname.textColor = UIColor.blackColor()
-    lblname.textAlignment = NSTextAlignment.Center
-    lblname.font = lblBy.font.fontWithSize(10)
-    self.contentView.addSubview(lblname)
+//    lblBy.text = "By-"
+//    //lblBy.backgroundColor = UIColor.redColor()
+//    lblBy.textColor = UIColor.grayColor()
+//    lblBy.font = lblBy.font.fontWithSize(10)
+//    self.contentView.addSubview(lblBy)
+//    
+//    
+//    lblname.text = aParam.valueForKey("by") as NSString
+//    lblname.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
+//    lblname.textColor = UIColor.blackColor()
+//    lblname.textAlignment = NSTextAlignment.Center
+//    lblname.font = lblBy.font.fontWithSize(10)
+//    self.contentView.addSubview(lblname)
 
     
     

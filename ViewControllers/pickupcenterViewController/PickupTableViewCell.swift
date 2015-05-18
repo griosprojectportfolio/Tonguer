@@ -23,6 +23,13 @@ class PickupTableViewCell: BaseTableViewCell {
   
   func defaultCellContents(aParam:NSDictionary){
     
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
+
+    
     if(isiPhone5orLower){
       imgVw = UIImageView(frame: CGRectMake(320-120, 5,80,80))
       vWcell = UIView(frame: CGRectMake(40, 5,imgVw.frame.origin.x-40, 80))

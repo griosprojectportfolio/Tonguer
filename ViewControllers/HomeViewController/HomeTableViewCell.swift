@@ -20,6 +20,14 @@ class HomeTableViewCell: BaseTableViewCell {
   
   func defaultCellContent(aParam:NSDictionary!){
     
+    
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
+
+    
     var imgVw: UIImageView!
     var lblTitle: UILabel!
     var lblVaild: UILabel!

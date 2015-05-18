@@ -20,7 +20,12 @@ class CourseDetailTableViewCell: UITableViewCell {
   func defaultCellContentForCourseDetail (dict : NSDictionary , btnIndex:Int){
     
     println(dict)
-   
+    
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
     switch(btnIndex) {
     
     case 1:
@@ -41,16 +46,16 @@ class CourseDetailTableViewCell: UITableViewCell {
           self.contentView.addSubview(lblSym)
         
           var lblrate: UILabel = UILabel(frame: CGRectMake(40,lblSym.frame.origin.y+5,100, 40))
-          lblrate.text = "0.0"//NSString(format: "%i",(dict.objectForKey("price")?.integerValue)!)
+          lblrate.text = dict.objectForKey("courserate") as NSString
           lblrate.font = lblrate.font.fontWithSize(22)
           lblrate.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
           self.contentView.addSubview(lblrate)
       case "1","2","3":
-        var imgVw: UIImageView! = UIImageView(frame: CGRectMake(0,20, 30, 30))
+        var imgVw: UIImageView! = UIImageView(frame: CGRectMake(10,10, 30, 30))
         imgVw.image = UIImage(named: dict.objectForKey("image")as NSString)
         self.contentView.addSubview(imgVw)
        
-        var lblTitle: UILabel = UILabel(frame: CGRectMake(imgVw.frame.width+10, 0, 200,30))
+        var lblTitle: UILabel = UILabel(frame: CGRectMake(imgVw.frame.width+50,imgVw.frame.origin.y+((imgVw.frame.height-30)/2), 200,30))
         lblTitle.text = dict.objectForKey("tilte") as NSString
         lblTitle.font = lblTitle.font.fontWithSize(16)
         lblTitle.textColor = UIColor.blackColor()

@@ -26,6 +26,12 @@ class QuesAnsTableViewCell: BaseTableViewCell {
   
   func defaultUIDesign(aParam: NSDictionary){
     
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
+    
     if(isiPhone5orLower){
       
       celltxtVw = UIView(frame: CGRectMake(20, 10,320-40,60))

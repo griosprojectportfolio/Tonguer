@@ -26,6 +26,7 @@
 #import "DisTopicComments.h"
 #import "Questions.h"
 #import "QuestionComment.h"
+#import "Answer.h"
 
 /* API Constants */
 static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
@@ -842,10 +843,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     
     NSArray *arrQues = [[responseObject valueForKey:@"data"]valueForKey:@"admin_comment"];
     
+    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
           [QuestionComment entityFromArray:arrQues inContext:localContext];
+          
         }];
     
     successBlock(task, responseObject);
@@ -861,6 +864,41 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
 
 
 
+#pragma mark - User Answer Api Call Crossponding Question
+
+- (AFHTTPRequestOperation *)userAnswer:(NSDictionary *)aParams
+                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/get_user_answer",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self GET:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    NSArray *arrAns = [responseObject valueForKey:@"answers"];
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      [Answer entityFromArray:arrAns inContext:localContext];
+    }];
+    
+    successBlock(task, responseObject);
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+
+
+
 #pragma mark Method to Downloading Media Data from server
 
 
@@ -868,24 +906,36 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  NSString *url = [NSString stringWithFormat:@"%@",[aParams objectForKey:@"url"]];
-  NSString *strFileNameWithExt = [[NSString alloc] initWithFormat:@"%@",[aParams objectForKey:@"fileName"]];
-  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
-  //BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:mediaPath];
+ // NSString *url = [NSString stringWithFormat:@"%@",[aParams objectForKey:@"url"]];
+   NSString *url = @"http://download.wavetlan.com/SVV/Media/HTTP/MP4/ConvertedFiles/MediaCoder/MediaCoder_test1_1m9s_AVC_VBR_256kbps_640x480_24fps_MPEG2Layer3_CBR_160kbps_Stereo_22050Hz.mp4";
+//  NSString *strFileNameWithExt = [[NSString alloc] initWithFormat:@"%@",[aParams objectForKey:@"fileName"]];
+//  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
+ 
+  NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+  AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
   
-  AFHTTPRequestOperation *operation = [self GET:url
-                                     parameters:nil
-                                        success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                          NSLog(@"successful download to %@", mediaPath);
-                                          successBlock(operation, responseObject);
-                                        }
-                                        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                          NSLog(@"Error: %@", error);
-                                          failureBlock(operation, error);
-                                        }];
-  operation.outputStream = [NSOutputStream outputStreamToFileAtPath:mediaPath append:NO];
-}
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[aParams objectForKey:@"fileName"]];
+  operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+  
+  [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSLog(@"Successfully downloaded file to %@", path);
+    successBlock(operation, responseObject);
+  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    NSLog(@"Error: %@", error);
+ 
+  }];
+  
+  [operation start];
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+      double progress = (double)totalBytesRead / totalBytesExpectedToRead;
+      NSLog(@"Progress: %.2f", progress);
+      
+    }];
+  
+  
+ }
 
 
 

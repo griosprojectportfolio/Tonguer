@@ -14,6 +14,7 @@ class VideoTableViewCell: BaseTableViewCell {
   var cellImgView:UIImageView!
   var lblText:UILabel!
   var btnplay:UIButton!
+  var vwHidden:UIView!
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -22,28 +23,37 @@ class VideoTableViewCell: BaseTableViewCell {
   
   func defaultUIDesign(aParm:NSDictionary){
     
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
+
+    
     if(isiPhone5orLower){
+      vwHidden = UIView(frame: CGRectMake(self.contentView.frame.origin.x,self.contentView.frame.origin.y,self.contentView.frame.width, self.contentView.frame.height))
       cellImgView = UIImageView(frame: CGRectMake(20, 15, 320-40,130))
       celltxtView = UIView(frame: CGRectMake(cellImgView.frame.origin.x,cellImgView.frame.height+15,cellImgView.frame.width ,50))
       lblText = UILabel(frame: CGRectMake(5,2,celltxtView.frame.width-20, celltxtView.frame.height-5));
-      btnplay = UIButton(frame: CGRectMake((cellImgView.frame.width-50)/2,(cellImgView.frame.height-50)/2,50,50))
+      btnplay = UIButton(frame: CGRectMake((cellImgView.frame.width-40)/2,(cellImgView.frame.height-40)/2,40,40))
       self.setContentsProperties(aParm)
     }
     
     if(isiPhone6){
+      vwHidden = UIView(frame: CGRectMake(self.contentView.frame.origin.x,self.contentView.frame.origin.y,self.contentView.frame.width, self.contentView.frame.height))
       cellImgView = UIImageView(frame: CGRectMake(20, 15, 375-40,130))
       celltxtView = UIView(frame: CGRectMake(cellImgView.frame.origin.x,cellImgView.frame.height+15,cellImgView.frame.width ,50))
       lblText = UILabel(frame: CGRectMake(5,2,celltxtView.frame.width-20, celltxtView.frame.height-5));
-      btnplay = UIButton(frame: CGRectMake(170,50,50,50))
+      btnplay = UIButton(frame: CGRectMake(170,55,40,40))
       self.setContentsProperties(aParm)
     }
     
     if(isiPhone6plus){
-      
+        vwHidden = UIView(frame: CGRectMake(self.contentView.frame.origin.x,self.contentView.frame.origin.y,self.contentView.frame.width, self.contentView.frame.height))
       cellImgView = UIImageView(frame: CGRectMake(20, 15, 414-40,130))
       celltxtView = UIView(frame: CGRectMake(cellImgView.frame.origin.x,cellImgView.frame.height+15,cellImgView.frame.width ,50))
       lblText = UILabel(frame: CGRectMake(5,2,celltxtView.frame.width-20, celltxtView.frame.height-5));
-      btnplay = UIButton(frame: CGRectMake((cellImgView.frame.width-50)/2,(cellImgView.frame.height-50)/2,50,50))
+      btnplay = UIButton(frame: CGRectMake((cellImgView.frame.width-40)/2,(cellImgView.frame.height-40)/2,40,40))
       self.setContentsProperties(aParm)
       
       
@@ -53,6 +63,10 @@ class VideoTableViewCell: BaseTableViewCell {
   }
   
   func setContentsProperties(aParam: NSDictionary){
+    
+//    vwHidden.backgroundColor = UIColor.grayColor()
+//    self.contentView.addSubview(vwHidden)
+    
     let url = NSURL(string: aParam.objectForKey("image") as NSString)
     let data = NSData(contentsOfURL: url!)
     cellImgView.layer.borderWidth = 0.3
@@ -72,9 +86,9 @@ class VideoTableViewCell: BaseTableViewCell {
     celltxtView.addSubview(lblText);
     
     btnplay.backgroundColor = UIColor.whiteColor()
-    btnplay.setBackgroundImage(UIImage(named: "playimg.png"), forState: UIControlState.Normal)
+    btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
     btnplay.userInteractionEnabled = true
-    btnplay.layer.cornerRadius = 30
+    btnplay.layer.cornerRadius = 20
     btnplay.layer.borderWidth = 1
     btnplay.layer.borderColor = UIColor.whiteColor().CGColor
     btnplay.layer.masksToBounds = true

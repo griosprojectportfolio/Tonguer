@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FeedbackViewController: UIViewController,UITextFieldDelegate,UITextViewDelegate {
+class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
@@ -17,11 +17,17 @@ class FeedbackViewController: UIViewController,UITextFieldDelegate,UITextViewDel
   var btnSend :UIButton!
   var custxtFname:CustomTextFieldBlurView!
   var custxtEmail:CustomTextFieldBlurView!
-  
+  var scrollVW:UIScrollView!
+  var lblComment: UILabel!
   override func viewDidLoad() {
     super.viewDidLoad()
     self.defaultUIDesign()
     
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    lblComment.hidden = false
   }
   
   func defaultUIDesign(){
@@ -37,20 +43,22 @@ class FeedbackViewController: UIViewController,UITextFieldDelegate,UITextViewDel
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    var btnforword:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-    btnforword.setImage(UIImage(named: "whiteforward.png"), forState: UIControlState.Normal)
-    btnforword.addTarget(self, action: "btnforwardTapped", forControlEvents: UIControlEvents.TouchUpInside)
+    scrollVW = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y,self.view.frame.size.width,self.view.frame.size.height))
     
-    barforwordBtn = UIBarButtonItem(customView: btnforword)
+    scrollVW.showsHorizontalScrollIndicator = true
+    scrollVW.scrollEnabled = true
+    scrollVW.userInteractionEnabled = true
+   // scrollVW.backgroundColor = UIColor.grayColor()
+    scrollVW.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+20)
     
-    self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
+    self.view.addSubview(scrollVW)
 
     
-    imgVwLogo = UIImageView(frame:CGRectMake((self.view.frame.size.width-100)/2,84, 90, 100))
+    imgVwLogo = UIImageView(frame:CGRectMake((scrollVW.frame.size.width-100)/2,20, 90, 100))
     imgVwLogo.image = UIImage(named: "Splash.png")
-    self.view.addSubview(imgVwLogo)
+    scrollVW.addSubview(imgVwLogo)
     
-    var framefname:CGRect = CGRectMake(self.view.frame.origin.x+20, self.imgVwLogo.frame.origin.y+120, self.view.frame.size.width-40, 40)
+    var framefname:CGRect = CGRectMake(scrollVW.frame.origin.x+20, self.imgVwLogo.frame.origin.y+120, self.view.frame.size.width-40, 40)
     custxtFname = CustomTextFieldBlurView(frame:framefname, imgName:"user.png")
     custxtFname.attributedPlaceholder = NSAttributedString(string:"First Name",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
     // custxtEmail.returnKeyType = UIReturnType.Done
@@ -58,7 +66,7 @@ class FeedbackViewController: UIViewController,UITextFieldDelegate,UITextViewDel
     custxtFname.returnKeyType = UIReturnKeyType.Done
     custxtFname.clearButtonMode = UITextFieldViewMode.Always
     custxtFname.keyboardType = .EmailAddress
-    self.view.addSubview(custxtFname)
+    scrollVW.addSubview(custxtFname)
     
     var frameEmail:CGRect = CGRectMake(framefname.origin.x,framefname.origin.y+framefname.height+10,framefname.width, framefname.height)
     custxtEmail = CustomTextFieldBlurView(frame:frameEmail, imgName:"emailicon.png")
@@ -68,24 +76,47 @@ class FeedbackViewController: UIViewController,UITextFieldDelegate,UITextViewDel
     custxtEmail.returnKeyType = UIReturnKeyType.Done
     custxtEmail.clearButtonMode = UITextFieldViewMode.Always
     custxtEmail.keyboardType = .EmailAddress
-    self.view.addSubview(custxtEmail)
+    scrollVW.addSubview(custxtEmail)
     
     txtViewComment = UITextView(frame: CGRectMake(frameEmail.origin.x, frameEmail.origin.y+frameEmail.height+10, frameEmail.width, 200))
-    txtViewComment.text = "Type Your Comment"
+    txtViewComment.text = ""
     txtViewComment.delegate = self
     txtViewComment.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     txtViewComment.layer.borderWidth = 1
     txtViewComment.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
-    self.view.addSubview(txtViewComment)
+    scrollVW.addSubview(txtViewComment)
+    
+    lblComment = UILabel(frame: CGRectMake((txtViewComment.frame.size.width-150)/2,(txtViewComment.frame.size.height-30)/2,150, 30))
+    lblComment.text = "Type Your Comment"
+    lblComment.font = lblComment.font.fontWithSize(12)
+    lblComment.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    txtViewComment.addSubview(lblComment)
     
     self.btnSend = UIButton(frame: CGRectMake(txtViewComment.frame.origin.x,(txtViewComment.frame.origin.y+txtViewComment.frame.size.height)+20, txtViewComment.frame.size.width, 40))
     self.btnSend.setTitle("Send", forState: UIControlState.Normal)
     self.btnSend.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0);
     self.btnSend.tintColor = UIColor.whiteColor()
-    self.view.addSubview(self.btnSend)
+    scrollVW.addSubview(self.btnSend)
 
     
   }
+  
+  func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    
+    if(text == "\n"){
+      scrollVW.contentOffset = CGPoint(x:0, y:0)
+      textView.resignFirstResponder()
+      return false
+    }
+    return true
+  }
+  
+  func textViewDidBeginEditing(textView: UITextView) {
+    lblComment.hidden = true
+    scrollVW.contentOffset = CGPoint(x:0, y:btnSend.frame.height+50)
+  }
+
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

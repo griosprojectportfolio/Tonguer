@@ -11,6 +11,7 @@
 
 
 #import <AFNetworking.h>
+#import <AFNetworking/UIKit+AFNetworking.h>
 #import <CoreData+MagicalRecord.h>
 #import "AppApi.h"
 #import "FreeClsCat.h"
@@ -32,5 +33,6 @@
 #import "DisTopicComments.h"
 #import "Questions.h"
 #import "QuestionComment.h"
+#import "Answer.h"
 
 #endif

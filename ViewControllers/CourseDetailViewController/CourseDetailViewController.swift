@@ -51,9 +51,18 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     print(clsDictDe)
     
     var strName: NSString! = clsDictDe.objectForKey("name") as NSString
-    //var price: NSInteger! = clsDictDe.objectForKey("price") as NSInteger
+    //var price: NSString! = NSString(format: "%i",(clsDictDe.objectForKey("price")?.integerValue)!)
+    var price: NSObject = clsDictDe.objectForKey("price") as NSObject
+    var strPrice: NSString!
+    if price.isKindOfClass(NSString){
+     strPrice = clsDictDe.objectForKey("price") as NSString
+    }else if price.isKindOfClass(NSNumber) {
+      strPrice =  NSString(format: "%i",(clsDictDe.objectForKey("price")?.integerValue)!)
+    }
     
-    dict1 = NSDictionary(objects: [clsDictDe.objectForKey("name") as NSString,"0","0"], forKeys: ["coursename","courserate","id"])
+
+    
+    dict1 = NSDictionary(objects: [clsDictDe.objectForKey("name") as NSString,strPrice,"0"], forKeys: ["coursename","courserate","id"])
     dict2 = NSDictionary(objects: ["course.png","Arrange",clsDictDe.valueForKey("arrange") as NSString,"1"], forKeys: ["image","tilte","data","id"])
     dict3 = NSDictionary(objects: ["userred.png","Suitable for user",clsDictDe.valueForKey("suitable") as NSString,"2"], forKeys: ["image","tilte","data","id"])
     dict4 = NSDictionary(objects: ["target.png","Target for",clsDictDe.valueForKey("target") as NSString,"3"], forKeys: ["image","tilte","data","id"])

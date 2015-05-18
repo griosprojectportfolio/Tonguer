@@ -51,63 +51,34 @@ class MyOrderViewController: UIViewController, UITableViewDataSource, UITableVie
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    var btnforword:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-    btnforword.setImage(UIImage(named: "whiteforward.png"), forState: UIControlState.Normal)
-    btnforword.addTarget(self, action: "btnforwardTapped", forControlEvents: UIControlEvents.TouchUpInside)
     
-    barforwordBtn = UIBarButtonItem(customView: btnforword)
-    
-    self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
-
-    
-    btnsVw = UIView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+70,self.view.frame.width, 50))
-    //btnsVw.backgroundColor = UIColor.greenColor()
-    self.view.addSubview(btnsVw)
-    
-    btn1 = UIButton(frame: CGRectMake(10,5,(self.view.frame.width-40)/2, 40))
+    btn1 = UIButton(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64,(self.view.frame.width-40)/2, 40))
     //btn1.backgroundColor = UIColor.grayColor()
     btn1.setTitle("Course list order", forState: UIControlState.Normal)
     btn1.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-    btn1.addTarget(self, action: "btn1Tapped", forControlEvents: UIControlEvents.TouchDragInside)
-    btnsVw.addSubview(btn1)
+    btn1.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchDragInside)
+    self.view.addSubview(btn1)
     
     HorizVw = UIView(frame: CGRectMake(btn1.frame.origin.x,btn1.frame.origin.y+btn1.frame.size.height , btn1.frame.size.width, 1))
     HorizVw.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    btnsVw.addSubview(HorizVw)
+    self.view.addSubview(HorizVw)
    
     vertiVw = UIView(frame: CGRectMake(btn1.frame.origin.x+btn1.frame.size.width,btn1.frame.origin.y,1, btn1.frame.height))
     vertiVw.backgroundColor = UIColor.grayColor()
-    btnsVw.addSubview(vertiVw)
+    self.view.addSubview(vertiVw)
     
     btn2 = UIButton(frame: CGRectMake(btn1.frame.origin.x+btn1.frame.size.width+10,btn1.frame.origin.y,btn1.frame.width, 40))
     //btn2.backgroundColor = UIColor.grayColor()
     btn2.setTitle("Credit order", forState: UIControlState.Normal)
     btn2.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
     btn2.addTarget(self, action: "btn2Tapped", forControlEvents: UIControlEvents.TouchDragInside)
-    btnsVw.addSubview(btn2)
+    self.view.addSubview(btn2)
     
     HorizVw2 = UIView(frame: CGRectMake(btn2.frame.origin.x,btn2.frame.origin.y+btn2.frame.size.height , btn2.frame.size.width, 1))
     HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    btnsVw.addSubview(HorizVw2)
-    
-//    vertiVw2 = UIView(frame: CGRectMake(btn2.frame.origin.x+btn2.frame.size.width,btn2.frame.origin.y,1, btn2.frame.height))
-//    vertiVw2.backgroundColor = UIColor.grayColor()
-//    btnsVw.addSubview(vertiVw2)
-//    
-//    btn3 = UIButton(frame: CGRectMake(btn2.frame.origin.x+btn2.frame.size.width+10,btn2.frame.origin.y,btn2.frame.width, 40))
-//     //btn3.backgroundColor = UIColor.grayColor()
-//    btn3.setTitle("Dolor", forState: UIControlState.Normal)
-//    btn3.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-//    btn3.addTarget(self, action: "btn3Tapped", forControlEvents: UIControlEvents.TouchDragInside)
-//    btnsVw.addSubview(btn3)
-//    
-//    HorizVw3 = UIView(frame: CGRectMake(btn3.frame.origin.x,btn3.frame.origin.y+btn3.frame.size.height, btn3.frame.size.width, 1))
-//    HorizVw3.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-//    btnsVw.addSubview(HorizVw3)
-    
-   
+   self.view.addSubview(HorizVw2)
   
-    myordertableview = UITableView(frame: CGRectMake(btnsVw.frame.origin.x,btnsVw.frame.origin.y+btnsVw.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-btnsVw.frame.height-20))
+    myordertableview = UITableView(frame: CGRectMake(btn1.frame.origin.x,HorizVw2.frame.origin.y+HorizVw2.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-HorizVw2.frame.height-20))
     myordertableview.backgroundColor = UIColor.grayColor()
     myordertableview.delegate = self
     myordertableview.dataSource = self
@@ -117,9 +88,9 @@ class MyOrderViewController: UIViewController, UITableViewDataSource, UITableVie
 
   }
   
-//  func btnBackTapped(){
-//    self.navigationController?.popViewControllerAnimated(true)
-//  }
+  func btnBackTapped(){
+    self.navigationController?.popViewControllerAnimated(true)
+  }
   
   func rightswipeGestureRecognizer(){
     
@@ -147,11 +118,6 @@ class MyOrderViewController: UIViewController, UITableViewDataSource, UITableVie
     //HorizVw3.hidden = true
   }
   
-  func btn3Tapped(){
-    HorizVw.hidden = true
-    HorizVw2.hidden = true
-    HorizVw3.hidden = false
-  }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return 3

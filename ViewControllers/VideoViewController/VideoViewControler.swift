@@ -88,9 +88,15 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     return cell
   }
   
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
+    var strName: NSString = dict.valueForKey("name") as NSString
+  }
+  
   func btnPalyTapped(sender:AnyObject){
     var btn = sender as UIButton
-    btn.hidden = true
+    btn.hidden = false
+    btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
     var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as NSDictionary
     var video_url: NSString! = dict.valueForKey("video_url") as NSString
     var fileName: NSString! = dict.valueForKey("name") as NSString
@@ -99,8 +105,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     
     self.api.downloadMediaData(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      
+      btn.hidden = true
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
