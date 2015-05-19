@@ -61,15 +61,24 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     dict4.setObject("Notes", forKey: "name")
     
     dataArr = NSArray(objects:dict1,dict2,dict3,dict4)
+    
+    //self.getClsTopicApiCall()
     self.defaultUIDesign()
+    
+    }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
     self.getClsTopicApiCall()
     self.dataFetchFromDatabaseDiscus()
-    }
+  }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
+  
+  
   
   func defaultUIDesign(){
     
@@ -274,6 +283,11 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
      aParams.setValue(dictClasses.valueForKey("id"), forKey: "class_id")
     self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      
+//      self.delay(1, closure: { () -> () in
+//         self.dataFetchFromDatabaseDiscus()
+//      })
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -281,6 +295,16 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     })
     
   }
+  
+  func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+      dispatch_time(
+        DISPATCH_TIME_NOW,
+        Int64(delay * Double(NSEC_PER_SEC))
+      ),
+      dispatch_get_main_queue(), closure)
+  }
+
 
   //***************Fetching Data From Database Discus *********
   

@@ -115,7 +115,7 @@
                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
-- (AFHTTPRequestOperation *)clsQueaComment:(NSDictionary *)aParams
+- (AFHTTPRequestOperation *)clsAdminComment:(NSDictionary *)aParams
                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
@@ -126,6 +126,11 @@
 - (AFHTTPRequestOperation *)userAnswer:(NSDictionary *)aParams
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)userGetNotes:(NSDictionary *)aParams
+                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
 
 
 

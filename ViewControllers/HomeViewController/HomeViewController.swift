@@ -255,13 +255,12 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     
     
     HorizVw2 = UIView(frame: CGRectMake(btn2.frame.origin.x,btn2.frame.origin.y+btn2.frame.size.height , btn2.frame.size.width, 1))
-    HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    HorizVw2.hidden = true
+    HorizVw2.backgroundColor = UIColor.grayColor()
     self.view.addSubview(HorizVw2)
     
     var vertiVw2 :UIView!
     vertiVw2 = UIView(frame: CGRectMake(btn2.frame.origin.x+btn2.frame.size.width,btn2.frame.origin.y,1, btn2.frame.height))
-    vertiVw2.backgroundColor = UIColor.grayColor()
+    vertiVw2.backgroundColor = UIColor.lightGrayColor()
     self.view.addSubview(vertiVw2)
     
     btn3 = UIButton(frame: CGRectMake(btn2.frame.origin.x+btn2.frame.size.width,btn2.frame.origin.y,btn2.frame.width, 40))
@@ -274,8 +273,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     
     
     HorizVw3 = UIView(frame: CGRectMake(btn3.frame.origin.x,btn3.frame.origin.y+btn3.frame.size.height, btn3.frame.size.width, 1))
-    HorizVw3.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    HorizVw3.hidden = true
+    HorizVw3.backgroundColor =  UIColor.lightGrayColor()
     self.view.addSubview(HorizVw3)
     
     btnFreeOpentryCls = UIButton(frame: CGRectMake(self.view.frame.origin.x+10,self.view.frame.height-50, self.view.frame.width-20, 40))
@@ -352,9 +350,9 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     var btn = sender as UIButton
     btnTag = btn.tag
     print("Default List")
-    HorizVw.hidden = false
-    HorizVw2.hidden = true
-    HorizVw3.hidden = true
+    HorizVw.backgroundColor  = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    HorizVw2.backgroundColor = UIColor.lightGrayColor()
+    HorizVw3.backgroundColor = UIColor.lightGrayColor()
     hometableVw.reloadData()
   }
   
@@ -362,9 +360,10 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     var btn = sender as UIButton
     btnTag = btn.tag
     print("Learn List")
-    HorizVw.hidden = true
-    HorizVw2.hidden = false
-    HorizVw3.hidden = true
+    HorizVw.backgroundColor  = UIColor.lightGrayColor()
+    HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    HorizVw3.backgroundColor = UIColor.lightGrayColor()
+
     hometableVw.reloadData()
   }
   
@@ -372,9 +371,11 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     var btn = sender as UIButton
     btnTag = btn.tag
     print("Learn List")
-    HorizVw.hidden = true
-    HorizVw2.hidden = true
-    HorizVw3.hidden = false
+    
+    HorizVw.backgroundColor  = UIColor.lightGrayColor()
+    HorizVw2.backgroundColor = UIColor.lightGrayColor()
+    HorizVw3.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    
     hometableVw.reloadData()
   }
   

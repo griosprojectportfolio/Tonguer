@@ -127,6 +127,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       var aParam: NSDictionary! = responseObject?.objectForKey("user") as NSDictionary
       self.auth_token = [dict.objectForKey("auth_token") as NSString];
   
+      
       self.getFreeClassApiCall()
       self.getPayClassApiCall()
       self.userClassApiCall()
@@ -142,6 +143,16 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     
     
     }
+  
+  
+  func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+      dispatch_time(
+        DISPATCH_TIME_NOW,
+        Int64(delay * Double(NSEC_PER_SEC))
+      ),
+      dispatch_get_main_queue(), closure)
+  }
   
   
   func loginValidation(){
@@ -199,9 +210,9 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
       
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
-      self.navigationController?.pushViewController(vc, animated: true)
+//      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+//      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+//      self.navigationController?.pushViewController(vc, animated: true)
 
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -254,6 +265,16 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
       //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
       //self.hometableVw.reloadData()
+      
+      self.delay(4, closure: { () -> () in
+        
+        self.actiIndecatorVw.loadingIndicator.stopAnimating()
+              var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+              self.navigationController?.pushViewController(vc, animated: true)
+
+        
+      })
+      
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in

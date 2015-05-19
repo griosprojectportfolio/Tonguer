@@ -89,12 +89,12 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
     self.view.addSubview(btnNotes)
     
     vWHori2 = UIView(frame: CGRectMake(btnNotes.frame.origin.x, btnNotes.frame.origin.y+btnNotes.frame.height, btnNotes.frame.width, 1))
-    vWHori2.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
-    vWHori2.hidden = true
+    vWHori2.backgroundColor = UIColor.lightGrayColor()
     self.view.addSubview(vWHori2)
     
     tblVwNotes = UITableView(frame: CGRectMake(self.view.frame.origin.x,btnNotes.frame.origin.y+btnNotes.frame.height+5,self.view.frame.width, self.view.frame.height - (btnNotes.frame.origin.y+btnNotes.frame.height+5)))
     //tblVwNotes.backgroundColor = UIColor.grayColor()
+    tblVwNotes.separatorStyle = UITableViewCellSeparatorStyle.None
     tblVwNotes.delegate = self
     tblVwNotes.dataSource = self
     self.view.addSubview(tblVwNotes)
@@ -122,16 +122,16 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
   func btnMyNotesTapped(sender:AnyObject){
     var btn = sender as UIButton
     tapTag = btn.tag
-    vWHori1.hidden = false
-    vWHori2.hidden = true
+    vWHori1.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
+    vWHori2.backgroundColor = UIColor.lightGrayColor()
     tblVwNotes.reloadData()
   }
   
   func btnNotesTapped(sender:AnyObject){
     var btn = sender as UIButton
     tapTag = btn.tag
-    vWHori2.hidden = false
-    vWHori1.hidden = true
+    vWHori2.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
+    vWHori1.backgroundColor = UIColor.lightGrayColor()
     tblVwNotes.reloadData()
   }
   
@@ -151,16 +151,17 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
     if(tapTag == 1){
       var cell: MyNotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("MyNotesCell") as MyNotesTableViewCell
+      cell.selectionStyle = UITableViewCellSelectionStyle.None
+      //cell.backgroundColor = UIColor.redColor()
 //      cell.textLabel.text = "My Notes"
 //      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
-      cell.defaultUIDesign()
+      cell.defaultUIDesign(self.view.frame)
        return cell
       
     }else if(tapTag == 2){
       var cell: NotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
-      cell.textLabel.text = "Notes"
-      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+      cell.defaultUIDesign(self.view.frame)
        return cell
     }
     

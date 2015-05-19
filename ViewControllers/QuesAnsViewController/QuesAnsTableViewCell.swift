@@ -76,7 +76,7 @@ class QuesAnsTableViewCell: BaseTableViewCell {
     celltxtVw.layer.borderColor = UIColor.grayColor().CGColor
     self.contentView.addSubview(celltxtVw)
     
-    cellImgVw.backgroundColor = UIColor.grayColor()
+    //cellImgVw.backgroundColor = UIColor.grayColor()
     cellImgVw.image = UIImage(named: "Q.png")
     celltxtVw.addSubview(cellImgVw)
     

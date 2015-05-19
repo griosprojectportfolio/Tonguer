@@ -66,8 +66,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     
     
     imgVw = UIImageView(frame: CGRectMake(10,10, 20, 20))
-    imgVw.backgroundColor = UIColor.grayColor()
-    imgVw.image = UIImage(named: "Q.png")
+    //imgVw.backgroundColor = UIColor.grayColor()
+    imgVw.image = UIImage(named: "T.png")
     scrollview.addSubview(imgVw)
     
     
@@ -146,8 +146,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     var data: NSString! = dict.valueForKey("comment") as NSString
     
     var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
-    print("****\(rect.height+70)")
-    return (rect.height+70)
+    print("****\(rect.height+40)")
+    return (rect.height+40)
   }
   
   

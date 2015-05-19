@@ -64,7 +64,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
     scrollview.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+rect.height)
     
     imgVw = UIImageView(frame: CGRectMake(5,5, 20, 20))
-    imgVw.backgroundColor = UIColor.grayColor()
+    //imgVw.backgroundColor = UIColor.grayColor()
     imgVw.image = UIImage(named: "Q.png")
     scrollview.addSubview(imgVw)
     

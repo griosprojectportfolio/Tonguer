@@ -14,7 +14,7 @@ class AdAnsTableViewCell: BaseTableViewCell {
   var lblAns :UILabel!
   var lblBy :UILabel!
   var lblname :UILabel!
-  var imgVW: UIImageView!
+  
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -43,22 +43,20 @@ class AdAnsTableViewCell: BaseTableViewCell {
     }
     
     
-       vWcell = UIView(frame:CGRectMake(20,5, width, rect.size.height + 20))
-      imgVW = UIImageView(frame: CGRectMake(2,(vWcell.frame.height-20)/2,20,20))
-       lblAns = UILabel(frame: CGRectMake(5,0, vWcell.frame.size.width-10, rect.size.height))
+       vWcell = UIView(frame:CGRectMake(40,5, width, rect.size.height + 20))
+       lblAns = UILabel(frame: CGRectMake(5,10, vWcell.frame.size.width-10, rect.size.height))
       lblBy = UILabel(frame: CGRectMake(width - 180,rect.size.height+5,20, 20))
       lblname = UILabel(frame: CGRectMake(width - 150,rect.size.height+5,150, 20))
     
     
     var strName: NSString! = aParam.valueForKey("by") as NSString
+    var strComment: NSString! = aParam.valueForKey("comment") as NSString
     
-    if(strName.isEqualToString("Admin")){
-      imgVW.image = UIImage(named: "adminChtImg.png")
-    }else {
-      imgVW.image = UIImage(named: "userChtImg.png")
-    }
+    var strfist: NSString = strName + ":"
     
-    self.contentView.addSubview(imgVW)
+    var string: NSMutableAttributedString! = NSMutableAttributedString(string: strfist)
+    string.beginEditing()
+    string.addAttribute(NSFontAttributeName, value: UIFont(name: "AmericanTypewriter-Bold", size: 12)!, range:NSMakeRange(4,5))
     
     //vWcell.backgroundColor = UIColor.lightGrayColor()
     vWcell.layer.cornerRadius = 2
@@ -67,7 +65,7 @@ class AdAnsTableViewCell: BaseTableViewCell {
     self.contentView.addSubview(vWcell)
     
     lblAns.numberOfLines = 0
-    lblAns.text = aParam.valueForKey("comment") as NSString
+    lblAns.text = strName + ": " + strComment
     lblAns.textColor = UIColor.grayColor()
     lblAns.font = lblAns.font.fontWithSize(12)
     vWcell.addSubview(lblAns)

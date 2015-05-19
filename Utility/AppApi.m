@@ -827,9 +827,9 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   }];
 }
 
-#pragma mark - Question Comment Api call
+#pragma mark - User Answer Admin Comment Api call
 
-- (AFHTTPRequestOperation *)clsQueaComment:(NSDictionary *)aParams
+- (AFHTTPRequestOperation *)clsAdminComment:(NSDictionary *)aParams
                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
