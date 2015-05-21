@@ -65,13 +65,13 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     self.view.addSubview(scrollview)
     
     
-    imgVw = UIImageView(frame: CGRectMake(10,10, 20, 20))
+    imgVw = UIImageView(frame: CGRectMake(10,10,20,20))
     //imgVw.backgroundColor = UIColor.grayColor()
     imgVw.image = UIImage(named: "T.png")
     scrollview.addSubview(imgVw)
     
     
-    vWLine = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width+10, imgVw.frame.origin.y, 1, imgVw.frame.height))
+    vWLine = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width, imgVw.frame.origin.y, 1, imgVw.frame.height))
     vWLine.backgroundColor = UIColor.lightGrayColor()
    scrollview.addSubview(vWLine)
     

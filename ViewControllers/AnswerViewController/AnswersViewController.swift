@@ -75,12 +75,12 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     scrollVW.userInteractionEnabled = true
     self.view.addSubview(scrollVW)
     
-    imgVw = UIImageView(frame: CGRectMake(scrollVW.frame.origin.x+10,30, 20, 20))
+    imgVw = UIImageView(frame: CGRectMake(scrollVW.frame.origin.x+10,30,20,20))
     //imgVw.backgroundColor = UIColor.grayColor()
     imgVw.image = UIImage(named: "Q.png")
    scrollVW.addSubview(imgVw);
     
-    vWLine = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width+10, imgVw.frame.origin.y, 1, imgVw.frame.height))
+    vWLine = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width, imgVw.frame.origin.y, 1, imgVw.frame.height))
     vWLine.backgroundColor = UIColor.lightGrayColor()
     scrollVW.addSubview(vWLine)
     
@@ -104,12 +104,12 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     var strAns = dictUserAns.valueForKey("answer") as NSString
     var rectAns: CGRect! = strAns.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
     
-    imgVw1 = UIImageView(frame: CGRectMake(imgVw.frame.origin.x,imgVw.frame.origin.y+lblQuestion.frame.size.height+20, 20, 20))
+    imgVw1 = UIImageView(frame: CGRectMake(imgVw.frame.origin.x,imgVw.frame.origin.y+lblQuestion.frame.size.height+20, 20,20))
     //imgVw1.backgroundColor = UIColor.grayColor()
     imgVw1.image = UIImage(named: "A.png")
     scrollVW.addSubview(imgVw1);
     
-    vWLine1 = UIView(frame: CGRectMake(imgVw1.frame.origin.x+imgVw1.frame.width+10, imgVw1.frame.origin.y,1,imgVw1.frame.height))
+    vWLine1 = UIView(frame: CGRectMake(imgVw1.frame.origin.x+imgVw1.frame.width, imgVw1.frame.origin.y,1,imgVw1.frame.height))
     vWLine1.backgroundColor = UIColor.lightGrayColor()
     scrollVW.addSubview(vWLine1)
     

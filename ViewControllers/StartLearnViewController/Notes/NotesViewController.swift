@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
 
   
   var barBackBtn :UIBarButtonItem!
@@ -20,19 +20,13 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
   var tapTag: NSInteger = 1
   var btnSearch: UIButton!
   var btnfilter: UIButton!
+  var api: AppApi!
+  var actiIndecatorVw: ActivityIndicatorView!
+  var arrUserNotes: NSMutableArray! = NSMutableArray()
+  var arrNotes: NSMutableArray! = NSMutableArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    self.defaultUIDesign()
-    }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  func defaultUIDesign(){
     
     self.title = "Notes"
     
@@ -47,6 +41,28 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
     barBackBtn = UIBarButtonItem(customView: backbtn)
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    
+    api = AppApi.sharedClient()
+    self.getNotesApiCall()
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+    
+    delay(8) { () -> () in
+      
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      self.defaultUIDesign()
+    }
+    
+    }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  func defaultUIDesign(){
+    
     
     btnfilter = UIButton(frame: CGRectMake(0, 0, 25, 25))
     btnfilter.setImage(UIImage(named: "filter.png"), forState: UIControlState.Normal)
@@ -141,7 +157,13 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
 
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    var count: NSInteger!
+    if(tapTag == 1){
+      count = arrUserNotes.count
+    }else if(tapTag == 2){
+      count = arrNotes.count
+    }
+    return count
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -152,16 +174,14 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
       var cell: MyNotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("MyNotesCell") as MyNotesTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-      //cell.backgroundColor = UIColor.redColor()
-//      cell.textLabel.text = "My Notes"
-//      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
-      cell.defaultUIDesign(self.view.frame)
+     
+      cell.defaultUIDesign(arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
        return cell
       
     }else if(tapTag == 2){
       var cell: NotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
-      cell.defaultUIDesign(self.view.frame)
+       cell.defaultUIDesign(arrNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
        return cell
     }
     
@@ -177,9 +197,137 @@ class NotesViewController: UIViewController,UITableViewDataSource,UITableViewDel
     
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("NotesDetailID") as NotesDetailViewController
     vc.isShow = tapTag
+    if(tapTag == 1){
+      vc.dictNotes = arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary
+    }else if(tapTag == 2){
+      vc.dictNotes = arrNotes.objectAtIndex(indexPath.row) as NSDictionary
+    }
     self.navigationController?.pushViewController(vc, animated: true)
     
   }
+  
+  func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+      dispatch_time(
+        DISPATCH_TIME_NOW,
+        Int64(delay * Double(NSEC_PER_SEC))
+      ),
+      dispatch_get_main_queue(), closure)
+  }
+  
+  //************Call Notes Api Method *********
+  
+  func getNotesApiCall(){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+       self.api.getUserNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+     self.delay(2, closure: { () -> () in
+        self.dataFetchFromDatabaseGetUserlNotes()
+        self.dataFetchFromDatabaseGetNotes()
+        })
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
+  
+  //************Data fetching From DataBase Get UserNotes  *********
+  
+  func dataFetchFromDatabaseGetUserlNotes(){
+    
+      let arrFetchAdmin: NSArray = UserNotes.MR_findAll()
+    for var index = 0; index < arrFetchAdmin.count; ++index{
+      let notesObj: UserNotes = arrFetchAdmin.objectAtIndex(index) as UserNotes
+      var dict: NSMutableDictionary! = NSMutableDictionary()
+      dict.setValue(notesObj.notes_id, forKey: "id")
+      dict.setValue(notesObj.notes_cls_id, forKey: "cls_id")
+      
+      if((notesObj.notes_content) != nil){
+        dict.setValue(notesObj.notes_content, forKey:"content")
+      }else{
+        dict.setValue("", forKey:"content")
+      }
+      
+      if((notesObj.notes_img) != nil){
+        dict.setValue(notesObj.notes_img, forKey:"image")
+      }else{
+        dict.setValue("", forKey:"image")
+      }
+      
+      if((notesObj.notes_like_count) != nil){
+        dict.setValue(notesObj.notes_like_count, forKey:"like")
+      }else{
+        dict.setValue(0, forKey:"like")
+      }
+      
+      if((notesObj.notes_date) != nil){
+        dict.setValue(notesObj.notes_date, forKey:"date")
+      }else{
+        dict.setValue("0000-00-00 00:00", forKey:"date")
+      }
+      
+      if((notesObj.isenable) != nil){
+        dict.setValue(notesObj.isenable, forKey:"isenable")
+      }else{
+        dict.setValue(0, forKey:"isenable")
+      }
+      
+      arrUserNotes.addObject(dict)
+
+    }
+    
+    print(arrUserNotes.count)
+    
+  }
+  
+  
+  func dataFetchFromDatabaseGetNotes(){
+    
+    let arrFetchAdmin: NSArray = Notes.MR_findAll()
+    for var index = 0; index < arrFetchAdmin.count; ++index{
+      let notesObj: Notes = arrFetchAdmin.objectAtIndex(index) as Notes
+      var dict: NSMutableDictionary! = NSMutableDictionary()
+      dict.setValue(notesObj.notes_id, forKey: "id")
+      dict.setValue(notesObj.notes_cls_id, forKey: "cls_id")
+      
+      if((notesObj.notes_content) != nil){
+        dict.setValue(notesObj.notes_content, forKey:"content")
+      }else{
+        dict.setValue("", forKey:"content")
+      }
+      
+      if((notesObj.notes_img) != nil){
+        dict.setValue(notesObj.notes_img, forKey:"image")
+      }else{
+        dict.setValue("", forKey:"image")
+      }
+      
+      if((notesObj.notes_like_cont) != nil){
+        dict.setValue(notesObj.notes_like_cont, forKey:"like")
+      }else{
+        dict.setValue(0, forKey:"like")
+      }
+      
+      if((notesObj.notes_date) != nil){
+        dict.setValue(notesObj.notes_date, forKey:"date")
+      }else{
+        dict.setValue("0000-00-00 00:00", forKey:"date")
+      }
+      
+      arrNotes.addObject(dict)
+      
+    }
+    
+    print(arrNotes.count)
+    
+  }
+
+  
   
 
 }

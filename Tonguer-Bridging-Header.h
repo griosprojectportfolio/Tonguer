@@ -34,5 +34,7 @@
 #import "Questions.h"
 #import "QuestionComment.h"
 #import "Answer.h"
+#import "Notes.h"
+#import "UserNotes.h"
 
 #endif

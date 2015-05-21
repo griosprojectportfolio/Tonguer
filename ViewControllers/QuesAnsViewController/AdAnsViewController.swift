@@ -69,7 +69,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
     scrollview.addSubview(imgVw)
     
     
-    vWLine = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width+10, imgVw.frame.origin.y, 1, imgVw.frame.height))
+    vWLine = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width, imgVw.frame.origin.y, 1, imgVw.frame.height))
     vWLine.backgroundColor = UIColor.lightGrayColor()
     scrollview.addSubview(vWLine)
     

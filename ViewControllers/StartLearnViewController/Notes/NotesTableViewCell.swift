@@ -32,7 +32,7 @@ class NotesTableViewCell:BaseTableViewCell {
     // Configure the view for the selected state
   }
   
-  func defaultUIDesign(/*aParam:NSDictionary*/Frame:CGRect){
+  func defaultUIDesign(aParam:NSDictionary,Frame:CGRect){
     
     var arry = self.contentView.subviews
     var vwSub: UIView!
@@ -57,13 +57,13 @@ class NotesTableViewCell:BaseTableViewCell {
     
     lblContent = UILabel(frame: CGRectMake(5, 2,imageVWLike.frame.origin.x-5,20))
     //lblContent.backgroundColor = UIColor.redColor()
-    lblContent.text = "contents"
+    lblContent.text = aParam.valueForKey("content") as NSString
     lblContent.font = lblContent.font.fontWithSize(12)
     lblContent.textColor = UIColor.grayColor()
     vwCell.addSubview(lblContent)
     
     lblLikeCount = UILabel(frame: CGRectMake(imageVWLike.frame.origin.x + 25,imageVWLike.frame.origin.y,vwCell.frame.width - imageVWLike.frame.origin.x-30, 20))
-    lblLikeCount.text = "0"
+    lblLikeCount.text =  NSString(format: "%i",(aParam.objectForKey("like")?.integerValue)!)
     lblLikeCount.font = lblLikeCount.font.fontWithSize(12)
     lblLikeCount.textAlignment = NSTextAlignment.Left
     lblLikeCount.textColor = UIColor.grayColor()
@@ -80,8 +80,14 @@ class NotesTableViewCell:BaseTableViewCell {
     lblClassNam.textColor = UIColor.grayColor()
     vwCell.addSubview(lblClassNam)
     
+    var date:NSDate! = aParam.valueForKey("date") as NSDate
+    var formatter: NSDateFormatter! = NSDateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+    
+    var strDate: NSString! = formatter.stringFromDate(date)
+    
     lblDate = UILabel(frame: CGRectMake(imageVWDateAntime.frame.origin.x+20,vwCell.frame.height-23,vwCell.frame.width-imageVWDateAntime.frame.origin.x-30,20))
-    lblDate.text = "Date And Time"
+    lblDate.text = strDate
     lblDate.font = lblClassNam.font.fontWithSize(12)
     lblDate.textColor = UIColor.grayColor()
     //lblDate.backgroundColor = UIColor.redColor()

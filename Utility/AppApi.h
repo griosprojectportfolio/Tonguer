@@ -127,10 +127,17 @@
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
-- (AFHTTPRequestOperation *)userGetNotes:(NSDictionary *)aParams
+- (AFHTTPRequestOperation *)getUserNotes:(NSDictionary *)aParams
                                success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
+- (AFHTTPRequestOperation *)createUserNotes:(NSDictionary *)aParams
+                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)notesLike:(NSDictionary *)aParams
+                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
 
 

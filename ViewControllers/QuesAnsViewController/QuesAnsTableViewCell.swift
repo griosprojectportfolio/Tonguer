@@ -35,7 +35,7 @@ class QuesAnsTableViewCell: BaseTableViewCell {
     if(isiPhone5orLower){
       
       celltxtVw = UIView(frame: CGRectMake(20, 10,320-40,60))
-      cellImgVw = UIImageView(frame: CGRectMake(10,10, 20, 20))
+      cellImgVw = UIImageView(frame: CGRectMake(10,10,20,20))
       cellLine = UIView(frame: CGRectMake(cellImgVw.frame.size.width + cellImgVw.frame.origin.x + 10, cellImgVw.frame.origin.y, 1, cellImgVw.frame.height))
       celllbltext = UILabel(frame: CGRectMake(cellLine.frame.origin.x+10,0,celltxtVw.frame.width-70,celltxtVw.frame.height-20));
       cellbtnAns =  UIButton(frame: CGRectMake(celltxtVw.frame.origin.x,celltxtVw.frame.origin.y+celltxtVw.frame.size.height+10, (celltxtVw.frame.width - 5)/2,30))
@@ -46,8 +46,8 @@ class QuesAnsTableViewCell: BaseTableViewCell {
     if(isiPhone6){
       
       celltxtVw = UIView(frame: CGRectMake(20, 10,375-40,60))
-      cellImgVw = UIImageView(frame: CGRectMake(10,10, 20, 20))
-      cellLine = UIView(frame: CGRectMake(cellImgVw.frame.size.width + cellImgVw.frame.origin.x + 10, cellImgVw.frame.origin.y, 1, cellImgVw.frame.height))
+      cellImgVw = UIImageView(frame: CGRectMake(10,10,20,20))
+      cellLine = UIView(frame: CGRectMake(cellImgVw.frame.size.width + cellImgVw.frame.origin.x, cellImgVw.frame.origin.y, 1, cellImgVw.frame.height))
       celllbltext = UILabel(frame: CGRectMake(cellLine.frame.origin.x+10,0,celltxtVw.frame.width-70,celltxtVw.frame.height-20));
       cellbtnAns =  UIButton(frame: CGRectMake(celltxtVw.frame.origin.x,celltxtVw.frame.origin.y+celltxtVw.frame.size.height+10, (celltxtVw.frame.width - 5)/2,30))
       cellbtnAddAns = UIButton(frame: CGRectMake(cellbtnAns.frame.width+25, cellbtnAns.frame.origin.y,cellbtnAns.frame.width,cellbtnAns.frame.height))
@@ -58,7 +58,7 @@ class QuesAnsTableViewCell: BaseTableViewCell {
     if(isiPhone6plus){
       
       celltxtVw = UIView(frame: CGRectMake(20, 10,414-40,60))
-      cellImgVw = UIImageView(frame: CGRectMake(10,10, 20, 20))
+      cellImgVw = UIImageView(frame: CGRectMake(10,10,20,20))
       cellLine = UIView(frame: CGRectMake(cellImgVw.frame.size.width + cellImgVw.frame.origin.x + 10, cellImgVw.frame.origin.y, 1, cellImgVw.frame.height))
       celllbltext = UILabel(frame: CGRectMake(cellLine.frame.origin.x+10,0,celltxtVw.frame.width-70,celltxtVw.frame.height-20));
       cellbtnAns =  UIButton(frame: CGRectMake(celltxtVw.frame.origin.x,celltxtVw.frame.origin.y+celltxtVw.frame.size.height+10, (celltxtVw.frame.width - 5)/2,30))

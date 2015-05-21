@@ -67,6 +67,16 @@
         <attribute name="cls_suitable" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cls_target" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Notes" representedClassName="Notes" syncable="YES">
+        <attribute name="isenable" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notes_cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="notes_cls_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes_content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes_date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="notes_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="notes_img" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes_like_cont" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
     <entity name="PayClassVideo" syncable="YES">
         <attribute name="video_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="video_img_url" optional="YES" attributeType="String" syncable="YES"/>
@@ -147,8 +157,19 @@
         <attribute name="cls_score" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="cls_vaild_days" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
+    <entity name="UserNotes" representedClassName="UserNotes" syncable="YES">
+        <attribute name="isenable" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notes_cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="notes_cls_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes_content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes_date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="notes_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="notes_img" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notes_like_count" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Addvertiesment" positionX="-216" positionY="-72" width="128" height="105"/>
+        <element name="Answer" positionX="-234" positionY="-90" width="128" height="90"/>
         <element name="DisAdminTopic" positionX="-234" positionY="-90" width="128" height="88"/>
         <element name="DisTopicComments" positionX="-234" positionY="-90" width="128" height="90"/>
         <element name="DisUserToic" positionX="-225" positionY="-81" width="128" height="90"/>
@@ -168,6 +189,7 @@
         <element name="UserDefaultClsList" positionX="-234" positionY="-90" width="128" height="150"/>
         <element name="UserLearnClsList" positionX="-234" positionY="-90" width="128" height="148"/>
         <element name="UserLearnedClsList" positionX="-225" positionY="-81" width="128" height="148"/>
-        <element name="Answer" positionX="-234" positionY="-90" width="128" height="88"/>
+        <element name="UserNotes" positionX="-234" positionY="-90" width="128" height="163"/>
+        <element name="Notes" positionX="-225" positionY="-81" width="128" height="163"/>
     </elements>
 </model>

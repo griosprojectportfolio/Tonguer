@@ -27,6 +27,8 @@
 #import "Questions.h"
 #import "QuestionComment.h"
 #import "Answer.h"
+#import "UserNotes.h"
+#import "Notes.h"
 
 /* API Constants */
 static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
@@ -895,6 +897,111 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     }
   }];
 }
+
+
+#pragma mark - Get User Notes Api Call
+
+- (AFHTTPRequestOperation *)getUserNotes:(NSDictionary *)aParams
+                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/get_all_notes",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self GET:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    NSArray *arrUserNotes = [responseObject valueForKey:@"user_notes"];
+    NSArray *arrOtherUserNotes = [responseObject valueForKey:@"other_user_notes"];
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      [UserNotes entityFromArray:arrUserNotes inContext:localContext];
+      [Notes entityFromArray:arrOtherUserNotes inContext:localContext];
+    }];
+    
+    successBlock(task, responseObject);
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+
+
+#pragma mark - User Create Note Api call
+
+- (AFHTTPRequestOperation *)createUserNotes:(NSDictionary *)aParams
+                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/user_create_note",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    NSArray *arrUserNotes = [responseObject valueForKey:@"note"];
+   
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      [UserNotes entityFromArray:arrUserNotes inContext:localContext];
+     
+    }];
+    
+    successBlock(task, responseObject);
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+
+#pragma mark - Like Note Api call
+
+- (AFHTTPRequestOperation *)notesLike:(NSDictionary *)aParams
+                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/user_like_note",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    //NSArray *arrUserNotes = [responseObject valueForKey:@"note"];
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+//    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+//      [UserNotes entityFromArray:arrUserNotes inContext:localContext];
+//      
+//    }];
+    
+    successBlock(task, responseObject);
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
 
 
 

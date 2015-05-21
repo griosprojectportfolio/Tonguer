@@ -21,6 +21,8 @@
 		0A0B89151AD6413600AD2501 /* LGSimpleChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B89141AD6413600AD2501 /* LGSimpleChat.swift */; };
 		0A32585B1AFB534D00B897DA /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A32585A1AFB534D00B897DA /* User.m */; };
 		0A326F911B04DEFE005DC966 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A326F901B04DEFE005DC966 /* ShareViewController.swift */; };
+		0A4145241B0B196500B3183D /* UserNotes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4145231B0B196500B3183D /* UserNotes.m */; };
+		0A4145271B0B196700B3183D /* Notes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4145261B0B196700B3183D /* Notes.m */; };
 		0A43E8FB1AF200C4009D3787 /* DiscussViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43E8FA1AF200C4009D3787 /* DiscussViewController.swift */; };
 		0A43E8FD1AF204A4009D3787 /* AddTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43E8FC1AF204A4009D3787 /* AddTopicViewController.swift */; };
 		0A43E8FF1AF21196009D3787 /* TopicDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43E8FE1AF21196009D3787 /* TopicDetailViewController.swift */; };
@@ -120,6 +122,10 @@
 		0A3258591AFB534D00B897DA /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = SOURCE_ROOT; };
 		0A32585A1AFB534D00B897DA /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = SOURCE_ROOT; };
 		0A326F901B04DEFE005DC966 /* ShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		0A4145221B0B196500B3183D /* UserNotes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserNotes.h; sourceTree = SOURCE_ROOT; };
+		0A4145231B0B196500B3183D /* UserNotes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserNotes.m; sourceTree = SOURCE_ROOT; };
+		0A4145251B0B196700B3183D /* Notes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notes.h; sourceTree = SOURCE_ROOT; };
+		0A4145261B0B196700B3183D /* Notes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Notes.m; sourceTree = SOURCE_ROOT; };
 		0A43E8FA1AF200C4009D3787 /* DiscussViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscussViewController.swift; sourceTree = "<group>"; };
 		0A43E8FC1AF204A4009D3787 /* AddTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTopicViewController.swift; sourceTree = "<group>"; };
 		0A43E8FE1AF21196009D3787 /* TopicDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicDetailViewController.swift; sourceTree = "<group>"; };
@@ -622,6 +628,10 @@
 				0ADD8B2A1B0216D100B73AC8 /* QuestionComment.m */,
 				0AC0C40D1B061BA9003C3BB9 /* Answer.h */,
 				0AC0C40E1B061BA9003C3BB9 /* Answer.m */,
+				0A4145251B0B196700B3183D /* Notes.h */,
+				0A4145261B0B196700B3183D /* Notes.m */,
+				0A4145221B0B196500B3183D /* UserNotes.h */,
+				0A4145231B0B196500B3183D /* UserNotes.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -853,6 +863,7 @@
 				0A88B2081AFCBEDA00003AFE /* Addvertiesment.m in Sources */,
 				0A08B34D1AF0C7AB0076226C /* AddNotesViewController.swift in Sources */,
 				0A9FC4B71AE527BC008BF6FC /* QesAndAnsViewController.swift in Sources */,
+				0A4145241B0B196500B3183D /* UserNotes.m in Sources */,
 				0AE94C311AD2727600CBEA76 /* HomeViewController.swift in Sources */,
 				0AE94C1E1AD25F8C00CBEA76 /* AddAnsViewController.swift in Sources */,
 				0AE94C2B1AD25F8C00CBEA76 /* VideoTableViewCell.swift in Sources */,
@@ -875,6 +886,7 @@
 				0A08B3571AF0F97D0076226C /* AllTableViewCell.swift in Sources */,
 				0AD487E31B00B066003A5B99 /* DisTopicComments.m in Sources */,
 				0AF2C0091AFB958400DCBFDA /* LearnTableViewCell.swift in Sources */,
+				0A4145271B0B196700B3183D /* Notes.m in Sources */,
 				0A6525211AD3EEF700762BBD /* MyOrderViewController.swift in Sources */,
 				0A08B35D1AF0FAFE0076226C /* SearchViewController.swift in Sources */,
 				0AE1DDD41AD504070059A719 /* ClassCenterViewController.swift in Sources */,

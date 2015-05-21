@@ -39,7 +39,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func defaultUIDesign(){
     
-    self.title = "Try Class Center"
+    self.title = "Try Class Centre"
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)

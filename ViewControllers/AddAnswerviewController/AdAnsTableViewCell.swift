@@ -52,11 +52,19 @@ class AdAnsTableViewCell: BaseTableViewCell {
     var strName: NSString! = aParam.valueForKey("by") as NSString
     var strComment: NSString! = aParam.valueForKey("comment") as NSString
     
-    var strfist: NSString = strName + ":"
+    var strfist: NSString = strName + ": "
     
-    var string: NSMutableAttributedString! = NSMutableAttributedString(string: strfist)
-    string.beginEditing()
-    string.addAttribute(NSFontAttributeName, value: UIFont(name: "AmericanTypewriter-Bold", size: 12)!, range:NSMakeRange(4,5))
+    var attrs = [NSFontAttributeName : UIFont.boldSystemFontOfSize(12)]
+     var boldString = NSMutableAttributedString(string:strfist, attributes:attrs)
+    boldString.beginEditing()
+    boldString.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: NSRange(location:0,length:boldString.length))
+   
+   
+    var normalString = NSMutableAttributedString(string:strComment, attributes:attrs)
+    normalString.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSRange(location:0,length:normalString.length))
+
+    
+    boldString.appendAttributedString(normalString)
     
     //vWcell.backgroundColor = UIColor.lightGrayColor()
     vWcell.layer.cornerRadius = 2
@@ -65,9 +73,7 @@ class AdAnsTableViewCell: BaseTableViewCell {
     self.contentView.addSubview(vWcell)
     
     lblAns.numberOfLines = 0
-    lblAns.text = strName + ": " + strComment
-    lblAns.textColor = UIColor.grayColor()
-    lblAns.font = lblAns.font.fontWithSize(12)
+    lblAns.attributedText = boldString
     vWcell.addSubview(lblAns)
     
     
