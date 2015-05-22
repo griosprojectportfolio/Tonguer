@@ -26,21 +26,6 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     api = AppApi.sharedClient()
     print(sub_cat_id)
     dict = NSDictionary(objects: ["ClassName","000.0","date","defaultImg.png"], forKeys: ["class_name","priz","date","image"])
-    self.defaultUIDesign()
-    if(flgClass .isEqualToString("Pay")){
-      self.payClassListApiCall()
-    }else if (flgClass.isEqualToString("Free")){
-      self.freeClassListApiCall()
-    }
-    
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  func defaultUIDesign(){
     
     self.title = "Classes"
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
@@ -55,7 +40,40 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    tblClass = UITableView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.width, self.view.frame.height))
+    self.actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+
+    
+    if(flgClass .isEqualToString("Pay")){
+      self.payClassListApiCall()
+    }else if (flgClass.isEqualToString("Free")){
+      self.freeClassListApiCall()
+    }
+    
+    self.delay(5) { () -> () in
+      
+      if(self.flgClass .isEqualToString("Pay")){
+        self.dataFetchFromDatabasePayCls()
+      }else if (self.flgClass.isEqualToString("Free")){
+        self.dataFetchFromDatabaseFreeCls()
+      }
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      self.defaultUIDesign()
+      
+    }
+    
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  func defaultUIDesign(){
+    
+    
+    tblClass = UITableView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width, self.view.frame.height-64))
     tblClass.delegate = self
     tblClass.dataSource = self
     tblClass.separatorStyle = UITableViewCellSeparatorStyle.None
@@ -104,8 +122,6 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func freeClassListApiCall(){
     
-    self.actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
-    self.view.addSubview(actiIndecatorVw)
     
     var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],sub_cat_id], forKeys: ["auth_token","sub_category_id"])
     
@@ -113,9 +129,8 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
       //self.hometableVw.reloadData()
-      self.dataFetchFromDatabaseFreeCls()
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
+      
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -136,7 +151,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     self.api.payClsList(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      self.dataFetchFromDatabasePayCls()
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -203,7 +218,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       var clsID: NSNumber = clsObject.cls_id
       dictClass.setValue(clsID, forKey: "id")
       arrClasses.addObject(dictClass)
-      tblClass.reloadData()
+      
     }
     
   }
@@ -256,7 +271,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       dictClass.setValue(clsID, forKey: "id")
       
       arrClasses.addObject(dictClass)
-      tblClass.reloadData()
+      
     }
     if(arrClasses.count == 0){
       var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry No Class", delegate: self, cancelButtonTitle: "Ok")
@@ -268,6 +283,15 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
+  }
+  
+  func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+      dispatch_time(
+        DISPATCH_TIME_NOW,
+        Int64(delay * Double(NSEC_PER_SEC))
+      ),
+      dispatch_get_main_queue(), closure)
   }
     
 }

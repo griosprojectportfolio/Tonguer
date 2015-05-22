@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import MediaPlayer
+
 
 class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
@@ -18,25 +20,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var tableview: UITableView!
   var arrClassVideo: NSMutableArray! = NSMutableArray()
   var actiIndecatorVw: ActivityIndicatorView!
- 
+  var moviePlayerController:MPMoviePlayerController!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
-    self.defaultUIDesign()
-    
-    if(isActive.isEqualToString("Paied")){
-      self.userClsVideoApiCalling()
-      
-    }else if (isActive.isEqualToString("Free")){
-      self.freeClsVideoApiCalling()
-      self.dataFetchFreeClsDB()
-    }
-    
-  }
-  
-  func defaultUIDesign(){
-    
     
     self.title = "Videos"
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
@@ -50,8 +38,37 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     barBackBtn = UIBarButtonItem(customView: backbtn)
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
     
-    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width,self.view.frame.height))
+    if(isActive.isEqualToString("Paied")){
+      self.userClsVideoApiCalling()
+      
+    }else if (isActive.isEqualToString("Free")){
+      self.freeClsVideoApiCalling()
+      
+    }
+    
+    self.delay(3) { () -> () in
+      
+      if(self.isActive.isEqualToString("Paied")){
+      self.dataFetchUserClsDB()
+        
+      }else if (self.isActive.isEqualToString("Free")){
+       
+        self.dataFetchFreeClsDB()
+      }
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+
+      self.defaultUIDesign()
+    }
+    
+  }
+  
+  func defaultUIDesign(){
+    
+    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.width,self.view.frame.height-64))
     tableview.delegate = self
     tableview.dataSource = self
     tableview.separatorStyle = UITableViewCellSeparatorStyle.None
@@ -62,6 +79,15 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   }
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
+  }
+  
+  func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+      dispatch_time(
+        DISPATCH_TIME_NOW,
+        Int64(delay * Double(NSEC_PER_SEC))
+      ),
+      dispatch_get_main_queue(), closure)
   }
   
   
@@ -85,13 +111,39 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     cell.btnplay.tag = indexPath.row
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     
+    var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
+    var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
+    let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+       let url: NSString = documentsPath.objectAtIndex(0) as NSString
+       let path: NSString! = url+"/"+fileName
+    
+    let manager = NSFileManager.defaultManager()
+    if (manager.fileExistsAtPath(path)){
+      cell.btnplay.hidden = true
+    }
+    
     return cell
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
-    var strName: NSString = dict.valueForKey("name") as NSString
+
+    var str: NSString = dict.valueForKey("name") as NSString
+    
+    var fileName: NSString! = str.stringByAppendingString(".mp4")
+    let aParams : NSDictionary = ["fileName":fileName]
+    let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams)
+    
+    moviePlayerController = MPMoviePlayerController(contentURL:viedoUrl)
+    moviePlayerController.view.frame = CGRectMake(self.view.frame.origin.x+20, self.view.frame.origin.y+74, self.view.frame.width-40,200)
+    self.view.addSubview(moviePlayerController.view)
+    moviePlayerController.fullscreen = false
+    moviePlayerController.controlStyle = MPMovieControlStyle.Embedded
+    moviePlayerController.shouldAutoplay = false
+    moviePlayerController.play()
+    
   }
+  
   
   func btnPalyTapped(sender:AnyObject){
     var btn = sender as UIButton
@@ -99,7 +151,10 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
     var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as NSDictionary
     var video_url: NSString! = dict.valueForKey("video_url") as NSString
-    var fileName: NSString! = dict.valueForKey("name") as NSString
+    var str: NSString = dict.valueForKey("name") as NSString
+    
+    var fileName: NSString! = str.stringByAppendingString(".mp4")
+    let aPara : NSDictionary = ["fileName":fileName]
     
     var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName], forKeys: ["url","fileName"])
     
@@ -120,16 +175,10 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   
   func freeClsVideoApiCalling(){
     var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID], forKeys: ["auth_token","class_id"])
-   
-    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
-    self.view.addSubview(actiIndecatorVw)
     
     self.api.freeClsVideoList(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -142,15 +191,9 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   func userClsVideoApiCalling(){
     var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID], forKeys: ["auth_token","class_id"])
     
-    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
-    self.view.addSubview(actiIndecatorVw)
-    
     self.api.userClassVideo(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      self.dataFetchUserClsDB()
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -196,7 +239,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       }
 
       arrClassVideo.addObject(dictClass)
-      tableview.reloadData()
+      
     }
     
     if(arrClassVideo.count == 0){
@@ -238,7 +281,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
         dictClass.setValue(videoUrl, forKey: "video_url")
       }
       arrClassVideo.addObject(dictClass)
-      tableview.reloadData()
+     
     }
     
     if(arrClassVideo.count == 0){

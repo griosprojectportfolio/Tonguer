@@ -25,24 +25,12 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   var dictTopic: NSDictionary!
   var arrCommentData: NSMutableArray! = NSMutableArray()
   var lblContent: UILabel!
+  var actiIndecatorVw: ActivityIndicatorView!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
-    self.defaultUIDesign()
-    self.getCommentTopicApiCall()
-    self.dataFetchFromDatabaseDiscus()
-  }
-  
-  override func viewWillAppear(animated: Bool) {
-    super.viewWillAppear(animated)
-    arrCommentData.removeAllObjects()
-    self.dataFetchFromDatabaseDiscus()
-  }
-  
-  func defaultUIDesign(){
-    print(dictTopic)
-    //self.title = "Forum"
+    
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
@@ -53,8 +41,33 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+
+    self.getCommentTopicApiCall()
     
-    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.height))
+    self.delay(4) { () -> () in
+    self.actiIndecatorVw.loadingIndicator.stopAnimating()
+   self.actiIndecatorVw.removeFromSuperview()
+      self.dataFetchFromDatabaseDiscus()
+       self.defaultUIDesign()
+      
+    }
+    
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+//    arrCommentData.removeAllObjects()
+//    self.dataFetchFromDatabaseDiscus()
+  }
+  
+  func defaultUIDesign(){
+    print(dictTopic)
+    //self.title = "Forum"
+    
+    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.size.width, self.view.frame.height-64))
     
     scrollview.showsHorizontalScrollIndicator = true
     scrollview.scrollEnabled = true
@@ -101,8 +114,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     scrollview.addSubview(self.btnSend)
     
     txtViewAddAns = UITextView(frame: CGRectMake(btnSend.frame.origin.x,btnSend.frame.origin.y-btnSend.frame.size.height-70,btnSend.frame.width, 100))
-    //txtViewAddAns.text = "Type Your Answer"
-   
+    txtViewAddAns.text = ""
     txtViewAddAns.delegate = self
     txtViewAddAns.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     txtViewAddAns.layer.borderWidth = 1
@@ -178,6 +190,17 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   }
   
   
+  func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+      dispatch_time(
+        DISPATCH_TIME_NOW,
+        Int64(delay * Double(NSEC_PER_SEC))
+      ),
+      dispatch_get_main_queue(), closure)
+  }
+
+  
+  
   func btnSendButtonTapped(semder:AnyObject){
     self.postCommentTopicApiCall()
    // self.dataFetchFromDatabaseDiscus()
@@ -202,7 +225,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
     aParams.setValue(dictTopic.valueForKey("id"), forKey:"topic_id")
-    aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
+    //aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
     self.api.discusTopicComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       },

@@ -38,7 +38,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   var dict4:NSMutableDictionary!
   var arrAdmin:NSMutableArray! = NSMutableArray()
   var arrUser:NSMutableArray! = NSMutableArray()
-  
+  var actiIndecatorVw: ActivityIndicatorView!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -62,28 +62,6 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     dataArr = NSArray(objects:dict1,dict2,dict3,dict4)
     
-    //self.getClsTopicApiCall()
-    self.defaultUIDesign()
-    
-    }
-  
-  override func viewWillAppear(animated: Bool) {
-    super.viewWillAppear(animated)
-    self.getClsTopicApiCall()
-    self.dataFetchFromDatabaseDiscus()
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  
-  
-  func defaultUIDesign(){
-    
-    print(dictClasses)
-    
     self.title = "Start To Learn"
     
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
@@ -98,6 +76,43 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+    self.getClsTopicApiCall()
+    
+    self.delay(5) { () -> () in
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      self.arrAdmin.removeAllObjects()
+      self.arrUser.removeAllObjects()
+      self.dataFetchFromDatabaseDiscus()
+      self.defaultUIDesign()
+    }
+    }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+      dispatch_time(
+        DISPATCH_TIME_NOW,
+        Int64(delay * Double(NSEC_PER_SEC))
+      ),
+      dispatch_get_main_queue(), closure)
+  }
+  
+  
+  func defaultUIDesign(){
+    
+    print(dictClasses)
     
     imgVwblur = UIImageView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64,self.view.frame.width,180))
     imgVwblur.image = UIImage(named: "imgblur.png")
@@ -201,6 +216,8 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
   }
   
+  
+  
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
   }
@@ -296,15 +313,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
   }
   
-  func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        Int64(delay * Double(NSEC_PER_SEC))
-      ),
-      dispatch_get_main_queue(), closure)
-  }
-
+  
 
   //***************Fetching Data From Database Discus *********
   

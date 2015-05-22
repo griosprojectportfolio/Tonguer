@@ -109,8 +109,8 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     self.view.addSubview(btnAll)
     
     horiVw1 = UIView(frame: CGRectMake(btnAll.frame.origin.x,btnAll.frame.size.height+btnAll.frame.origin.y,btnAll.frame.size.width,1))
-    horiVw1.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    horiVw1.hidden = true
+    horiVw1.backgroundColor = UIColor.grayColor()
+  
     self.view.addSubview(horiVw1)
     
     pickupTableView = UITableView(frame: CGRectMake(self.view.frame.origin.x,horiVw1.frame.origin.y+horiVw1.frame.size.height+5,self.view.frame.width,self.view.frame.height))
@@ -127,7 +127,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   func rightswipeGestureRecognizer(){
     
-    UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+    UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
       self.appDelegate.objSideBar.frame = self.view.bounds
       self.appDelegate.objSideBar.sideNavigation = self.navigationController
       }, completion: nil)
@@ -136,8 +136,9 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   
   func btnHostTapped(sender:AnyObject){
-    horiVw1.hidden = true
-    horiVw.hidden = false
+    
+    horiVw.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
+    horiVw1.backgroundColor = UIColor.grayColor()
     var btn = sender as UIButton
     btntag = btn.tag
     print(btntag)
@@ -145,8 +146,9 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   }
   
   func btnAllTapped(sender:AnyObject){
-    horiVw1.hidden = false
-    horiVw.hidden = true
+  
+    horiVw1.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
+    horiVw.backgroundColor = UIColor.grayColor()
     var btn = sender as UIButton
     btntag = btn.tag
     print(btntag)

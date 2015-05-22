@@ -15,23 +15,12 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   var btnAddQues: UIButton!
   var classID: NSInteger!
   var api: AppApi!
+  var actiIndecatorVw: ActivityIndicatorView!
   var arrQuestion: NSMutableArray! = NSMutableArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
-    self.defaultUIDesign()
-    self.getQuestionApiCall()
-  }
-  
-  override func viewWillAppear(animated: Bool) {
-    arrQuestion.removeAllObjects()
-    self.dataFetchFromDataBaseQuestion()
-  }
-  
-  
-  
-  func defaultUIDesign(){
     self.title = "Question and Answer"
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
@@ -43,6 +32,28 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+    self.getQuestionApiCall()
+    
+    self.delay(5) { () -> () in
+      self.arrQuestion.removeAllObjects()
+      self.dataFetchFromDataBaseQuestion()
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      self.defaultUIDesign()
+    }
+    
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    
+  }
+  
+  
+  
+  func defaultUIDesign(){
     
     btnAddQues = UIButton(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.height-50, self.view.frame.width-40, 40))
     btnAddQues.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
@@ -86,6 +97,15 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
+  }
+
+  func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+      dispatch_time(
+        DISPATCH_TIME_NOW,
+        Int64(delay * Double(NSEC_PER_SEC))
+      ),
+      dispatch_get_main_queue(), closure)
   }
   
   func btnAddAnswerTapped(sender:AnyObject){

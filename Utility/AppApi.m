@@ -1045,5 +1045,10 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
  }
 
 
+-(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams {
+  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *filePath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:[aParams objectForKey:@"fileName"]];
+  return [NSURL fileURLWithPath:filePath];
+}
 
 @end

@@ -60,6 +60,8 @@
 		0AC4ED9B1AEE12F300C8882F /* PayClsCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4ED9A1AEE12F300C8882F /* PayClsCat.m */; };
 		0AC4ED9E1AEE12F400C8882F /* PayCls.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4ED9D1AEE12F400C8882F /* PayCls.m */; };
 		0AC4EDA11AEE12F400C8882F /* PaySubCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4EDA01AEE12F400C8882F /* PaySubCat.m */; };
+		0ACB02941B0DD707009CAD57 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACB02931B0DD707009CAD57 /* AVFoundation.framework */; };
+		0ACB02961B0DD720009CAD57 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACB02951B0DD71F009CAD57 /* MediaPlayer.framework */; };
 		0AD487E31B00B066003A5B99 /* DisTopicComments.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD487E21B00B066003A5B99 /* DisTopicComments.m */; };
 		0ADD8B241B01DA5200B73AC8 /* Questions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD8B231B01DA5200B73AC8 /* Questions.m */; };
 		0ADD8B271B01E6E600B73AC8 /* AdAnsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADD8B261B01E6E600B73AC8 /* AdAnsViewController.swift */; };
@@ -179,6 +181,8 @@
 		0AC4ED9D1AEE12F400C8882F /* PayCls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayCls.m; sourceTree = SOURCE_ROOT; };
 		0AC4ED9F1AEE12F400C8882F /* PaySubCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaySubCat.h; sourceTree = SOURCE_ROOT; };
 		0AC4EDA01AEE12F400C8882F /* PaySubCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaySubCat.m; sourceTree = SOURCE_ROOT; };
+		0ACB02931B0DD707009CAD57 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		0ACB02951B0DD71F009CAD57 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		0AD487E11B00B066003A5B99 /* DisTopicComments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisTopicComments.h; sourceTree = SOURCE_ROOT; };
 		0AD487E21B00B066003A5B99 /* DisTopicComments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisTopicComments.m; sourceTree = SOURCE_ROOT; };
 		0ADD8B221B01DA5200B73AC8 /* Questions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Questions.h; sourceTree = SOURCE_ROOT; };
@@ -232,6 +236,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ACB02961B0DD720009CAD57 /* MediaPlayer.framework in Frameworks */,
+				0ACB02941B0DD707009CAD57 /* AVFoundation.framework in Frameworks */,
 				AA95E13E70BA724B812D8B0A /* libPods-Tonguer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -688,6 +694,8 @@
 		9C388BF09CFC511C6BF41ACC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0ACB02951B0DD71F009CAD57 /* MediaPlayer.framework */,
+				0ACB02931B0DD707009CAD57 /* AVFoundation.framework */,
 				FA28444B89CDE8C4E6F03B1B /* libPods-Tonguer.a */,
 			);
 			name = Frameworks;

@@ -45,16 +45,16 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.width, self.view.frame.height-64))
+    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width, self.view.frame.height))
     scrollview.scrollEnabled = true
     scrollview.showsHorizontalScrollIndicator = true
     scrollview.scrollEnabled = true
     scrollview.userInteractionEnabled = true
     //scrollview.backgroundColor = UIColor.grayColor()
-    scrollview.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height-70)
+    scrollview.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
     self.view.addSubview(scrollview)
     
-    lblAmount = UILabel(frame: CGRectMake(scrollview.frame.origin.x+10,scrollview.frame.origin.y-20,100, 40))
+    lblAmount = UILabel(frame: CGRectMake(scrollview.frame.origin.x+10,scrollview.frame.origin.y,100, 40))
     lblAmount.text = "Amount:"
     lblAmount.font = lblAmount.font.fontWithSize(15)
     scrollview.addSubview(lblAmount)
@@ -121,7 +121,7 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
   
   func rightswipeGestureRecognizer(){
     
-    UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+    UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
       self.appDelegate.objSideBar.frame = self.view.bounds
       self.appDelegate.objSideBar.sideNavigation = self.navigationController
       }, completion: nil)

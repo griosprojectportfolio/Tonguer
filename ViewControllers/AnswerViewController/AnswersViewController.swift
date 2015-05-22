@@ -48,11 +48,15 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     self.view.addSubview(actiIndecatorVw)
     getUserAnswerApiCall()
     
-    delay(8) { () -> () in
-      self.getAdminCommentApiCall()
-     self.actiIndecatorVw.loadingIndicator.stopAnimating()
-     self.actiIndecatorVw.removeFromSuperview()
-     self.defaultUIDesign()
+    delay(5) { () -> () in
+     self.dataFetchFromDataBaseUserAnswer()
+     self.getAdminCommentApiCall()
+     self.delay(3, closure: { () -> () in
+        self.dataFetchFromDataBaseComments()
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      self.defaultUIDesign()
+      })
     }
    
   }
@@ -216,8 +220,6 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     aParams.setValue(dictUserAns.valueForKey("id"), forKey: "answer_id")
     self.api.clsAdminComment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-  
-         self.dataFetchFromDataBaseComments()
      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -236,9 +238,6 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     aParams.setValue(dictQues.valueForKey("id"), forKey: "question_id")
     self.api.userAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      
-        self.dataFetchFromDataBaseUserAnswer()
-      
   
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
