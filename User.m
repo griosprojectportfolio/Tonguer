@@ -75,4 +75,25 @@
 }
 
 
+  //MARK : Function to delete table
++ (void)deleteAllEntityObjects {
+  [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    NSArray *arrEntities = [[NSArray alloc] initWithObjects:@"User", @"UserClsVideo",@"UserDefaultClsList", @"UserLearnClsList", @"UserLearnedClsList",@"Questions",@"QuestionComment",@"Answer",@"Notes",@"UserNotes",@"DisAdminTopic", @"FreeCls",nil];
+    for (int i=0; i < arrEntities.count; i++) {
+
+      NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+      NSEntityDescription *entity = [NSEntityDescription entityForName:[arrEntities objectAtIndex:i] inManagedObjectContext:localContext];
+      [fetchRequest setEntity:entity];
+      NSError *error;
+      NSArray *items = [localContext executeFetchRequest:fetchRequest error:&error];
+      for (NSManagedObject *managedObject in items) {
+        [localContext deleteObject:managedObject];
+      }
+      if (![localContext save:&error]) {
+
+      }
+    }
+  }];
+}
+
 @end

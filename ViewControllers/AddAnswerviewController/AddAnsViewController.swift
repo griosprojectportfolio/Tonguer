@@ -42,42 +42,31 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
 
-    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
-    self.view.addSubview(actiIndecatorVw)
+//    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+//    self.view.addSubview(actiIndecatorVw)
 
     self.getCommentTopicApiCall()
-    
-    self.delay(4) { () -> () in
-    self.actiIndecatorVw.loadingIndicator.stopAnimating()
-   self.actiIndecatorVw.removeFromSuperview()
-      self.dataFetchFromDatabaseDiscus()
-       self.defaultUIDesign()
-      
-    }
-    
+    self.defaultUIDesign()
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-//    arrCommentData.removeAllObjects()
-//    self.dataFetchFromDatabaseDiscus()
+    self.getCommentTopicApiCall()
   }
   
   func defaultUIDesign(){
     print(dictTopic)
     //self.title = "Forum"
     
-    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.size.width, self.view.frame.height-64))
+    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.height))
     
     scrollview.showsHorizontalScrollIndicator = true
     scrollview.scrollEnabled = true
     scrollview.userInteractionEnabled = true
     //scrollview.backgroundColor = UIColor.grayColor()
-    
-    
+
     self.view.addSubview(scrollview)
-    
-    
+
     imgVw = UIImageView(frame: CGRectMake(10,10,20,20))
     //imgVw.backgroundColor = UIColor.grayColor()
     imgVw.image = UIImage(named: "T.png")
@@ -122,8 +111,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   
     scrollview.addSubview(txtViewAddAns)
     
-    adAnstableView = UITableView(frame: CGRectMake(scrollview.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.size.height+10,scrollview.frame.width ,txtViewAddAns.frame.origin.y - txtViewAddAns.frame.height-50))
-   // adAnstableView.backgroundColor = UIColor.yellowColor()
+    adAnstableView = UITableView(frame: CGRectMake(scrollview.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.size.height+20,scrollview.frame.width ,txtViewAddAns.frame.origin.y - txtViewAddAns.frame.height-lblContent.frame.height+70))
+    // adAnstableView.backgroundColor = UIColor.yellowColor()
     adAnstableView.separatorStyle = UITableViewCellSeparatorStyle.None
     adAnstableView.rowHeight = 50
     adAnstableView.delegate = self
@@ -187,19 +176,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
-  }
-  
-  
-  func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        Int64(delay * Double(NSEC_PER_SEC))
-      ),
-      dispatch_get_main_queue(), closure)
-  }
-
-  
+  }  
   
   func btnSendButtonTapped(semder:AnyObject){
     self.postCommentTopicApiCall()
@@ -227,7 +204,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     aParams.setValue(dictTopic.valueForKey("id"), forKey:"topic_id")
     //aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
     self.api.discusTopicComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-      println(responseObject)
+      self.dataFetchFromDatabaseDiscus(responseObject as NSArray)
+      self.adAnstableView.reloadData()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -246,7 +224,6 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
     self.api.discusTopicPostComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-    self.dataFetchFromDatabaseDiscus()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -259,11 +236,9 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
 
 //***********Data Fetch from DataBase************
   
-  func dataFetchFromDatabaseDiscus(){
-    
-    let arrFetchAdmin: NSArray = DisTopicComments.MR_findAll()
-    
-    for var index = 0; index < arrFetchAdmin.count; ++index{
+  func dataFetchFromDatabaseDiscus(arrFetchAdmin: NSArray){
+      arrCommentData.removeAllObjects()
+      for var index = 0; index < arrFetchAdmin.count; ++index{
       let clsObject: DisTopicComments = arrFetchAdmin.objectAtIndex(index) as DisTopicComments
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObject.comment_id, forKey: "id")

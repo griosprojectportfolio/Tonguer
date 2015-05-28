@@ -19,8 +19,10 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   var custxtEmail:CustomTextFieldBlurView!
   var scrollVW:UIScrollView!
   var lblComment: UILabel!
+  var api: AppApi!
   override func viewDidLoad() {
     super.viewDidLoad()
+    api = AppApi.sharedClient()
     self.defaultUIDesign()
     
   }
@@ -76,9 +78,9 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     custxtEmail.returnKeyType = UIReturnKeyType.Done
     custxtEmail.clearButtonMode = UITextFieldViewMode.Always
     custxtEmail.keyboardType = .EmailAddress
-    scrollVW.addSubview(custxtEmail)
+   // scrollVW.addSubview(custxtEmail)
     
-    txtViewComment = UITextView(frame: CGRectMake(frameEmail.origin.x, frameEmail.origin.y+frameEmail.height+10, frameEmail.width, 200))
+    txtViewComment = UITextView(frame: CGRectMake(frameEmail.origin.x, framefname.origin.y+framefname.height+10, frameEmail.width, 200))
     txtViewComment.text = ""
     txtViewComment.delegate = self
     txtViewComment.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
@@ -86,8 +88,8 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     txtViewComment.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
     scrollVW.addSubview(txtViewComment)
     
-    lblComment = UILabel(frame: CGRectMake((txtViewComment.frame.size.width-150)/2,(txtViewComment.frame.size.height-30)/2,150, 30))
-    lblComment.text = "Type Your Comment"
+    lblComment = UILabel(frame: CGRectMake((txtViewComment.frame.size.width-140)/2,(txtViewComment.frame.size.height-30)/2,150, 30))
+    lblComment.text = "Type your Comment"
     lblComment.font = lblComment.font.fontWithSize(12)
     lblComment.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     txtViewComment.addSubview(lblComment)
@@ -96,9 +98,14 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     self.btnSend.setTitle("Send", forState: UIControlState.Normal)
     self.btnSend.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0);
     self.btnSend.tintColor = UIColor.whiteColor()
+    btnSend.addTarget(self, action: "btnSendTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     scrollVW.addSubview(self.btnSend)
 
     
+  }
+  
+  func btnSendTapped(sender:AnyObject){
+    userLearnClsApiCall()
   }
   
   func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
@@ -115,7 +122,6 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     lblComment.hidden = true
     scrollVW.contentOffset = CGPoint(x:0, y:btnSend.frame.height+50)
   }
-
 
 
     override func didReceiveMemoryWarning() {
@@ -136,19 +142,23 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     self.navigationController?.popViewControllerAnimated(true)
   }
   
-  func btnforwardTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PickCenterID") as PickupCoursecenterViewController
-    self.navigationController?.pushViewController(vc, animated: true)
+  // ********* FeedBack Api Call Mehtods*************
+  
+  func userLearnClsApiCall(){
+    
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token,custxtFname.text,txtViewComment.text], forKeys: ["auth_token","name","comment"])
+    
+    self.api.feedback(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
   }
 
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }

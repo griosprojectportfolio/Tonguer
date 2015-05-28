@@ -12,6 +12,7 @@
 @implementation FreeClssVideo
 
 @dynamic video_id;
+@dynamic cls_id;
 @dynamic video_img_url;
 @dynamic video_url;
 @dynamic video_name;
@@ -45,7 +46,8 @@
     FreeClssVideo *obj = (FreeClssVideo*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
     
     obj.video_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
-    
+    obj.cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"a_class_id"] integerValue]];
+
     if (![[aDictionary objectForKey:@"image"] isKindOfClass:[NSNull class]])
       obj.video_img_url = [aDictionary valueForKey:@"image"] ;
     

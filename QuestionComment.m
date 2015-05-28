@@ -25,17 +25,17 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray withAnswerId:(NSNumber *)answer_Id inContext:(NSManagedObjectContext *)localContext {
   for(NSDictionary *aDictionary in aArray) {
-    [QuestionComment entityFromDictionary:aDictionary inContext:localContext];
+    [QuestionComment entityFromDictionary:aDictionary withAnswerId:answer_Id inContext:localContext];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [QuestionComment entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary withAnswerId:(NSNumber *)answer_Id inContext:(NSManagedObjectContext *)localContext {
+  [QuestionComment entityFromDictionary:adictionary  withAnswerId:answer_Id  inContext:localContext];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary withAnswerId:(NSNumber *)answer_Id inContext:(NSManagedObjectContext *)localContext {
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
@@ -46,6 +46,7 @@
     if (![[aDictionary objectForKey:@"comment"] isKindOfClass:[NSNull class]])
       obj.comment = [aDictionary valueForKey:@"comment"] ;
     
+   obj.answer_Id = answer_Id;
     
     return obj;
   }

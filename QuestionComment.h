@@ -13,10 +13,11 @@
 @interface QuestionComment : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * comt_id;
+@property (nonatomic, retain) NSNumber * answer_Id;
 @property (nonatomic, retain) NSString * comment;
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)entityFromArray:(NSArray *)aArray withAnswerId:(NSNumber *)answer_Id inContext:(NSManagedObjectContext*)localContext;
++ (id)entityFromDictionary:(NSDictionary *)aDictionary withAnswerId:(NSNumber *)answer_Id  inContext:(NSManagedObjectContext *)localContext;
++ (void)entityWithDictionaty:(NSDictionary *)adictionary withAnswerId:(NSNumber *)answer_Id  inContext:(NSManagedObjectContext *)localContext;
 
 @end

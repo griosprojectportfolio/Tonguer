@@ -16,7 +16,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   var classID: NSInteger!
   var api: AppApi!
   var actiIndecatorVw: ActivityIndicatorView!
-  var arrQuestion: NSMutableArray! = NSMutableArray()
+  var arrQuestion: NSMutableArray = NSMutableArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -35,24 +35,21 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
+    self.arrQuestion.removeAllObjects()
     self.getQuestionApiCall()
-    
-    self.delay(5) { () -> () in
-      self.arrQuestion.removeAllObjects()
-      self.dataFetchFromDataBaseQuestion()
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-      self.defaultUIDesign()
-    }
-    
   }
   
   override func viewWillAppear(animated: Bool) {
-    
+
+    super.viewWillAppear(animated)
+
+    self.defaultUIDesign()
+    self.view.bringSubviewToFront(self.actiIndecatorVw)
+
+    var arry:NSArray = Questions.MR_findAll()
+    self.dataFetchFromDataBaseQuestion(arry)
   }
-  
-  
-  
+
   func defaultUIDesign(){
     
     btnAddQues = UIButton(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.height-50, self.view.frame.width-40, 40))
@@ -98,15 +95,6 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
   }
-
-  func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        Int64(delay * Double(NSEC_PER_SEC))
-      ),
-      dispatch_get_main_queue(), closure)
-  }
   
   func btnAddAnswerTapped(sender:AnyObject){
     let btn = sender as UIButton
@@ -142,35 +130,37 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     aParams.setValue(auth_token[0], forKey: "auth_token")
     aParams.setValue(/*dictClasses.valueForKey("id")*/4, forKey: "class_id")
     self.api.clsQuestion(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+
       println(responseObject)
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+
+      var arry:NSArray = responseObject as NSArray
+      self.dataFetchFromDataBaseQuestion(arry)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        
-    })    
+    })
   }
-  
-  
-  
-  
-  
-  
-  //********Data Fetch frome Database *********
-  
-  func dataFetchFromDataBaseQuestion(){
-    
-     let arrFetchQues: NSArray = Questions.MR_findAll()
-    
+
+  func dataFetchFromDataBaseQuestion(var arrFetchQues:NSArray){
+
+    arrQuestion.removeAllObjects()
     for var index = 0 ; index < arrFetchQues.count ; index++ {
       let clsObj: Questions! = arrFetchQues.objectAtIndex(index) as Questions
       
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObj.ques_id, forKey: "id")
       dict.setValue(clsObj.question, forKey:"question")
-     arrQuestion.addObject(dict)
+      arrQuestion.addObject(dict)
     }
-    
+    print(arrQuestion)
+    if (arrQuestion.count != 0) {
+
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+
+      self.tableview.reloadData()
+    }
   }
-  
-  
 }

@@ -8,14 +8,14 @@
 
 import UIKit
 
-class LearnedTableViewCell: BaseTableViewCell {
+class LearnedTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
   
-  func defaultCellContent(aParam:NSDictionary!){
+  func defaultCellContent(aParam:NSDictionary!,Frame:CGRect){
     
     var arry = self.contentView.subviews
     var vwSub: UIView!
@@ -27,36 +27,16 @@ class LearnedTableViewCell: BaseTableViewCell {
     var lblTitle: UILabel!
     var lblVaild: UILabel!
     var lblDate: UILabel!
-    
-    imgVw = UIImageView()
-    lblVaild = UILabel()
-    lblTitle = UILabel()
-    lblDate = UILabel()
     var vWcell:UIView!
     
-    if(isiPhone5orLower){
-      imgVw = UIImageView(frame: CGRectMake(10, 10, 80, 80))
-      vWcell = UIView(frame: CGRectMake(90, 10, 200, 80))
-      lblTitle = UILabel(frame: CGRectMake(0,0,190,30))
-      lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,lblTitle.frame.origin.y+30,100, 30))
-      lblDate = UILabel(frame: CGRectMake(80,lblVaild.frame.origin.y,lblVaild.frame.width, 30))
-    }else if(isiPhone6){
-      imgVw = UIImageView(frame: CGRectMake(10, 10, 80, 80))
-      vWcell = UIView(frame: CGRectMake(90, 10, 250, 80))
-      lblTitle = UILabel(frame: CGRectMake(5,5,190,30))
-      lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,lblTitle.frame.origin.y+30,100, 30))
-      lblDate = UILabel(frame: CGRectMake(80,lblVaild.frame.origin.y,lblVaild.frame.width, 30))
-    }else if(isiPhone6plus){
-      imgVw = UIImageView(frame: CGRectMake(10, 10, 80, 80))
-      vWcell = UIView(frame: CGRectMake(90, 10, 300, 80))
-      lblTitle = UILabel(frame: CGRectMake(5,5,190,30))
-      lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,lblTitle.frame.origin.y+30,100, 30))
-      lblDate = UILabel(frame: CGRectMake(80,lblVaild.frame.origin.y,lblVaild.frame.width, 30))
-    }
+    imgVw = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80,80))
+    vWcell = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.origin.y,Frame.width-imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.height))
+    lblTitle = UILabel(frame: CGRectMake(5,3,vWcell.frame.width-10,30))
+    lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,vWcell.frame.height-30,100, 30))
+    lblDate = UILabel(frame: CGRectMake(lblVaild.frame.origin.x + lblVaild.frame.width+2, lblVaild.frame.origin.y,150, 30))
     
     let url = NSURL(string: aParam.objectForKey("image") as NSString)
-    let data = NSData(contentsOfURL: url!)
-    imgVw.image = UIImage(data: data!)
+    imgVw.sd_setImageWithURL(url)
     imgVw.layer.borderWidth = 0.5
     imgVw.layer.borderColor = UIColor.lightGrayColor().CGColor
     self.contentView.addSubview(imgVw)

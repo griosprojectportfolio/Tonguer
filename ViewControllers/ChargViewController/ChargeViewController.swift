@@ -115,8 +115,6 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
     btnCharge.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     btnCharge.addTarget(self, action: "btnChargetapped:", forControlEvents: UIControlEvents.TouchUpInside)
     scrollview.addSubview(btnCharge)
-
-    
   }
   
   func rightswipeGestureRecognizer(){
@@ -125,7 +123,6 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
       self.appDelegate.objSideBar.frame = self.view.bounds
       self.appDelegate.objSideBar.sideNavigation = self.navigationController
       }, completion: nil)
-    
   }
   
   func btnTappedToolbarDone(sender:AnyObject){
@@ -135,9 +132,16 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
   }
   
   func btnChargetapped(sender:AnyObject){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PayID") as PayViewController
-    vc.strMoney = cusTxtQuantity.text
-    self.navigationController?.pushViewController(vc, animated: true)
+
+    var money:NSString = cusTxtQuantity.text as NSString
+    if (money.length != 0) {
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PaypalVC") as PayPalViewController
+      vc.moneyQuantity = cusTxtQuantity.text
+      self.navigationController?.pushViewController(vc, animated: true)
+    } else {
+      var alertVw:UIAlertView = UIAlertView(title:"Message", message:"Please enter ammount.", delegate:nil, cancelButtonTitle:"OK")
+      alertVw.show()
+    }
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {

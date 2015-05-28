@@ -35,17 +35,17 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray withSubcategoryId:(NSNumber *)categoryId inContext:(NSManagedObjectContext *)localContext {
   for(NSDictionary *aDictionary in aArray) {
-    [FreeCls entityFromDictionary:aDictionary inContext:localContext];
+    [FreeCls entityFromDictionary:aDictionary withSubcategoryId:categoryId inContext:localContext];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [FreeCls entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary withSubcategoryId:(NSNumber *)categoryId inContext:(NSManagedObjectContext *)localContext {
+  [FreeCls entityFromDictionary:adictionary withSubcategoryId:categoryId inContext:localContext];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary withSubcategoryId:(NSNumber *)categoryId inContext:(NSManagedObjectContext *)localContext {
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
@@ -79,7 +79,8 @@
     
     if (![[aDictionary objectForKey:@"target"] isKindOfClass:[NSNull class]])
       obj.cls_suitable = [aDictionary valueForKey:@"target"] ;
-    
+
+      obj.cls_subcategory_Id = categoryId;
     return obj;
   }
   return nil;

@@ -48,26 +48,13 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     self.view.addSubview(actiIndecatorVw)
     getUserAnswerApiCall()
     
-    delay(5) { () -> () in
-     self.dataFetchFromDataBaseUserAnswer()
-     self.getAdminCommentApiCall()
-     self.delay(3, closure: { () -> () in
-        self.dataFetchFromDataBaseComments()
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-      self.defaultUIDesign()
-      })
-    }
-   
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-//    getUserAnswerApiCall()
-//    getAdminCommentApiCall()
-    
+    self.view.bringSubviewToFront(actiIndecatorVw)
   }
-  
+
   func defaultUIDesign(){
     
     print(arrComments)
@@ -200,17 +187,6 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     return cell
   }
   
-  func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        Int64(delay * Double(NSEC_PER_SEC))
-      ),
-      dispatch_get_main_queue(), closure)
-  }
-
-  
-  
   //********Question Comment Api calling Methode*********
   
   func getAdminCommentApiCall(){
@@ -220,7 +196,12 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     aParams.setValue(dictUserAns.valueForKey("id"), forKey: "answer_id")
     self.api.clsAdminComment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-     
+
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+
+      let arryQuestion:NSArray = responseObject as NSArray
+      self.dataFetchFromDataBaseComments(arryQuestion)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -238,22 +219,21 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     aParams.setValue(dictQues.valueForKey("id"), forKey: "question_id")
     self.api.userAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-  
+
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+
+      let arryAnswer:NSArray = responseObject as NSArray
+      self.dataFetchFromDataBaseUserAnswer(arryAnswer)
+      self.getAdminCommentApiCall()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        
     })
   }
-
-
-  //*******Data Fetching from DataBase ***********
   
-  
-  func dataFetchFromDataBaseComments(){
-    
-    let arrFetchComment: NSArray = QuestionComment.MR_findAll()
-    
+  func dataFetchFromDataBaseComments(arrFetchComment: NSArray ){
+
     for var index = 0 ; index < arrFetchComment.count ; index++ {
       let clsObj: QuestionComment! = arrFetchComment.objectAtIndex(index) as QuestionComment
       
@@ -263,22 +243,17 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
       arrComments.addObject(dict)
       ansTableview.reloadData()
     }
-    
   }
 
-  func dataFetchFromDataBaseUserAnswer(){
-    
-   let arrFetchAnswer: NSArray = Answer.MR_findAll()
-  
+  func dataFetchFromDataBaseUserAnswer(arrFetchAnswer: NSArray){
+
       for var index = 0 ; index < arrFetchAnswer.count ; index++ {
       let ansObj: Answer! = arrFetchAnswer.objectAtIndex(index) as Answer
       
       dictUserAns.setValue(ansObj.ans_id, forKey: "id")
       dictUserAns.setValue(ansObj.answer, forKey:"answer")
-    
+      self.defaultUIDesign()
     }
-    
   }
 
-  
 }

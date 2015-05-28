@@ -130,12 +130,31 @@ class NotesDetailViewController: BaseViewController {
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        
     })
-    
   }
 
-  
+  func editNotesApiCall () {
 
+    let param:NSDictionary = ["":""]
+    self.api.callNotesUpdateApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+      var alertVw:UIAlertView = UIAlertView(title:"Message", message:"Notes updates successfully", delegate: nil, cancelButtonTitle:"OK")
+      alertVw.show()
+      }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
+        
+    }
+  }
+  
+  func deleteNotesApiCall (classId:NSInteger) {
+
+    let param:NSDictionary = ["":classId]
+    self.api.callNotesDeleteApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+      self.deleteNotes()
+      }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
+    }
+  }
+
+  func deleteNotes () {
+    self.navigationController?.popViewControllerAnimated(true)
+  }
 }
 

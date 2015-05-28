@@ -37,6 +37,11 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     
   }
   
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    getFreeClassApiCall()
+  }
+  
   func defaultUIDesign(){
     
     self.title = "Try Class Centre"
@@ -175,9 +180,28 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     
   }
   
+  
+  func getFreeClassApiCall(){
+    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    self.api.freeClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
+      //self.hometableVw.reloadData()
+      self.dataFetchFromDataBase()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+    })
+    
+  }
+
+  
   //*************** Data feching Form DataBase **************
   
   func dataFetchFromDataBase(){
+    dataArr.removeAllObjects()
     let arrFetchCat : NSArray = FreeClsCat.MR_findAll()
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index {

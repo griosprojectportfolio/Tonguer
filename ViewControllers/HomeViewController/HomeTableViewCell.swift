@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeTableViewCell: BaseTableViewCell {
+class HomeTableViewCell: UITableViewCell {
   
  
   
@@ -18,81 +18,55 @@ class HomeTableViewCell: BaseTableViewCell {
    
   }
   
-  func defaultCellContent(aParam:NSDictionary!){
-    
+  func defaultCellContent(aParam:NSDictionary!,Frame:CGRect){
     
     var arry = self.contentView.subviews
     var vwSub: UIView!
     for vwSub in arry {
       vwSub.removeFromSuperview()
     }
-
-    
     var imgVw: UIImageView!
     var lblTitle: UILabel!
     var lblVaild: UILabel!
     var lblDate: UILabel!
     var vWcell:UIView!
     
-    
-    if(isiPhone5orLower){
-      imgVw = UIImageView(frame: CGRectMake(10, 10, 80, 80))
-      vWcell = UIView(frame: CGRectMake(90, 10, 200, 80))
-      lblTitle = UILabel(frame: CGRectMake(0,0,190,30))
-      lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,lblTitle.frame.origin.y+30,100, 30))
-      lblDate = UILabel(frame: CGRectMake(80,lblVaild.frame.origin.y,lblVaild.frame.width, 30))
-    }else if(isiPhone6){
-      imgVw = UIImageView(frame: CGRectMake(10, 10, 80, 80))
-      vWcell = UIView(frame: CGRectMake(90, 10, 250, 80))
-      lblTitle = UILabel(frame: CGRectMake(5,5,190,30))
-      lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,lblTitle.frame.origin.y+30,100, 30))
-      lblDate = UILabel(frame: CGRectMake(80,lblVaild.frame.origin.y,lblVaild.frame.width, 30))
-    }else if(isiPhone6plus){
-      imgVw = UIImageView(frame: CGRectMake(10, 10, 80, 80))
-      vWcell = UIView(frame: CGRectMake(90, 10, 300, 80))
-      lblTitle = UILabel(frame: CGRectMake(5,5,190,30))
-      lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,lblTitle.frame.origin.y+30,100, 30))
-      lblDate = UILabel(frame: CGRectMake(80,lblVaild.frame.origin.y,lblVaild.frame.width, 30))
-    }
-    
-    
+    imgVw = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80,80))
+    vWcell = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.origin.y,Frame.width-imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.height))
+    lblTitle = UILabel(frame: CGRectMake(5,3,vWcell.frame.width-10,30))
+    lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,vWcell.frame.height-30,100, 30))
+    lblDate = UILabel(frame: CGRectMake(lblVaild.frame.origin.x+lblVaild.frame.width, lblVaild.frame.origin.y,150, 30))
     
     let url = NSURL(string: aParam.objectForKey("image") as NSString)
-    let data = NSData(contentsOfURL: url!)
-       imgVw.image = UIImage(data: data!)
-       imgVw.layer.borderWidth = 0.5
-       imgVw.layer.borderColor = UIColor.lightGrayColor().CGColor
-      self.contentView.addSubview(imgVw)
-    
+    imgVw.sd_setImageWithURL(url)
+    imgVw.layer.borderWidth = 0.5
+    imgVw.layer.borderColor = UIColor.lightGrayColor().CGColor
+    self.contentView.addSubview(imgVw)
+  
     vWcell.backgroundColor = UIColor.whiteColor()
     vWcell.layer.borderWidth = 0.5
     vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
     self.contentView.addSubview(vWcell)
     
+    lblTitle.text = aParam.objectForKey("name") as NSString
+    //lblTitle.backgroundColor = UIColor.grayColor()
+    lblTitle.textColor = UIColor.blackColor()
+    lblTitle.font = lblTitle.font.fontWithSize(15)
+    vWcell.addSubview(lblTitle)
     
-    
-      lblTitle.text = aParam.objectForKey("name") as NSString
-      //lblTitle.backgroundColor = UIColor.grayColor()
-      lblTitle.textColor = UIColor.blackColor()
-      lblTitle.font = lblTitle.font.fontWithSize(15)
-      vWcell.addSubview(lblTitle)
-    
-    
-      //lblTitle.backgroundColor = UIColor.lightGrayColor()
-      lblVaild.text = "Valid Days-"
-      lblVaild.textColor = UIColor.grayColor()
-      lblVaild.font = lblVaild.font.fontWithSize(13)
-      vWcell.addSubview(lblVaild)
-    
-    
+    //lblTitle.backgroundColor = UIColor.lightGrayColor()
+    lblVaild.text = "Valid Days-"
+    lblVaild.textColor = UIColor.grayColor()
+    lblVaild.font = lblVaild.font.fontWithSize(13)
+    vWcell.addSubview(lblVaild)
     
     var day: NSNumber! = aParam.objectForKey("days") as NSNumber
     
-      lblDate.text = day.stringValue
-      //lblDate.backgroundColor = UIColor.redColor()
-      lblDate.textColor = UIColor.grayColor()
-      lblDate.font = lblDate.font.fontWithSize(12)
-      vWcell.addSubview(lblDate)
+    lblDate.text = day.stringValue
+    //lblDate.backgroundColor = UIColor.redColor()
+    lblDate.textColor = UIColor.grayColor()
+    lblDate.font = lblDate.font.fontWithSize(12)
+    vWcell.addSubview(lblDate)
   }
   
   

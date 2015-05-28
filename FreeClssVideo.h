@@ -13,6 +13,7 @@
 @interface FreeClssVideo : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * video_id;
+@property (nonatomic, retain) NSNumber * cls_id;
 @property (nonatomic, retain) NSString * video_img_url;
 @property (nonatomic, retain) NSString * video_url;
 @property (nonatomic, retain) NSString * video_name;

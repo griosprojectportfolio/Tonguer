@@ -13,6 +13,7 @@
 @interface UserClsVideo : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * vdo_id;
+@property (nonatomic, retain) NSNumber * cls_id;
 @property (nonatomic, retain) NSString * vdo_name;
 @property (nonatomic, retain) NSString * vdo_img;
 @property (nonatomic, retain) NSString * vdo_url;

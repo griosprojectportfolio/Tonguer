@@ -13,11 +13,11 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
    var flgClass:NSString!
   var flag: NSString = "PicupCourse"
    var barBackBtn :UIBarButtonItem!
-   var  tblClass :UITableView!
+   var tblClass :UITableView!
    var dict: NSDictionary!
    var arrClasses: NSMutableArray! = NSMutableArray()
    var sub_cat_id: NSInteger!
-  var actiIndecatorVw: ActivityIndicatorView!
+   var actiIndecatorVw: ActivityIndicatorView!
   
   var api: AppApi!
   
@@ -43,33 +43,39 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     self.actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
 
-    
-    if(flgClass .isEqualToString("Pay")){
-      self.payClassListApiCall()
-    }else if (flgClass.isEqualToString("Free")){
-      self.freeClassListApiCall()
+    var predicate:NSPredicate = NSPredicate (format: "cls_subcategory_Id CONTAINS %i", sub_cat_id)!;
+
+    var arrFetchCat:NSArray;
+    if (flgClass.isEqualToString("Free")){
+      arrFetchCat  = FreeCls.MR_findAllWithPredicate(predicate);
+      self.dataFetchFromDatabaseFreeCls(arrFetchCat)
+     
+
+    } else if (flgClass.isEqualToString("Pay")) {
+      arrFetchCat  = PayCls.MR_findAllWithPredicate(predicate);
+      self.dataFetchFromDatabasePayCls(arrFetchCat)
+
     }
-    
-    self.delay(5) { () -> () in
-      
-      if(self.flgClass .isEqualToString("Pay")){
-        self.dataFetchFromDatabasePayCls()
-      }else if (self.flgClass.isEqualToString("Free")){
-        self.dataFetchFromDatabaseFreeCls()
-      }
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-      self.defaultUIDesign()
-      
-    }
-    
   }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
-  
+
+  override func viewWillAppear(animated: Bool) {
+
+    super.viewWillAppear(animated)
+    self.view.bringSubviewToFront(self.actiIndecatorVw)
+    self.defaultUIDesign()
+
+    if(flgClass .isEqualToString("Pay")){
+      self.payClassListApiCall()
+    }else if (flgClass.isEqualToString("Free")){
+      self.freeClassListApiCall()
+    }
+  }
+
   func defaultUIDesign(){
     
     
@@ -127,10 +133,17 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     
     self.api.freeClsList(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      //self.hometableVw.reloadData()
-      
-      
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      let arry:NSArray = responseObject as NSArray
+      self.dataFetchFromDatabaseFreeCls(arry)
+      if self.arrClasses.count == 0{
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Class Found", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+      }
+      self.tblClass.reloadData()
+      println("\( self.arrClasses)")
+
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -139,19 +152,24 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
         self.actiIndecatorVw.loadingIndicator.stopAnimating()
         self.actiIndecatorVw.removeFromSuperview()
     })
-    
   }
-  
-  
-  
+
   func payClassListApiCall(){
     
     var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],sub_cat_id], forKeys: ["auth_token","sub_category_id"])
     
     self.api.payClsList(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      let arry:NSArray = responseObject as NSArray
+      self.dataFetchFromDatabasePayCls(arry)
+      if(self.arrClasses.count == 0){
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Class Found", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+      }
+      self.tblClass.reloadData()
+      println(self.arrClasses)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -159,14 +177,15 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     })
     
   }
-  
-  
+
   //************ Fetch Data From DataBase ***********
-  
-  func dataFetchFromDatabaseFreeCls(){
-    let arrFetchCat: NSArray = FreeCls.MR_findAll()
-    for var index = 0; index < arrFetchCat.count; ++index{
-      let clsObject: FreeCls = arrFetchCat.objectAtIndex(index) as FreeCls
+  func dataFetchFromDatabaseFreeCls(arryClass:NSArray){
+    arrClasses.removeAllObjects()
+
+    for var index = 0; index < arryClass.count; ++index {
+
+      var clsObject:FreeCls = arryClass.objectAtIndex(index) as FreeCls
+      println(clsObject.cls_arrange)
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
       if((clsObject.cls_name) != nil){
         var strName: NSString = clsObject.cls_name
@@ -194,10 +213,10 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
         dictClass.setValue("", forKey: "price")
       }
       
-      if((clsObject.cls_arrange) != nil){
-      dictClass.setValue(clsObject.cls_arrange, forKey:"arrange")
+      if ((clsObject.cls_arrange) != nil) {
+        dictClass.setValue(clsObject.cls_arrange, forKey:"arrange")
       }else{
-        var arrange: NSString = " "
+        var arrange: NSString = ""
         dictClass.setValue(arrange, forKey:"arrange")
       }
       
@@ -208,7 +227,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
         dictClass.setValue(suitable, forKey:"suitable")
       }
       
-      if((clsObject.cls_target) != nil){
+      if ((clsObject.cls_target) != nil){
         dictClass.setValue(clsObject.cls_target, forKey:"target")
       }else{
         var target: NSString = " "
@@ -218,80 +237,76 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       var clsID: NSNumber = clsObject.cls_id
       dictClass.setValue(clsID, forKey: "id")
       arrClasses.addObject(dictClass)
-      
     }
-    
+  
   }
-  
-  
-  func dataFetchFromDatabasePayCls(){
-    
-    let arrFetchCat: NSArray = PayCls.MR_findAll()
-    for var index = 0; index < arrFetchCat.count; ++index{
-      let clsObject: PayCls = arrFetchCat.objectAtIndex(index) as PayCls
+
+  //************ Fetch Data From DataBase ***********
+  func dataFetchFromDatabasePayCls(arryClass:NSArray){
+    arrClasses.removeAllObjects()
+
+    for var index = 0; index < arryClass.count; ++index {
+
+      var clsObject:PayCls = arryClass.objectAtIndex(index) as PayCls
+
+      println(clsObject.cls_arrange)
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
-      
       if((clsObject.cls_name) != nil){
         var strName: NSString = clsObject.cls_name
         dictClass.setValue(strName, forKey: "name")
+
       }else{
         var strName: NSString = ""
         dictClass.setValue(strName, forKey: "name")
+
       }
-      
       if((clsObject.cls_days) != nil){
         var strDay: NSNumber = clsObject.cls_days
         dictClass.setValue(strDay, forKey: "day")
-
-      }else{
+      }else {
         var strDay: NSNumber = 0
         dictClass.setValue(strDay, forKey: "day")
-
       }
-      
       if((clsObject.cls_img_url) != nil){
-        
         var strImgUrl: NSString = clsObject.cls_img_url
         dictClass.setValue(strImgUrl, forKey: "image")
-
+        dictClass.setValue("Free", forKey: "price")
       }else{
         var strImgUrl: NSString = "http://www.popular.com.my/images/no_image.gif"
         dictClass.setValue(strImgUrl, forKey: "image")
+        dictClass.setValue("", forKey: "price")
       }
-      
-      if((clsObject.cls_price) != nil){
-        var clsPiz: NSNumber = clsObject.cls_price
-        dictClass.setValue(clsPiz, forKey: "price")
+
+      if ((clsObject.cls_arrange) != nil) {
+        dictClass.setValue(clsObject.cls_arrange, forKey:"arrange")
       }else{
-        var clsPiz: NSNumber = 0
-        dictClass.setValue(clsPiz, forKey: "price")
+        var arrange: NSString = ""
+        dictClass.setValue(arrange, forKey:"arrange")
       }
-      
+
+      if((clsObject.cls_suitable) != nil){
+        dictClass.setValue(clsObject.cls_suitable, forKey:"suitable")
+      }else{
+        var suitable: NSString = " "
+        dictClass.setValue(suitable, forKey:"suitable")
+      }
+
+      if ((clsObject.cls_target) != nil){
+        dictClass.setValue(clsObject.cls_target, forKey:"target")
+      }else{
+        var target: NSString = " "
+        dictClass.setValue(target, forKey:"target")
+      }
+
       var clsID: NSNumber = clsObject.cls_id
       dictClass.setValue(clsID, forKey: "id")
-      
       arrClasses.addObject(dictClass)
-      
-    }
-    if(arrClasses.count == 0){
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry No Class", delegate: self, cancelButtonTitle: "Ok")
-      alert.show()
     }
     
   }
-  
-  
+
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
-  }
-  
-  func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        Int64(delay * Double(NSEC_PER_SEC))
-      ),
-      dispatch_get_main_queue(), closure)
   }
     
 }

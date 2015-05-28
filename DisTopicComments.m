@@ -26,17 +26,17 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray withTopicId:(NSNumber *)topicId  inContext:(NSManagedObjectContext *)localContext {
   for(NSDictionary *aDictionary in aArray) {
-    [DisTopicComments entityFromDictionary:aDictionary inContext:localContext];
+    [DisTopicComments entityFromDictionary:aDictionary withTopicId:topicId   inContext:localContext];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [DisTopicComments entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary withTopicId:(NSNumber *)topicId inContext:(NSManagedObjectContext *)localContext {
+  [DisTopicComments entityFromDictionary:adictionary withTopicId:topicId  inContext:localContext];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary withTopicId:(NSNumber *)topicId inContext:(NSManagedObjectContext *)localContext {
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
@@ -49,6 +49,8 @@
     
     if (![[aDictionary objectForKey:@"comment_userable_type"] isKindOfClass:[NSNull class]])
       obj.name = [aDictionary valueForKey:@"comment_userable_type"] ;
+    
+    obj.topic_Id = topicId;
     
     return obj;
   }

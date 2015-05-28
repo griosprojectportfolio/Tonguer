@@ -18,11 +18,13 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
   var btnLogout: UIButton!
   
   var userDict: NSDictionary!
+  var dictParam: NSDictionary!
+  var api: AppApi!
   var arrSettData: NSArray!
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    api = AppApi.sharedClient()
     userDict = NSDictionary(objects: ["img2","Test User"], forKeys: ["image","name"])
     
     arrSettData = NSArray(objects:"Alreday downloaded","Option for video","Download reminder","Feedback","Recommand to friend","About us")
@@ -57,7 +59,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     
     lblname = UILabel(frame: CGRectMake(imgVwPPic.frame.origin.x+10 + imgVwPPic.frame.width+2,10,VwUserDetail.frame.width-120,40))
     //lblname.backgroundColor = UIColor.grayColor()
-    lblname.text = userDict.objectForKey("name") as NSString
+    lblname.text = ""
     lblname.font = lblname.font.fontWithSize(15)
     VwUserDetail.addSubview(lblname)
     
@@ -78,6 +80,8 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     tableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(tableview)
     tableview.registerClass(SettingTableViewCell.self, forCellReuseIdentifier: "cell")
+    
+    fetchDataFromdataBase()
   }
   
   override func didReceiveMemoryWarning() {
@@ -105,35 +109,33 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     
    switch (indexPath.row){
     
-   case 0:
+   case 0://Alreday downloaded
     print(arrSettData.objectAtIndex(indexPath.row))
     
-   case 1:
+   case 1://Option for video
     print(arrSettData.objectAtIndex(indexPath.row))
     
-   case 2:
+   case 2://Download reminder
     print(arrSettData.objectAtIndex(indexPath.row))
     
-   case 3:
+   case 3://Feedback
     print(arrSettData.objectAtIndex(indexPath.row))
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("FeedbackID") as FeedbackViewController
     self.navigationController?.pushViewController(vc, animated: true)
-   case 4:
+   case 4://Recommand to friend
     print(arrSettData.objectAtIndex(indexPath.row))
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("ShareID") as ShareViewController
-    self.navigationController?.pushViewController(vc, animated: true)
     
-   case 5:
+    let firstActivityItem = "my text"
+    let activityViewController : UIActivityViewController = UIActivityViewController(activityItems: [firstActivityItem], applicationActivities: nil)
+    self.presentViewController(activityViewController, animated: true, completion:nil)
+    
+   case 5: //About us
     print(arrSettData.objectAtIndex(indexPath.row))
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AppFlowID") as AppFlowViewController
     self.navigationController?.pushViewController(vc, animated: true)
    default:
      print("******** Error**********")
-    
-    
     }
-    
-    
   }
   
   
@@ -141,9 +143,35 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     self.navigationController?.popViewControllerAnimated(true)
   }
   
+ //*********** logOut Api calling *********
   func btnLogoutTapped(){
     
-  }
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    
+    self.api.signOutUser(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      //var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+
+      User.deleteAllEntityObjects() // delete all table
+      NSUserDefaults.standardUserDefaults().removeObjectForKey("auth_token")
+      NSUserDefaults.standardUserDefaults().synchronize()
+
+      self.navigationController?.popToRootViewControllerAnimated(false)
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+}
   
-   
+  func fetchDataFromdataBase(){
+    let arrFetchedData : NSArray = User.MR_findAll()
+    let userObject : User = arrFetchedData.objectAtIndex(0) as User
+    print(userObject.fname)
+    let fname = userObject.fname
+    let lname = userObject.lname
+    
+    var name = fname+" "+lname
+    lblname.text = name
+  }
 }

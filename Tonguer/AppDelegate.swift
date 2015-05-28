@@ -17,13 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+
       var frame1:CGRect = UIScreen.mainScreen().bounds
       var frame2:CGRect = CGRectMake(-frame1.width, frame1.origin.y, frame1.width, frame1.height)
        objSideBar = SideBarView(frame: frame2)
       self.window?.makeKeyAndVisible()
       self.window?.addSubview(objSideBar)
       self.window?.bringSubviewToFront(objSideBar)
-      
+
+    PayPalMobile.initializeWithClientIdsForEnvironments([PayPalEnvironmentSandbox:"AeXH1pDAunezMi2uSCm_nav3jV8QnUhly1GB0IlqxtUlgQBiTCRDEgt0Dq_TXLkCjlAoIabdE_N3Wc_R"])
+      // [PayPalMobile initializeWithClientIdsForEnvironments:@{PayPalEnvironmentProduction : @"YOUR_CLIENT_ID_FOR_PRODUCTION",
+
       MagicalRecord.setupCoreDataStack()
         return true
     }
@@ -117,3 +121,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+
+/*
+
+grepruby0-facilitator@gmail.com
+Endpoint:
+api.sandbox.paypal.com
+Client ID:
+AeXH1pDAunezMi2uSCm_nav3jV8QnUhly1GB0IlqxtUlgQBiTCRDEgt0Dq_TXLkCjlAoIabdE_N3Wc_R
+Secret: EIJn9d2fJ5Rc71Zg1MDmINlszHccet8pG9EcRammFGemm2BJXYMzQTY3fjWR9BHm5V7AEHOAymv8KeIq
+
+//credential
+
+Main Sendbox account
+
+//https://developer.paypal.com/developer
+
+grepruby0@gmail.com
+grepruby@123
+
+At Merchant test side
+grepruby0-facilitator@gmail.com
+grepruby@123
+
+
+At buyer test side
+grepruby0-buyer@gmail.com
+grepruby@123
+
+*/

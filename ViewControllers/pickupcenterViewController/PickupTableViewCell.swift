@@ -50,9 +50,7 @@ class PickupTableViewCell: BaseTableViewCell {
   func setContentProperties(aParam:NSDictionary){
     
     let url = NSURL(string: aParam.objectForKey("image") as NSString)
-    let data = NSData(contentsOfURL: url!)
-    
-    imgVw.image = UIImage(data: data!)
+    imgVw.sd_setImageWithURL(url)
     //imgVw.backgroundColor = UIColor.redColor()
     imgVw.layer.borderWidth = 0.3
     imgVw.layer.borderColor = UIColor.lightGrayColor().CGColor
@@ -93,5 +91,4 @@ class PickupTableViewCell: BaseTableViewCell {
     
     // Configure the view for the selected state
   }
-  
 }

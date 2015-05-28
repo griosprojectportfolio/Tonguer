@@ -15,7 +15,7 @@ class BaseViewController: UIViewController {
     let isiPhone6           =   UIScreen.mainScreen().bounds.size.width == 375
     let isiPhone6plus       =   UIScreen.mainScreen().bounds.size.width == 414
     
-    
+  
     var auth_token : [NSString] {
         get {
             var returnValue: [NSString]? = NSUserDefaults.standardUserDefaults().objectForKey("auth_token") as? [NSString]

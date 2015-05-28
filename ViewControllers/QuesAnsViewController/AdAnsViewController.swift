@@ -48,7 +48,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.height))
+    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.height-64))
     
     scrollview.showsHorizontalScrollIndicator = true
     scrollview.scrollEnabled = true

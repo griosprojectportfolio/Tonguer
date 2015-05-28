@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyOrderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate{
   
   let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
   
@@ -19,16 +19,21 @@ class MyOrderViewController: UIViewController, UITableViewDataSource, UITableVie
   var btnsVw :UIView!
   var btn1:UIButton!
   var btn2:UIButton!
-  var btn3:UIButton!
+  var api: AppApi!
+  
+  var btnTag: NSInteger = 1
   
   var HorizVw : UIView!
   var vertiVw :UIView!
   var HorizVw2 : UIView!
   var vertiVw2 :UIView!
   var HorizVw3 : UIView!
+  var arryTrue: NSArray! = NSArray()
+  var arryFalse: NSArray! = NSArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    api = AppApi.sharedClient()
     self.defaultUIDesign()
   }
   
@@ -52,12 +57,15 @@ class MyOrderViewController: UIViewController, UITableViewDataSource, UITableVie
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
     
-    btn1 = UIButton(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64,(self.view.frame.width-40)/2, 40))
-    //btn1.backgroundColor = UIColor.grayColor()
+    btn1 = UIButton(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64,(self.view.frame.width)/2,40))
+    //btn1.backgroundColor = UIColor.redColor()
+    btn1.userInteractionEnabled = true
     btn1.setTitle("Course list order", forState: UIControlState.Normal)
     btn1.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-    btn1.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchDragInside)
+    btn1.tag = 1
+    btn1.addTarget(self, action: "btn1Tapped:", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btn1)
+    self.view.bringSubviewToFront(btn1)
     
     HorizVw = UIView(frame: CGRectMake(btn1.frame.origin.x,btn1.frame.origin.y+btn1.frame.size.height , btn1.frame.size.width, 1))
     HorizVw.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
@@ -67,24 +75,29 @@ class MyOrderViewController: UIViewController, UITableViewDataSource, UITableVie
     vertiVw.backgroundColor = UIColor.grayColor()
     self.view.addSubview(vertiVw)
     
-    btn2 = UIButton(frame: CGRectMake(btn1.frame.origin.x+btn1.frame.size.width+10,btn1.frame.origin.y,btn1.frame.width, 40))
-    //btn2.backgroundColor = UIColor.grayColor()
+    btn2 = UIButton(frame: CGRectMake(vertiVw.frame.origin.x+1,btn1.frame.origin.y,btn1.frame.width, 40))
+   //btn2.backgroundColor = UIColor.greenColor()
+    btn2.userInteractionEnabled = true
     btn2.setTitle("Credit order", forState: UIControlState.Normal)
+    btn2.tag = 2
     btn2.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-    btn2.addTarget(self, action: "btn2Tapped", forControlEvents: UIControlEvents.TouchDragInside)
+    btn2.addTarget(self, action: "btn2Tapped:", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btn2)
+    self.view.bringSubviewToFront(btn2)
     
     HorizVw2 = UIView(frame: CGRectMake(btn2.frame.origin.x,btn2.frame.origin.y+btn2.frame.size.height , btn2.frame.size.width, 1))
-    HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    HorizVw2.backgroundColor = UIColor.lightGrayColor()
    self.view.addSubview(HorizVw2)
   
     myordertableview = UITableView(frame: CGRectMake(btn1.frame.origin.x,HorizVw2.frame.origin.y+HorizVw2.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-HorizVw2.frame.height-20))
-    myordertableview.backgroundColor = UIColor.grayColor()
+    //myordertableview.backgroundColor = UIColor.grayColor()
+    myordertableview.separatorStyle = UITableViewCellSeparatorStyle.None
     myordertableview.delegate = self
     myordertableview.dataSource = self
     self.view.addSubview(myordertableview)
     
-     myordertableview.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+     myordertableview.registerClass(CourseOrderTableViewCell.self, forCellReuseIdentifier: "courseCell")
+    myordertableview.registerClass(CreditTableViewCell.self, forCellReuseIdentifier: "creditCell")
 
   }
   
@@ -94,80 +107,88 @@ class MyOrderViewController: UIViewController, UITableViewDataSource, UITableVie
   
   func rightswipeGestureRecognizer(){
     
-    UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+    UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
       self.appDelegate.objSideBar.frame = self.view.bounds
       self.appDelegate.objSideBar.sideNavigation = self.navigationController
       }, completion: nil)
     
   }
   
-  func btnforwardTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("LearnID") as StartLearnViewController
-    self.navigationController?.pushViewController(vc, animated: true)
+  
+  func btn1Tapped(sender:AnyObject){
+    var btn = sender as UIButton
+    btnTag = btn.tag
+    HorizVw.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    HorizVw2.backgroundColor = UIColor.lightGrayColor()
+    myordertableview.reloadData()
   }
   
-  func btn1Tapped(){
-    HorizVw.hidden = false
-    HorizVw2.hidden = true
-   // HorizVw3.hidden = true
-  }
-  
-  func btn2Tapped(){
-    HorizVw.hidden = true
-    HorizVw2.hidden = false
-    //HorizVw3.hidden = true
+  func btn2Tapped(sender:AnyObject){
+    var btn = sender as UIButton
+    btnTag = btn.tag
+    HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    HorizVw.backgroundColor = UIColor.lightGrayColor()
+     myordertableview.reloadData()
   }
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 3
+    
+    var count: NSInteger!
+    if(btnTag == 1){
+      count = arryFalse.count
+    }else if(btnTag == 2){
+      count = arryTrue.count
+    }
+    return 3 //count
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
     var cell:UITableViewCell!
     
-    cell = myordertableview.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-    
-        if(cell == nil){
-
-      var vWcell:UIView! = UIView(frame: CGRectMake(cell.frame.origin.x+10, cell.frame.origin.y+5,cell.frame.size.width-20,100))
-      //vWcell.backgroundColor = UIColor.blackColor()
-      vWcell.layer.borderWidth = 1
-      vWcell.layer.borderColor = UIColor.grayColor().CGColor
-      cell.contentView.addSubview(vWcell)
-      
-      var vWVertical: UIView! = UIView(frame: CGRectMake(vWcell.frame.width-100,0,1,vWcell.frame.height))
-      vWVertical.backgroundColor = UIColor.grayColor()
-      vWcell.addSubview(vWVertical)
-      
-      var lblDeatil:UILabel! = UILabel(frame: CGRectMake(5, 2,vWVertical.frame.origin.x-20,60))
-      lblDeatil.text = "This is a preliminary document for an API or technology in development. Apple is supplying this."
-      lblDeatil.numberOfLines = 0
-      lblDeatil.font = lblDeatil.font.fontWithSize(12)
-      //lblDeatil.backgroundColor = UIColor.yellowColor()
-      lblDeatil.textColor = UIColor.blackColor()
-      vWcell.addSubview(lblDeatil)
-      
-      var lblName: UILabel! = UILabel(frame: CGRectMake(5,vWcell.frame.height-30,150,30))
-      lblName.text = "Preliminarydocument"
-      lblName.font = lblDeatil.font.fontWithSize(12)
-      //lblName.backgroundColor = UIColor.greenColor()
-      lblName.textColor = UIColor.grayColor()
-      vWcell.addSubview(lblName)
-      
-      var lblMoney:UILabel! = UILabel(frame: CGRectMake((vWcell.frame.width-80),20,100,40))
-      lblMoney.text = "$15.00"
-      lblMoney.font = lblMoney.font.fontWithSize(20)
-      lblMoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
-      vWcell.addSubview(lblMoney)
-    
+    if(btnTag == 1){
+      var cell:CourseOrderTableViewCell!
+      var dict: NSDictionary! = NSDictionary()
+      cell = myordertableview.dequeueReusableCellWithIdentifier("courseCell") as CourseOrderTableViewCell
+      cell.defaultCellContents(arryFalse.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+      return cell
+      }else if(btnTag == 2){
+      var cell:CreditTableViewCell!
+      var dict: NSDictionary! = NSDictionary()
+      cell = myordertableview.dequeueReusableCellWithIdentifier("creditCell") as CreditTableViewCell
+      cell.defaultCellContents(arryFalse.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+      return cell
     }
+    
     return cell
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    return 120
+    return 100
   }
+  
+  //**************** User Classes Orders Api Call **************
+  
+  func userClassOrdersApiCall(){
+    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0]], forKeys: ["auth_token"])
+    
+    self.api.userClassOrders(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      self.dataFetchFromDatabase(responseObject as NSDictionary)
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+    })
+    
+  }
+
+  func dataFetchFromDatabase(dicrOrders:NSDictionary){
+    
+    arryTrue = dicrOrders.objectForKey("True") as NSArray
+    arryFalse = dicrOrders.objectForKey("False") as NSArray
+  }
+  
   
 }

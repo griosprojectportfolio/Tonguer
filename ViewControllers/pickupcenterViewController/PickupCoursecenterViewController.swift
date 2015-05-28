@@ -37,6 +37,15 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   var arrSubCat:NSArray!
   var horiVw: UIView!
   var horiVw1: UIView!
+
+  var listingShow:NSString = "Host"
+  var arrySearch:NSMutableArray = NSMutableArray()
+  var isSearch:Bool = false
+
+  var search:UISearchBar!
+  var backbtn:UIButton!
+  var btnforword:UIButton!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     dict = NSDictionary(objects: ["ClassName","000.0","date","img2.png"], forKeys: ["class_name","priz","date","image"])
@@ -53,6 +62,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     self.hostDataFetchFromDataBase()
   }
   
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    getHostPayClsApiCall()
+    getPayClassApiCall()
+  }
+  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
@@ -64,19 +79,19 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
-    var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
+    backbtn = UIButton(frame: CGRectMake(0, 0,25,25))
     backbtn.setImage(UIImage(named: "sideIcon.png"), forState: UIControlState.Normal)
     backbtn.addTarget(self, action: "rightswipeGestureRecognizer", forControlEvents: UIControlEvents.TouchUpInside)
     
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
-    
-    var btnforword:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-    btnforword.setImage(UIImage(named: "searchicon.png"), forState: UIControlState.Normal)
-    btnforword.addTarget(self, action: "btnforwardTapped", forControlEvents: UIControlEvents.TouchUpInside)
-    
-    barforwordBtn = UIBarButtonItem(customView: btnforword)
-    
+
+    var btnSearch:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
+    btnSearch.setImage(UIImage(named: "searchicon.png"), forState: UIControlState.Normal)
+    btnSearch.addTarget(self, action: "btnSearchTapped", forControlEvents: UIControlEvents.TouchUpInside)
+
+    barforwordBtn = UIBarButtonItem(customView: btnSearch)
+
     self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
     
 //    btnsVw = UIView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64,self.view.frame.width, 40))
@@ -113,7 +128,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
     self.view.addSubview(horiVw1)
     
-    pickupTableView = UITableView(frame: CGRectMake(self.view.frame.origin.x,horiVw1.frame.origin.y+horiVw1.frame.size.height+5,self.view.frame.width,self.view.frame.height))
+    pickupTableView = UITableView(frame: CGRectMake(self.view.frame.origin.x,horiVw1.frame.origin.y+horiVw1.frame.size.height+5,self.view.frame.width,self.view.frame.height-104))
     pickupTableView.delegate = self
     pickupTableView.dataSource = self
     pickupTableView.separatorStyle = UITableViewCellSeparatorStyle.None
@@ -122,6 +137,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     pickupTableView.registerClass(PickupTableViewCell.self, forCellReuseIdentifier: "cell")
     pickupTableView.registerClass(AllTableViewCell.self, forCellReuseIdentifier: "allcell")
 
+    search = UISearchBar(frame: CGRectMake(0, 0, 100, 30))
+    search.hidden = true
+    search.delegate = self
+    search.showsCancelButton = true
+    search.tintColor = UIColor.whiteColor()
+    self.navigationItem.titleView = search
   }
   
   
@@ -136,7 +157,8 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   
   func btnHostTapped(sender:AnyObject){
-    
+
+    listingShow = "Host"
     horiVw.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     horiVw1.backgroundColor = UIColor.grayColor()
     var btn = sender as UIButton
@@ -146,30 +168,38 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   }
   
   func btnAllTapped(sender:AnyObject){
-  
+
+    listingShow = "All"
     horiVw1.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     horiVw.backgroundColor = UIColor.grayColor()
     var btn = sender as UIButton
     btntag = btn.tag
     print(btntag)
-    //self.getPayClassApiCall()
+    self.getPayClassApiCall()
    pickupTableView.reloadData()
   }
 
   
-  func btnforwardTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("SearchID") as SearchViewController
-    self.navigationController?.pushViewController(vc, animated: true)
+  func btnSearchTapped(){
+
+    self.navigationItem.leftBarButtonItem = nil
+    self.navigationItem.rightBarButtonItems = nil
+    search.hidden = false
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     var count: NSInteger!
-    if(btntag == 1){
-      count = arrHost.count
-    }else if(btntag == 2){
-       var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
-      var arr: NSArray! = dict.objectForKey("array") as NSArray
-      count = arr.count
+
+    if (isSearch == true) {
+      count = arrySearch.count
+    } else {
+      if(btntag == 1){
+        count = arrHost.count
+      }else if(btntag == 2){
+         var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
+        var arr: NSArray! = dict.objectForKey("array") as NSArray
+        count = arr.count
+      }
     }
     return count
   }
@@ -229,7 +259,11 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     if(btntag == 1){
       var hostCell = pickupTableView.dequeueReusableCellWithIdentifier("cell") as PickupTableViewCell
       hostCell.selectionStyle = UITableViewCellSelectionStyle.None
-      hostCell.defaultCellContents(arrHost.objectAtIndex(indexPath.row)as NSDictionary)
+      if (isSearch == false) {
+        hostCell.defaultCellContents(arrHost.objectAtIndex(indexPath.row)as NSDictionary)
+      } else {
+        hostCell.defaultCellContents(arrySearch.objectAtIndex(indexPath.row)as NSDictionary)
+      }
       hostCell.selectionStyle = UITableViewCellSelectionStyle.None
       return hostCell
     }else if(btntag == 2){
@@ -237,7 +271,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       if(allCell == nil){
         allCell = pickupTableView.dequeueReusableCellWithIdentifier("allcell") as AllTableViewCell
         allCell.selectionStyle = UITableViewCellSelectionStyle.None
-        var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+        var dict: NSDictionary!
+        if (isSearch == false) {
+           dict = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+        } else {
+          dict = arrySearch.objectAtIndex(indexPath.row) as NSDictionary
+        }
         var arr: NSArray! = dict.objectForKey("array") as NSArray
         var subDict: NSDictionary! = arr.objectAtIndex(indexPath.row) as NSDictionary
         allCell.textLabel.text = subDict.objectForKey("name") as NSString
@@ -263,12 +302,21 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     if(btntag == 1){
     var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
     vc.callVw = "Pay"
-    vc.clsDictDe = arrHost.objectAtIndex(indexPath.row) as NSDictionary
+      if (isSearch == false) {
+        vc.clsDictDe = arrHost.objectAtIndex(indexPath.row) as NSDictionary
+      } else {
+        vc.clsDictDe  = arrySearch.objectAtIndex(indexPath.row)as NSDictionary
+      }
     self.navigationController?.pushViewController(vc, animated: true)
     }else if(btntag == 2){
       var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.row) as NSDictionary
       var cellArr: NSArray! = dict.objectForKey("array") as NSArray
-      var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
+      var dictSub: NSDictionary!
+      if (isSearch == false) {
+       dictSub = cellArr.objectAtIndex(indexPath.row) as NSDictionary
+      } else {
+        dictSub = arrySearch.objectAtIndex(indexPath.row)as NSDictionary
+      }
       var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassID") as ClassViewController
       vc.sub_cat_id = dictSub.objectForKey("id") as NSInteger
       vc.flgClass = "Pay"
@@ -279,26 +327,47 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   //************Api Calling Method***********
   
-//  func getPayClassApiCall(){
-//    
-//      var aParams: NSDictionary = ["auth_token":auth_token[0]]
-//      self.api.payClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-//        println(responseObject)
-//        var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-//        //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
-//        //self.hometableVw.reloadData()
-//        
-//        },
-//        failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-//          println(error)
-//          
-//      })
-//    
-//  }
+  func getPayClassApiCall(){
+    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    self.api.payClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
+      //self.hometableVw.reloadData()
+      self.allDataFetchFromDataBase()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+  
+  
+  func getHostPayClsApiCall(){
+    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    self.api.hostpayClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
+      //self.hometableVw.reloadData()
+      self.hostDataFetchFromDataBase()
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
   
   //*************** Data feching Form DataBase **************
   
   func allDataFetchFromDataBase(){
+    dataArr.removeAllObjects()
     let arrFetchCat : NSArray = PayClsCat.MR_findAll()
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index {
@@ -310,7 +379,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       dictData.setObject(str_cat_id, forKey: "id")
       dictData.setObject(strName, forKey: "name")
       
-      let sub_CatFilter : NSPredicate = NSPredicate(format: "sub_cat_id CONTAINS %@",str_cat_id)!
+      let sub_CatFilter : NSPredicate = NSPredicate(format:"sub_cat_id CONTAINS %@",str_cat_id)!
       let subcatData : NSArray = PaySubCat.MR_findAllWithPredicate(sub_CatFilter)
       
       for var index = 0; index < subcatData.count; ++index {
@@ -330,6 +399,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   }
   
   func hostDataFetchFromDataBase(){
+    arrHost.removeAllObjects()
     let arrFetchCat : NSArray = HostPayCls.MR_findAll()
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index{
@@ -412,8 +482,58 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry No Class", delegate: self, cancelButtonTitle: "Ok")
       alert.show()
     }
-    
   }
-  
-  
+
+
+  func convertResponseIntoSectionData(arrFetchCat : NSArray){
+
+    for var index = 0; index < arrFetchCat.count; ++index {
+
+      let catObject : NSDictionary = arrFetchCat.objectAtIndex(index) as NSDictionary
+      var str_cat_id = catObject.objectForKey("") as NSInteger
+      var strName = catObject.objectForKey("") as NSString
+      var dictData: NSMutableDictionary! = NSMutableDictionary()
+      dictData.setObject(str_cat_id, forKey: "id")
+      dictData.setObject(strName, forKey: "name")
+
+      let subcatData : NSArray = catObject.objectForKey("") as NSArray
+
+      for var index = 0; index < subcatData.count; ++index {
+        let subCatObject : NSDictionary = subcatData.objectAtIndex(index) as NSDictionary
+        var strID = subCatObject.objectForKey("") as NSInteger
+        var strName = subCatObject.objectForKey("") as NSString
+        var catDict2: NSMutableDictionary! = NSMutableDictionary()
+        catDict2.setObject(strID, forKey: "id")
+        catDict2.setObject(strName, forKey: "name")
+        var subCatArr: NSMutableArray! = NSMutableArray(object: catDict2)
+        dictData.setObject(subCatArr, forKey: "array")
+        print(subCatArr.count)
+      }
+      arrySearch.addObject(dictData)
+    }
+  }
+}
+
+extension PickupCoursecenterViewController:UISearchBarDelegate {
+  func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    searchBar.text = ""
+    searchBar.hidden = true
+    searchBar.resignFirstResponder()
+    self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
+    self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+  }
+
+  func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    let param:NSDictionary = ["search":searchBar.text]
+    self.api.callSearchNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+      self.isSearch = true
+
+      if (self.btntag == 2) {
+        self.convertResponseIntoSectionData(responseObject as NSMutableArray)
+      } else {
+        self.arrySearch = responseObject as NSMutableArray
+      }
+      }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
+    }
+  }
 }

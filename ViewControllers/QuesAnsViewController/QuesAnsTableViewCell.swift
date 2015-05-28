@@ -65,12 +65,9 @@ class QuesAnsTableViewCell: BaseTableViewCell {
       cellbtnAddAns = UIButton(frame: CGRectMake(cellbtnAns.frame.width+25, cellbtnAns.frame.origin.y,cellbtnAns.frame.width,cellbtnAns.frame.height))
       
       self.setContentProperties(aParam)
-    }
-    
-    
+    }    
   }
-  
-  
+
   func setContentProperties(aParam: NSDictionary){
     celltxtVw.layer.borderWidth = 0.38
     celltxtVw.layer.borderColor = UIColor.grayColor().CGColor

@@ -139,6 +139,46 @@
                                     success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                     failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
+- (AFHTTPRequestOperation *)callFilterNotesApi:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)callSearchNotesApi:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)callNotesDeleteApi:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)callNotesUpdateApi:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)aboutUS:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)clsOutline:(NSDictionary *)aParams
+                            success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                            failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)videoComplete:(NSDictionary *)aParams
+                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)feedback:(NSDictionary *)aParams
+                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)buyClass:(NSDictionary *)aParams
+                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)userClassOrders:(NSDictionary *)aParams
+                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
 -(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams;
 
 @end

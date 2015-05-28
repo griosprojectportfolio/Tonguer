@@ -25,6 +25,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   var horiVw1: UIView!
   var horiVw2: UIView!
   
+  var api: AppApi!
+  
   var btnHaveClass: UIButton!
   var btnServiceChat: UIButton!
   var btnCall: UIButton!
@@ -46,8 +48,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    api = AppApi.sharedClient()
     self.defaultUIDesign()
-    
     print(clsDictDe)
     
     var strName: NSString! = clsDictDe.objectForKey("name") as NSString
@@ -111,7 +113,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     self.view.addSubview(vertiVw)
     
     btnCourselist = UIButton(frame: CGRectMake(vertiVw.frame.origin.x,btnCourseDetail.frame.origin.y, btnCourseDetail.frame.width, btnCourseDetail.frame.height))
-    btnCourselist.setTitle("Class list", forState: UIControlState.Normal)
+    btnCourselist.setTitle("Outline", forState: UIControlState.Normal)
     btnCourselist.tag = 2
     btnCourselist.titleLabel?.font = btnCourselist.titleLabel?.font.fontWithSize(12)
     btnCourselist.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
@@ -120,8 +122,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     self.view.addSubview(btnCourselist)
     
      horiVw1 = UIView(frame: CGRectMake(btnCourselist.frame.origin.x,btnCourselist.frame.origin.y+btnCourselist.frame.height , btnCourselist.frame.width, 1))
-    horiVw1.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    horiVw1.hidden = true
+    horiVw1.backgroundColor = UIColor.lightGrayColor()
+    
     self.view.addSubview(horiVw1)
     
     var vertiVw1: UIView! = UIView(frame: CGRectMake(btnCourselist.frame.origin.x+btnCourselist.frame.width,btnCourselist.frame.origin.y,1,btnCourselist.frame.height))
@@ -138,8 +140,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     self.view.addSubview(btnCourseask)
     
     horiVw2 = UIView(frame: CGRectMake(btnCourseask.frame.origin.x,btnCourseask.frame.origin.y+btnCourseask.frame.height , btnCourseask.frame.width, 1))
-    horiVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    horiVw2.hidden = true
+    horiVw2.backgroundColor = UIColor.lightGrayColor()
     self.view.addSubview(horiVw2)
     
     var vertiVw2: UIView! = UIView(frame: CGRectMake(btnCourseask.frame.origin.x+btnCourseask.frame.width,btnCourseask.frame.origin.y,1,btnCourseask.frame.height))
@@ -150,7 +151,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
      self.setVwFooterBtnsCallPickupCourse()
     }else if(callVw.isEqualToString("Free")){
       self.setVwFooterBtnsCallTryClass()
-      btnCourselist.userInteractionEnabled = false
+      //btnCourselist.userInteractionEnabled = false
     }
     
     tableview.delegate = self
@@ -166,12 +167,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   func setVwFooterBtnsCallPickupCourse(){
     btnServiceChat = UIButton(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.height-40,(self.view.frame.width/3)-50,40))
     btnServiceChat.setImage(UIImage(named: "servicechat.png"), forState: UIControlState.Normal)
+    btnServiceChat.addTarget(self, action: "btnServiceChatTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     //btnServiceChat.backgroundColor = UIColor.redColor()
     self.view.addSubview(btnServiceChat)
     
     btnCall = UIButton(frame: CGRectMake(btnServiceChat.frame.origin.x+btnServiceChat.frame.width,btnServiceChat.frame.origin.y, btnServiceChat.frame.width,btnServiceChat.frame.height ))
     btnCall.setImage(UIImage(named: "call.png"), forState: UIControlState.Normal)
     //btnCall.backgroundColor = UIColor.redColor()
+    btnCall.addTarget(self, action: "btnCallTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btnCall)
     
     btnbuy = UIButton(frame: CGRectMake(btnCall.frame.origin.x+btnCall.frame.width, btnCall.frame.origin.y,self.view.frame.width - (btnCall.frame.origin.x+btnCall.frame.width), 40))
@@ -213,6 +216,17 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     
     return count
   }
+  
+  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    var count: NSInteger!
+    if(btnTag == 1){
+      count = 1
+    }else if(btnTag == 2){
+      count = clistarr.count
+    }
+    return count
+  }
+  
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     
     var height: CGFloat!
@@ -220,10 +234,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       height = 70
     }else if(btnTag == 2){
       height = 100
-    }else{
-      height = 70
     }
-    
     return height
   }
   
@@ -241,11 +252,47 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       var cell: CourseListCell!  = tableview.dequeueReusableCellWithIdentifier("CourseList") as CourseListCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       dictDetail = clistarr.objectAtIndex(indexPath.row) as NSDictionary
-      cell.defaultCellContenforCourselist(dictDetail)
+      cell.defaultCellContenforCourselist(dictDetail, Frame:self.view.frame)
       return cell
     }
     return cell
   }
+  
+  
+  func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    var vWheader: UIView!
+    if(btnTag == 1){
+      return vWheader
+    }else if(btnTag == 2){
+      vWheader = UIView(frame: CGRectMake(5, 5, 100, 40))
+      vWheader.backgroundColor = UIColor.whiteColor()
+      vWheader.layer.borderWidth = 0.5
+      vWheader.layer.borderColor = UIColor.lightGrayColor().CGColor
+      vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
+      var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
+      var lbltilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
+      lbltilte.text = "Modual"
+      lbltilte.font = lbltilte.font.fontWithSize(12)
+      lbltilte.textColor = UIColor.whiteColor()
+      vWheader.addSubview(lbltilte)
+      
+      return vWheader
+    }
+    return vWheader
+    
+  }
+  
+  func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    
+    var strTitle: NSString!
+    if(btnTag == 1){
+      strTitle = ""
+    }else if(btnTag == 2){
+      strTitle = "Module"
+    }
+    return strTitle
+  }
+
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -279,9 +326,10 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     var btn = sender as UIButton
     btnTag = btn.tag
     println(btnTag)
-    horiVw.hidden = false
-    horiVw1.hidden = true
-    horiVw2.hidden = true
+    horiVw.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    horiVw1.backgroundColor = UIColor.lightGrayColor()
+    horiVw2.backgroundColor = UIColor.lightGrayColor()
+  
     tableview.reloadData()
   }
   
@@ -289,9 +337,10 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     var btn = sender as UIButton
     btnTag = btn.tag
     println(btnTag)
-    horiVw1.hidden = false
-    horiVw.hidden = true
-    horiVw2.hidden = true
+    
+    horiVw.backgroundColor = UIColor.lightGrayColor()
+    horiVw1.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    horiVw2.backgroundColor = UIColor.lightGrayColor()
   
     tableview.reloadData()
   }
@@ -300,13 +349,54 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     var btn = sender as UIButton
     btnTag = btn.tag
     println(btnTag)
-    horiVw1.hidden = true
-    horiVw.hidden = true
-    horiVw2.hidden = false
+   
+    horiVw.backgroundColor = UIColor.lightGrayColor()
+    horiVw1.backgroundColor = UIColor.lightGrayColor()
+    horiVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     
+    skypeIntegrationMethode()
+  }
+  
+  func btnServiceChatTapped(sender:UIButton){
+    skypeIntegrationMethode()
+  }
+  
+  
+  func skypeIntegrationMethode(){
+    
+    var installed = UIApplication.sharedApplication().canOpenURL(NSURL(string: "skype:")!)
+    if(installed){
+      UIApplication.sharedApplication().openURL(NSURL(string: "skype:echo123?call")!)
+    }else{
+      UIApplication.sharedApplication().openURL(NSURL(string: "http://itunes.com/apps/skype/skype")!)
+    }
     
   }
   
+  func btnCallTapped(sender:UIButton){
+    let phoneString = NSString(format: "tel://%@", 8602699798/*self.meeting.phone*/) as String
+    UIApplication.sharedApplication().openURL(NSURL(string: phoneString)!)
+  }
+  
+  //********* Class Outline Api Calling Method *********
+  
+  func freeClassListApiCall(){
+    
+    var cls_id:NSInteger = self.clsDictDe.valueForKey("id") as NSInteger
+    var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],cls_id], forKeys: ["auth_token","class_id"])
+    
+    self.api.clsOutline(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry some technical problam.", delegate: self, cancelButtonTitle: "Ok")
+        alert.show()
+        
+    })
+  }
 
+  
   
 }

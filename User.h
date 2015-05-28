@@ -23,5 +23,6 @@
 + (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
 + (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
 + (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)deleteAllEntityObjects;
 
 @end

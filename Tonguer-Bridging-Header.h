@@ -36,5 +36,10 @@
 #import "Answer.h"
 #import "Notes.h"
 #import "UserNotes.h"
+#import "UIImageView+WebCache.h"
+#import "PayPalMobile.h"
+#import "Aboutus.h"
+#import "UserClassOrder.h"
+
 
 #endif

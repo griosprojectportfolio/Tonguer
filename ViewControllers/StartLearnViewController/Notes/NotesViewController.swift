@@ -8,8 +8,7 @@
 
 import UIKit
 
-class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
-
+class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UISearchBarDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var btnMyNotes: UIButton!
@@ -21,10 +20,20 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   var btnSearch: UIButton!
   var btnfilter: UIButton!
   var api: AppApi!
+  var pickerVW: UIPickerView!
+  var vwPicker: UIView!
   var actiIndecatorVw: ActivityIndicatorView!
   var arrUserNotes: NSMutableArray! = NSMutableArray()
+  var arrclass: NSMutableArray! = NSMutableArray()
   var arrNotes: NSMutableArray! = NSMutableArray()
-  
+  var isSearch:Bool = false
+  var arrySearchNotes:NSMutableArray = NSMutableArray()
+
+  var btnBarFilter: UIBarButtonItem!
+  var btnBarSearch: UIBarButtonItem!
+  var btnBarAdd: UIBarButtonItem!
+  var search:UISearchBar!
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -45,25 +54,51 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     api = AppApi.sharedClient()
     self.getNotesApiCall()
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
-    self.view.addSubview(actiIndecatorVw)
-    
-    delay(8) { () -> () in
-      
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-      self.defaultUIDesign()
-    }
-    
-    }
+    //self.view.addSubview(actiIndecatorVw)
+
+    fetchDataFromDBforDefaultCls()
+  }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
-  
+
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    self.view.bringSubviewToFront(self.actiIndecatorVw)
+    self.defaultUIDesign()
+
+    var arryUserNotes:NSArray = UserNotes.MR_findAll()
+    var arryNotes:NSArray = Notes.MR_findAll()
+
+    self.dataFetchFromDatabaseGetNotes(arryNotes)
+    self.dataFetchFromDatabaseGetUserlNotes(arryUserNotes)
+
+    if (arryNotes.count != 0 || arryUserNotes.count != 0) {
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      self.tblVwNotes.reloadData()
+    }
+  }
+
   func defaultUIDesign(){
-    
-    
+
+    vwPicker = UIView(frame: CGRectMake(0, 0,self.view.frame.width,self.view.frame.height))
+    vwPicker.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+
+    var tapGuesture: UITapGestureRecognizer! = UITapGestureRecognizer(target: self, action:"tappedGestureRecog")
+    vwPicker.addGestureRecognizer(tapGuesture)
+
+    pickerVW = UIPickerView(frame: CGRectMake(vwPicker.frame.origin.x+20,(vwPicker.frame.height-250)/2,vwPicker.frame.width-40,250))
+    pickerVW.backgroundColor = UIColor.whiteColor()
+    pickerVW.dataSource = self
+    pickerVW.delegate = self
+    self.view.addSubview(vwPicker)
+
+    vwPicker.addSubview(pickerVW)
+    vwPicker.hidden = true
+
     btnfilter = UIButton(frame: CGRectMake(0, 0, 25, 25))
     btnfilter.setImage(UIImage(named: "filter.png"), forState: UIControlState.Normal)
     btnfilter.addTarget(self, action: "btnFilterTapped:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -72,14 +107,12 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     btnSearch.setImage(UIImage(named: "searchicon.png"), forState: UIControlState.Normal)
     btnSearch.addTarget(self, action: "btnSearchTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     
-    var btnBarFilter: UIBarButtonItem! = UIBarButtonItem(customView: btnfilter)
-    var btnBarSearch: UIBarButtonItem! = UIBarButtonItem(customView: btnSearch)
-    
-    var btnBarAdd: UIBarButtonItem! = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "btnAddTapped:")
+    btnBarFilter = UIBarButtonItem(customView: btnfilter)
+    btnBarSearch = UIBarButtonItem(customView: btnSearch)
+    btnBarAdd = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "btnAddTapped:")
     btnBarAdd.tintColor = UIColor.whiteColor()
     
     self.navigationItem.setRightBarButtonItems([btnBarFilter,btnBarSearch,btnBarAdd], animated: true)
-    
     
     btnMyNotes = UIButton(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.width/2, 40))
     btnMyNotes.setTitle("My Notes", forState: UIControlState.Normal)
@@ -108,7 +141,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     vWHori2.backgroundColor = UIColor.lightGrayColor()
     self.view.addSubview(vWHori2)
     
-    tblVwNotes = UITableView(frame: CGRectMake(self.view.frame.origin.x,btnNotes.frame.origin.y+btnNotes.frame.height+5,self.view.frame.width, self.view.frame.height - (btnNotes.frame.origin.y+btnNotes.frame.height+5)))
+    tblVwNotes = UITableView(frame: CGRectMake(self.view.frame.origin.x,btnNotes.frame.origin.y+btnNotes.frame.height+2,self.view.frame.width, self.view.frame.height - (btnNotes.frame.origin.y+btnNotes.frame.height+5)))
     //tblVwNotes.backgroundColor = UIColor.grayColor()
     tblVwNotes.separatorStyle = UITableViewCellSeparatorStyle.None
     tblVwNotes.delegate = self
@@ -117,12 +150,19 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     
     tblVwNotes.registerClass(MyNotesTableViewCell.self, forCellReuseIdentifier: "MyNotesCell")
     tblVwNotes.registerClass(NotesTableViewCell.self, forCellReuseIdentifier: "NotesCell")
-    
+
+    search = UISearchBar(frame: CGRectMake(0, 0, 100, 30))
+    search.hidden = true
+    search.delegate = self
+    search.showsCancelButton = true
+    search.tintColor = UIColor.whiteColor()
+    self.navigationItem.titleView = search
   }
   
   func btnSearchTapped(sender:AnyObject){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("SearchID") as SearchViewController
-    self.navigationController?.pushViewController(vc, animated: true)
+    self.navigationItem.rightBarButtonItems = nil
+    self.navigationItem.leftBarButtonItem = nil
+    search.hidden = false
   }
   
   func btnAddTapped(sender:AnyObject){
@@ -131,8 +171,8 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
   
   func btnFilterTapped(sender:AnyObject){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseListID") as CourselistViewController
-    self.navigationController?.pushViewController(vc, animated: true)
+    vwPicker.hidden = false
+    self.view.bringSubviewToFront(vwPicker)
   }
   
   func btnMyNotesTapped(sender:AnyObject){
@@ -155,17 +195,25 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     self.navigationController?.popViewControllerAnimated(true)
   }
 
-  
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     var count: NSInteger!
-    if(tapTag == 1){
-      count = arrUserNotes.count
-    }else if(tapTag == 2){
-      count = arrNotes.count
+
+    if (isSearch == true) {
+      count = arrySearchNotes.count
+    } else {
+      if(tapTag == 1){
+        count = arrUserNotes.count
+      } else if(tapTag == 2){
+        count = arrNotes.count
+      }
     }
     return count
   }
-  
+
+  func tappedGestureRecog(){
+    vwPicker.hidden = true
+  }
+
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
     var cell: UITableViewCell! = nil
@@ -174,21 +222,26 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       var cell: MyNotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("MyNotesCell") as MyNotesTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-     
-      cell.defaultUIDesign(arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+
+      if (isSearch == false) {
+        cell.defaultUIDesign(arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+      } else {
+        cell.defaultUIDesign(arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+      }
        return cell
-      
-    }else if(tapTag == 2){
+    } else if(tapTag == 2){
       var cell: NotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
+      if (isSearch == false) {
        cell.defaultUIDesign(arrNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
-       return cell
+      } else {
+        cell.defaultUIDesign(arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+      }
+      return cell
     }
-    
     return cell
-    
   }
-  
+
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     return 100
   }
@@ -206,41 +259,33 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     
   }
   
-  func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        Int64(delay * Double(NSEC_PER_SEC))
-      ),
-      dispatch_get_main_queue(), closure)
-  }
-  
   //************Call Notes Api Method *********
   
   func getNotesApiCall(){
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
-       self.api.getUserNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+
+    self.api.getUserNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-     self.delay(2, closure: { () -> () in
-        self.dataFetchFromDatabaseGetUserlNotes()
-        self.dataFetchFromDatabaseGetNotes()
-        })
+
+        self.actiIndecatorVw.loadingIndicator.stopAnimating()
+        self.actiIndecatorVw.removeFromSuperview()
+        var dictResponse:NSDictionary = responseObject as NSDictionary
+        self.dataFetchFromDatabaseGetUserlNotes(dictResponse.objectForKey("UserNotes") as NSArray)
+        self.dataFetchFromDatabaseGetNotes(dictResponse.objectForKey("Notes") as NSArray)
+        self.tblVwNotes.reloadData()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        
     })
-    
   }
 
-  
   //************Data fetching From DataBase Get UserNotes  *********
   
-  func dataFetchFromDatabaseGetUserlNotes(){
-    
-      let arrFetchAdmin: NSArray = UserNotes.MR_findAll()
+  func dataFetchFromDatabaseGetUserlNotes(arrFetchAdmin:NSArray){
+
+    arrUserNotes.removeAllObjects()
     for var index = 0; index < arrFetchAdmin.count; ++index{
       let notesObj: UserNotes = arrFetchAdmin.objectAtIndex(index) as UserNotes
       var dict: NSMutableDictionary! = NSMutableDictionary()
@@ -278,17 +323,14 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }
       
       arrUserNotes.addObject(dict)
-
     }
-    
     print(arrUserNotes.count)
-    
   }
   
   
-  func dataFetchFromDatabaseGetNotes(){
-    
-    let arrFetchAdmin: NSArray = Notes.MR_findAll()
+  func dataFetchFromDatabaseGetNotes(arrFetchAdmin:NSArray){
+
+    arrNotes.removeAllObjects()
     for var index = 0; index < arrFetchAdmin.count; ++index{
       let notesObj: Notes = arrFetchAdmin.objectAtIndex(index) as Notes
       var dict: NSMutableDictionary! = NSMutableDictionary()
@@ -318,16 +360,128 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }else{
         dict.setValue("0000-00-00 00:00", forKey:"date")
       }
-      
       arrNotes.addObject(dict)
-      
     }
-    
     print(arrNotes.count)
-    
   }
 
-  
-  
 
+  func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    return 1
+  }
+
+  func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    return arrclass.count
+  }
+
+  func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+
+    var dict: NSDictionary! = arrclass.objectAtIndex(row) as NSDictionary
+    var strName: NSString! = dict.valueForKey("name") as NSString
+    //id filter
+    return strName
+  }
+
+  func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+
+    var dict: NSDictionary! = arrclass.objectAtIndex(row) as NSDictionary
+    var name:NSString =  dict.valueForKey("name") as NSString
+    var classId:NSInteger =  dict.valueForKey("id") as NSInteger
+    vwPicker.hidden = true
+    self.filterApiCall(classId) //call filter api
+  }
+
+  func filterApiCall (classId:NSInteger) {
+    let param:NSDictionary = ["":classId]
+    self.api.callFilterNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+
+      self.arrySearchNotes = responseObject?.objectForKey("filter") as NSMutableArray
+      self.isSearch = true
+      self.tblVwNotes.reloadData() // take search arry and apply content
+
+      }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
+
+    }
+  }
+
+  func fetchDataFromDBforDefaultCls(){
+    let arrFetchedData : NSArray = UserDefaultClsList.MR_findAll()
+
+    for var index = 0; index < arrFetchedData.count; ++index {
+      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as UserDefaultClsList
+      var dict: NSMutableDictionary! = NSMutableDictionary()
+
+      dict.setObject(userClsObj.cls_id, forKey: "id")
+
+      if((userClsObj.cls_name) != nil){
+        dict.setObject(userClsObj.cls_name, forKey:"name")
+      }else{
+        dict.setObject("No Class Name", forKey:"name")
+      }
+
+      if((userClsObj.cls_img_url) != nil){
+        var str_url: NSString = userClsObj.cls_img_url
+        dict.setObject(str_url, forKey:"image")
+
+      }else{
+        var str_url: NSString = "http://www.popular.com.my/images/no_image.gif"
+        dict.setObject(str_url, forKey:"image")
+      }
+
+      if((userClsObj.cls_vaild_days) != nil){
+        dict.setObject(userClsObj.cls_vaild_days,forKey:"days")
+
+      }else{
+        dict.setObject("No Day",forKey:"days")
+      }
+
+      if((userClsObj.cls_score) != nil){
+        dict.setObject(userClsObj.cls_score, forKey: "score")
+
+      }else{
+        dict.setObject("0.0", forKey: "score")
+      }
+
+      if((userClsObj.cls_price) != nil){
+        dict.setObject(userClsObj.cls_price, forKey: "price")
+
+      }else{
+        dict.setObject("0.0", forKey: "price")
+      }
+
+      if((userClsObj.cls_progress) != nil){
+        dict.setObject(userClsObj.cls_progress, forKey:"progress")
+
+      }else{
+        dict.setObject("0", forKey:"progress")
+      }
+      arrclass.addObject(dict)
+    }
+
+    print(arrclass.count)
+  }
 }
+
+extension NotesViewController:UISearchBarDelegate {
+
+  func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    searchBar.text = ""
+    searchBar.hidden = true
+    searchBar.resignFirstResponder()
+    self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    self.navigationItem.setRightBarButtonItems([btnBarFilter,btnBarSearch,btnBarAdd], animated: true)
+  }
+
+  func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    let param:NSDictionary = ["search":searchBar.text]
+    self.api.callSearchNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+
+        self.arrySearchNotes = responseObject?.objectForKey("notes") as NSMutableArray
+        self.isSearch = true
+        self.tblVwNotes.reloadData() // take search arry and apply content
+
+      }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
+    }
+  }
+}
+

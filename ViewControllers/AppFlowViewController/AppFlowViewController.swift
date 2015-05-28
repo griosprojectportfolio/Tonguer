@@ -18,11 +18,13 @@ class AppFlowViewController: BaseViewController {
   var lblDescrip : UILabel!
   var btnplay : UIButton!
   var scrollVW: UIScrollView!
+  var api: AppApi!
   var strMessage: NSString = "This is a preliminary document for an API or technology in development. Apple is supplying this information to help you plan for the adoption of the technologies and programming interfaces described herein for use on Apple-branded products. This information is subject to change, and software implemented according to this document should be tested with final operating system software and final documentation. Newer versions of this document may be  First throw call stack: (0x16b1022 0x1842cd6 0xed3871 0x599a 0xe3a1e 0xe2fec 0x109f1d 0xf41cb 0x10adf1 0x10ae0d 0x10aea9 0x496f5 0x4973c 0x1a596 0x1b274 0x2a183 0x2ac38 0x1e634 0x159bef5 0x1685195 0x15e9ff2 0x15e88da 0x15e7d84 0x15e7c9b 0x1ac65 0x1c626 0x32ed 0x2385 0x1) terminate called throwing an exception(lldb)."
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    api = AppApi.sharedClient()
+    abouUSApiCall()
     self.defaultUIDesign()
   }
   
@@ -80,7 +82,7 @@ class AppFlowViewController: BaseViewController {
     btnplay.layer.cornerRadius = 20
     btnplay.layer.borderWidth = 1
     btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
-    btnplay.addTarget(self, action: "btnPayTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    btnplay.addTarget(self, action: "btnPlayTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     imgVwAlpha.addSubview(btnplay)
     self.view.bringSubviewToFront(btnplay)
     
@@ -99,8 +101,27 @@ class AppFlowViewController: BaseViewController {
     self.navigationController?.popViewControllerAnimated(true)
   }
   
-  func btnPayTapped(sender:AnyObject){
+  func btnPlayTapped(sender:AnyObject){
     print("Tapped")
   }
+  
+  //************Api methode Call Post Comments*********
+  
+  func abouUSApiCall(){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    
+    self.api.aboutUS(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var arry = responseObject as NSArray
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
+  
   
 }

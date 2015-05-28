@@ -14,10 +14,11 @@
 
 @property (nonatomic, retain) NSNumber * comment_id;
 @property (nonatomic, retain) NSString * commment;
+@property (nonatomic, retain) NSNumber * topic_Id;
 @property (nonatomic, retain) NSString * name;
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)entityFromArray:(NSArray *)aArray withTopicId:(NSNumber *)topicId inContext:(NSManagedObjectContext*)localContext;
++ (id)entityFromDictionary:(NSDictionary *)aDictionary withTopicId:(NSNumber *)topicId  inContext:(NSManagedObjectContext *)localContext;
++ (void)entityWithDictionaty:(NSDictionary *)adictionary withTopicId:(NSNumber *)topicId  inContext:(NSManagedObjectContext *)localContext;
 
 @end

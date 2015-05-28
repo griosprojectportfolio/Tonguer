@@ -49,9 +49,8 @@ class ClassTableViewCell: BaseTableViewCell {
   func setContentProperties(aParam:NSDictionary){
     
     let url = NSURL(string: aParam.objectForKey("image") as NSString)
-    let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-    imgVw.image = UIImage(data: data!)
-    
+    imgVw.sd_setImageWithURL(url)
+
     //imgVw.image = UIImage(named: aParam.objectForKey("image") as NSString)
     //imgVw.backgroundColor = UIColor.redColor()
     imgVw.layer.borderWidth = 0.3

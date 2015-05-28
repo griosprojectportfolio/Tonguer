@@ -31,7 +31,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   
   var lblDayLeft :UILabel!
   var lblDayLeftDigit :UILabel!
-  var dataArr: NSArray!
+  var dataArr: NSMutableArray = NSMutableArray()
   var dict1:NSMutableDictionary!
   var dict2:NSMutableDictionary!
   var dict3:NSMutableDictionary!
@@ -59,9 +59,6 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     dict4 = NSMutableDictionary()
     dict4.setObject("notes.png", forKey: "image")
     dict4.setObject("Notes", forKey: "name")
-    
-    dataArr = NSArray(objects:dict1,dict2,dict3,dict4)
-    
     self.title = "Start To Learn"
     
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
@@ -78,36 +75,23 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
-    self.getClsTopicApiCall()
-    
-    self.delay(5) { () -> () in
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-      self.arrAdmin.removeAllObjects()
-      self.arrUser.removeAllObjects()
-      self.dataFetchFromDatabaseDiscus()
-      self.defaultUIDesign()
-    }
+    self.arrAdmin.removeAllObjects()
+    self.arrUser.removeAllObjects()
+
     }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    
+    self.defaultUIDesign()
+    self.view.bringSubviewToFront(self.actiIndecatorVw)
+    self.getClsTopicApiCall()
   }
-  
+
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
-  
-  func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        Int64(delay * Double(NSEC_PER_SEC))
-      ),
-      dispatch_get_main_queue(), closure)
-  }
+
   
   
   func defaultUIDesign(){
@@ -205,7 +189,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     btnFreeOpen.addTarget(self, action:"btnFreeOpenTapped", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btnFreeOpen)
     
-    sartlTableview = UITableView(frame:CGRectMake(btnFreeOpen.frame.origin.x,btnStartLearn.frame.origin.y+btnFreeOpen.frame.height+5, btnFreeOpen.frame.width,btnFreeOpen.frame.origin.y-btnFreeOpen.frame.height-imgVwAlpha.frame.height-80))
+    sartlTableview = UITableView(frame:CGRectMake(btnFreeOpen.frame.origin.x,btnStartLearn.frame.origin.y+btnFreeOpen.frame.height+1, btnFreeOpen.frame.width,btnFreeOpen.frame.origin.y-(btnStartLearn.frame.origin.y+40)))
     sartlTableview.delegate = self
     sartlTableview.dataSource = self
     sartlTableview.scrollEnabled = true
@@ -296,34 +280,34 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   func getClsTopicApiCall(){
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-     aParams.setValue(auth_token[0], forKey: "auth_token")
-     aParams.setValue(dictClasses.valueForKey("id"), forKey: "class_id")
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(dictClasses.valueForKey("id"), forKey: "class_id")
+
     self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      
-//      self.delay(1, closure: { () -> () in
-//         self.dataFetchFromDatabaseDiscus()
-//      })
-      
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()//  
+
+      var dictresponse:NSDictionary = responseObject as NSDictionary
+      self.dataFetchFromDatabaseDiscus(dictresponse)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
         
     })
-    
   }
-  
-  
 
   //***************Fetching Data From Database Discus *********
   
-  func dataFetchFromDatabaseDiscus(){
-    let arrFetchAdmin: NSArray = DisAdminTopic.MR_findAll()
-    let arrFetchUser: NSArray = DisUserToic.MR_findAll()
+  func dataFetchFromDatabaseDiscus(var dictData:NSDictionary){
+    let arrFetchAdmin: NSArray = dictData.objectForKey("Admin") as NSArray
+    let arrFetchUser: NSArray = dictData.objectForKey("User") as NSArray
     var count: NSInteger = arrFetchAdmin.count + arrFetchUser.count
     print(count)
     dict3.setObject(count, forKey: "count")
-    
+    dataArr = [dict1,dict2,dict3,dict4]
+    self.sartlTableview.reloadData()
+
     for var index = 0; index < arrFetchAdmin.count; ++index{
       let clsObject: DisAdminTopic = arrFetchAdmin.objectAtIndex(index) as DisAdminTopic
       var dict: NSMutableDictionary! = NSMutableDictionary()
@@ -341,10 +325,5 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
       dict.setValue(clsObject.topic_content, forKey: "content")
       arrUser.addObject(dict)
     }
-
-    
   }
-
-  
-  
 }

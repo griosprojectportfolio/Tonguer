@@ -15,50 +15,29 @@ class VideoTableViewCell: BaseTableViewCell {
   var lblText:UILabel!
   var btnplay:UIButton!
   var vwHidden:UIView!
+  var btnComplete:UIButton!
+  var downloadProgress: UIProgressView!
   
   override func awakeFromNib() {
     super.awakeFromNib()
     // Initialization code
   }
   
-  func defaultUIDesign(aParm:NSDictionary){
+  func defaultUIDesign(aParm:NSDictionary,frame:CGRect){
     
     var arry = self.contentView.subviews
     var vwSub: UIView!
     for vwSub in arry {
       vwSub.removeFromSuperview()
     }
-
     
-    if(isiPhone5orLower){
-      vwHidden = UIView(frame: CGRectMake(self.contentView.frame.origin.x,self.contentView.frame.origin.y,self.contentView.frame.width, self.contentView.frame.height))
-      cellImgView = UIImageView(frame: CGRectMake(20, 15, 320-40,130))
-      celltxtView = UIView(frame: CGRectMake(cellImgView.frame.origin.x,cellImgView.frame.height+15,cellImgView.frame.width ,50))
-      lblText = UILabel(frame: CGRectMake(5,2,celltxtView.frame.width-20, celltxtView.frame.height-5));
-      btnplay = UIButton(frame: CGRectMake((cellImgView.frame.width-40)/2,(cellImgView.frame.height-40)/2,40,40))
-      self.setContentsProperties(aParm)
-    }
-    
-    if(isiPhone6){
-      vwHidden = UIView(frame: CGRectMake(self.contentView.frame.origin.x,self.contentView.frame.origin.y,self.contentView.frame.width, self.contentView.frame.height))
-      cellImgView = UIImageView(frame: CGRectMake(20, 15, 375-40,130))
-      celltxtView = UIView(frame: CGRectMake(cellImgView.frame.origin.x,cellImgView.frame.height+15,cellImgView.frame.width ,50))
-      lblText = UILabel(frame: CGRectMake(5,2,celltxtView.frame.width-20, celltxtView.frame.height-5));
-      btnplay = UIButton(frame: CGRectMake(170,55,40,40))
-      self.setContentsProperties(aParm)
-    }
-    
-    if(isiPhone6plus){
-        vwHidden = UIView(frame: CGRectMake(self.contentView.frame.origin.x,self.contentView.frame.origin.y,self.contentView.frame.width, self.contentView.frame.height))
-      cellImgView = UIImageView(frame: CGRectMake(20, 15, 414-40,130))
-      celltxtView = UIView(frame: CGRectMake(cellImgView.frame.origin.x,cellImgView.frame.height+15,cellImgView.frame.width ,50))
-      lblText = UILabel(frame: CGRectMake(5,2,celltxtView.frame.width-20, celltxtView.frame.height-5));
-      btnplay = UIButton(frame: CGRectMake((cellImgView.frame.width-40)/2,(cellImgView.frame.height-40)/2,40,40))
-      self.setContentsProperties(aParm)
-      
-      
-    }
-    
+    cellImgView = UIImageView(frame: CGRectMake(frame.origin.x+20,15,frame.width-40,130))
+    celltxtView = UIView(frame: CGRectMake(cellImgView.frame.origin.x,cellImgView.frame.height+15,cellImgView.frame.width ,50))
+    btnComplete = UIButton(frame: CGRectMake(celltxtView.frame.size.width-85,5,80,40))
+    lblText = UILabel(frame: CGRectMake(5,2,btnComplete.frame.origin.x,40));
+    downloadProgress = UIProgressView(frame: CGRectMake(5,lblText.frame.origin.y+40,btnComplete.frame.origin.x-20,5))
+    btnplay = UIButton(frame: CGRectMake((cellImgView.frame.width-30)/2,(cellImgView.frame.height-30)/2,40,40))
+    self.setContentsProperties(aParm)
     
   }
   
@@ -68,10 +47,10 @@ class VideoTableViewCell: BaseTableViewCell {
 //    self.contentView.addSubview(vwHidden)
     
     let url = NSURL(string: aParam.objectForKey("image") as NSString)
-    let data = NSData(contentsOfURL: url!)
     cellImgView.layer.borderWidth = 0.3
     cellImgView.layer.borderColor = UIColor.grayColor().CGColor
-    cellImgView.image = UIImage(data: data!)
+    cellImgView.sd_setImageWithURL(url)
+
     self.contentView.addSubview(cellImgView)
     
     celltxtView.layer.borderWidth = 0.3
@@ -84,6 +63,20 @@ class VideoTableViewCell: BaseTableViewCell {
     //lblText.backgroundColor = UIColor.yellowColor()
     lblText.textColor = UIColor.grayColor()
     celltxtView.addSubview(lblText);
+    
+    btnComplete.backgroundColor = UIColor.whiteColor()
+    btnComplete.setTitle("Done", forState: UIControlState.Normal)
+    btnComplete.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+    btnComplete.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
+    btnComplete.userInteractionEnabled = true
+    btnComplete.layer.cornerRadius = 5
+    btnComplete.layer.borderWidth = 1
+    btnComplete.layer.borderColor = UIColor.whiteColor().CGColor
+    btnComplete.layer.masksToBounds = true
+    celltxtView.addSubview(btnComplete)
+    
+//    downloadProgress.setProgress(0, animated:false)
+//    celltxtView.addSubview(downloadProgress)
     
     btnplay.backgroundColor = UIColor.whiteColor()
     btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)

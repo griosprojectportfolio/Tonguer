@@ -29,6 +29,10 @@
 #import "Answer.h"
 #import "UserNotes.h"
 #import "Notes.h"
+#import "Aboutus.h"
+#import "ClsOutLineModule.h"
+#import "ClsModElement.h"
+#import "UserClassOrder.h"
 
 /* API Constants */
 static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
@@ -89,9 +93,10 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       [arrResponse addObject:[responseObject valueForKey:@"user"]];
       [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         [User entityFromArray:arrResponse inContext:localContext];
+      }completion:^(BOOL success, NSError *error) {
+        successBlock(task, responseObject);
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
       }];
-      successBlock(task, responseObject);
-      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     } failure:^(AFHTTPRequestOperation *task, NSError *error) {
         if(failureBlock){
           
@@ -194,12 +199,14 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
 - (AFHTTPRequestOperation *)signOutUser:(NSDictionary *)aParams
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
-    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
     NSString *url = [NSString stringWithFormat:@"%@/sessions/logout",kAppAPIBaseURLString];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
+  
+
     return [self DELETE:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+      successBlock(task, responseObject);
     } failure:^(AFHTTPRequestOperation *task, NSError *error) {
         failureBlock(task, error);
     }];
@@ -230,6 +237,8 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       
       NSArray *arrFetchCat  = [UserDefaultClsList MR_findAll];
       NSLog(@"%@",arrFetchCat);
+    } completion:^(BOOL success, NSError *error) {
+      successBlock(task, responseObject);
     }];
     
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
@@ -265,6 +274,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       
       NSArray *arrFetchCat  = [UserLearnClsList MR_findAll];
       NSLog(@"%@",arrFetchCat);
+    } completion:^(BOOL success, NSError *error) {
       successBlock(task, responseObject);
     }];
     
@@ -301,6 +311,8 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       
       NSArray *arrFetchCat  = [UserLearnedClsList MR_findAll];
       NSLog(@"%@",arrFetchCat);
+    }completion:^(BOOL success, NSError *error) {
+      successBlock(task, responseObject);
     }];
     
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
@@ -371,17 +383,17 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     
     NSMutableArray *arrClsList = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
     NSLog(@"%lu",(unsigned long)arrClsList.count);
-    
+    NSNumber *subCategoryId = [aParams objectForKey:@"sub_category_id"];
+
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-  
-      [FreeCls entityFromArray:arrClsList inContext:localContext];
-  
-      NSArray *arrFetchCat  = [FreeCls MR_findAll];
-      NSLog(@"%@",arrFetchCat);
+      [FreeCls entityFromArray:arrClsList withSubcategoryId:subCategoryId inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cls_subcategory_Id CONTAINS %i", subCategoryId.integerValue];
+      NSArray *arrFetchCat  = [FreeCls MR_findAllWithPredicate:predicate];
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+      successBlock(task, arrFetchCat);
     }];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    successBlock(task, responseObject);
-    
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       
@@ -411,14 +423,13 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       
       [FreeClssVideo entityFromArray:arrClsList inContext:localContext];
-      
-      NSArray *arrFetchCat  = [FreeClssVideo MR_findAll];
-      NSLog(@"%@",arrFetchCat);
+    }completion:^(BOOL success, NSError *error) {
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cls_id CONTAINS %i",[[aParams objectForKey:@"class_id"]integerValue]];
+      NSArray *arryVideo = [FreeClssVideo MR_findAllWithPredicate:predicate];
+      NSLog(@"%lu",(unsigned long)arryVideo.count);
       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+      successBlock(task, arryVideo);
     }];
-    
-    successBlock(task, responseObject);
-    
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -484,17 +495,16 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     
     NSMutableArray *arrClsList = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
     NSLog(@"%lu",(unsigned long)arrClsList.count);
-    
+    NSNumber *subCategoryId = [aParams objectForKey:@"sub_category_id"];
+
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      
-      [PayCls entityFromArray:arrClsList inContext:localContext];
-      
-      NSArray *arrFetchCat  = [PayCls MR_findAll];
-      NSLog(@"%@",arrFetchCat);
+      [PayCls entityFromArray:arrClsList withSubcategoryId:subCategoryId inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cls_subcategory_Id CONTAINS %i", subCategoryId.integerValue];
+      NSArray *arrFetchCat  = [PayCls MR_findAllWithPredicate:predicate];
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+      successBlock(task, arrFetchCat);
     }];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    successBlock(task, responseObject);
-    
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -561,10 +571,14 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserClsVideo entityFromArray:arrVideoList inContext:localContext];
+    }completion:^(BOOL success, NSError *error) {
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cls_id CONTAINS %i",[[aParams objectForKey:@"class_id"]integerValue]];
+      NSArray *arryAdmin = [UserClsVideo MR_findAllWithPredicate:predicate];
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+      successBlock(task, arryAdmin);
     }];
     
-    successBlock(task, responseObject);
-    
+
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -625,7 +639,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     NSArray * arrAdmin = [[dict1 valueForKey:@"disscuss" ]valueForKey:@"admin"];
     NSArray * arrUser = [[dict1 valueForKey:@"disscuss" ]valueForKey:@"user"];
     NSMutableArray *adminData = [[NSMutableArray alloc]init];
-     NSMutableArray *userData = [[NSMutableArray alloc]init];
+    NSMutableArray *userData = [[NSMutableArray alloc]init];
     
     for (NSDictionary *dict in arrAdmin) {
       [adminData addObject:dict];
@@ -641,10 +655,17 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [DisAdminTopic entityFromArray:adminData inContext:localContext];
        [DisUserToic entityFromArray:userData inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+      NSArray *arryAdmin = [DisAdminTopic MR_findAll];
+      NSArray *arryUser = [DisUserToic MR_findAll];
+
+      NSDictionary *dictDiscuss = @{@"Admin":arryAdmin,
+                             @"User":arryUser};
+
+      successBlock(task, dictDiscuss);
     }];
     
-    successBlock(task, responseObject);
-    
+
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -676,13 +697,20 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       [adminData addObject:dict];
     }
     
+    NSNumber *topicId = [aParams valueForKey:@"topic_id"];
+
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      [DisTopicComments entityFromArray:adminData inContext:localContext];
+      [DisTopicComments entityFromArray:adminData withTopicId:topicId inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"topic_Id CONTAINS %i", topicId.integerValue];
+      NSArray *arrComment  = [DisTopicComments MR_findAllWithPredicate:predicate];
+      successBlock(task, arrComment);
     }];
     
-    successBlock(task, responseObject);
+
     
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
@@ -712,11 +740,14 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     NSDictionary * dict1 = [responseObject valueForKey:@"comment"];
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
+    NSNumber *topicId = [aParams valueForKey:@"topic_id"];
+
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      [DisTopicComments entityWithDictionaty:dict1 inContext:localContext];
+      [DisTopicComments entityWithDictionaty:dict1 withTopicId:topicId inContext:localContext];
     }];
     
+    
+  /////////
     successBlock(task, responseObject);
     
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
@@ -782,10 +813,10 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [Questions entityFromArray:arrQues inContext:localContext];
+    }completion:^(BOOL success, NSError *error) {
+      NSArray *arry = [Questions MR_findAll];
+      successBlock(task, arry);
     }];
-    
-    successBlock(task, responseObject);
-    
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -844,17 +875,18 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     
     
     NSArray *arrQues = [[responseObject valueForKey:@"data"]valueForKey:@"admin_comment"];
-    
+    NSNumber *answer_Id = [aParams valueForKey:@"answer_id"];
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-          [QuestionComment entityFromArray:arrQues inContext:localContext];
-          
+          [QuestionComment entityFromArray:arrQues  withAnswerId:answer_Id inContext:localContext];
+        }completion:^(BOOL success, NSError *error) {
+
+          NSPredicate *predicate = [NSPredicate predicateWithFormat:@"answer_Id CONTAINS %i", answer_Id.integerValue];
+          NSArray *arry = [QuestionComment MR_findAllWithPredicate:predicate];
+          successBlock(task, arry);
         }];
-    
-    successBlock(task, responseObject);
-    
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -885,10 +917,10 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [Answer entityFromArray:arrAns inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+      NSArray *arry = [Answer MR_findAll];
+      successBlock(task, arry);
     }];
-    
-    successBlock(task, responseObject);
-    
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -920,10 +952,15 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserNotes entityFromArray:arrUserNotes inContext:localContext];
       [Notes entityFromArray:arrOtherUserNotes inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+
+      NSArray *arrNotes = [Notes MR_findAll];
+      NSArray *arrUserNotes = [UserNotes MR_findAll];
+
+      NSDictionary *dictResponse = @{@"Notes":arrNotes,
+                             @"UserNotes":arrUserNotes};
+      successBlock(task, dictResponse);
     }];
-    
-    successBlock(task, responseObject);
-    
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -1040,12 +1077,325 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       NSLog(@"Progress: %.2f", progress);
       
     }];
-  
-  
  }
 
 
--(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams {
+#pragma mark - Search notes Api call
+
+- (AFHTTPRequestOperation *)callSearchNotesApi:(NSDictionary *)aParams
+                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+  return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    successBlock(task, responseObject);
+
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+#pragma mark - Filter notes Api call
+
+- (AFHTTPRequestOperation *)callFilterNotesApi:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+  return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    successBlock(task, responseObject);
+
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+  //Edit Notes api
+- (AFHTTPRequestOperation *)callNotesUpdateApi:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+  return [self PUT:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    successBlock(task, responseObject);
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+//Delete Notes api
+- (AFHTTPRequestOperation *)callNotesDeleteApi:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+  return [self DELETE:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    successBlock(task, responseObject);
+
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+
+#pragma mark - About Us Api call
+
+- (AFHTTPRequestOperation *)aboutUS:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+  
+//  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+   NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self GET:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+     
+      [Aboutus entityFromDictionary:responseObject inContext:localContext];
+      
+    } completion:^(BOOL success, NSError *error) {
+      NSArray *arryData = [Aboutus MR_findAll];
+      successBlock(task, arryData);
+    }];
+    
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+
+#pragma mark - Class Outline Us Api call
+
+- (AFHTTPRequestOperation *)clsOutline:(NSDictionary *)aParams
+                            success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                            failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+  
+  //  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self GET:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      
+      [ClsOutLineModule entityFromDictionary:responseObject inContext:localContext];
+      
+    } completion:^(BOOL success, NSError *error) {
+      NSArray *arryData = [ClsOutLineModule MR_findAll];
+      successBlock(task, arryData);
+    }];
+    
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+
+#pragma mark - Video Complete Api call Api call
+
+- (AFHTTPRequestOperation *)videoComplete:(NSDictionary *)aParams
+                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      
+      [ClsOutLineModule entityFromDictionary:responseObject inContext:localContext];
+      
+    } completion:^(BOOL success, NSError *error) {
+      NSArray *arryData = [ClsOutLineModule MR_findAll];
+      successBlock(task, arryData);
+    }];
+    
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+
+#pragma mark -  Feedback  Api call
+
+- (AFHTTPRequestOperation *)feedback:(NSDictionary *)aParams
+                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      
+      [ClsOutLineModule entityFromDictionary:responseObject inContext:localContext];
+      
+    } completion:^(BOOL success, NSError *error) {
+      NSArray *arryData = [ClsOutLineModule MR_findAll];
+      successBlock(task, arryData);
+    }];
+    
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+#pragma mark -  User Buy class  Api call
+
+- (AFHTTPRequestOperation *)buyClass:(NSDictionary *)aParams
+                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    successBlock(task, responseObject);
+//    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+//      
+//      [ClsOutLineModule entityFromDictionary:responseObject inContext:localContext];
+//      
+//    } completion:^(BOOL success, NSError *error) {
+//      NSArray *arryData = [ClsOutLineModule MR_findAll];
+//      
+//    }];
+    
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+#pragma mark -  Get User Class Orders  Api call
+
+- (AFHTTPRequestOperation *)userClassOrders:(NSDictionary *)aParams
+                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self GET:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    successBlock(task, responseObject);
+        [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    
+          [UserClassOrder entityFromDictionary:responseObject inContext:localContext];
+    
+        } completion:^(BOOL success, NSError *error) {
+          NSPredicate *predicate = [NSPredicate predicateWithFormat:@"is_buy CONTAINS %i",0];
+          NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"is_buy CONTAINS %i",1];
+          NSArray *arryTrue = [UserClassOrder MR_findAllWithPredicate:predicate1];
+          NSArray *arryFail = [UserClassOrder MR_findAllWithPredicate:predicate];
+          NSDictionary *dict = [[NSDictionary alloc]initWithObjects:@[arryTrue,arryFail] forKeys:@[@"True",@"False"]];
+          successBlock(task, dict);
+    
+        }];
+    
+    
+  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      failureBlock(task, error);
+      NSLog(@"%@",error);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
+}
+
+- (NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams {
   NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *filePath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:[aParams objectForKey:@"fileName"]];
   return [NSURL fileURLWithPath:filePath];

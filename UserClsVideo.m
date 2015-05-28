@@ -12,6 +12,7 @@
 @implementation UserClsVideo
 
 @dynamic vdo_id;
+@dynamic cls_id;
 @dynamic vdo_name;
 @dynamic vdo_img;
 @dynamic vdo_url;
@@ -46,7 +47,8 @@
     UserClsVideo *obj = (UserClsVideo*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
     
     obj.vdo_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
-    
+    obj.cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"a_class_id"] integerValue]];
+
     if (![[aDictionary objectForKey:@"image"] isKindOfClass:[NSNull class]])
       obj.vdo_img = [aDictionary valueForKey:@"image"] ;
     
@@ -55,6 +57,7 @@
     
     if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
       obj.vdo_name = [aDictionary valueForKey:@"name"] ;
+
     
     return obj;
   }

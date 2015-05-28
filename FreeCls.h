@@ -14,6 +14,7 @@
 @interface FreeCls : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * cls_day;
+@property (nonatomic, retain) NSNumber * cls_subcategory_Id;
 @property (nonatomic, retain) NSNumber * cls_id;
 @property (nonatomic, retain) NSString * cls_name;
 @property (nonatomic, retain) NSString * img_url;
@@ -26,8 +27,8 @@
 @property (nonatomic, retain) NSNumber * cls_progress;
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)entityFromArray:(NSArray *)aArray withSubcategoryId:(NSNumber *)categoryId inContext:(NSManagedObjectContext *)localContext;
++ (id)entityFromDictionary:(NSDictionary *)aDictionary withSubcategoryId:(NSNumber *)categoryId inContext:(NSManagedObjectContext *)localContext;
++ (void)entityWithDictionaty:(NSDictionary *)adictionary withSubcategoryId:(NSNumber *)categoryId inContext:(NSManagedObjectContext *)localContext;
 
 @end

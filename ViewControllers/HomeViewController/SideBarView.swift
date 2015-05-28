@@ -259,31 +259,40 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate,LGChatContro
       
       
     case 5:// Chat
-            
-      var lastViewcontroler: UIViewController! = self.sideNavigation.visibleViewController
-      print(lastViewcontroler)
       
-      if lastViewcontroler .isKindOfClass(QesAndAnsViewController){
-        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-          self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
-          }, completion: { (Bool) -> Void in
-            
-            //              var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID") as QesAndAnsViewController
-            //              self.sideNavigation.pushViewController(vc, animated:false)
-            
-        })
-        
-        
+      
+      var installed = UIApplication.sharedApplication().canOpenURL(NSURL(string: "skype:")!)
+      if(installed){
+        UIApplication.sharedApplication().openURL(NSURL(string: "skype:echo123?call")!)
       }else{
-        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-          self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
-          }, completion: { (Bool) -> Void in
-            
-            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID") as QesAndAnsViewController
-            self.sideNavigation.pushViewController(vc, animated:false)
-            
-        })
+        UIApplication.sharedApplication().openURL(NSURL(string: "http://itunes.com/apps/skype/skype")!)
       }
+      
+            
+//      var lastViewcontroler: UIViewController! = self.sideNavigation.visibleViewController
+//      print(lastViewcontroler)
+//      
+//      if lastViewcontroler .isKindOfClass(QesAndAnsViewController){
+//        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+//          self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
+//          }, completion: { (Bool) -> Void in
+//            
+//            //              var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID") as QesAndAnsViewController
+//            //              self.sideNavigation.pushViewController(vc, animated:false)
+//            
+//        })
+//        
+//        
+//      }else{
+//        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+//          self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
+//          }, completion: { (Bool) -> Void in
+//            
+//            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID") as QesAndAnsViewController
+//            self.sideNavigation.pushViewController(vc, animated:false)
+//            
+//        })
+//      }
       
       
     default:

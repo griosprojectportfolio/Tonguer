@@ -85,10 +85,7 @@ class MyNotesTableViewCell:BaseTableViewCell  {
     lblDate.font = lblClassNam.font.fontWithSize(12)
     lblDate.textColor = UIColor.grayColor()
     //lblDate.backgroundColor = UIColor.redColor()
-    vwCell.addSubview(lblDate)
-
-    
-    
+    vwCell.addSubview(lblDate)    
   }
   
   override func setSelected(selected: Bool, animated: Bool) {

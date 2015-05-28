@@ -18,14 +18,15 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
   var tableview: UITableView!
-  var arrClassVideo: NSMutableArray! = NSMutableArray()
+  var arrClassVideo: NSMutableArray = NSMutableArray()
   var actiIndecatorVw: ActivityIndicatorView!
   var moviePlayerController:MPMoviePlayerController!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
-    
+
+    arrClassVideo.removeAllObjects()
     self.title = "Videos"
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
@@ -41,56 +42,51 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
     
+    var predicate:NSPredicate = NSPredicate (format: "cls_id CONTAINS %i", classID)!;
+    
+   
+    if(isActive.isEqualToString("Paied")){
+      let arryVideo:NSArray = UserClsVideo.MR_findAllWithPredicate(predicate)
+      self.dataFetchUserClsDB(arryVideo)
+     // self.userClsVideoApiCalling()
+      
+    } else if (isActive.isEqualToString("Free")){
+     let arryVideo:NSArray = FreeClssVideo.MR_findAllWithPredicate(predicate)
+      self.dataFetchFreeClsDB(arryVideo)
+      //self.freeClsVideoApiCalling()
+      
+    }
+    
+    self.defaultUIDesign()
+  
+  }
+
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    self.view.bringSubviewToFront(self.actiIndecatorVw)
+    //self.defaultUIDesign()
     if(isActive.isEqualToString("Paied")){
       self.userClsVideoApiCalling()
-      
     }else if (isActive.isEqualToString("Free")){
       self.freeClsVideoApiCalling()
-      
     }
-    
-    self.delay(3) { () -> () in
-      
-      if(self.isActive.isEqualToString("Paied")){
-      self.dataFetchUserClsDB()
-        
-      }else if (self.isActive.isEqualToString("Free")){
-       
-        self.dataFetchFreeClsDB()
-      }
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-
-      self.defaultUIDesign()
-    }
-    
   }
-  
+
   func defaultUIDesign(){
     
-    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.width,self.view.frame.height-64))
+    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width,self.view.frame.height))
     tableview.delegate = self
     tableview.dataSource = self
     tableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(tableview)
     
     tableview.registerClass(VideoTableViewCell.self, forCellReuseIdentifier: "cell")
-    
   }
+
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
   }
-  
-  func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        Int64(delay * Double(NSEC_PER_SEC))
-      ),
-      dispatch_get_main_queue(), closure)
-  }
-  
-  
+
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
@@ -107,11 +103,13 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as VideoTableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
-    cell.defaultUIDesign(arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary)
+    cell.defaultUIDesign(arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
+    var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
     cell.btnplay.tag = indexPath.row
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-    
-    var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
+    cell.btnComplete.tag = dict.valueForKey("id") as NSInteger
+    cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+   
     var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
     let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
        let url: NSString = documentsPath.objectAtIndex(0) as NSString
@@ -121,7 +119,6 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     if (manager.fileExistsAtPath(path)){
       cell.btnplay.hidden = true
     }
-    
     return cell
   }
   
@@ -142,6 +139,14 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     moviePlayerController.shouldAutoplay = false
     moviePlayerController.play()
     
+  }
+  
+  
+  func btnCompleteTapped(sender:AnyObject){
+     var btn = sender as UIButton
+    print(btn.tag)
+    btn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
+    //videoDoneApiCall()
   }
   
   
@@ -178,12 +183,14 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     
     self.api.freeClsVideoList(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      let arryVideo:NSArray = responseObject as NSArray
+      self.dataFetchFreeClsDB(arryVideo)
+      self.tableview.reloadData()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        
     })
 
   }
@@ -193,8 +200,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     
     self.api.userClassVideo(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      let arryVideo:NSArray = responseObject as NSArray
+      self.dataFetchUserClsDB(arryVideo)
+      self.tableview.reloadData()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -203,11 +213,31 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     
   }
   
+  func videoDoneApiCall(video_id:NSInteger){
+    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,video_id], forKeys: ["auth_token","class_id","video_id"])
+    
+    self.api.videoComplete(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      let arryVideo:NSArray = responseObject as NSArray
+      self.dataFetchUserClsDB(arryVideo)
+      self.tableview.reloadData()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
   
-//**********Data Fetching Methods************
   
-  func dataFetchFreeClsDB(){
-    let arrFetchCat: NSArray = FreeClssVideo.MR_findAll()
+
+  func dataFetchFreeClsDB(arrFetchCat: NSArray){
+    arrClassVideo.removeAllObjects()
+     print(arrFetchCat.count)
+
     for var index = 0; index < arrFetchCat.count; ++index{
       let clsObject: FreeClssVideo = arrFetchCat.objectAtIndex(index) as FreeClssVideo
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
@@ -239,18 +269,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       }
 
       arrClassVideo.addObject(dictClass)
-      
     }
-    
-    if(arrClassVideo.count == 0){
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry No Videos", delegate: self, cancelButtonTitle: "Ok")
-      alert.show()
     }
-
-  }
   
-  func dataFetchUserClsDB(){
-    let arrFetchCat: NSArray = UserClsVideo.MR_findAll()
+  func dataFetchUserClsDB(arrFetchCat: NSArray){
+    arrClassVideo.removeAllObjects()
     for var index = 0; index < arrFetchCat.count; ++index{
       let clsObject: UserClsVideo = arrFetchCat.objectAtIndex(index) as UserClsVideo
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
@@ -282,11 +305,6 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       }
       arrClassVideo.addObject(dictClass)
      
-    }
-    
-    if(arrClassVideo.count == 0){
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry No Videos", delegate: self, cancelButtonTitle: "Ok")
-      alert.show()
     }
 
   }
