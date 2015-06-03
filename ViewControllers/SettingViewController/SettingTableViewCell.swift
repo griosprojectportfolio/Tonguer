@@ -18,7 +18,7 @@ class SettingTableViewCell:BaseTableViewCell {
     // Initialization code
   }
   
-  func defaultUICellContent(name: NSString , index: NSInteger){
+  func defaultUICellContent(name: NSString , index: NSInteger,frame:CGRect){
     
     var arry = self.contentView.subviews
     var vwSub: UIView!
@@ -26,21 +26,7 @@ class SettingTableViewCell:BaseTableViewCell {
       vwSub.removeFromSuperview()
     }
     
-    if(isiPhone5orLower){
-      vWCell = UIView(frame: CGRectMake(20, 10,320-50,60))
-      setcellContentProperties(name,index: index)
-    }
-    if(isiPhone6){
-      vWCell = UIView(frame: CGRectMake(20, 10,375-50,60))
-      setcellContentProperties(name,index: index)
-    }
-    if(isiPhone6plus){
-      vWCell = UIView(frame: CGRectMake(20, 10,414-50,60))
-     setcellContentProperties(name,index: index)
-    }
-  }
-  
-  func setcellContentProperties(name:NSString , index: NSInteger){
+    vWCell = UIView(frame: CGRectMake(20,10,frame.width-50,60))
     vWCell.layer.borderWidth = 0.5
     vWCell.layer.borderColor = UIColor.lightGrayColor().CGColor
     self.contentView.addSubview(vWCell)
@@ -52,11 +38,26 @@ class SettingTableViewCell:BaseTableViewCell {
     vWCell.addSubview(lbltitle)
     
     if(index == 2){
-       swtRemind = UISwitch(frame: CGRectMake(vWCell.frame.width - 40,25, 30,30))
+      swtRemind = UISwitch(frame: CGRectMake(vWCell.frame.width - 40,25, 30,30))
       self.contentView.addSubview(swtRemind)
     }
     
+    if(index == 1){
+      var defaults=NSUserDefaults()
+      var fileSize=defaults.integerForKey("fileSize")
+      var str: NSString = NSString(format: "%i",fileSize)
+      var lblFileSize: UILabel = UILabel(frame: CGRectMake(vWCell.frame.width-150,15,150,30))
+      lblFileSize.text = str+" KB"
+      lblFileSize.textAlignment = NSTextAlignment.Center
+      lblFileSize.font = lbltitle.font.fontWithSize(15)
+      //lblFileSize.backgroundColor = UIColor.redColor()
+      vWCell.addSubview(lblFileSize)
+    }
+
+    
   }
+  
+  
   
   override func setSelected(selected: Bool, animated: Bool) {
     super.setSelected(selected, animated: animated)

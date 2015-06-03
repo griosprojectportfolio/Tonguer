@@ -25,10 +25,11 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
-    self.defaultUIDesign()
-    //self.getFreeClassApiCall()
+    
     self.dataFetchFromDataBase()
-    //self.getAddvertiesmentApiCall()
+    self.defaultUIDesign()
+    //self.tableview.reloadData()
+    self.getAddvertiesmentApiCall()
     
   }
   
@@ -39,7 +40,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    getFreeClassApiCall()
+      getFreeClassApiCall()
   }
   
   func defaultUIDesign(){
@@ -130,10 +131,18 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
      cell.selectionStyle = UITableViewCellSelectionStyle.None
     var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.row) as NSDictionary
     var cellArr: NSArray! = dict.objectForKey("array") as NSArray
-    var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
-     cell.textLabel.text = dictSub.valueForKey("name") as NSString
-     cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
-    return cell
+    if(cellArr.count>0){
+      var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
+      cell.textLabel.text = dictSub.valueForKey("name") as NSString
+      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+      return cell
+
+    }else{
+      cell.textLabel.text = ""
+      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+      return cell
+    }
+    
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -187,9 +196,8 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     self.api.freeClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
-      //self.hometableVw.reloadData()
       self.dataFetchFromDataBase()
+      self.tableview.reloadData()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -213,25 +221,37 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
       dictData.setObject(str_cat_id, forKey: "id")
       dictData.setObject(strName, forKey: "name")
       
-      let sub_CatFilter : NSPredicate = NSPredicate(format: "sub_cat_id CONTAINS %@",str_cat_id)!
+      let sub_CatFilter : NSPredicate = NSPredicate(format: "cat_id CONTAINS %@",str_cat_id)!
       let subcatData : NSArray = FreeSubCat.MR_findAllWithPredicate(sub_CatFilter)
-      
+      if (subcatData.count > 0){
       for var index = 0; index < subcatData.count; ++index {
         let subCatObject : FreeSubCat = subcatData.objectAtIndex(index) as FreeSubCat
-        var strID = subCatObject.sub_cat_id
-        var strName = subCatObject.sub_cat_name as NSString
         var catDict2: NSMutableDictionary! = NSMutableDictionary()
-        catDict2.setObject(strID, forKey: "id")
-        catDict2.setObject(strName, forKey: "name")
+        if((subCatObject.sub_cat_id) != nil){
+           var strID = subCatObject.sub_cat_id
+           catDict2.setObject(strID, forKey: "id")
+        }else{
+           var strID = 0
+           catDict2.setObject(strID, forKey: "id")
+        }
+        if((subCatObject.sub_cat_name) != nil){
+         var strName = subCatObject.sub_cat_name as NSString
+          catDict2.setObject(strName, forKey: "name")
+        }else{
+          var strName = ""
+          catDict2.setObject(strName, forKey: "name")
+        }
         //subCatArr.addObject(catDict2)
         var subCatArr: NSMutableArray! = NSMutableArray(object: catDict2)
         dictData.setObject(subCatArr, forKey: "array")
         print(subCatArr.count)
       }
+      }else{
+        dictData.setObject([], forKey: "array")
+      }
       dataArr.addObject(dictData)
-      tableview.reloadData()
+
     }
-    
   }
   
   

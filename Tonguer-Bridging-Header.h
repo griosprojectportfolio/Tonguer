@@ -40,6 +40,8 @@
 #import "PayPalMobile.h"
 #import "Aboutus.h"
 #import "UserClassOrder.h"
+#import "ClsOutLineModule.h"
+#import "ClsModElement.h"
 
 
 #endif

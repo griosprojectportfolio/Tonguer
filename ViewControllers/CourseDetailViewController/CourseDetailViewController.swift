@@ -39,6 +39,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   var dict5: NSDictionary!
   
   var clistarr: NSArray!
+  var arrOutline: NSArray! = NSArray()
   var dictClist: NSDictionary!
   
   var clsDictDe: NSDictionary!
@@ -209,11 +210,11 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     if(btnTag == 1){
       count = dataArr.count
     }else if(btnTag == 2){
-      count = clistarr.count
-    }else{
-      count = dataArr.count
+       let dict = arrOutline.objectAtIndex(section) as NSDictionary
+      let arry = dict.valueForKey("array") as NSArray
+      print(arry.count)
+      count = arry.count
     }
-    
     return count
   }
   
@@ -222,7 +223,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     if(btnTag == 1){
       count = 1
     }else if(btnTag == 2){
-      count = clistarr.count
+      count = arrOutline.count
     }
     return count
   }
@@ -233,7 +234,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     if(btnTag == 1){
       height = 70
     }else if(btnTag == 2){
-      height = 100
+      height = 50
     }
     return height
   }
@@ -251,8 +252,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     } else if(btnTag == 2){
       var cell: CourseListCell!  = tableview.dequeueReusableCellWithIdentifier("CourseList") as CourseListCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-      dictDetail = clistarr.objectAtIndex(indexPath.row) as NSDictionary
-      cell.defaultCellContenforCourselist(dictDetail, Frame:self.view.frame)
+      let dict = arrOutline.objectAtIndex(indexPath.section) as NSDictionary
+      let arry = dict.valueForKey("array") as NSArray
+      let obj = arry.objectAtIndex(indexPath.row) as ClsModElement
+      cell.textLabel.text = obj.mod_element_content
+      cell.textLabel.textColor = UIColor.grayColor()
+      cell.textLabel.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
+     // dictDetail = clistarr.objectAtIndex(indexPath.row) as NSDictionary
+     //cell.defaultCellContenforCourselist(dictDetail, Frame:self.view.frame)
       return cell
     }
     return cell
@@ -269,9 +276,12 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       vWheader.layer.borderWidth = 0.5
       vWheader.layer.borderColor = UIColor.lightGrayColor().CGColor
       vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
-      var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
+  
       var lbltilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
-      lbltilte.text = "Modual"
+      
+      let dict = arrOutline.objectAtIndex(section) as NSDictionary
+      let obj = dict.valueForKey("module") as ClsOutLineModule
+      lbltilte.text = obj.mod_content
       lbltilte.font = lbltilte.font.fontWithSize(12)
       lbltilte.textColor = UIColor.whiteColor()
       vWheader.addSubview(lbltilte)
@@ -341,15 +351,15 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     horiVw.backgroundColor = UIColor.lightGrayColor()
     horiVw1.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     horiVw2.backgroundColor = UIColor.lightGrayColor()
-  
-    tableview.reloadData()
+    classOutlineApiCall()
+    
   }
   
   func btnCourseAskingTapped(sender:AnyObject){
     var btn = sender as UIButton
     btnTag = btn.tag
     println(btnTag)
-   
+    
     horiVw.backgroundColor = UIColor.lightGrayColor()
     horiVw1.backgroundColor = UIColor.lightGrayColor()
     horiVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
@@ -380,13 +390,25 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   
   //********* Class Outline Api Calling Method *********
   
-  func freeClassListApiCall(){
+  func classOutlineApiCall(){
     
     var cls_id:NSInteger = self.clsDictDe.valueForKey("id") as NSInteger
-    var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],cls_id], forKeys: ["auth_token","class_id"])
+    var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],14], forKeys: ["auth_token","cls_id"])
     
     self.api.clsOutline(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      self.arrOutline = responseObject as? NSArray
+      if(self.arrOutline?.count == 0){
+        
+      }else{
+        
+      }
+      
+      let dict = self.arrOutline.objectAtIndex(0) as NSDictionary
+      let arry = dict.valueForKey("array") as NSArray
+      print(arry.count)
+      
+      self.tableview.reloadData()
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in

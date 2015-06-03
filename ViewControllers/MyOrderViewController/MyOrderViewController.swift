@@ -34,15 +34,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
-    self.defaultUIDesign()
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  func defaultUIDesign(){
+    
     self.title = "My Order"
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
@@ -70,13 +62,13 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     HorizVw = UIView(frame: CGRectMake(btn1.frame.origin.x,btn1.frame.origin.y+btn1.frame.size.height , btn1.frame.size.width, 1))
     HorizVw.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     self.view.addSubview(HorizVw)
-   
+    
     vertiVw = UIView(frame: CGRectMake(btn1.frame.origin.x+btn1.frame.size.width,btn1.frame.origin.y,1, btn1.frame.height))
     vertiVw.backgroundColor = UIColor.grayColor()
     self.view.addSubview(vertiVw)
     
     btn2 = UIButton(frame: CGRectMake(vertiVw.frame.origin.x+1,btn1.frame.origin.y,btn1.frame.width, 40))
-   //btn2.backgroundColor = UIColor.greenColor()
+    //btn2.backgroundColor = UIColor.greenColor()
     btn2.userInteractionEnabled = true
     btn2.setTitle("Credit order", forState: UIControlState.Normal)
     btn2.tag = 2
@@ -87,8 +79,18 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     
     HorizVw2 = UIView(frame: CGRectMake(btn2.frame.origin.x,btn2.frame.origin.y+btn2.frame.size.height , btn2.frame.size.width, 1))
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
-   self.view.addSubview(HorizVw2)
+    self.view.addSubview(HorizVw2)
+    userClassOrdersApiCall()
+    
+  }
   
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  func defaultUIDesign(){
+    
     myordertableview = UITableView(frame: CGRectMake(btn1.frame.origin.x,HorizVw2.frame.origin.y+HorizVw2.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-HorizVw2.frame.height-20))
     //myordertableview.backgroundColor = UIColor.grayColor()
     myordertableview.separatorStyle = UITableViewCellSeparatorStyle.None
@@ -140,7 +142,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     }else if(btnTag == 2){
       count = arryTrue.count
     }
-    return 3 //count
+    return count
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -149,15 +151,21 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     
     if(btnTag == 1){
       var cell:CourseOrderTableViewCell!
-      var dict: NSDictionary! = NSDictionary()
       cell = myordertableview.dequeueReusableCellWithIdentifier("courseCell") as CourseOrderTableViewCell
-      cell.defaultCellContents(arryFalse.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+      if(arryFalse.count == 0){
+        
+      }else{
+        cell.defaultCellContents(arryFalse.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+      }
       return cell
       }else if(btnTag == 2){
       var cell:CreditTableViewCell!
-      var dict: NSDictionary! = NSDictionary()
       cell = myordertableview.dequeueReusableCellWithIdentifier("creditCell") as CreditTableViewCell
-      cell.defaultCellContents(arryFalse.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+      if(arryTrue.count == 0){
+        
+      }else{
+      cell.defaultCellContents(arryTrue.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+      }
       return cell
     }
     
@@ -176,7 +184,8 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     self.api.userClassOrders(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.dataFetchFromDatabase(responseObject as NSDictionary)
-      
+      self.defaultUIDesign()
+      self.myordertableview.reloadData()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -185,9 +194,9 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   }
 
   func dataFetchFromDatabase(dicrOrders:NSDictionary){
-    
     arryTrue = dicrOrders.objectForKey("True") as NSArray
     arryFalse = dicrOrders.objectForKey("False") as NSArray
+   
   }
   
   

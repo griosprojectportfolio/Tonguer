@@ -26,27 +26,27 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext classID:(NSNumber *)class_id {
   for(NSDictionary *aDictionary in aArray) {
-    [ClsOutLineModule entityFromDictionary:aDictionary inContext:localContext];
+    [ClsOutLineModule entityFromDictionary:aDictionary inContext:localContext classID:class_id];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [ClsOutLineModule entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext classID:(NSNumber *)class_id {
+  [ClsOutLineModule entityFromDictionary:adictionary inContext:localContext classID:class_id];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext classID:(NSNumber *)class_id{
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
     ClsOutLineModule *obj = (ClsOutLineModule*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
     
     obj.mod_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
-    obj.cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"a_class_id"] integerValue]];
+    obj.cls_id = class_id;
     
-    if (![[aDictionary objectForKey:@"content"] isKindOfClass:[NSNull class]])
-      obj.mod_content = [aDictionary valueForKey:@"content"] ;
+    if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
+      obj.mod_content = [aDictionary valueForKey:@"name"] ;
     
 
     return obj;

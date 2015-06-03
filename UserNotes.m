@@ -69,14 +69,23 @@
       
     }
     
-    if (![[[aDictionary objectForKey:@"image"] objectForKey:@"url"] isKindOfClass:[NSNull class]])
-      obj.notes_img = [[aDictionary valueForKey:@"image"] objectForKey:@"url"] ;
+    if (![[[aDictionary objectForKey:@"image"]valueForKey:@"url"] isKindOfClass:[NSNull class]]){
+      
+      NSString *strImgBaseUrl = @"https://tonguer.herokuapp.com";
+      NSString *imgUrl = [strImgBaseUrl stringByAppendingString:[[aDictionary valueForKey:@"image"]valueForKey:@"url"]];
+      obj.notes_img = imgUrl;
+      
+    }
+    
     
     if (![[aDictionary objectForKey:@"is_enable"] isKindOfClass:[NSNull class]])
       obj.isenable = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"is_enable"] integerValue]];
     
     if (![[aDictionary objectForKey:@"a_class_id"] isKindOfClass:[NSNull class]])
       obj.notes_cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"a_class_id"] integerValue]];
+    
+    if (![[[aDictionary objectForKey:@"a_class"]valueForKey:@"name"] isKindOfClass:[NSNull class]])
+      obj.notes_cls_name =  [[aDictionary valueForKey:@"a_class"]valueForKey:@"name"];
 
     
     return obj;

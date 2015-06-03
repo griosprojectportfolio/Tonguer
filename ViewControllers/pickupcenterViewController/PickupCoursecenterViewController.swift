@@ -56,10 +56,11 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     arrSubCat = NSArray(object: allSubCatDict)
     
     api = AppApi.sharedClient()
-    
-    self.defaultUIDesign()
+  
     self.allDataFetchFromDataBase()
     self.hostDataFetchFromDataBase()
+    self.defaultUIDesign()
+    //pickupTableView.reloadData()
   }
   
   override func viewWillAppear(animated: Bool) {
@@ -157,18 +158,19 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   
   func btnHostTapped(sender:AnyObject){
-
+    isSearch = false
     listingShow = "Host"
     horiVw.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     horiVw1.backgroundColor = UIColor.grayColor()
     var btn = sender as UIButton
     btntag = btn.tag
     print(btntag)
+    getHostPayClsApiCall()
     pickupTableView.reloadData()
   }
   
   func btnAllTapped(sender:AnyObject){
-
+     isSearch = false
     listingShow = "All"
     horiVw1.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     horiVw.backgroundColor = UIColor.grayColor()
@@ -190,17 +192,17 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     var count: NSInteger!
 
-    if (isSearch == true) {
-      count = arrySearch.count
-    } else {
       if(btntag == 1){
-        count = arrHost.count
+        if(isSearch == true){
+          count = arrySearch.count
+        }else{
+          count = arrHost.count
+        }
       }else if(btntag == 2){
          var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
         var arr: NSArray! = dict.objectForKey("array") as NSArray
         count = arr.count
       }
-    }
     return count
   }
   
@@ -260,9 +262,9 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       var hostCell = pickupTableView.dequeueReusableCellWithIdentifier("cell") as PickupTableViewCell
       hostCell.selectionStyle = UITableViewCellSelectionStyle.None
       if (isSearch == false) {
-        hostCell.defaultCellContents(arrHost.objectAtIndex(indexPath.row)as NSDictionary)
+        hostCell.defaultCellContents(arrHost.objectAtIndex(indexPath.row) as NSDictionary)
       } else {
-        hostCell.defaultCellContents(arrySearch.objectAtIndex(indexPath.row)as NSDictionary)
+        hostCell.defaultCellContents(arrySearch.objectAtIndex(indexPath.row) as NSDictionary)
       }
       hostCell.selectionStyle = UITableViewCellSelectionStyle.None
       return hostCell
@@ -273,16 +275,22 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
         allCell.selectionStyle = UITableViewCellSelectionStyle.None
         var dict: NSDictionary!
         if (isSearch == false) {
-           dict = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+           dict = dataArr.objectAtIndex(indexPath.section) as NSDictionary
         } else {
           dict = arrySearch.objectAtIndex(indexPath.row) as NSDictionary
         }
         var arr: NSArray! = dict.objectForKey("array") as NSArray
-        var subDict: NSDictionary! = arr.objectAtIndex(indexPath.row) as NSDictionary
-        allCell.textLabel.text = subDict.objectForKey("name") as NSString
-        allCell.textLabel.font = allCell.textLabel.font.fontWithSize(12)
-        allCell.selectionStyle = UITableViewCellSelectionStyle.None
-        return allCell
+         allCell.selectionStyle = UITableViewCellSelectionStyle.None
+        if(arr.count>0){
+          var subDict: NSDictionary! = arr.objectAtIndex(indexPath.row) as NSDictionary
+          allCell.textLabel.text = subDict.objectForKey("name") as NSString
+          allCell.textLabel.font = allCell.textLabel.font.fontWithSize(12)
+          return allCell
+        }else{
+          allCell.textLabel.text = ""
+          allCell.textLabel.font = allCell.textLabel.font.fontWithSize(12)
+          return allCell
+        }
       }
     }
     return cell
@@ -379,9 +387,9 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       dictData.setObject(str_cat_id, forKey: "id")
       dictData.setObject(strName, forKey: "name")
       
-      let sub_CatFilter : NSPredicate = NSPredicate(format:"sub_cat_id CONTAINS %@",str_cat_id)!
+      let sub_CatFilter : NSPredicate = NSPredicate(format:"cat_id CONTAINS %@",str_cat_id)!
       let subcatData : NSArray = PaySubCat.MR_findAllWithPredicate(sub_CatFilter)
-      
+      if (subcatData.count > 0){
       for var index = 0; index < subcatData.count; ++index {
         let subCatObject : PaySubCat = subcatData.objectAtIndex(index) as PaySubCat
         var strID = subCatObject.sub_cat_id
@@ -393,9 +401,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
         dictData.setObject(subCatArr, forKey: "array")
         print(subCatArr.count)
       }
+      }else{
+         dictData.setObject([], forKey: "array")
+      }
       dataArr.addObject(dictData)
-      
     }
+    
   }
   
   func hostDataFetchFromDataBase(){
@@ -417,10 +428,10 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       }
       if((clsObject.cls_days) != nil){
         var strDay: NSNumber = clsObject.cls_days
-        dictClass.setValue(strDay, forKey: "day")
+        dictClass.setValue(strDay, forKey: "valid_days")
       }else {
         var strDay: NSNumber = 0
-        dictClass.setValue(strDay, forKey: "day")
+        dictClass.setValue(strDay, forKey: "valid_days")
       }
       if((clsObject.cls_img) != nil){
         var strImgUrl: NSString = clsObject.cls_img
@@ -477,7 +488,6 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       arrHost.addObject(dictClass)
     }
     print(arrHost.count)
-    
     if(arrHost.count == 0){
       var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry No Class", delegate: self, cancelButtonTitle: "Ok")
       alert.show()
@@ -516,6 +526,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
 
 extension PickupCoursecenterViewController:UISearchBarDelegate {
   func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    isSearch = false
+    if(btntag == 1){
+    getHostPayClsApiCall()
+    }else if(btntag == 2){
+    getPayClassApiCall()
+    }
     searchBar.text = ""
     searchBar.hidden = true
     searchBar.resignFirstResponder()
@@ -523,15 +539,25 @@ extension PickupCoursecenterViewController:UISearchBarDelegate {
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
   }
 
+  //***********Search Api Call****************
   func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-    let param:NSDictionary = ["search":searchBar.text]
-    self.api.callSearchNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
-      self.isSearch = true
-
-      if (self.btntag == 2) {
-        self.convertResponseIntoSectionData(responseObject as NSMutableArray)
-      } else {
-        self.arrySearch = responseObject as NSMutableArray
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text], forKeys: ["auth_token","cls_key_word"])
+    self.api.callSearchClassApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+      print(responseObject)
+     // self.arrySearch = responseObject as NSMutableArray
+      let arrySe = responseObject as? NSArray
+      if(arrySe?.count == 0){
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Class Found", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+      }else{
+        self.isSearch = true
+        if (self.btntag == 2) {
+          self.convertResponseIntoSectionData(responseObject as NSMutableArray)
+        } else {
+          self.arrySearch = responseObject as NSMutableArray
+          print(self.arrySearch.count)
+          self.pickupTableView.reloadData()
+        }
       }
       }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
     }

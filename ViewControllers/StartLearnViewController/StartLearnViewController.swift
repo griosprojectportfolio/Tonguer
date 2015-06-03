@@ -212,10 +212,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   }
   
   func btnStartLearnTapped(){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
-    vc.classID = dictClasses.objectForKey("id") as NSInteger
-    vc.isActive = "Paied"
-    self.navigationController?.pushViewController(vc, animated: true)
+    startLearningApiCall()
   }
   
 //  func btnforwardTapped(){
@@ -296,6 +293,31 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
         
     })
   }
+  
+  //**************Start Learning Api Calling***********
+  
+  func startLearningApiCall(){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(dictClasses.valueForKey("id"), forKey: "cls_id")
+    
+    self.api.startLearning(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
+      vc.classID = self.dictClasses.objectForKey("id") as NSInteger
+      vc.isActive = "Paied"
+      self.navigationController?.pushViewController(vc, animated: true)
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry Somethig Worng", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+    })
+  }
+
 
   //***************Fetching Data From Database Discus *********
   

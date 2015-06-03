@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PayViewController: UIViewController {
+class PayViewController: BaseViewController {
   
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
@@ -19,10 +19,13 @@ class PayViewController: UIViewController {
   var btnmakesure : UIButton!
   var strMoney: NSString! = "0"
   var clsDict: NSDictionary!
+  var segment: UISegmentedControl!
+  var choosMethod:NSInteger = 0
+  var api: AppApi!
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    api = AppApi.sharedClient()
     self.defaultUIDesign()
   }
   
@@ -33,6 +36,9 @@ class PayViewController: UIViewController {
   
   
   func defaultUIDesign(){
+    
+     print(clsDict)
+    
     self.title = "Select the way to pay"
     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
@@ -58,20 +64,46 @@ class PayViewController: UIViewController {
     lblmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblmoney)
     
-    btnpaypal = UIButton(frame: CGRectMake(self.view.frame.origin.x+20,lblmoney.frame.origin.y+lblmoney.frame.size.height , self.view.frame.width-40, 60))
-    btnpaypal.setTitle("Paypal For charge", forState: UIControlState.Normal)
-    btnpaypal.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-    btnpaypal.layer.borderWidth = 1
-    btnpaypal.layer.borderColor = UIColor.lightGrayColor().CGColor
-    self.view.addSubview(btnpaypal)
+//    btnpaypal = UIButton(frame: CGRectMake(self.view.frame.origin.x+20,lblmoney.frame.origin.y+lblmoney.frame.size.height , self.view.frame.width-40, 60))
+//    btnpaypal.setTitle("Paypal For charge", forState: UIControlState.Normal)
+//    btnpaypal.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
+//    btnpaypal.layer.borderWidth = 1
+//    btnpaypal.layer.borderColor = UIColor.lightGrayColor().CGColor
+//    self.view.addSubview(btnpaypal)
+    
+    var arryItem: NSArray = NSArray(objects: "Wallet","PayPal")
+    
+    segment = UISegmentedControl(items: arryItem)
+    segment.frame = CGRectMake(self.view.frame.origin.x+20,lblmoney.frame.origin.y+lblmoney.frame.size.height+20, self.view.frame.width-40,40)
+    segment.tintColor =  UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    segment.selectedSegmentIndex = 0
+    segment.addTarget(self, action: "segmentTapped:", forControlEvents:UIControlEvents.ValueChanged)
+    self.view.addSubview(segment)
     
     btnmakesure = UIButton(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.height-50, self.view.frame.width-40, 40))
-    btnmakesure.setTitle("Free Open Try class", forState: UIControlState.Normal)
+    btnmakesure.setTitle("OK", forState: UIControlState.Normal)
+    btnmakesure.addTarget(self, action: "btnTappedOK:", forControlEvents: UIControlEvents.TouchUpInside)
     btnmakesure.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
     btnmakesure.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     
     self.view.addSubview(btnmakesure)
   }
+  
+  func segmentTapped(segment:UISegmentedControl){
+    choosMethod = segment.selectedSegmentIndex
+  }
+  
+  func btnTappedOK(sender:UIButton){
+    if(choosMethod == 0){
+      walletApiCall()
+    }else if(choosMethod == 1){
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PaypalVC") as PayPalViewController
+      vc.dictCls = clsDict
+      vc.method = "payment"
+      self.navigationController?.pushViewController(vc, animated: true)
+    }
+  }
+  
   
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
@@ -81,5 +113,45 @@ class PayViewController: UIViewController {
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as OrderConfViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
+  
+  //************ Wallet Api methode Call*********
+  
+  func walletApiCall(){
+
+    var aParams: NSMutableDictionary = NSMutableDictionary()
+        aParams.setValue(self.auth_token[0], forKey:"auth_token")
+        aParams.setValue(clsDict.valueForKey("id"), forKey: "cls_id")
+        aParams.setValue(clsDict.valueForKey("price"), forKey: "cls_amount")
+    
+    self.api.walletApi(aParams as NSDictionary,success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "Your Transaction Successfully", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "You have not sufficent amount in your wallet, please charge your wallet or select another payment method", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+    })
+  }
+  
+//  //************ Wallet Api methode Call*********
+//  
+//  func walletApiCall(){
+//    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+//    
+//    self.api.walletApi(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+//      println(responseObject)
+//      
+//      },
+//      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+//        println(error)
+//        
+//    })
+//  }
+
+
   
 }

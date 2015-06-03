@@ -8,9 +8,14 @@
 import UIKit
 
 
-class PayPalViewController: UIViewController, PayPalPaymentDelegate, PayPalFuturePaymentDelegate, PayPalProfileSharingDelegate {
+class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFuturePaymentDelegate, PayPalProfileSharingDelegate {
 
   var moneyQuantity:NSString!
+  var method:NSString!
+  var is_buy:Bool = false
+  var dictCls: NSDictionary!
+  var api: AppApi!
+   var barBackBtn :UIBarButtonItem!
   var environment:String = PayPalEnvironmentSandbox
 
   var acceptCreditCards: Bool = true {
@@ -25,7 +30,16 @@ class PayPalViewController: UIViewController, PayPalPaymentDelegate, PayPalFutur
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    
+    var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
+    backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
+    backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
+    
+    barBackBtn = UIBarButtonItem(customView: backbtn)
+    self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    
+    
+     api = AppApi.sharedClient()
     // Do any additional setup after loading the view.
     title = "PayPal"
 
@@ -49,9 +63,20 @@ class PayPalViewController: UIViewController, PayPalPaymentDelegate, PayPalFutur
     payPalConfig.payPalShippingAddressOption = .PayPal;
 
     println("PayPal iOS SDK Version: \(PayPalMobile.libraryVersion())")
-    self.tougerPaypal()
+    if(method.isEqualToString("payment")){
+      moneyQuantity = NSString(format: "%i",(dictCls.objectForKey("price")?.integerValue)!)
+       self.tougerPaypal()
+    }else if(method.isEqualToString("charge")){
+      self.tougerPaypal()
+    }
+   
   }
 
+  
+  func btnBackTapped(){
+    self.navigationController?.popViewControllerAnimated(true)
+  }
+  
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
     PayPalMobile.preconnectWithEnvironment(environment)
@@ -114,8 +139,8 @@ class PayPalViewController: UIViewController, PayPalPaymentDelegate, PayPalFutur
       // send completed confirmaion to your server
       println("Here is your proof of payment:\n\n\(completedPayment.confirmation)\n\nSend this to your server for confirmation and fulfillment.")
       self.resultText = completedPayment!.description
+     
       self.showSuccess()
-
       let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
       self.navigationController!.popToViewController(viewControllers[1], animated: true);
 
@@ -176,7 +201,56 @@ class PayPalViewController: UIViewController, PayPalPaymentDelegate, PayPalFutur
 
   // MARK: Helpers
   func showSuccess() {
-    var alertVw:UIAlertView = UIAlertView(title: "Success!!", message: "Successfully add into vallet.", delegate: nil, cancelButtonTitle: "OK")
-    alertVw.show()
+    if(method.isEqualToString("charge")){
+      UserUpadteApiCall()
+    }else if(method.isEqualToString("payment")){
+      paypalApiCall()
+    }
+    
   }
+  //****** Update User Recodes ans Api call ************
+  func UserUpadteApiCall(){
+    
+    var aParam:NSMutableDictionary = NSMutableDictionary()
+    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+    aParam.setValue(moneyQuantity, forKey: "user[money]")
+    
+    self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var alertVw:UIAlertView = UIAlertView(title: "Success!!", message: "Successfully add into Wallet.", delegate: nil, cancelButtonTitle: "OK")
+      alertVw.show()
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
+  
+  //****** Paypal Api call ************
+  func paypalApiCall(){
+     self.is_buy = true
+    var aParam:NSMutableDictionary = NSMutableDictionary()
+    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+    aParam.setValue(dictCls.valueForKey("id"), forKey: "class_id")
+    aParam.setValue(is_buy, forKey: "is_buy")
+    
+    self.api.paypalApi(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var alertVw:UIAlertView = UIAlertView(title: "Success!!", message: "Successfully add into Wallet.", delegate: nil, cancelButtonTitle: "OK")
+      alertVw.show()
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
+  
+  
+  
 }

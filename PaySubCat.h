@@ -14,6 +14,7 @@
 @interface PaySubCat : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * sub_cat_id;
+@property (nonatomic, retain) NSNumber * cat_id;
 @property (nonatomic, retain) NSString * sub_cat_name;
 @property (nonatomic, retain) PayClsCat *payclscat;
 @property (nonatomic, retain) NSSet *paycls;
@@ -26,8 +27,8 @@
 - (void)addPaycls:(NSSet *)values;
 - (void)removePaycls:(NSSet *)values;
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext catID:(NSNumber*)cat_id;
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext catID:(NSNumber*)cat_id;
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext catID:(NSNumber*)cat_id;
 
 @end

@@ -16,7 +16,7 @@ class CreditTableViewCell: UITableViewCell {
     }
   
   
-  func defaultCellContents(aParam:UserClassOrder,frame:CGRect){
+  func defaultCellContents(obj:UserClassOrder,frame:CGRect){
     
     var arry = self.contentView.subviews
     var vwSub: UIView!
@@ -36,14 +36,14 @@ class CreditTableViewCell: UITableViewCell {
     vwCell.addSubview(lblPrice)
     
     var lblClassName: UILabel! = UILabel(frame: CGRectMake(2, 0,lblPrice.frame.origin.x-5,40))
-    lblClassName.text = "Class name"
+    lblClassName.text = obj.cls_name
     lblClassName.font = lblClassName.font.fontWithSize(15)
     lblClassName.textColor = UIColor.lightGrayColor()
     vwCell.addSubview(lblClassName)
     
     
     var lblDate: UILabel = UILabel(frame: CGRectMake(5,vwCell.frame.height-40,vwCell.frame.width-40,40))
-    lblDate.text = "Date"
+    lblDate.text = obj.date
     lblDate.font = lblClassName.font.fontWithSize(15)
     lblDate.textColor = UIColor.lightGrayColor()
     vwCell.addSubview(lblDate)

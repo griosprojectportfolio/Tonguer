@@ -94,6 +94,8 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.userClassApiCall()
     self.userLearnClsApiCall()
     self.userLearnedClsApiCall()
+    
+    updateDeviceTokenCall()
   }
 
   func rightswipeGestureRecognizer(){
@@ -470,7 +472,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   func UserUpadteApiCall(image:UIImage){
     var imageData = UIImagePNGRepresentation(image)
     let base64String = imageData.base64EncodedStringWithOptions(.allZeros)
-    println(base64String)
+    //println(base64String)
 
     var aParam:NSMutableDictionary = NSMutableDictionary()
     aParam.setValue(self.auth_token[0], forKey: "auth_token")
@@ -486,9 +488,29 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
     })
 
-
-
   }
+  
+  
+  func updateDeviceTokenCall(){
+    
+    var aParam:NSMutableDictionary = NSMutableDictionary()
+    
+    let strDeviceToken = appDelegate.deviceTokenString
+    
+    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+    aParam.setValue(strDeviceToken, forKey: "user[device_token]")
+    
+    self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+
 
 
   //****** User Data fetch from database ************
@@ -499,11 +521,34 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     print(userObject.fname)
     let fname = userObject.fname
     let lname = userObject.lname
-
-    var name = fname+" "+lname
+    var name: NSString!
+    if((fname != nil && lname  != nil)){
+      name = fname+" "+lname
+    }else{
+      name = ""
+    }
     lblblurVwtextTitle.text = name
+    
+    if((userObject.money) != nil){
     lblMoney.text = userObject.money.stringValue
-    lblScore.text = userObject.score.stringValue
+    }else{
+       lblMoney.text = "0.0"
+    }
+    
+    if((userObject.score) != nil){
+      lblScore.text = userObject.score.stringValue
+    }else{
+      lblScore.text = "0.0"
+    }
+    
+    if((userObject.pro_img) != nil){
+      let url = NSURL(string: userObject.pro_img as NSString)
+      imgVwProfilrPic.sd_setImageWithURL(url)
+    }else{
+      let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
+      imgVwProfilrPic.sd_setImageWithURL(url)
+    }
+    
   }
 
 

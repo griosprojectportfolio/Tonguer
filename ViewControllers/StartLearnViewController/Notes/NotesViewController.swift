@@ -52,11 +52,23 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
     api = AppApi.sharedClient()
-    self.getNotesApiCall()
+    
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     //self.view.addSubview(actiIndecatorVw)
+    self.defaultUIDesign()
+    var arryUserNotes:NSArray = UserNotes.MR_findAll()
+    var arryNotes:NSArray = Notes.MR_findAll()
+    
+    self.dataFetchFromDatabaseGetNotes(arryNotes)
+    self.dataFetchFromDatabaseGetUserlNotes(arryUserNotes)
+    self.fetchDataFromDBforDefaultCls()
+    if (arryNotes.count != 0 || arryUserNotes.count != 0) {
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      self.tblVwNotes.reloadData()
+    }
 
-    fetchDataFromDBforDefaultCls()
+
   }
   
   override func didReceiveMemoryWarning() {
@@ -67,19 +79,9 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
     self.view.bringSubviewToFront(self.actiIndecatorVw)
-    self.defaultUIDesign()
-
-    var arryUserNotes:NSArray = UserNotes.MR_findAll()
-    var arryNotes:NSArray = Notes.MR_findAll()
-
-    self.dataFetchFromDatabaseGetNotes(arryNotes)
-    self.dataFetchFromDatabaseGetUserlNotes(arryUserNotes)
-
-    if (arryNotes.count != 0 || arryUserNotes.count != 0) {
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-      self.tblVwNotes.reloadData()
-    }
+    self.getNotesApiCall()
+    
+    
   }
 
   func defaultUIDesign(){
@@ -167,6 +169,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func btnAddTapped(sender:AnyObject){
     var vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddNotesID") as AddNotesViewController
+    vc.is_Call = "Save"
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
@@ -301,7 +304,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       if((notesObj.notes_img) != nil){
         dict.setValue(notesObj.notes_img, forKey:"image")
       }else{
-        dict.setValue("", forKey:"image")
+        dict.setValue("http://www.popular.com.my/images/no_image.gif", forKey:"image")
       }
       
       if((notesObj.notes_like_count) != nil){
@@ -321,6 +324,13 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }else{
         dict.setValue(0, forKey:"isenable")
       }
+      
+      if((notesObj.notes_cls_name) != nil){
+        dict.setValue(notesObj.notes_cls_name, forKey:"cls_name")
+      }else{
+        dict.setValue("", forKey:"cls_name")
+      }
+
       
       arrUserNotes.addObject(dict)
     }
@@ -346,7 +356,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       if((notesObj.notes_img) != nil){
         dict.setValue(notesObj.notes_img, forKey:"image")
       }else{
-        dict.setValue("", forKey:"image")
+        dict.setValue("http://www.popular.com.my/images/no_image.gif", forKey:"image")
       }
       
       if((notesObj.notes_like_cont) != nil){
@@ -360,6 +370,13 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }else{
         dict.setValue("0000-00-00 00:00", forKey:"date")
       }
+      
+      if((notesObj.notes_cls_name) != nil){
+        dict.setValue(notesObj.notes_cls_name, forKey:"cls_name")
+      }else{
+        dict.setValue("", forKey:"cls_name")
+      }
+      
       arrNotes.addObject(dict)
     }
     print(arrNotes.count)
@@ -392,12 +409,59 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
 
   func filterApiCall (classId:NSInteger) {
-    let param:NSDictionary = ["":classId]
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],classId], forKeys: ["auth_token","cls_id"])
     self.api.callFilterNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
-
-      self.arrySearchNotes = responseObject?.objectForKey("filter") as NSMutableArray
-      self.isSearch = true
-      self.tblVwNotes.reloadData() // take search arry and apply content
+      print(responseObject)
+      
+      let arryNot = responseObject as? NSArray
+      for var index = 0; index < arryNot?.count; ++index{
+        var dictData = arryNot?.objectAtIndex(index) as NSDictionary
+        print(dictData)
+        
+        var dict: NSMutableDictionary! = NSMutableDictionary()
+        
+        dict.setValue(dictData.valueForKey("id"), forKey: "id")
+        dict.setValue(dictData.valueForKey("a_class")!.valueForKey("id")!, forKey: "cls_id")
+        
+        if((dictData.valueForKey("content")) != nil){
+          dict.setValue(dictData.valueForKey("content"), forKey:"content")
+        }else{
+          dict.setValue("", forKey:"content")
+        }
+        
+        if((dictData.valueForKey("image")?.valueForKey("url")?) != nil){
+          dict.setValue(dictData.valueForKey("image")?.valueForKey("url"), forKey:"image")
+        }else{
+          dict.setValue("http://www.popular.com.my/images/no_image.gif", forKey:"image")
+        }
+        
+        if((dictData.valueForKey("like_count")) != nil){
+          dict.setValue(dictData.valueForKey("like_count"), forKey:"like")
+        }else{
+          dict.setValue(0, forKey:"like")
+        }
+        
+        if((dictData.valueForKey("created_at")) != nil){
+          dict.setValue(dictData.valueForKey("created_at"), forKey:"date")
+        }else{
+          dict.setValue("0000-00-00 00:00", forKey:"date")
+        }
+        
+        if((dictData.valueForKey("a_class")?.valueForKey("name")!) != nil){
+          dict.setValue(dictData.valueForKey("a_class")?.valueForKey("name")?, forKey:"cls_name")
+        }else{
+          dict.setValue("", forKey:"cls_name")
+        }
+        self.arrySearchNotes.addObject(dict)
+      }
+      print(self.arrySearchNotes.count)
+      if(arryNot?.count == 0){
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Notes Found", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+      }else{
+        self.isSearch = true
+        self.tblVwNotes.reloadData()
+      }
 
       }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
 
@@ -470,15 +534,66 @@ extension NotesViewController:UISearchBarDelegate {
     searchBar.resignFirstResponder()
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     self.navigationItem.setRightBarButtonItems([btnBarFilter,btnBarSearch,btnBarAdd], animated: true)
+    self.isSearch = false
+    self.tblVwNotes.reloadData()
   }
 
   func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-    let param:NSDictionary = ["search":searchBar.text]
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text], forKeys: ["auth_token","notes_key_word"])
     self.api.callSearchNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
-
-        self.arrySearchNotes = responseObject?.objectForKey("notes") as NSMutableArray
+      print(responseObject)
+      
+      let arryNotes = responseObject as? NSArray
+      for var index = 0; index < arryNotes?.count; ++index{
+       var dictData = arryNotes?.objectAtIndex(index) as NSDictionary
+        print(dictData)
+        
+        var dict: NSMutableDictionary! = NSMutableDictionary()
+        
+        dict.setValue(dictData.valueForKey("id"), forKey: "id")
+        dict.setValue(dictData.valueForKey("a_class")!.valueForKey("id")!, forKey: "cls_id")
+        
+        if((dictData.valueForKey("content")) != nil){
+          dict.setValue(dictData.valueForKey("content"), forKey:"content")
+        }else{
+          dict.setValue("", forKey:"content")
+        }
+        
+        if((dictData.valueForKey("image")?.valueForKey("url")?) != nil){
+          dict.setValue(dictData.valueForKey("image")?.valueForKey("url"), forKey:"image")
+        }else{
+          dict.setValue("http://www.popular.com.my/images/no_image.gif", forKey:"image")
+        }
+        
+        if((dictData.valueForKey("like_count")) != nil){
+          dict.setValue(dictData.valueForKey("like_count"), forKey:"like")
+        }else{
+          dict.setValue(0, forKey:"like")
+        }
+        
+        if((dictData.valueForKey("created_at")) != nil){
+          dict.setValue(dictData.valueForKey("created_at"), forKey:"date")
+        }else{
+          dict.setValue("0000-00-00 00:00", forKey:"date")
+        }
+        
+        if((dictData.valueForKey("a_class")?.valueForKey("name")!) != nil){
+          dict.setValue(dictData.valueForKey("a_class")?.valueForKey("name")?, forKey:"cls_name")
+        }else{
+          dict.setValue("", forKey:"cls_name")
+        }
+        self.arrySearchNotes.addObject(dict)
         self.isSearch = true
-        self.tblVwNotes.reloadData() // take search arry and apply content
+        self.tblVwNotes.reloadData()
+      }
+      
+      if(arryNotes?.count == 0){
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Notes Found", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+        }else{
+        self.isSearch = true
+        self.tblVwNotes.reloadData()
+      }
 
       }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
     }

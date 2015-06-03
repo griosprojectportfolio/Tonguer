@@ -26,30 +26,29 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext about_id:(NSNumber*)ab_id{
   for(NSDictionary *aDictionary in aArray) {
-    [Aboutus entityFromDictionary:aDictionary inContext:localContext];
+    [Aboutus entityFromDictionary:aDictionary inContext:localContext about_id:ab_id];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [Aboutus entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext about_id:(NSNumber*)ab_id {
+  [Aboutus entityFromDictionary:adictionary inContext:localContext about_id:ab_id];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext about_id:(NSNumber*)ab_id{
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
-    Aboutus *obj = (Aboutus*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
+    Aboutus *obj = (Aboutus*)[self findOrCreateByID:ab_id inContext:localContext];
     
-    obj.ab_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
+    obj.ab_id = ab_id;
     
+    if (![[aDictionary objectForKey:@"message"] isKindOfClass:[NSNull class]])
+      obj.ab_content = [aDictionary valueForKey:@"message"] ;
     
-    if (![[aDictionary objectForKey:@"content"] isKindOfClass:[NSNull class]])
-      obj.ab_content = [aDictionary valueForKey:@"content"] ;
-    
-    if (![[aDictionary objectForKey:@"video"] isKindOfClass:[NSNull class]])
-      obj.ab_videourl = [aDictionary valueForKey:@"video"] ;
+    if (![[aDictionary objectForKey:@"video_url"] isKindOfClass:[NSNull class]])
+      obj.ab_videourl = [aDictionary valueForKey:@"video_url"] ;
 
     
     return obj;

@@ -65,9 +65,18 @@
     if (![[aDictionary objectForKey:@"score"] isKindOfClass:[NSNull class]])
       obj.score =[NSNumber numberWithInteger:[[aDictionary objectForKey:@"score"] integerValue]];
     
-    if (![[aDictionary objectForKey:@"userimage"] isKindOfClass:[NSNull class]])
-      obj.pro_img =[aDictionary valueForKey:@"userimage"];
+    if (![[[aDictionary objectForKey:@"image"]valueForKey:@"url"] isKindOfClass:[NSNull class]]){
+      NSString *strImgBaseUrl = @"https://tonguer.herokuapp.com";
+      NSString *imgUrl = [strImgBaseUrl stringByAppendingString:[[aDictionary valueForKey:@"image"]valueForKey:@"url"]];
+      obj.pro_img =imgUrl;
+    }
     
+    
+    if (![[aDictionary objectForKey:@"device_token"] isKindOfClass:[NSNull class]])
+      obj.device_token =[aDictionary valueForKey:@"device_token"];
+    
+    if (![[aDictionary objectForKey:@"batch_count"] isKindOfClass:[NSNull class]])
+      obj.batch_count =[aDictionary valueForKey:@"batch_count"];
     
     return obj;
   }

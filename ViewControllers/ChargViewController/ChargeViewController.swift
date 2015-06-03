@@ -137,6 +137,7 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
     if (money.length != 0) {
       var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PaypalVC") as PayPalViewController
       vc.moneyQuantity = cusTxtQuantity.text
+      vc.method = "charge"
       self.navigationController?.pushViewController(vc, animated: true)
     } else {
       var alertVw:UIAlertView = UIAlertView(title:"Message", message:"Please enter ammount.", delegate:nil, cancelButtonTitle:"OK")

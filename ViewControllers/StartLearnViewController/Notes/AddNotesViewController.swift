@@ -31,6 +31,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   var lblSelectImg: UILabel!
   var lblPublish: UILabel!
   var dictNote: NSDictionary!
+  var is_Call: NSString!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -127,7 +128,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     scrollVW.addSubview(cusTxtFieldCls)
     
    
-    ImgVW = UIImageView(frame: CGRectMake(cusTxtFieldCls.frame.width-100,cusTxtFieldCls.frame.origin.y+cusTxtFieldCls.frame.height+10,100,100))
+    ImgVW = UIImageView(frame: CGRectMake(cusTxtFieldCls.frame.width-100,cusTxtFieldCls.frame.origin.y+cusTxtFieldCls.frame.height+50,100,100))
     //ImgVW.backgroundColor = UIColor.grayColor()
     ImgVW.userInteractionEnabled = true
     ImgVW.layer.borderWidth = 0.5
@@ -211,16 +212,34 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   
   
   func btnSaveTapped(sender:AnyObject){
-    var imageData = UIImagePNGRepresentation(imagePick)
-    let base64String = imageData.base64EncodedStringWithOptions(.allZeros)
-    println(base64String)
     
+    if(is_Call == "Upadte"){
+     notesUpdateApiCall()
+    }else if(is_Call == "Save"){
+      notesSaveApiCall()
+    }
+    
+  }
+  
+  
+  func notesSaveApiCall(){
+
+    var base64String:NSString!
+    if((imagePick) != nil){
+      var imageData = UIImagePNGRepresentation(imagePick)
+        base64String = imageData.base64EncodedStringWithOptions(.allZeros) as NSString
+      println(base64String)
+    }else{
+      base64String = ""
+    }
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
+    
     aParams.setValue(txtVwContent.text, forKey: "note[content]")
-    aParams.setValue(base64String, forKey: "note[image]")
+    aParams.setValue(base64String, forKey: "image_code")
     aParams.setValue(isEnable, forKey: "note[is_enable]")
-    aParams.setValue(cls_id, forKey: "note[cls_id]")
+    aParams.setValue(cls_id, forKey: "class_id")
+    //aParams.setValue(cusTxtFieldCls.text, forKey: "note[cls_name]")
     self.api.createUserNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       
@@ -229,7 +248,47 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
         println(error)
         
     })
+
+    
   }
+  
+  
+  //******************* Notes Edit Api Call **************
+  
+  
+  func notesUpdateApiCall(){
+    
+    var base64String:NSString!
+    if((imagePick) != nil){
+      var imageData = UIImagePNGRepresentation(imagePick)
+      base64String = imageData.base64EncodedStringWithOptions(.allZeros) as NSString
+      println(base64String)
+    }else{
+      var imageData = UIImagePNGRepresentation(imagePick)
+      base64String = imageData.base64EncodedStringWithOptions(.allZeros) as NSString
+    }
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(dictNote.valueForKey("id"), forKey: "note_id")
+    aParams.setValue(txtVwContent.text, forKey: "note[content]")
+    aParams.setValue(base64String, forKey: "image_code")
+    aParams.setValue(isEnable, forKey: "note[is_enable]")
+    aParams.setValue(cls_id, forKey: "note[a_class_id]")
+    //aParams.setValue(cusTxtFieldCls.text, forKey: "note[cls_name]")
+    
+    self.api.callNotesUpdateApi(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+  }
+  
+  
+  
   
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
@@ -344,7 +403,27 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
         swtPublish.setOn(true, animated:false)
       }
       
+      cusTxtFieldCls.text = dictNote.valueForKey("cls_name") as NSString
       
+      let url = NSURL(string: dictNote.objectForKey("image") as NSString)
+      var data = NSData(contentsOfURL: url!)
+      imagePick = UIImage(data: data!)
+      ImgVW.sd_setImageWithURL(url)
+    
+      cls_id = dictNote.valueForKey("cls_id") as NSInteger
+    }
+  }
+
+ 
+  
+  func editNotesApiCall () {
+    
+    let param:NSDictionary = ["":""]
+    self.api.callNotesUpdateApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+      var alertVw:UIAlertView = UIAlertView(title:"Message", message:"Notes updates successfully", delegate: nil, cancelButtonTitle:"OK")
+      alertVw.show()
+      }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
+        
     }
   }
 

@@ -118,6 +118,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     let manager = NSFileManager.defaultManager()
     if (manager.fileExistsAtPath(path)){
       cell.btnplay.hidden = true
+      self.calculateVideofileSize(path)
     }
     return cell
   }
@@ -146,7 +147,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
      var btn = sender as UIButton
     print(btn.tag)
     btn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
-    //videoDoneApiCall()
+    videoDoneApiCall(btn.tag)
   }
   
   
@@ -171,10 +172,18 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
         println(error)
         
     })
-
     
   }
   
+  func calculateVideofileSize(filePath:NSString){
+    var fileAttributes: NSDictionary = NSFileManager.defaultManager().attributesOfItemAtPath(filePath, error:nil)!
+    var fileSizeNumber: AnyObject? = fileAttributes.objectForKey(NSFileSize)
+    var fileSize = fileSizeNumber?.longValue
+    
+    let userDefaults = NSUserDefaults.standardUserDefaults()
+    userDefaults.setValue(fileSize, forKey: "fileSize")
+    userDefaults.synchronize() // don't forget this!!!!
+  }
   
   //*********** Api Calling Methods**********
   
@@ -214,15 +223,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   }
   
   func videoDoneApiCall(video_id:NSInteger){
-    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,video_id], forKeys: ["auth_token","class_id","video_id"])
+    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,video_id], forKeys: ["auth_token","cls_id","video_id"])
     
     self.api.videoComplete(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-      let arryVideo:NSArray = responseObject as NSArray
-      self.dataFetchUserClsDB(arryVideo)
-      self.tableview.reloadData()
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -230,8 +235,6 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     })
     
   }
-
-  
   
 
   func dataFetchFreeClsDB(arrFetchCat: NSArray){

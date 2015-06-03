@@ -147,6 +147,10 @@
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
+- (AFHTTPRequestOperation *)callSearchClassApi:(NSDictionary *)aParams
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
 - (AFHTTPRequestOperation *)callNotesDeleteApi:(NSDictionary *)aParams
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
@@ -171,13 +175,26 @@
                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
-- (AFHTTPRequestOperation *)buyClass:(NSDictionary *)aParams
+- (AFHTTPRequestOperation *)paypalApi:(NSDictionary *)aParams
                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
 - (AFHTTPRequestOperation *)userClassOrders:(NSDictionary *)aParams
                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)startLearning:(NSDictionary *)aParams
+                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)addNotes:(NSDictionary *)aParams
+                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+- (AFHTTPRequestOperation *)walletApi:(NSDictionary *)aParams
+                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
 
 -(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams;
 

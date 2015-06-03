@@ -16,8 +16,8 @@
 @property (nonatomic, retain) NSString * ab_content;
 @property (nonatomic, retain) NSString * ab_videourl;
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext about_id:(NSNumber*)ab_id;
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext about_id:(NSNumber*)ab_id;
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext about_id:(NSNumber*)ab_id;
 
 @end

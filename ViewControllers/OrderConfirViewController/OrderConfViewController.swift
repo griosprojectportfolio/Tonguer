@@ -18,7 +18,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   var txtFieldMoney : CustomTextFieldBlurView!
   var txtFieldContact : CustomTextFieldBlurView!
   var btnConfirmpay :UIButton!
-  var clsDict: NSDictionary!
+  var clsDict: NSDictionary = NSDictionary()
   
   var lblNeed :UILabel!
   var lblNeedmoney :UILabel!
@@ -26,8 +26,17 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     print(clsDict)
+    self.title = "Order Confirm"
+    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
+    self.navigationItem.setHidesBackButton(true, animated:false)
     
-    self.defaultUIDesign()
+    var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
+    backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
+    backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
+    
+    barBackBtn = UIBarButtonItem(customView: backbtn)
+    self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    defaultUIDesign()
   }
   
   override func didReceiveMemoryWarning() {
@@ -37,17 +46,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   
   
   func defaultUIDesign(){
-    self.title = "Order Confirm"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
-    self.navigationItem.setHidesBackButton(true, animated:false)
-    
-    var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-    backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
-    backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
-    
-    barBackBtn = UIBarButtonItem(customView: backbtn)
-    self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+  
     
     imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x+30, self.view.frame.origin.y+84, 80, 60))
     let url = NSURL(string: clsDict.objectForKey("image") as NSString)
@@ -59,10 +58,11 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     lblDetail.numberOfLines = 2
     //lblDetail.backgroundColor = UIColor.redColor()
     lblDetail.textColor = UIColor.darkGrayColor()
-    lblDetail.font = lblDetail.font.fontWithSize(12)
-    lblDetail.text = clsDict.objectForKey("name") as NSString
-    
+    lblDetail.font = lblDetail.font.fontWithSize(15)
+    let strName = clsDict.valueForKey("name") as? NSString
+    lblDetail.text = strName
     self.view.addSubview(lblDetail)
+    
      var str: NSString = "$"
     lblmoney = UILabel(frame: CGRectMake(imgVw.frame.origin.x+(imgVw.frame.width - 70)/2,imgVw.frame.origin.y+imgVw.frame.height+5,100,50))
     lblmoney.text = str + "  " + NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
@@ -70,9 +70,9 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     lblmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblmoney)
     
-    var strValid: NSString = "Vaild to"
+    var strValid: NSString = "Vaild to days:"
     lblVaild = UILabel(frame: CGRectMake((self.view.frame.width-150)-20, lblmoney.frame.origin.y,150, 40))
-    lblVaild.text = strValid + "  " + NSString(format: "%i",(clsDict.objectForKey("day")?.integerValue)!)
+    lblVaild.text = strValid + "  " + NSString(format: "%i",(clsDict.objectForKey("valid_days")?.integerValue)!)
     lblVaild.font = lblmoney.font.fontWithSize(12)
     lblVaild.textColor = UIColor.grayColor()
     self.view.addSubview(lblVaild)
@@ -82,6 +82,8 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     txtFieldMoney = CustomTextFieldBlurView(frame:txtmoneyframe, imgName:"")
     txtFieldMoney.attributedPlaceholder = NSAttributedString(string:"Money",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
     // custxtEmail.returnKeyType = UIReturnType.Done
+    txtFieldMoney.text =  NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
+    txtFieldMoney.userInteractionEnabled = false
     txtFieldMoney.delegate = self;
     txtFieldMoney.returnKeyType = UIReturnKeyType.Done
     txtFieldMoney.clearButtonMode = UITextFieldViewMode.Always
@@ -110,6 +112,9 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     lblNeedmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblNeedmoney)
     
+    
+    
+    
     btnConfirmpay = UIButton(frame: CGRectMake(txtFieldContact.frame.origin.x, self.view.frame.size.height-50, txtFieldContact.frame.width, 40))
     btnConfirmpay.setTitle("Confirm Pay", forState: UIControlState.Normal)
     btnConfirmpay.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
@@ -127,5 +132,10 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
 
 func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
+  }
+  
+  func textFieldShouldReturn(textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    return false
   }
 }

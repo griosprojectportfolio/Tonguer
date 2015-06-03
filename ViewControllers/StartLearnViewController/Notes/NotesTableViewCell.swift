@@ -42,7 +42,8 @@ class NotesTableViewCell:BaseTableViewCell {
     
     imageVW = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80, 70))
     
-    imageVW.image = UIImage(named: "demoimg.png")
+    let url = NSURL(string: aParam.objectForKey("image") as NSString)
+    imageVW.sd_setImageWithURL(url)
     self.contentView.addSubview(imageVW)
     print(Frame.width)
     vwCell = UIView(frame: CGRectMake(imageVW.frame.origin.x+imageVW.frame.width,imageVW.frame.origin.y,(Frame.width)-(imageVW.frame.width+40),imageVW.frame.height))
@@ -75,7 +76,7 @@ class NotesTableViewCell:BaseTableViewCell {
     vwCell.addSubview(imageVWDateAntime)
     
     lblClassNam = UILabel(frame: CGRectMake(lblContent.frame.origin.x,vwCell.frame.height-30,imageVWDateAntime.frame.origin.x - 5,30))
-    lblClassNam.text = "Class Name"
+    lblClassNam.text = aParam.valueForKey("cls_name") as NSString
     lblClassNam.font = lblClassNam.font.fontWithSize(12)
     lblClassNam.textColor = UIColor.grayColor()
     vwCell.addSubview(lblClassNam)

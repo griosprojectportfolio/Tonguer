@@ -49,8 +49,15 @@ class PickupTableViewCell: BaseTableViewCell {
   
   func setContentProperties(aParam:NSDictionary){
     
-    let url = NSURL(string: aParam.objectForKey("image") as NSString)
-    imgVw.sd_setImageWithURL(url)
+    let strImgUrl = aParam["image"] as? String
+    
+    if(strImgUrl == nil){
+      let url = NSURL(string:"http://www.popular.com.my/images/no_image.gif")
+      imgVw.sd_setImageWithURL(url)
+    }else{
+      let url = NSURL(string: aParam.objectForKey("image") as NSString)
+      imgVw.sd_setImageWithURL(url)
+    }
     //imgVw.backgroundColor = UIColor.redColor()
     imgVw.layer.borderWidth = 0.3
     imgVw.layer.borderColor = UIColor.lightGrayColor().CGColor
@@ -70,7 +77,12 @@ class PickupTableViewCell: BaseTableViewCell {
     
     
     lblPriz = UILabel(frame: CGRectMake(vWcell.frame.width-50,vWcell.frame.height-30,50,30))
-    lblPriz.text =  NSString(format: "%i",(aParam.objectForKey("price")?.integerValue)!)
+    if((aParam.objectForKey("price")?.integerValue) != nil){
+      lblPriz.text =  NSString(format: "%i",(aParam.objectForKey("price")?.integerValue)!)
+    }else{
+      lblPriz.text = "0.0"
+    }
+    
     lblPriz.font = lblClassName.font.fontWithSize(12)
     lblPriz.textAlignment = NSTextAlignment.Center
     lblPriz.textColor = UIColor.whiteColor()
@@ -78,7 +90,7 @@ class PickupTableViewCell: BaseTableViewCell {
     vWcell.addSubview(lblPriz)
     
     lblDate = UILabel(frame: CGRectMake(10,vWcell.frame.height-30,lblPriz.frame.origin.x-10,30))
-    lblDate.text = NSString(format: "%i",(aParam.objectForKey("day")?.integerValue)!)    //aParam.objectForKey("valid_days") as NSString
+    lblDate.text = NSString(format: "%i",(aParam.objectForKey("valid_days")?.integerValue)!)    //aParam.objectForKey("valid_days") as NSString
     lblDate.font = lblDate.font.fontWithSize(12)
     lblDate.textColor = UIColor.grayColor()
     //lblDate.backgroundColor = UIColor.redColor()

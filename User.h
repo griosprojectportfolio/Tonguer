@@ -13,6 +13,8 @@
 @interface User : NSManagedObject
 
 @property (nonatomic, retain) NSString * email;
+@property (nonatomic, retain) NSString * device_token;
+@property (nonatomic, retain) NSString * batch_count;
 @property (nonatomic, retain) NSString * fname;
 @property (nonatomic, retain) NSString * lname;
 @property (nonatomic, retain) NSNumber * money;

@@ -81,6 +81,8 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     self.view.addSubview(tableview)
     tableview.registerClass(SettingTableViewCell.self, forCellReuseIdentifier: "cell")
     
+    
+    
     fetchDataFromdataBase()
   }
   
@@ -101,7 +103,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as SettingTableViewCell
     cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
     cell.selectionStyle = UITableViewCellSelectionStyle.None
-    cell.defaultUICellContent(arrSettData.objectAtIndex(indexPath.row) as NSString, index: indexPath.row)
+    cell.defaultUICellContent(arrSettData.objectAtIndex(indexPath.row) as NSString, index: indexPath.row,frame: self.view.frame)
     return cell
   }
   
@@ -170,8 +172,12 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     print(userObject.fname)
     let fname = userObject.fname
     let lname = userObject.lname
-    
-    var name = fname+" "+lname
-    lblname.text = name
+    var name: NSString!
+    if((fname != nil && lname  != nil)){
+      name = fname+" "+lname
+    }else{
+      name = ""
+    }
+   
   }
 }

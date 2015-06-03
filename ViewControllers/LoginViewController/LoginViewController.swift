@@ -128,7 +128,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   func loginApiCall(){
     //var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
 
-    var aParams: NSDictionary = ["user[email]" : "test01@rails.com", "user[password]" : "gr123456"]
+    var aParams: NSDictionary = ["user[email]" : "ajulwania@grepruby.com", "user[password]" : "arun123456"]
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
@@ -151,6 +151,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        self.actiIndecatorVw.removeFromSuperview()
         self.loginValidation()
     })
 
@@ -235,9 +236,6 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     var aParams: NSDictionary = ["auth_token":auth_token[0]]
     self.api.freeClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
-      //self.hometableVw.reloadData()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -250,10 +248,6 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     var aParams: NSDictionary = ["auth_token":auth_token[0]]
     self.api.payClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
-      //self.hometableVw.reloadData()
-
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

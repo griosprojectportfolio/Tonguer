@@ -19,7 +19,9 @@ class NotesDetailViewController: BaseViewController {
   var dictNotes: NSDictionary!
   var scrollVW: UIScrollView!
   var lblContent:UILabel!
+  var imgVW: UIImageView!
   var api: AppApi!
+  var actiIndecatorVw: ActivityIndicatorView!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -53,6 +55,7 @@ class NotesDetailViewController: BaseViewController {
       
       btnDelete = UIButton(frame: CGRectMake(0, 0, 25, 25))
       btnDelete.setImage(UIImage(named: "deleteicon.png"), forState: UIControlState.Normal)
+      btnDelete.addTarget(self, action: "btnDeleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
       
       var btnBarEdit: UIBarButtonItem = UIBarButtonItem(customView: btnEdit)
       var btnBarDelete: UIBarButtonItem = UIBarButtonItem(customView: btnDelete)
@@ -62,6 +65,7 @@ class NotesDetailViewController: BaseViewController {
       
       btnAdd = UIButton(frame: CGRectMake(0, 0, 25, 25))
       btnAdd.setImage(UIImage(named: "Add.png"), forState: UIControlState.Normal)
+      btnAdd.addTarget(self, action:"btnAddNoteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
       var btnBarAdd: UIBarButtonItem = UIBarButtonItem(customView: btnAdd)
       
       btnLike = UIButton(frame: CGRectMake(0, 0, 25, 25))
@@ -90,21 +94,52 @@ class NotesDetailViewController: BaseViewController {
     lblContent.text = strContent
     lblContent.numberOfLines = 0
     lblContent.textAlignment = NSTextAlignment.Justified
-    lblContent.font = lblContent.font.fontWithSize(12)
+    lblContent.font = lblContent.font.fontWithSize(15)
     lblContent.textColor = UIColor.grayColor()
     //lblContent.backgroundColor = UIColor.greenColor()
     scrollVW.addSubview(lblContent)
-
+    
+    imgVW = UIImageView(frame: CGRectMake(lblContent.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.height+30,lblContent.frame.width,150))
+    let url = NSURL(string: dictNotes.objectForKey("image") as NSString)
+    imgVW.sd_setImageWithURL(url)
+    imgVW.backgroundColor = UIColor.redColor()
+    scrollVW.addSubview(imgVW);
   }
   
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
   }
   
+   //************Call Add Notes Api Method *********
+  
+  func btnAddNoteTapped(sender:UIButton){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(dictNotes.valueForKey("id"), forKey: "note_id")
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+    self.api.addNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      self.actiIndecatorVw.loadingIndicator.startAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note Added Successfully", delegate:nil, cancelButtonTitle: "OK")
+      alert.show()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+    })
+
+    
+    
+  }
+  
+  
   func btnEditedTapped(sender:UIButton){
     
     var vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddNotesID") as AddNotesViewController
     vc.dictNote = dictNotes
+    vc.is_Call = "Upadte"
     self.navigationController?.pushViewController(vc, animated: true)
     
   }
@@ -113,6 +148,13 @@ class NotesDetailViewController: BaseViewController {
     notesLikeApiCall()
   }
   
+  func btnDeleteTapped(sender:UIButton){
+    var notes_id = dictNotes.valueForKey("id") as NSInteger
+    deleteNotesApiCall(notes_id)
+  }
+  
+  
+ 
   
   
   //************Call Notes Api Method *********
@@ -121,7 +163,7 @@ class NotesDetailViewController: BaseViewController {
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
-     aParams.setValue(dictNotes.valueForKey("id"), forKey: "auth_token")
+     aParams.setValue(dictNotes.valueForKey("id"), forKey: "note_id")
     
     self.api.notesLike(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -133,20 +175,10 @@ class NotesDetailViewController: BaseViewController {
     })
   }
 
-  func editNotesApiCall () {
+    
+  func deleteNotesApiCall (notes_id:NSInteger) {
 
-    let param:NSDictionary = ["":""]
-    self.api.callNotesUpdateApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
-      var alertVw:UIAlertView = UIAlertView(title:"Message", message:"Notes updates successfully", delegate: nil, cancelButtonTitle:"OK")
-      alertVw.show()
-      }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
-        
-    }
-  }
-  
-  func deleteNotesApiCall (classId:NSInteger) {
-
-    let param:NSDictionary = ["":classId]
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],notes_id], forKeys: ["auth_token","note_id"])
     self.api.callNotesDeleteApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       self.deleteNotes()
       }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in

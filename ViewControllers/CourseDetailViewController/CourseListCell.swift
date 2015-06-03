@@ -31,9 +31,9 @@ class CourseListCell: BaseTableViewCell {
       vwSub.removeFromSuperview()
     }
     
-    var lblElemnet: UILabel = UILabel(frame: CGRectMake(0,0,Frame.width,70))
+    var lblElemnet: UILabel = UILabel(frame: CGRectMake(0,0,Frame.width,40))
     lblElemnet.text = "Elements"
-    lblElemnet.backgroundColor = UIColor.redColor()
+   // lblElemnet.backgroundColor = UIColor.redColor()
     lblElemnet.font = lblElemnet.font.fontWithSize(12)
     lblElemnet.textColor = UIColor.grayColor()
     contentView.addSubview(lblElemnet)

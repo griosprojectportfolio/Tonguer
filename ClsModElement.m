@@ -17,7 +17,7 @@
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
   
-  ClsModElement *obj = [ClsModElement MR_findFirstByAttribute:@"mod_id" withValue:anID inContext:localContext];
+  ClsModElement *obj = [ClsModElement MR_findFirstByAttribute:@"mod_element_id" withValue:anID inContext:localContext];
   
   if (!obj) {
     obj = [ClsModElement MR_createInContext:localContext];
@@ -26,24 +26,24 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext modId:(NSNumber *)mod_id {
   for(NSDictionary *aDictionary in aArray) {
-    [ClsModElement entityFromDictionary:aDictionary inContext:localContext];
+    [ClsModElement entityFromDictionary:aDictionary inContext:localContext modId:mod_id];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [ClsModElement entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext modId:(NSNumber *)mod_id {
+  [ClsModElement entityFromDictionary:adictionary inContext:localContext modId:mod_id];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext modId:(NSNumber *)mod_id {
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
     ClsModElement *obj = (ClsModElement*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
     
     obj.mod_element_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
-    obj.mod_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"mod_id"] integerValue]];
+    obj.mod_id = mod_id;
     
     if (![[aDictionary objectForKey:@"content"] isKindOfClass:[NSNull class]])
       obj.mod_element_content = [aDictionary valueForKey:@"content"] ;

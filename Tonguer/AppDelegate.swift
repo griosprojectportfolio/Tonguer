@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
   var objSideBar:SideBarView!
+  var deviceTokenString:NSString!
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -29,7 +30,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       // [PayPalMobile initializeWithClientIdsForEnvironments:@{PayPalEnvironmentProduction : @"YOUR_CLIENT_ID_FOR_PRODUCTION",
 
       MagicalRecord.setupCoreDataStack()
-        return true
+      
+
+      // For Push Notification
+      var types: UIUserNotificationType = UIUserNotificationType.Badge | UIUserNotificationType.Alert | UIUserNotificationType.Sound
+      var settings: UIUserNotificationSettings = UIUserNotificationSettings( forTypes: types, categories: nil )
+      application.registerUserNotificationSettings(settings)
+      application.registerForRemoteNotifications()
+
+      return true
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -117,6 +126,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 abort()
             }
         }
+    }
+  
+  
+     // Push Notification Methods
+  
+    func application( application: UIApplication!, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData! ) {
+    
+      var characterSet: NSCharacterSet = NSCharacterSet( charactersInString: "<>" )
+    
+       deviceTokenString = ( deviceToken.description as NSString ).stringByTrimmingCharactersInSet( characterSet ).stringByReplacingOccurrencesOfString( " ", withString: "" ) as String
+    
+    }
+  
+    func application( application: UIApplication!, didFailToRegisterForRemoteNotificationsWithError error: NSError! ) {
+    
+      println( error.localizedDescription )
     }
 
 }

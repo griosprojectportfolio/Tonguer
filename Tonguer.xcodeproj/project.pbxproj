@@ -932,7 +932,7 @@
 				TargetAttributes = {
 					174531B91ACD145400E6DF2E = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 75V25T9GAG;
+						DevelopmentTeam = ZJG828Y48M;
 					};
 					174531D11ACD145400E6DF2E = {
 						CreatedOnToolsVersion = 6.1;
@@ -1181,8 +1181,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zerrick Bynum (YF7G68R9CC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zerrick Bynum (YF7G68R9CC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
 				COPY_PHASE_STRIP = NO;
 				DEFINES_MODULE = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -1206,7 +1206,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "1e769bd2-86ad-4d71-b6a5-69392c8563b2";
+				PROVISIONING_PROFILE = "4efaae8a-6b4b-4ff4-9ac9-d7e635133122";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tonguer-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1231,8 +1231,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zerrick Bynum (YF7G68R9CC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zerrick Bynum (YF7G68R9CC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
 				COPY_PHASE_STRIP = YES;
 				DEFINES_MODULE = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -1249,7 +1249,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "1e769bd2-86ad-4d71-b6a5-69392c8563b2";
+				PROVISIONING_PROFILE = "4efaae8a-6b4b-4ff4-9ac9-d7e635133122";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tonguer-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1263,8 +1263,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zerrick Bynum (YF7G68R9CC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
 				INFOPLIST_FILE = Tonguer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1273,7 +1273,7 @@
 					"$(PROJECT_DIR)/Utility/PayPalMobile",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1e769bd2-86ad-4d71-b6a5-69392c8563b2";
+				PROVISIONING_PROFILE = "4efaae8a-6b4b-4ff4-9ac9-d7e635133122";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tonguer-Bridging-Header.h";
 			};
 			name = Debug;
@@ -1284,8 +1284,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zerrick Bynum (YF7G68R9CC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
 				INFOPLIST_FILE = Tonguer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1294,7 +1294,7 @@
 					"$(PROJECT_DIR)/Utility/PayPalMobile",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1e769bd2-86ad-4d71-b6a5-69392c8563b2";
+				PROVISIONING_PROFILE = "4efaae8a-6b4b-4ff4-9ac9-d7e635133122";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tonguer-Bridging-Header.h";
 			};
 			name = Release;

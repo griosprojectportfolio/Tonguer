@@ -17,6 +17,7 @@
 @dynamic sub_cat_name;
 @dynamic payclscat;
 @dynamic paycls;
+@dynamic cat_id;
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
   
@@ -29,23 +30,24 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext catID:(NSNumber*)cat_id{
   for(NSDictionary *aDictionary in aArray) {
-    [PaySubCat entityFromDictionary:aDictionary inContext:localContext];
+    [PaySubCat entityFromDictionary:aDictionary inContext:localContext catID:cat_id];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [PaySubCat entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext catID:(NSNumber*)cat_id{
+  [PaySubCat entityFromDictionary:adictionary inContext:localContext catID:cat_id];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext catID:(NSNumber*)cat_id{
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
     PaySubCat *obj = (PaySubCat*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
     
     obj.sub_cat_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
+    obj.cat_id =cat_id;
     
     if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
       obj.sub_cat_name = [aDictionary valueForKey:@"name"] ;

@@ -45,10 +45,10 @@
     UserClassOrder *obj = (UserClassOrder*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
     
     obj.order_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
-    obj.cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"a_class_id"] integerValue]];
+    obj.cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"class_id"] integerValue]];
     
-    if (![[aDictionary objectForKey:@"class_name"] isKindOfClass:[NSNull class]])
-      obj.cls_name = [aDictionary valueForKey:@"class_name"];
+    if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
+      obj.cls_name = [aDictionary valueForKey:@"name"];
     
     if (![[aDictionary objectForKey:@"date"] isKindOfClass:[NSNull class]])
       obj.date = [aDictionary valueForKey:@"date"];
