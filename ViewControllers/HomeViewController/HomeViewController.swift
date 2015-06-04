@@ -68,10 +68,12 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.defaultUIDesign()
     var date: NSDate! = NSDate()
 
+    updateDeviceTokenCall()
     self.fetchDataFromDBforDefaultCls()
     self.fetchDataFromDBforLearnCls()
     self.fetchDataFromDBforLearnedCls()
     self.hometableVw.reloadData()
+    
 
     if (NSUserDefaults.standardUserDefaults().valueForKey("checkIns") == nil) {
       return;
@@ -95,7 +97,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.userLearnClsApiCall()
     self.userLearnedClsApiCall()
     
-    updateDeviceTokenCall()
+    
   }
 
   func rightswipeGestureRecognizer(){
@@ -480,7 +482,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
     self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      self.fetchDataFromdataBase()
 
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -543,7 +545,8 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     
     if((userObject.pro_img) != nil){
       let url = NSURL(string: userObject.pro_img as NSString)
-      imgVwProfilrPic.sd_setImageWithURL(url)
+      imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+      imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
     }else{
       let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
       imgVwProfilrPic.sd_setImageWithURL(url)

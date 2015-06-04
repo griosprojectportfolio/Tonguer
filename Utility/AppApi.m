@@ -33,6 +33,7 @@
 #import "ClsOutLineModule.h"
 #import "ClsModElement.h"
 #import "UserClassOrder.h"
+#import "DownloadedData.h"
 
 /* API Constants */
 static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
@@ -148,9 +149,13 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
     
     return [self PATCH:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+      
+      NSLog(@"%@",responseObject);
+      
+      NSDictionary *dict = [responseObject valueForKey:@"user"];
           
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        [User entityFromDictionary:aParams inContext:localContext];
+        [User entityFromDictionary:dict inContext:localContext];
       }];
       
       NSArray *arrFetchCat  = [User MR_findAll];
@@ -467,8 +472,6 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       successBlock(task, responseObject);
     }];
     
-    
-    
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
       failureBlock(task, error);
@@ -601,14 +604,16 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     NSLog(@"%@",responseObject);
     NSDictionary *dict = [[NSDictionary alloc ]init];
     dict = [responseObject valueForKey:@"advertiesment"];
-    NSDictionary *dictImg = [dict valueForKey:@"img_url"];
-    NSString *strImg = [dictImg valueForKey:@"url"];
+   
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      //[Addvertiesment entityFromArray:arrVideoList inContext:localContext];
+      [Addvertiesment entityWithDictionaty:dict  inContext:localContext];
+    }completion:^(BOOL success, NSError *error) {
+      NSArray *arryAdd = [Addvertiesment MR_findAll];
+      successBlock(task, arryAdd);
     }];
     
-    successBlock(task, responseObject);
+    
     
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
@@ -916,7 +921,8 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [Answer entityFromArray:arrAns inContext:localContext];
     } completion:^(BOOL success, NSError *error) {
-      NSArray *arry = [Answer MR_findAll];
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ques_id CONTAINS %i",[[aParams valueForKey:@"question_id"]integerValue]];
+      NSArray *arry = [Answer MR_findAllWithPredicate:predicate];
       successBlock(task, arry);
     }];
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
@@ -1063,6 +1069,18 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
   [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
     NSLog(@"Successfully downloaded file to %@", path);
+    
+    NSUserDefaults *defaults = [[NSUserDefaults alloc]init];
+    BOOL state = [defaults boolForKey:@"state"];
+    
+    if(state == true){
+      UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+      localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:30];
+      localNotification.alertBody = @"Video Downloaded Successfully";
+      localNotification.timeZone = [NSTimeZone defaultTimeZone];
+      [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    }
+    
     successBlock(operation, responseObject);
   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     NSLog(@"Error: %@", error);
@@ -1377,7 +1395,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
   return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
-    
+    successBlock(task, responseObject);
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
     
@@ -1398,24 +1416,14 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
   [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
-  NSString *url = [NSString stringWithFormat:@"%@/",kAppAPIBaseURLString];
+  NSString *url = [NSString stringWithFormat:@"%@/feedback",kAppAPIBaseURLString];
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
   
   return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
-    
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      
-     // [ClsOutLineModule entityFromDictionary:responseObject inContext:localContext];
-      
-    } completion:^(BOOL success, NSError *error) {
-      NSArray *arryData = [ClsOutLineModule MR_findAll];
-      successBlock(task, arryData);
-    }];
-    
+    successBlock(task, responseObject);
     
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {
     if(failureBlock){
@@ -1550,6 +1558,13 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *filePath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:[aParams objectForKey:@"fileName"]];
   return [NSURL fileURLWithPath:filePath];
+}
+
+-(void)saveDownloadedData:(NSDictionary *)aParams{
+  [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [DownloadedData entityWithDictionaty:aParams inContext:localContext];
+  }];
+
 }
 
 @end

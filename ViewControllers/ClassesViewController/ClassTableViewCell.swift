@@ -27,23 +27,18 @@ class ClassTableViewCell: BaseTableViewCell {
     // Configure the view for the selected state
   }
   
-  func defaultCellContents(aParam:NSDictionary){
+  func defaultCellContents(aParam:NSDictionary,frame:CGRect){
     
-    if(isiPhone5orLower){
-      imgVw = UIImageView(frame: CGRectMake(320-120,10,80,80))
-      vWcell = UIView(frame: CGRectMake(40,10,imgVw.frame.origin.x-40, 80))
-      self.setContentProperties(aParam)
+    var arry = self.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
     }
-    if(isiPhone6){
-      imgVw = UIImageView(frame: CGRectMake(375-120,10,80,80))
-      vWcell = UIView(frame: CGRectMake(40,10,imgVw.frame.origin.x-40, 80))
-      self.setContentProperties(aParam)
-    }
-    if(isiPhone6plus){
-      imgVw = UIImageView(frame: CGRectMake(414-120,10,80,80))
-      vWcell = UIView(frame: CGRectMake(40,10,imgVw.frame.origin.x-40, 80))
-      self.setContentProperties(aParam)
-    }
+    
+    imgVw = UIImageView(frame: CGRectMake(frame.origin.x+20,20,80,80))
+    vWcell = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width,20,frame.width-(imgVw.frame.origin.x+imgVw.frame.width+20),80))
+    self.setContentProperties(aParam)
+    
   }
   
   func setContentProperties(aParam:NSDictionary){

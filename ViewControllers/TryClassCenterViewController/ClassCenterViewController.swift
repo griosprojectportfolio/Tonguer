@@ -29,7 +29,15 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     self.dataFetchFromDataBase()
     self.defaultUIDesign()
     //self.tableview.reloadData()
-    self.getAddvertiesmentApiCall()
+    
+    var arry = Addvertiesment.MR_findAll()
+    if(arry.count>0){
+     advertiesmentFetchFromDataBase(arry)
+    }else{
+      imgVw.image = UIImage(named:"defaultImg.png")
+      lbldeatil.text = ""
+    }
+    
     
   }
   
@@ -40,6 +48,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
+    getAddvertiesmentApiCall()
       getFreeClassApiCall()
   }
   
@@ -59,7 +68,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
     imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x+10, self.view.frame.origin.y+84,self.view.frame.size.width-20,150))
-    imgVw.image = UIImage(named: "img2.png")
+    //imgVw.image = UIImage(named: "img2.png")
     imgVw.layer.borderWidth = 0.5
     imgVw.layer.borderColor = UIColor.lightGrayColor().CGColor
     self.view.addSubview(imgVw)
@@ -129,7 +138,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as CalssCenterCell
      cell.selectionStyle = UITableViewCellSelectionStyle.None
-    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as NSDictionary
     var cellArr: NSArray! = dict.objectForKey("array") as NSArray
     if(cellArr.count>0){
       var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
@@ -139,7 +148,6 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
 
     }else{
       cell.textLabel.text = ""
-      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
       return cell
     }
     
@@ -151,7 +159,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
-    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as NSDictionary
     var cellArr: NSArray! = dict.objectForKey("array") as NSArray
     var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
     var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassID") as ClassViewController
@@ -178,8 +186,8 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     
     self.api.addvertiesment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("advertiesment") as NSDictionary
-      
+      let arry = responseObject as NSArray
+      self.advertiesmentFetchFromDataBase(arry)
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -204,6 +212,31 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     })
     
   }
+  
+  //*************** Advertiesment Data feching Form DataBase **************
+  
+  func advertiesmentFetchFromDataBase(arryAdd:NSArray){
+    
+    let obj = arryAdd.objectAtIndex(0) as Addvertiesment
+    
+    if((obj.add_name) != nil){
+      lbldeatil.text = obj.add_name
+    }else{
+      lbldeatil.text = ""
+    }
+    
+    if((obj.add_img) != nil){
+      let url: NSURL = NSURL(string: obj.add_img as NSString)!
+      imgVw.sd_setImageWithURL(url, placeholderImage:UIImage(named:"defaultImg.png"))
+    }else{
+      let url: NSURL = NSURL(string:"http://www.popular.com.my/images/no_image.gif")!
+      imgVw.sd_setImageWithURL(url)
+    }
+    
+    
+  }
+  
+  
 
   
   //*************** Data feching Form DataBase **************

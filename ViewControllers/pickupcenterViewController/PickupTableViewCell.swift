@@ -21,30 +21,17 @@ class PickupTableViewCell: BaseTableViewCell {
     // Initialization code
   }
   
-  func defaultCellContents(aParam:NSDictionary){
+  func defaultCellContents(aParam:NSDictionary,frame:CGRect){
     
     var arry = self.contentView.subviews
     var vwSub: UIView!
     for vwSub in arry {
       vwSub.removeFromSuperview()
     }
-
     
-    if(isiPhone5orLower){
-      imgVw = UIImageView(frame: CGRectMake(320-120, 5,80,80))
-      vWcell = UIView(frame: CGRectMake(40, 5,imgVw.frame.origin.x-40, 80))
-      self.setContentProperties(aParam)
-    }
-    if(isiPhone6){
-      imgVw = UIImageView(frame: CGRectMake(375-120, 5,80,80))
-       vWcell = UIView(frame: CGRectMake(40, 5,imgVw.frame.origin.x-40, 80))
-      self.setContentProperties(aParam)
-    }
-    if(isiPhone6plus){
-      imgVw = UIImageView(frame: CGRectMake(414-120, 5,80,80))
-      vWcell = UIView(frame: CGRectMake(40, 5,imgVw.frame.origin.x-40, 80))
-      self.setContentProperties(aParam)
-    }
+    imgVw = UIImageView(frame: CGRectMake(frame.origin.x+20,frame.origin.y+20,80,80))
+    vWcell = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width,20,frame.width-(imgVw.frame.width+40),80))
+    self.setContentProperties(aParam)
   }
   
   func setContentProperties(aParam:NSDictionary){

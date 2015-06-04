@@ -27,7 +27,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     api = AppApi.sharedClient()
     userDict = NSDictionary(objects: ["img2","Test User"], forKeys: ["image","name"])
     
-    arrSettData = NSArray(objects:"Alreday downloaded","Option for video","Download reminder","Feedback","Recommand to friend","About us")
+    arrSettData = NSArray(objects:"Alreday downloaded","Download reminder","Feedback","Recommand to friend","About us")
     
     self.defaultUIDesign()
     
@@ -54,7 +54,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     self.view.addSubview(VwUserDetail)
     
     imgVwPPic = UIImageView(frame: CGRectMake(5,5,50,50))
-    imgVwPPic.image = UIImage(named: userDict.objectForKey("image")as NSString)
+    //imgVwPPic.image = UIImage(named: userDict.objectForKey("image")as NSString)
     VwUserDetail.addSubview(imgVwPPic)
     
     lblname = UILabel(frame: CGRectMake(imgVwPPic.frame.origin.x+10 + imgVwPPic.frame.width+2,10,VwUserDetail.frame.width-120,40))
@@ -104,6 +104,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     cell.defaultUICellContent(arrSettData.objectAtIndex(indexPath.row) as NSString, index: indexPath.row,frame: self.view.frame)
+    cell.swtRemind.addTarget(self, action: "setDownloadReminder:", forControlEvents:UIControlEvents.ValueChanged)
     return cell
   }
   
@@ -114,30 +115,40 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
    case 0://Alreday downloaded
     print(arrSettData.objectAtIndex(indexPath.row))
     
-   case 1://Option for video
+   case 1://Download reminder
     print(arrSettData.objectAtIndex(indexPath.row))
     
-   case 2://Download reminder
-    print(arrSettData.objectAtIndex(indexPath.row))
-    
-   case 3://Feedback
+   case 2://Feedback
     print(arrSettData.objectAtIndex(indexPath.row))
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("FeedbackID") as FeedbackViewController
     self.navigationController?.pushViewController(vc, animated: true)
-   case 4://Recommand to friend
+   case 3://Recommand to friend
     print(arrSettData.objectAtIndex(indexPath.row))
     
     let firstActivityItem = "my text"
     let activityViewController : UIActivityViewController = UIActivityViewController(activityItems: [firstActivityItem], applicationActivities: nil)
     self.presentViewController(activityViewController, animated: true, completion:nil)
     
-   case 5: //About us
+   case 4: //About us
     print(arrSettData.objectAtIndex(indexPath.row))
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AppFlowID") as AppFlowViewController
     self.navigationController?.pushViewController(vc, animated: true)
    default:
      print("******** Error**********")
     }
+  }
+  
+  
+  func setDownloadReminder(switchss:UISwitch){
+    var state:Bool = false
+    if switchss.on{
+      state = true
+    }else{
+      state = false
+    }
+    let userDefaults = NSUserDefaults.standardUserDefaults()
+    userDefaults.setValue(state, forKey: "state")
+    userDefaults.synchronize()
   }
   
   
@@ -178,6 +189,16 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     }else{
       name = ""
     }
+    
+    if((userObject.pro_img) != nil){
+      let url = NSURL(string: userObject.pro_img as NSString)
+      imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+    }else{
+      let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
+      imgVwPPic.sd_setImageWithURL(url)
+    }
+    
+    
    
   }
 }

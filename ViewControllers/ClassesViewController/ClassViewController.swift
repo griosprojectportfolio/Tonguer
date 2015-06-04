@@ -100,7 +100,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     var cell: ClassTableViewCell!
      cell = tblClass.dequeueReusableCellWithIdentifier("cell") as ClassTableViewCell
      cell.selectionStyle = UITableViewCellSelectionStyle.None
-     cell.defaultCellContents(arrClasses.objectAtIndex(indexPath.row) as NSDictionary)
+     cell.defaultCellContents(arrClasses.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
     return cell
   }
   

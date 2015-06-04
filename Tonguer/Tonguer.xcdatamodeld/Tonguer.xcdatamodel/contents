@@ -42,6 +42,10 @@
         <attribute name="topic_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="topic_name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="DownloadedData" representedClassName="DownloadedData" syncable="YES">
+        <attribute name="download_data" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="download_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
     <entity name="FreeCls" representedClassName="FreeCls" syncable="YES">
         <attribute name="cls_arrange" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cls_day" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -68,6 +72,7 @@
         <attribute name="video_url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="FreeSubCat" representedClassName="FreeSubCat" syncable="YES">
+        <attribute name="cat_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="sub_cat_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="sub_cat_name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="freecls" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FreeCls" inverseName="freesubcat" inverseEntity="FreeCls" syncable="YES"/>
@@ -121,6 +126,7 @@
         <relationship name="paysubcat" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PaySubCat" inverseName="payclscat" inverseEntity="PaySubCat" syncable="YES"/>
     </entity>
     <entity name="PaySubCat" representedClassName="PaySubCat" syncable="YES">
+        <attribute name="cat_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="sub_cat_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="sub_cat_name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="paycls" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PayCls" inverseName="paysubcat" inverseEntity="PayCls" syncable="YES"/>
@@ -136,6 +142,8 @@
         <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="User" representedClassName="User" syncable="YES">
+        <attribute name="batch_count" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="device_token" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fname" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lname" optional="YES" attributeType="String" syncable="YES"/>
@@ -196,32 +204,33 @@
         <attribute name="notes_like_count" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Aboutus" positionX="-234" positionY="-90" width="128" height="90"/>
         <element name="Addvertiesment" positionX="-216" positionY="-72" width="128" height="105"/>
         <element name="Answer" positionX="-234" positionY="-90" width="128" height="90"/>
+        <element name="ClsModElement" positionX="-216" positionY="-72" width="128" height="88"/>
+        <element name="ClsOutLineModule" positionX="-225" positionY="-81" width="128" height="88"/>
         <element name="DisAdminTopic" positionX="-234" positionY="-90" width="128" height="88"/>
         <element name="DisTopicComments" positionX="-234" positionY="-90" width="128" height="105"/>
         <element name="DisUserToic" positionX="-225" positionY="-81" width="128" height="90"/>
         <element name="FreeCls" positionX="-432" positionY="57" width="128" height="208"/>
         <element name="FreeClsCat" positionX="-2" positionY="65" width="128" height="88"/>
         <element name="FreeClssVideo" positionX="-234" positionY="-90" width="128" height="120"/>
-        <element name="FreeSubCat" positionX="-225" positionY="68" width="128" height="103"/>
+        <element name="FreeSubCat" positionX="-225" positionY="68" width="128" height="120"/>
         <element name="HostPayCls" positionX="-225" positionY="-81" width="128" height="193"/>
         <element name="Notes" positionX="-225" positionY="-81" width="128" height="163"/>
         <element name="PayClassVideo" positionX="-234" positionY="-90" width="128" height="103"/>
         <element name="PayCls" positionX="-198" positionY="-27" width="128" height="223"/>
         <element name="PayClsCat" positionX="25" positionY="-108" width="128" height="88"/>
-        <element name="PaySubCat" positionX="-153" positionY="-54" width="128" height="103"/>
+        <element name="PaySubCat" positionX="-153" positionY="-54" width="128" height="120"/>
         <element name="QuestionComment" positionX="-225" positionY="-81" width="128" height="90"/>
         <element name="Questions" positionX="-234" positionY="-90" width="128" height="73"/>
-        <element name="User" positionX="-378" positionY="-234" width="128" height="150"/>
+        <element name="User" positionX="-378" positionY="-234" width="128" height="180"/>
+        <element name="UserClassOrder" positionX="-207" positionY="-63" width="128" height="118"/>
         <element name="UserClsVideo" positionX="-234" positionY="-90" width="128" height="120"/>
         <element name="UserDefaultClsList" positionX="-234" positionY="-90" width="128" height="150"/>
         <element name="UserLearnClsList" positionX="-234" positionY="-90" width="128" height="148"/>
         <element name="UserLearnedClsList" positionX="-225" positionY="-81" width="128" height="148"/>
         <element name="UserNotes" positionX="-234" positionY="-90" width="128" height="163"/>
-        <element name="Aboutus" positionX="-234" positionY="-90" width="128" height="90"/>
-        <element name="ClsOutLineModule" positionX="-225" positionY="-81" width="128" height="88"/>
-        <element name="ClsModElement" positionX="-216" positionY="-72" width="128" height="88"/>
-        <element name="UserClassOrder" positionX="-207" positionY="-63" width="128" height="118"/>
+        <element name="DownloadedData" positionX="-234" positionY="-90" width="128" height="73"/>
     </elements>
 </model>

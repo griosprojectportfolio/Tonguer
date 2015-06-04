@@ -202,6 +202,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
 
       let arryQuestion:NSArray = responseObject as NSArray
       self.dataFetchFromDataBaseComments(arryQuestion)
+      self.defaultUIDesign()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -222,7 +223,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
 
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-
+     
       let arryAnswer:NSArray = responseObject as NSArray
       self.dataFetchFromDataBaseUserAnswer(arryAnswer)
       self.getAdminCommentApiCall()
@@ -252,7 +253,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
       
       dictUserAns.setValue(ansObj.ans_id, forKey: "id")
       dictUserAns.setValue(ansObj.answer, forKey:"answer")
-      self.defaultUIDesign()
+      
     }
   }
 

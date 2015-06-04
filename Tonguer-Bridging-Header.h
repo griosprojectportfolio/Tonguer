@@ -42,6 +42,8 @@
 #import "UserClassOrder.h"
 #import "ClsOutLineModule.h"
 #import "ClsModElement.h"
+#import "Addvertiesment.h"
+#import "DownloadedData.h"
 
 
 #endif

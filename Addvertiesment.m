@@ -18,7 +18,7 @@
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
   
-  Addvertiesment *obj = [Addvertiesment MR_findFirstByAttribute:@"cls_id" withValue:anID inContext:localContext];
+  Addvertiesment *obj = [Addvertiesment MR_findFirstByAttribute:@"add_id" withValue:anID inContext:localContext];
   
   if (!obj) {
     obj = [Addvertiesment MR_createInContext:localContext];
@@ -45,11 +45,11 @@
     
     obj.add_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
     
-    if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
-      obj.add_name = [aDictionary valueForKey:@"name"] ;
+    if (![[aDictionary objectForKey:@"message"] isKindOfClass:[NSNull class]])
+      obj.add_name = [aDictionary valueForKey:@"message"] ;
     
-    if (![[aDictionary objectForKey:@"image"] isKindOfClass:[NSNull class]])
-      obj.add_img = [aDictionary valueForKey:@"image"] ;
+    if (![[aDictionary objectForKey:@"img_url"] isKindOfClass:[NSNull class]])
+      obj.add_img = [aDictionary valueForKey:@"img_url"] ;
     
     return obj;
   }

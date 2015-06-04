@@ -42,6 +42,7 @@ class AppFlowViewController: BaseViewController {
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
     abouUSApiCall()
+    self.defaultUIDesign()
     
   }
   
@@ -136,8 +137,6 @@ class AppFlowViewController: BaseViewController {
     moviePlayerController.shouldAutoplay = false
     moviePlayerController.play()
     
-    
-    
   }
   
   
@@ -176,7 +175,6 @@ class AppFlowViewController: BaseViewController {
       let data = obj.ab_content 
       self.strMessage = data
       self.video_url = obj.ab_videourl as NSString
-      self.defaultUIDesign()
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in

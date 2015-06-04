@@ -148,6 +148,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       self.userLearnClsApiCall()
       self.userLearnedClsApiCall()
       self.getHostPayClsApiCall()
+      self.getAddvertiesmentApiCall()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -277,7 +278,24 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
         println(error)
 
     })
+  }
+  
+  func getAddvertiesmentApiCall(){
+    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]] //NSDictionary(objects: [auth_token], forKeys: ["auth_token"])
+    
+    self.api.addvertiesment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      let arry = responseObject as NSArray
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
     
   }
+
+  
   
 }

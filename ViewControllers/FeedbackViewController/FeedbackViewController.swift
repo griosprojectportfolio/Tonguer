@@ -62,7 +62,7 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     
     var framefname:CGRect = CGRectMake(scrollVW.frame.origin.x+20, self.imgVwLogo.frame.origin.y+120, self.view.frame.size.width-40, 40)
     custxtFname = CustomTextFieldBlurView(frame:framefname, imgName:"user.png")
-    custxtFname.attributedPlaceholder = NSAttributedString(string:"First Name",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
+    custxtFname.attributedPlaceholder = NSAttributedString(string:"Name",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
     // custxtEmail.returnKeyType = UIReturnType.Done
     custxtFname.delegate = self;
     custxtFname.returnKeyType = UIReturnKeyType.Done
@@ -146,14 +146,20 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   
   func userLearnClsApiCall(){
     
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token,custxtFname.text,txtViewComment.text], forKeys: ["auth_token","name","comment"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],custxtFname.text,txtViewComment.text], forKeys: ["auth_token","feedback[name]","feedback[content]"])
     
     self.api.feedback(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+    self.txtViewComment.text = ""
+    self.custxtFname.text = ""
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "Your feedback hasbeen sent successfully.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Your feedback is not send successfully..", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
         
     })
     

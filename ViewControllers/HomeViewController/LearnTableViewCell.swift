@@ -33,7 +33,7 @@ class LearnTableViewCell: UITableViewCell {
     
     
     imgVw = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80,80))
-    vWcell = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.origin.y,Frame.width-imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.height))
+    vWcell = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.origin.y,Frame.width-(imgVw.frame.origin.x+imgVw.frame.width+20),imgVw.frame.height))
     lblTitle = UILabel(frame: CGRectMake(5,3,vWcell.frame.width-10,30))
     lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,vWcell.frame.height-30,100, 30))
     lblDate = UILabel(frame: CGRectMake(lblVaild.frame.origin.x + lblVaild.frame.width+2, lblVaild.frame.origin.y,150, 30))

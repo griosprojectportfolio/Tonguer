@@ -18,6 +18,8 @@
 @dynamic pro_img;
 @dynamic score;
 @dynamic user_id;
+@dynamic device_token;
+@dynamic batch_count;
 
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
@@ -66,7 +68,7 @@
       obj.score =[NSNumber numberWithInteger:[[aDictionary objectForKey:@"score"] integerValue]];
     
     if (![[[aDictionary objectForKey:@"image"]valueForKey:@"url"] isKindOfClass:[NSNull class]]){
-      NSString *strImgBaseUrl = @"https://tonguer.herokuapp.com";
+      NSString *strImgBaseUrl = @"http://tonguer.herokuapp.com";
       NSString *imgUrl = [strImgBaseUrl stringByAppendingString:[[aDictionary valueForKey:@"image"]valueForKey:@"url"]];
       obj.pro_img =imgUrl;
     }

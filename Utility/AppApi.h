@@ -198,4 +198,8 @@
 
 -(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams;
 
+-(void)saveDownloadedData:(NSDictionary *)aParams;
+
+
+
 @end

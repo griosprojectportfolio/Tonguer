@@ -36,16 +36,21 @@ class SettingTableViewCell:BaseTableViewCell {
     lbltitle.font = lbltitle.font.fontWithSize(15)
     //lbltitle.backgroundColor = UIColor.redColor()
     vWCell.addSubview(lbltitle)
+
+    swtRemind = UISwitch(frame: CGRectMake(vWCell.frame.width - 40,25, 30,30))
     
-    if(index == 2){
-      swtRemind = UISwitch(frame: CGRectMake(vWCell.frame.width - 40,25, 30,30))
+    if(index == 1){
       self.contentView.addSubview(swtRemind)
     }
     
-    if(index == 1){
-      var defaults=NSUserDefaults()
-      var fileSize=defaults.integerForKey("fileSize")
-      var str: NSString = NSString(format: "%i",fileSize)
+    if(index == 0){
+//      var defaults=NSUserDefaults()
+//      var fileSize=defaults.integerForKey("downloadedData")
+      
+      let arry = DownloadedData.MR_findAll() as NSArray
+      var obj = arry.objectAtIndex(0) as DownloadedData
+      var data = obj.download_data.doubleValue
+      var str: NSString = NSString(format: "%.2f",data)
       var lblFileSize: UILabel = UILabel(frame: CGRectMake(vWCell.frame.width-150,15,150,30))
       lblFileSize.text = str+" KB"
       lblFileSize.textAlignment = NSTextAlignment.Center

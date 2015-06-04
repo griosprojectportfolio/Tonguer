@@ -136,7 +136,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     self.view.addSubview(pickupTableView)
     
     pickupTableView.registerClass(PickupTableViewCell.self, forCellReuseIdentifier: "cell")
-    pickupTableView.registerClass(AllTableViewCell.self, forCellReuseIdentifier: "allcell")
+    pickupTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "allcell")
 
     search = UISearchBar(frame: CGRectMake(0, 0, 100, 30))
     search.hidden = true
@@ -262,16 +262,16 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       var hostCell = pickupTableView.dequeueReusableCellWithIdentifier("cell") as PickupTableViewCell
       hostCell.selectionStyle = UITableViewCellSelectionStyle.None
       if (isSearch == false) {
-        hostCell.defaultCellContents(arrHost.objectAtIndex(indexPath.row) as NSDictionary)
+        hostCell.defaultCellContents(arrHost.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
       } else {
-        hostCell.defaultCellContents(arrySearch.objectAtIndex(indexPath.row) as NSDictionary)
+        hostCell.defaultCellContents(arrySearch.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
       }
       hostCell.selectionStyle = UITableViewCellSelectionStyle.None
       return hostCell
     }else if(btntag == 2){
-      var allCell: AllTableViewCell!
+      var allCell: UITableViewCell!
       if(allCell == nil){
-        allCell = pickupTableView.dequeueReusableCellWithIdentifier("allcell") as AllTableViewCell
+        allCell = pickupTableView.dequeueReusableCellWithIdentifier("allcell") as UITableViewCell
         allCell.selectionStyle = UITableViewCellSelectionStyle.None
         var dict: NSDictionary!
         if (isSearch == false) {
@@ -317,7 +317,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       }
     self.navigationController?.pushViewController(vc, animated: true)
     }else if(btntag == 2){
-      var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+      var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as NSDictionary
       var cellArr: NSArray! = dict.objectForKey("array") as NSArray
       var dictSub: NSDictionary!
       if (isSearch == false) {

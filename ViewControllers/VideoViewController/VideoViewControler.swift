@@ -21,6 +21,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var arrClassVideo: NSMutableArray = NSMutableArray()
   var actiIndecatorVw: ActivityIndicatorView!
   var moviePlayerController:MPMoviePlayerController!
+  var doenloadedData:NSInteger = 0
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -54,8 +55,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
      let arryVideo:NSArray = FreeClssVideo.MR_findAllWithPredicate(predicate)
       self.dataFetchFreeClsDB(arryVideo)
       //self.freeClsVideoApiCalling()
-      
     }
+    
+    let userDefaults = NSUserDefaults.standardUserDefaults()
+    userDefaults.setValue(doenloadedData, forKey: "downloadedData")
+    userDefaults.synchronize()
     
     self.defaultUIDesign()
   
@@ -178,11 +182,40 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   func calculateVideofileSize(filePath:NSString){
     var fileAttributes: NSDictionary = NSFileManager.defaultManager().attributesOfItemAtPath(filePath, error:nil)!
     var fileSizeNumber: AnyObject? = fileAttributes.objectForKey(NSFileSize)
-    var fileSize = fileSizeNumber?.longValue
+    var fileSize = fileSizeNumber?.doubleValue
     
-    let userDefaults = NSUserDefaults.standardUserDefaults()
-    userDefaults.setValue(fileSize, forKey: "fileSize")
-    userDefaults.synchronize() // don't forget this!!!!
+    let arry = DownloadedData.MR_findAll() as NSArray
+    
+    if(arry.count>0){
+    
+    var obj = arry.objectAtIndex(0) as DownloadedData
+    var prevData = obj.download_data.doubleValue
+    
+    var currtData = prevData + fileSize!
+      var aParam:NSMutableDictionary! = NSMutableDictionary()
+      aParam.setValue(1, forKey: "id")
+      aParam.setValue(currtData, forKey: "data")
+      api.saveDownloadedData(aParam)
+
+    }else{
+      var aParam:NSMutableDictionary! = NSMutableDictionary()
+      aParam.setValue(1, forKey: "id")
+      aParam.setValue(0, forKey: "data")
+      api.saveDownloadedData(aParam)
+      
+    }
+    
+    
+//    var defaults=NSUserDefaults()
+//    var preData=defaults.integerForKey("downloadedData")
+//    
+//    var currtData = preData+fileSize!
+//    
+//    let userDefaults = NSUserDefaults.standardUserDefaults()
+//    userDefaults.setValue(currtData, forKey: "downloadedData")
+//    userDefaults.synchronize()
+
+    
   }
   
   //*********** Api Calling Methods**********
@@ -236,7 +269,6 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     
   }
   
-
   func dataFetchFreeClsDB(arrFetchCat: NSArray){
     arrClassVideo.removeAllObjects()
      print(arrFetchCat.count)
