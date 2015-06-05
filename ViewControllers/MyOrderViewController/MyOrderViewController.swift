@@ -152,15 +152,19 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     if(btnTag == 1){
       var cell:CourseOrderTableViewCell!
       cell = myordertableview.dequeueReusableCellWithIdentifier("courseCell") as CourseOrderTableViewCell
+      cell.selectionStyle = UITableViewCellSelectionStyle.None
       if(arryFalse.count == 0){
         
       }else{
         cell.defaultCellContents(arryFalse.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+        cell.btnNotPay.tag = indexPath.row
+        cell.btnNotPay.addTarget(self, action:"btnNotPayTapped:", forControlEvents:UIControlEvents.TouchUpInside)
       }
       return cell
       }else if(btnTag == 2){
       var cell:CreditTableViewCell!
       cell = myordertableview.dequeueReusableCellWithIdentifier("creditCell") as CreditTableViewCell
+      cell.selectionStyle = UITableViewCellSelectionStyle.None
       if(arryTrue.count == 0){
         
       }else{
@@ -175,7 +179,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     return 100
   }
-  
+
   //**************** User Classes Orders Api Call **************
   
   func userClassOrdersApiCall(){
@@ -197,6 +201,41 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     arryTrue = dicrOrders.objectForKey("True") as NSArray
     arryFalse = dicrOrders.objectForKey("False") as NSArray
    
+  }
+  
+  func btnNotPayTapped(sender:UIButton){
+    var btn = sender as UIButton
+    var obj = arryFalse.objectAtIndex(btn.tag) as UserClassOrder
+    var dictCls:NSMutableDictionary = NSMutableDictionary()
+    if((obj.cls_id) != nil){
+      dictCls.setValue(obj.cls_id, forKey:"id")
+    }else{
+      dictCls.setValue(0, forKey:"id")
+    }
+    if((obj.cls_name) != nil){
+      dictCls.setValue(obj.cls_name, forKey:"name")
+    }else{
+       dictCls.setValue("", forKey:"name")
+    }
+    if((obj.cls_amount) != nil){
+      dictCls.setValue(obj.cls_amount, forKey:"price")
+    }else{
+      dictCls.setValue(0.0, forKey:"price")
+    }
+    if((obj.cls_image) != nil){
+      dictCls.setValue(obj.cls_image, forKey:"image")
+    }else{
+      dictCls.setValue("http://www.popular.com.my/images/no_image.gif", forKey:"image")
+    }
+    if((obj.cls_days) != nil){
+      dictCls.setValue(obj.cls_days, forKey:"valid_days")
+    }else{
+      dictCls.setValue(0, forKey:"valid_days")
+    }
+    
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as OrderConfViewController
+    vc.clsDict = dictCls
+    self.navigationController?.pushViewController(vc, animated: true)
   }
   
   

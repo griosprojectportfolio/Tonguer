@@ -62,9 +62,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     }else if price.isKindOfClass(NSNumber) {
       strPrice =  NSString(format: "%i",(clsDictDe.objectForKey("price")?.integerValue)!)
     }
-    
-
-    
+        
     dict1 = NSDictionary(objects: [clsDictDe.objectForKey("name") as NSString,strPrice,"0"], forKeys: ["coursename","courserate","id"])
     dict2 = NSDictionary(objects: ["course.png","Arrange",clsDictDe.valueForKey("arrange") as NSString,"1"], forKeys: ["image","tilte","data","id"])
     dict3 = NSDictionary(objects: ["userred.png","Suitable for user",clsDictDe.valueForKey("suitable") as NSString,"2"], forKeys: ["image","tilte","data","id"])
@@ -92,8 +90,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     
     imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.size.width, 200))
     let url = NSURL(string: clsDictDe.objectForKey("image") as NSString)
-    let data = NSData(contentsOfURL: url!)
-    imgVw.image = UIImage(data: data!)
+    imgVw.sd_setImageWithURL(url, placeholderImage:UIImage(named:"defaultImg"))
     self.view.addSubview(imgVw)
     
     btnCourseDetail = UIButton(frame: CGRectMake(0,imgVw.frame.origin.y+imgVw.frame.height,(self.view.frame.width/3), 40))

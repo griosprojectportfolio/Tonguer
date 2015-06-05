@@ -32,9 +32,6 @@ class AdAnsTableViewCell: BaseTableViewCell {
     }
     
     var strAnswer = aParam.valueForKey("comment") as NSString
-    var rect: CGRect! = strAnswer.boundingRectWithSize(CGSize(width:width-20,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
-    
-    print("****\(rect), *** \(width)")
 
     var arry = self.contentView.subviews
     var vwSub: UIView!
@@ -42,28 +39,29 @@ class AdAnsTableViewCell: BaseTableViewCell {
       vwSub.removeFromSuperview()
     }
     
-    
-       vWcell = UIView(frame:CGRectMake(40,5, width, rect.size.height + 20))
-       lblAns = UILabel(frame: CGRectMake(5,10, vWcell.frame.size.width-10, rect.size.height))
-      lblBy = UILabel(frame: CGRectMake(width - 180,rect.size.height+5,20, 20))
-      lblname = UILabel(frame: CGRectMake(width - 150,rect.size.height+5,150, 20))
+    // lblBy = UILabel(frame: CGRectMake(width - 180,rect.size.height+5,20, 20))
+    // lblname = UILabel(frame: CGRectMake(width - 150,rect.size.height+5,150, 20))
     
     
     var strName: NSString! = aParam.valueForKey("by") as NSString
     var strComment: NSString! = aParam.valueForKey("comment") as NSString
     
     var strfist: NSString = strName + ": "
-    
+    var stringSize = strfist + strComment
+
     var attrs = [NSFontAttributeName : UIFont.boldSystemFontOfSize(12)]
      var boldString = NSMutableAttributedString(string:strfist, attributes:attrs)
     boldString.beginEditing()
     boldString.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: NSRange(location:0,length:boldString.length))
-   
-   
+    var rect: CGRect! = stringSize.boundingRectWithSize(CGSize(width:width-20,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+    print("****\(rect), *** \(width)")
+
+    vWcell = UIView(frame:CGRectMake(40,5, width, rect.size.height + 20))
+    lblAns = UILabel(frame: CGRectMake(5,10, vWcell.frame.size.width-10, rect.size.height))
+
     var normalString = NSMutableAttributedString(string:strComment, attributes:attrs)
     normalString.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSRange(location:0,length:normalString.length))
 
-    
     boldString.appendAttributedString(normalString)
     
     //vWcell.backgroundColor = UIColor.lightGrayColor()
@@ -73,7 +71,9 @@ class AdAnsTableViewCell: BaseTableViewCell {
     self.contentView.addSubview(vWcell)
     
     lblAns.numberOfLines = 0
+    lblAns.font = lblAns.font.fontWithSize(11)
     lblAns.attributedText = boldString
+
     vWcell.addSubview(lblAns)
     
     

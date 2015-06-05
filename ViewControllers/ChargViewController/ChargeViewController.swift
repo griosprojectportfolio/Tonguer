@@ -45,16 +45,16 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width, self.view.frame.height))
+    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width,self.view.frame.height))
     scrollview.scrollEnabled = true
     scrollview.showsHorizontalScrollIndicator = true
     scrollview.scrollEnabled = true
     scrollview.userInteractionEnabled = true
-    //scrollview.backgroundColor = UIColor.grayColor()
-    scrollview.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
+   // scrollview.backgroundColor = UIColor.grayColor()
+    scrollview.contentSize = CGSize(width:self.view.frame.width,height: self.view.frame.height)
     self.view.addSubview(scrollview)
     
-    lblAmount = UILabel(frame: CGRectMake(scrollview.frame.origin.x+10,scrollview.frame.origin.y,100, 40))
+    lblAmount = UILabel(frame: CGRectMake(10,0,100, 40))
     lblAmount.text = "Amount:"
     lblAmount.font = lblAmount.font.fontWithSize(15)
     scrollview.addSubview(lblAmount)
@@ -126,7 +126,7 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
   }
   
   func btnTappedToolbarDone(sender:AnyObject){
-    scrollview.contentOffset = CGPoint(x:0, y:0)
+    scrollview.contentOffset = CGPoint(x:0, y:-64)
     cusTxtMobileNum.resignFirstResponder()
     cusTxtQuantity.resignFirstResponder()
   }
@@ -151,7 +151,7 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
   }
   
   func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-    scrollview.contentOffset = CGPoint(x:0, y:(40))
+    scrollview.contentOffset = CGPoint(x:0, y:40)
     return true
   }
 

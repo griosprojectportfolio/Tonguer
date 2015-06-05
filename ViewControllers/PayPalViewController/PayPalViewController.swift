@@ -131,6 +131,8 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     println("PayPal Payment Cancelled")
     resultText = ""
     paymentViewController?.dismissViewControllerAnimated(true, completion: nil)
+    let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+    self.navigationController!.popToViewController(viewControllers[1], animated: true);
   }
 
   func payPalPaymentViewController(paymentViewController: PayPalPaymentViewController!, didCompletePayment completedPayment: PayPalPayment!) {
@@ -160,7 +162,9 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
   func payPalFuturePaymentDidCancel(futurePaymentViewController: PayPalFuturePaymentViewController!) {
     println("PayPal Future Payment Authorizaiton Canceled")
     successView.hidden = true
-    futurePaymentViewController?.dismissViewControllerAnimated(true, completion: nil)
+    //futurePaymentViewController?.dismissViewControllerAnimated(true, completion: nil)
+    let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+    self.navigationController!.popToViewController(viewControllers[1], animated: true);
   }
 
   func payPalFuturePaymentViewController(futurePaymentViewController: PayPalFuturePaymentViewController!, didAuthorizeFuturePayment futurePaymentAuthorization: [NSObject : AnyObject]!) {

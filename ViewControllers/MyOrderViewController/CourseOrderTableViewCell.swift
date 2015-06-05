@@ -9,6 +9,8 @@
 import UIKit
 
 class CourseOrderTableViewCell: UITableViewCell {
+  
+  var btnNotPay: UIButton!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,8 +31,10 @@ class CourseOrderTableViewCell: UITableViewCell {
     vwCell.layer.borderColor = UIColor.lightGrayColor().CGColor
     contentView.addSubview(vwCell)
     
+    var price:NSString = NSString(format:"%i",obj.cls_amount.doubleValue)
+    
      var lblPrice: UILabel! = UILabel(frame: CGRectMake(vwCell.frame.width-60,0,50,40))
-    lblPrice.text = "$"+"00.0"
+    lblPrice.text = "$"+price
     lblPrice.font = lblPrice.font.fontWithSize(18)
     lblPrice.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     vwCell.addSubview(lblPrice)
@@ -41,7 +45,7 @@ class CourseOrderTableViewCell: UITableViewCell {
     lblClassName.textColor = UIColor.lightGrayColor()
     vwCell.addSubview(lblClassName)
     
-    var btnNotPay: UIButton = UIButton(frame: CGRectMake(vwCell.frame.width-110,vwCell.frame.height-40,100,30))
+    btnNotPay  = UIButton(frame: CGRectMake(vwCell.frame.width-110,vwCell.frame.height-40,100,30))
     btnNotPay.setTitle("Note Pay", forState:UIControlState.Normal)
     btnNotPay.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
     btnNotPay.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)

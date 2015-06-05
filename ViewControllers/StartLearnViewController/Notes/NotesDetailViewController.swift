@@ -87,14 +87,14 @@ class NotesDetailViewController: BaseViewController {
     
     var strContent: NSString = dictNotes.valueForKey("content") as NSString
     
-    var rect: CGRect! = strContent.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+    var rect: CGRect! = strContent.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(13)], context: nil)
     
     lblContent = UILabel(frame: CGRectMake(scrollVW.frame.origin.x+20,5,scrollVW.frame.size.width-40,rect.height))
     
     lblContent.text = strContent
     lblContent.numberOfLines = 0
     lblContent.textAlignment = NSTextAlignment.Justified
-    lblContent.font = lblContent.font.fontWithSize(15)
+    lblContent.font = lblContent.font.fontWithSize(12)
     lblContent.textColor = UIColor.grayColor()
     //lblContent.backgroundColor = UIColor.greenColor()
     scrollVW.addSubview(lblContent)
@@ -102,7 +102,7 @@ class NotesDetailViewController: BaseViewController {
     imgVW = UIImageView(frame: CGRectMake(lblContent.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.height+30,lblContent.frame.width,150))
     let url = NSURL(string: dictNotes.objectForKey("image") as NSString)
     imgVW.sd_setImageWithURL(url)
-    imgVW.backgroundColor = UIColor.redColor()
+    //imgVW.backgroundColor = UIColor.redColor()
     scrollVW.addSubview(imgVW);
   }
   

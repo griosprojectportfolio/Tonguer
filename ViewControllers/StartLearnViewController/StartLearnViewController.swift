@@ -28,6 +28,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   
   var lblClassScore :UILabel!
   var lblClassScoreDigit :UILabel!
+  var useImgUrl:NSString!
   
   var lblDayLeft :UILabel!
   var lblDayLeftDigit :UILabel!
@@ -53,7 +54,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     dict3 = NSMutableDictionary()
     dict3.setObject("discuss.png", forKey: "image")
-    dict3.setObject("Discus", forKey: "name")
+    dict3.setObject("Discuss", forKey: "name")
    
     
     dict4 = NSMutableDictionary()
@@ -99,7 +100,8 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     print(dictClasses)
     
     imgVwblur = UIImageView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64,self.view.frame.width,180))
-    imgVwblur.image = UIImage(named: "imgblur.png")
+    let url = NSURL(string:useImgUrl)
+    imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
     self.view.addSubview(imgVwblur)
     
     imgVwAlpha = UIImageView()

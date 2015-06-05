@@ -489,7 +489,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     }
     print(arrHost.count)
     if(arrHost.count == 0){
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry No Class", delegate: self, cancelButtonTitle: "Ok")
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
       alert.show()
     }
   }
@@ -544,10 +544,11 @@ extension PickupCoursecenterViewController:UISearchBarDelegate {
     let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text], forKeys: ["auth_token","cls_key_word"])
     self.api.callSearchClassApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
+      searchBar.resignFirstResponder()
      // self.arrySearch = responseObject as NSMutableArray
       let arrySe = responseObject as? NSArray
       if(arrySe?.count == 0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Class Found", delegate:self, cancelButtonTitle:"OK")
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
       }else{
         self.isSearch = true

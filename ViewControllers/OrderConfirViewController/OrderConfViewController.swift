@@ -50,8 +50,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     
     imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x+30, self.view.frame.origin.y+84, 80, 60))
     let url = NSURL(string: clsDict.objectForKey("image") as NSString)
-    let data = NSData(contentsOfURL: url!)
-    imgVw.image = UIImage(data: data!)
+    imgVw.sd_setImageWithURL(url)
     self.view.addSubview(imgVw)
     
     lblDetail = UILabel(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.size.width+10,imgVw.frame.origin.y+(imgVw.frame.height-40)/2, self.view.frame.width-150,40))

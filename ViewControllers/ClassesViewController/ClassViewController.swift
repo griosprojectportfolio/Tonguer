@@ -138,7 +138,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       let arry:NSArray = responseObject as NSArray
       self.dataFetchFromDatabaseFreeCls(arry)
       if self.arrClasses.count == 0{
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Class Found", delegate:self, cancelButtonTitle:"OK")
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
       }
       self.tblClass.reloadData()
@@ -147,7 +147,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry some technical problam.", delegate: self, cancelButtonTitle: "Ok")
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry some technical problem.", delegate: self, cancelButtonTitle: "Ok")
         alert.show()
         self.actiIndecatorVw.loadingIndicator.stopAnimating()
         self.actiIndecatorVw.removeFromSuperview()
@@ -165,7 +165,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       let arry:NSArray = responseObject as NSArray
       self.dataFetchFromDatabasePayCls(arry)
       if(self.arrClasses.count == 0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Class Found", delegate:self, cancelButtonTitle:"OK")
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
       }
       self.tblClass.reloadData()

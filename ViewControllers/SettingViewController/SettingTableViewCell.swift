@@ -48,18 +48,20 @@ class SettingTableViewCell:BaseTableViewCell {
 //      var fileSize=defaults.integerForKey("downloadedData")
       
       let arry = DownloadedData.MR_findAll() as NSArray
-      var obj = arry.objectAtIndex(0) as DownloadedData
-      var data = obj.download_data.doubleValue
-      var str: NSString = NSString(format: "%.2f",data)
       var lblFileSize: UILabel = UILabel(frame: CGRectMake(vWCell.frame.width-150,15,150,30))
-      lblFileSize.text = str+" KB"
       lblFileSize.textAlignment = NSTextAlignment.Center
       lblFileSize.font = lbltitle.font.fontWithSize(15)
-      //lblFileSize.backgroundColor = UIColor.redColor()
+      lblFileSize.text = "0 KB"
       vWCell.addSubview(lblFileSize)
-    }
 
-    
+      if (arry.count > 0) {
+        var obj = arry.objectAtIndex(0) as DownloadedData
+        var data = obj.download_data.doubleValue
+        var str: NSString = NSString(format: "%.2f",data)
+        lblFileSize.text = str+" KB"
+        //lblFileSize.backgroundColor = UIColor.redColor()
+      }
+    }
   }
   
   

@@ -15,9 +15,7 @@
 		0A08B3511AF0ECC30076226C /* CourselistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B3501AF0ECC30076226C /* CourselistTableViewCell.swift */; };
 		0A08B3581AF0F97D0076226C /* PickupCoursecenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B3541AF0F97D0076226C /* PickupCoursecenterViewController.swift */; };
 		0A08B3591AF0F97D0076226C /* PickupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B3551AF0F97D0076226C /* PickupTableViewCell.swift */; };
-		0A08B35D1AF0FAFE0076226C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B35C1AF0FAFE0076226C /* SearchViewController.swift */; };
 		0A08B35F1AF1019E0076226C /* NotesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B35E1AF1019E0076226C /* NotesDetailViewController.swift */; };
-		0A0B89151AD6413600AD2501 /* LGSimpleChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B89141AD6413600AD2501 /* LGSimpleChat.swift */; };
 		0A32585B1AFB534D00B897DA /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A32585A1AFB534D00B897DA /* User.m */; };
 		0A4145241B0B196500B3183D /* UserNotes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4145231B0B196500B3183D /* UserNotes.m */; };
 		0A4145271B0B196700B3183D /* Notes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4145261B0B196700B3183D /* Notes.m */; };
@@ -141,9 +139,7 @@
 		0A08B3501AF0ECC30076226C /* CourselistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourselistTableViewCell.swift; sourceTree = "<group>"; };
 		0A08B3541AF0F97D0076226C /* PickupCoursecenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickupCoursecenterViewController.swift; sourceTree = "<group>"; };
 		0A08B3551AF0F97D0076226C /* PickupTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickupTableViewCell.swift; sourceTree = "<group>"; };
-		0A08B35C1AF0FAFE0076226C /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		0A08B35E1AF1019E0076226C /* NotesDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesDetailViewController.swift; sourceTree = "<group>"; };
-		0A0B89141AD6413600AD2501 /* LGSimpleChat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LGSimpleChat.swift; sourceTree = "<group>"; };
 		0A3258591AFB534D00B897DA /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = SOURCE_ROOT; };
 		0A32585A1AFB534D00B897DA /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = SOURCE_ROOT; };
 		0A4145221B0B196500B3183D /* UserNotes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserNotes.h; sourceTree = SOURCE_ROOT; };
@@ -362,14 +358,6 @@
 			path = pickupcenterViewController;
 			sourceTree = "<group>";
 		};
-		0A08B35B1AF0FAFE0076226C /* SearchVIewController */ = {
-			isa = PBXGroup;
-			children = (
-				0A08B35C1AF0FAFE0076226C /* SearchViewController.swift */,
-			);
-			path = SearchVIewController;
-			sourceTree = "<group>";
-		};
 		0A43E8F91AF200C4009D3787 /* Discuss */ = {
 			isa = PBXGroup;
 			children = (
@@ -577,14 +565,6 @@
 			);
 			name = AnswerViewController;
 			path = ../AnswerViewController;
-			sourceTree = "<group>";
-		};
-		0AE94C091AD25F8C00CBEA76 /* ChatViewController */ = {
-			isa = PBXGroup;
-			children = (
-				0A0B89141AD6413600AD2501 /* LGSimpleChat.swift */,
-			);
-			path = ChatViewController;
 			sourceTree = "<group>";
 		};
 		0AE94C0B1AD25F8C00CBEA76 /* CourseDetailViewController */ = {
@@ -830,7 +810,6 @@
 			isa = PBXGroup;
 			children = (
 				0A89DAA81B14797500CB0AE9 /* PayPalViewController */,
-				0A08B35B1AF0FAFE0076226C /* SearchVIewController */,
 				0A08B3521AF0F97D0076226C /* pickupcenterViewController */,
 				0AC4ED941AEDFCFA00C8882F /* ClassesViewController */,
 				0A5370121ADE681000ACE5C0 /* SettingViewController */,
@@ -844,7 +823,6 @@
 				0AE94C371AD2C29A00CBEA76 /* OrderConfirViewController */,
 				0AE94C341AD2BBDA00CBEA76 /* PayViewController */,
 				0AE94C2F1AD2721600CBEA76 /* HomeViewController */,
-				0AE94C091AD25F8C00CBEA76 /* ChatViewController */,
 				0AE94C0B1AD25F8C00CBEA76 /* CourseDetailViewController */,
 				0AE94C101AD25F8C00CBEA76 /* FeedbackViewController */,
 				0AE94C121AD25F8C00CBEA76 /* ForgotpasswordViewController  */,
@@ -1068,7 +1046,6 @@
 				0A08B35F1AF1019E0076226C /* NotesDetailViewController.swift in Sources */,
 				0AE94C261AD25F8C00CBEA76 /* ForgotpasswordViewController.swift in Sources */,
 				0AE94C2E1AD25FD900CBEA76 /* CustomTextFieldBlurView.swift in Sources */,
-				0A0B89151AD6413600AD2501 /* LGSimpleChat.swift in Sources */,
 				0A7D823A1AE1403000A29692 /* CourseListCell.swift in Sources */,
 				0AC4ED901AEDF93000C8882F /* FreeCls.m in Sources */,
 				0AAFC7F21B13413C00426D22 /* UserLearnedClsList.m in Sources */,
@@ -1086,7 +1063,6 @@
 				0A6525211AD3EEF700762BBD /* MyOrderViewController.swift in Sources */,
 				0AAFC7DD1B12F8D200426D22 /* UIImageView+HighlightedWebCache.m in Sources */,
 				0AAFC7D01B12F8D200426D22 /* MKAnnotationView+WebCache.m in Sources */,
-				0A08B35D1AF0FAFE0076226C /* SearchViewController.swift in Sources */,
 				0AE1DDD41AD504070059A719 /* ClassCenterViewController.swift in Sources */,
 				0AAFC7D21B12F8D200426D22 /* SDImageCache.m in Sources */,
 				0A5370141ADE6AA100ACE5C0 /* SettingViewController.swift in Sources */,

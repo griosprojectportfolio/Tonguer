@@ -245,8 +245,14 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
       let arryVideo:NSArray = responseObject as NSArray
-      self.dataFetchUserClsDB(arryVideo)
-      self.tableview.reloadData()
+      if(arryVideo.count>0){
+        self.dataFetchUserClsDB(arryVideo)
+        self.tableview.reloadData()
+      }else{
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no video found.", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+      }
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

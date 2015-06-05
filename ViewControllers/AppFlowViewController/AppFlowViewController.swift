@@ -22,7 +22,7 @@ class AppFlowViewController: BaseViewController {
   var scrollVW: UIScrollView!
   var api: AppApi!
   var moviePlayerController:MPMoviePlayerController!
-  var strMessage: NSString = "This is a preliminary document for an API or technology in development. Apple is supplying this information to help you plan for the adoption of the technologies and programming interfaces described herein for use on Apple-branded products. This information is subject to change, and software implemented according to this document should be tested with final operating system software and final documentation. Newer versions of this document may be  First throw call stack: (0x16b1022 0x1842cd6 0xed3871 0x599a 0xe3a1e 0xe2fec 0x109f1d 0xf41cb 0x10adf1 0x10ae0d 0x10aea9 0x496f5 0x4973c 0x1a596 0x1b274 0x2a183 0x2ac38 0x1e634 0x159bef5 0x1685195 0x15e9ff2 0x15e88da 0x15e7d84 0x15e7c9b 0x1ac65 0x1c626 0x32ed 0x2385 0x1) terminate called throwing an exception(lldb)."
+  var strMessage: NSString = ""
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -40,10 +40,16 @@ class AppFlowViewController: BaseViewController {
     barBackBtn = UIBarButtonItem(customView: backbtn)
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+   
+    let arry = Aboutus.MR_findAll()
+     dataFetchFromDatabase(arry)
+     self.defaultUIDesign()
     
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
     abouUSApiCall()
-    self.defaultUIDesign()
-    
   }
   
   override func didReceiveMemoryWarning() {
@@ -58,15 +64,15 @@ class AppFlowViewController: BaseViewController {
     scrollVW.showsHorizontalScrollIndicator = true
     scrollVW.scrollEnabled = true
     scrollVW.userInteractionEnabled = true
-    //scrollVW.backgroundColor = UIColor.grayColor()
+    //  scrollVW.backgroundColor = UIColor.redColor()
     scrollVW.contentOffset = CGPoint(x: 0, y: 0)
-    scrollVW.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+64)
+    scrollVW.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
     
    self.view.addSubview(scrollVW)
     
      var rect: CGRect! = strMessage.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
     
-    VwimgBG = UIView(frame: CGRectMake(scrollVW.frame.origin.x+20,scrollVW.frame.origin.y+74, scrollVW.frame.size.width - 40,300))
+    VwimgBG = UIView(frame: CGRectMake(scrollVW.frame.origin.x+20,scrollVW.frame.origin.y+20, scrollVW.frame.size.width - 40,300))
     //VwimgBG.backgroundColor = UIColor.blackColor()
     scrollVW.addSubview(VwimgBG)
     
@@ -171,16 +177,22 @@ class AppFlowViewController: BaseViewController {
     self.api.aboutUS(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var arry = responseObject as NSArray
-      let obj = arry.objectAtIndex(0) as Aboutus
-      let data = obj.ab_content 
-      self.strMessage = data
-      self.video_url = obj.ab_videourl as NSString
+      self.dataFetchFromDatabase(arry)
+      
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
         
     })
+    
+  }
+  
+  func dataFetchFromDatabase(arry:NSArray){
+    let obj = arry.objectAtIndex(0) as Aboutus
+    let data = obj.ab_content
+    self.strMessage = data
+    self.video_url = obj.ab_videourl as NSString
     
   }
 

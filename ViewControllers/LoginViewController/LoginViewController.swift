@@ -126,9 +126,9 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   }
 
   func loginApiCall(){
-    //var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
+    var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
 
-    var aParams: NSDictionary = ["user[email]" : "ajulwania@grepruby.com", "user[password]" : "arun123456"]
+    //var aParams: NSDictionary = ["user[email]" : "ajulwania@grepruby.com", "user[password]" : "arun123456"]
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
@@ -149,6 +149,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       self.userLearnedClsApiCall()
       self.getHostPayClsApiCall()
       self.getAddvertiesmentApiCall()
+      self.abouUSApiCall()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -184,6 +185,26 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   }
 
   //************ Data Store in the Database And Api Calling Methodes****************
+  
+  
+  func abouUSApiCall(){
+    
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    
+    self.api.aboutUS(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var arry = responseObject as NSArray
+      let obj = arry.objectAtIndex(0) as Aboutus
+      let data = obj.ab_content
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+  
 
   func userClassApiCall(){
 

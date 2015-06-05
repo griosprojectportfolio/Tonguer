@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate,LGChatControllerDelegate {
+class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
 
   var btnMyClass: UIButton!
   var btnPickUp: UIButton!
@@ -257,43 +257,13 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate,LGChatContro
         
       }
       
-      
     case 5:// Chat
-      
-      
       var installed = UIApplication.sharedApplication().canOpenURL(NSURL(string: "skype:")!)
       if(installed){
         UIApplication.sharedApplication().openURL(NSURL(string: "skype:echo123?call")!)
       }else{
         UIApplication.sharedApplication().openURL(NSURL(string: "http://itunes.com/apps/skype/skype")!)
       }
-      
-            
-//      var lastViewcontroler: UIViewController! = self.sideNavigation.visibleViewController
-//      print(lastViewcontroler)
-//      
-//      if lastViewcontroler .isKindOfClass(QesAndAnsViewController){
-//        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-//          self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
-//          }, completion: { (Bool) -> Void in
-//            
-//            //              var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID") as QesAndAnsViewController
-//            //              self.sideNavigation.pushViewController(vc, animated:false)
-//            
-//        })
-//        
-//        
-//      }else{
-//        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-//          self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
-//          }, completion: { (Bool) -> Void in
-//            
-//            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID") as QesAndAnsViewController
-//            self.sideNavigation.pushViewController(vc, animated:false)
-//            
-//        })
-//      }
-      
       
     default:
       println("erroe")
@@ -302,17 +272,6 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate,LGChatContro
     
   }
   
-  func chatController(chatController: LGChatController, didAddNewMessage message: LGChatMessage) {
-    println("Did Add Message: \(message.content)")
-  }
   
-  
-  func shouldChatController(chatController: LGChatController, addMessage message: LGChatMessage) -> Bool {
-    /*
-    Use this space to prevent sending a message, or to alter a message.  For example, you might want to hold a message until its successfully uploaded to a server.
-    */
-    return true
-  }
-
   
 }

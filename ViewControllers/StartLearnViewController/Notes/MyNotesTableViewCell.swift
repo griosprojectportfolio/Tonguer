@@ -41,8 +41,9 @@ class MyNotesTableViewCell:BaseTableViewCell  {
     let img = aParam.valueForKey("image") as? NSString
     
     if(img == nil){
-      let url = NSURL(string:"http://www.popular.com.my/images/no_image.gif" as NSString)
-      imageVW.sd_setImageWithURL(url)
+      // let url = NSURL(string:"http://www.popular.com.my/images/no_image.gif" as NSString)
+      // imageVW.sd_setImageWithURL(url)
+      imageVW.image = UIImage(named:"defaultImg")!
     }else{
       let url = NSURL(string: aParam.objectForKey("image") as NSString)
       imageVW.sd_setImageWithURL(url)
@@ -86,11 +87,12 @@ class MyNotesTableViewCell:BaseTableViewCell  {
     var strDate: NSString!
    
     var dateObj: NSObject = aParam.valueForKey("date") as NSObject
-    if(dateObj.isKindOfClass(NSData)){
+    if(dateObj.isKindOfClass(NSDate)){
       var date:NSDate! = aParam.valueForKey("date") as NSDate
       var formatter: NSDateFormatter! = NSDateFormatter()
       formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-    strDate = formatter.stringFromDate(date)
+      formatter.dateFormat = "yyyy-MM-dd"
+      strDate = formatter.stringFromDate(date)
     }else if(dateObj.isKindOfClass(NSString)){
       
     }

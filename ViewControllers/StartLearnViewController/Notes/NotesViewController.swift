@@ -234,7 +234,8 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
        return cell
     } else if(tapTag == 2){
       var cell: NotesTableViewCell!
-      cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
+       cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
+       cell.selectionStyle = UITableViewCellSelectionStyle.None
       if (isSearch == false) {
        cell.defaultUIDesign(arrNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
       } else {
@@ -456,7 +457,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }
       print(self.arrySearchNotes.count)
       if(arryNot?.count == 0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Notes Found", delegate:self, cancelButtonTitle:"OK")
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
       }else{
         self.isSearch = true
@@ -542,7 +543,7 @@ extension NotesViewController:UISearchBarDelegate {
     let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text], forKeys: ["auth_token","notes_key_word"])
     self.api.callSearchNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
-      
+      searchBar.resignFirstResponder()
       let arryNotes = responseObject as? NSArray
       for var index = 0; index < arryNotes?.count; ++index{
        var dictData = arryNotes?.objectAtIndex(index) as NSDictionary
@@ -588,7 +589,7 @@ extension NotesViewController:UISearchBarDelegate {
       }
       
       if(arryNotes?.count == 0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No Notes Found", delegate:self, cancelButtonTitle:"OK")
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
         }else{
         self.isSearch = true

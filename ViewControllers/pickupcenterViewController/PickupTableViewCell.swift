@@ -75,9 +75,13 @@ class PickupTableViewCell: BaseTableViewCell {
     lblPriz.textColor = UIColor.whiteColor()
     lblPriz.backgroundColor =  UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     vWcell.addSubview(lblPriz)
-    
+
+    var str: NSString = "Valid_days: "
+    var strDays: NSString = NSString(format: "%i",(aParam.objectForKey("valid_days")?.integerValue)!)
+    var strCommon = str+strDays
+
     lblDate = UILabel(frame: CGRectMake(10,vWcell.frame.height-30,lblPriz.frame.origin.x-10,30))
-    lblDate.text = NSString(format: "%i",(aParam.objectForKey("valid_days")?.integerValue)!)    //aParam.objectForKey("valid_days") as NSString
+    lblDate.text = strCommon //NSString(format: "%i",(aParam.objectForKey("valid_days")?.integerValue)!)    //aParam.objectForKey("valid_days") as NSString
     lblDate.font = lblDate.font.fontWithSize(12)
     lblDate.textColor = UIColor.grayColor()
     //lblDate.backgroundColor = UIColor.redColor()

@@ -16,6 +16,9 @@
 @dynamic cls_name;
 @dynamic is_buy;
 @dynamic date;
+@dynamic cls_image;
+@dynamic cls_amount;
+@dynamic cls_days;
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
   
@@ -55,6 +58,16 @@
     
     if (![[aDictionary objectForKey:@"is_buy"] isKindOfClass:[NSNull class]])
       obj.is_buy = [aDictionary valueForKey:@"is_buy"];
+    
+    if (![[aDictionary objectForKey:@"image"] isKindOfClass:[NSNull class]])
+      obj.cls_image = [aDictionary valueForKey:@"image"];
+    
+    if (![[aDictionary objectForKey:@"price"] isKindOfClass:[NSNull class]])
+      obj.cls_amount = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"price"] doubleValue]];
+    
+    if (![[aDictionary objectForKey:@"valid_days"] isKindOfClass:[NSNull class]])
+      obj.cls_amount = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"valid_days"] doubleValue]];
+
     
     return obj;
   }

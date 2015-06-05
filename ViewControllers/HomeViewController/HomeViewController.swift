@@ -38,7 +38,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   var lblAledaytext :UILabel!
 
   var btnsView :UIView!
-
+  var useImgUrl: NSString!
   var btn1 :UIButton!
   var btn2 :UIButton!
   var btn3 :UIButton!
@@ -438,6 +438,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("LearnID") as StartLearnViewController
     vc.dictClasses = dict
+    vc.useImgUrl = useImgUrl
     self.navigationController?.pushViewController(vc, animated: true)
 
   }
@@ -544,10 +545,12 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     }
     
     if((userObject.pro_img) != nil){
+      useImgUrl = userObject.pro_img as NSString
       let url = NSURL(string: userObject.pro_img as NSString)
       imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
       imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
     }else{
+      useImgUrl = "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png"
       let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
       imgVwProfilrPic.sd_setImageWithURL(url)
     }

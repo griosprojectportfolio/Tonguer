@@ -14,7 +14,10 @@
 
 @property (nonatomic, retain) NSNumber * order_id;
 @property (nonatomic, retain) NSNumber * cls_id;
+@property (nonatomic, retain) NSNumber * cls_days;
+@property (nonatomic, retain) NSNumber * cls_amount;
 @property (nonatomic, retain) NSString * cls_name;
+@property (nonatomic, retain) NSString * cls_image;
 @property (nonatomic, retain) NSNumber * is_buy;
 @property (nonatomic, retain) NSString * date;
 

@@ -84,7 +84,7 @@ class NotesTableViewCell:BaseTableViewCell {
     var date:NSDate! = aParam.valueForKey("date") as NSDate
     var formatter: NSDateFormatter! = NSDateFormatter()
     formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-    
+    formatter.dateFormat = "yyyy-MM-dd"
     var strDate: NSString! = formatter.stringFromDate(date)
     
     lblDate = UILabel(frame: CGRectMake(imageVWDateAntime.frame.origin.x+20,vwCell.frame.height-23,vwCell.frame.width-imageVWDateAntime.frame.origin.x-30,20))
