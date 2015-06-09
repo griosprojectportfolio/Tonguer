@@ -48,7 +48,6 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
     api = AppApi.sharedClient()
     self.defaultUIDesign()
     print(clsDictDe)
@@ -74,9 +73,13 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     clistarr = NSArray(object: dictClist)
   }
   
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    classOutlineApiCall()
+  }
+  
   func defaultUIDesign(){
     self.title = "Class Detail"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -229,8 +232,20 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     
     var height: CGFloat!
     if(btnTag == 1){
-      height = 70
+      if(indexPath.row==0){
+         height = 70
+      }else{
+        let dictData = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+        let str = dictData.valueForKey("data") as NSString
+       
+        var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
+
+        height = 50+rect.height
+      }
+      
+      
     }else if(btnTag == 2){
+
       height = 50
     }
     return height
@@ -243,20 +258,23 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       var cell: CourseDetailTableViewCell  = tableview.dequeueReusableCellWithIdentifier("cell") as CourseDetailTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       dictDetail = dataArr.objectAtIndex(indexPath.row) as NSDictionary
-      cell.defaultCellContentForCourseDetail(dictDetail, btnIndex: btnTag)
+      cell.defaultCellContentForCourseDetail(dictDetail, btnIndex: btnTag,frame: self.view.frame)
       return cell
 
     } else if(btnTag == 2){
       var cell: CourseListCell!  = tableview.dequeueReusableCellWithIdentifier("CourseList") as CourseListCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-      let dict = arrOutline.objectAtIndex(indexPath.section) as NSDictionary
-      let arry = dict.valueForKey("array") as NSArray
-      let obj = arry.objectAtIndex(indexPath.row) as ClsModElement
-      cell.textLabel.text = obj.mod_element_content
+      if(arrOutline.count>0){
+        let dict = arrOutline.objectAtIndex(indexPath.section) as NSDictionary
+        let arry = dict.valueForKey("array") as NSArray
+        let obj = arry.objectAtIndex(indexPath.row) as ClsModElement
+        cell.textLabel.text = obj.mod_element_content
+      }else{
+        cell.textLabel.text = ""
+      }
       cell.textLabel.textColor = UIColor.grayColor()
       cell.textLabel.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
-     // dictDetail = clistarr.objectAtIndex(indexPath.row) as NSDictionary
-     //cell.defaultCellContenforCourselist(dictDetail, Frame:self.view.frame)
+  
       return cell
     }
     return cell
@@ -275,13 +293,16 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
   
       var lbltilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
-      
-      let dict = arrOutline.objectAtIndex(section) as NSDictionary
-      let obj = dict.valueForKey("module") as ClsOutLineModule
-      lbltilte.text = obj.mod_content
       lbltilte.font = lbltilte.font.fontWithSize(12)
       lbltilte.textColor = UIColor.whiteColor()
+      lbltilte.text = " "
       vWheader.addSubview(lbltilte)
+      
+      if(arrOutline.count>0){
+        let dict = arrOutline.objectAtIndex(section) as NSDictionary
+        let obj = dict.valueForKey("module") as ClsOutLineModule
+        lbltilte.text = obj.mod_content
+      }
       
       return vWheader
     }
@@ -348,7 +369,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     horiVw.backgroundColor = UIColor.lightGrayColor()
     horiVw1.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     horiVw2.backgroundColor = UIColor.lightGrayColor()
-    classOutlineApiCall()
+    self.tableview.reloadData()
     
   }
   
@@ -390,29 +411,27 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   func classOutlineApiCall(){
     
     var cls_id:NSInteger = self.clsDictDe.valueForKey("id") as NSInteger
-    var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],14], forKeys: ["auth_token","cls_id"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],cls_id], forKeys: ["auth_token","cls_id"])
     
     self.api.clsOutline(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      self.arrOutline = responseObject as? NSArray
-      if(self.arrOutline?.count == 0){
+      let arry = responseObject as NSArray
+      if(arry.count == 0){
         
       }else{
-        
+        self.arrOutline = arry
+        let dict = self.arrOutline.objectAtIndex(0) as NSDictionary
+        let arry = dict.valueForKey("array") as NSArray
+        print(arry.count)
       }
-      
-      let dict = self.arrOutline.objectAtIndex(0) as NSDictionary
-      let arry = dict.valueForKey("array") as NSArray
-      print(arry.count)
-      
-      self.tableview.reloadData()
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry some technical problam.", delegate: self, cancelButtonTitle: "Ok")
-        alert.show()
-        
+        if(self.btnTag == 2){
+          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry some technical problam.", delegate: self, cancelButtonTitle: "Ok")
+          alert.show()
+        }
     })
   }
 

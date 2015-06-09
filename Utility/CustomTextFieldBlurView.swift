@@ -24,6 +24,7 @@ class CustomTextFieldBlurView: UITextField {
 
     func addBlurViewWithTextField(imgName: String) {
 
+      self.text = ""
          if (countElements(imgName) != 0) {
 
             var imageName = imgName
@@ -40,7 +41,7 @@ class CustomTextFieldBlurView: UITextField {
           vwImage.addSubview(imageViewLine)
             self.returnKeyType = UIReturnKeyType.Done
             self.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
-          self.layer.borderWidth = 1.0;
+            self.layer.borderWidth = 1.0;
             self.leftView = vwImage
             self.leftViewMode = UITextFieldViewMode.Always;
             self.font = UIFont(name: "Palatino", size: 17.0)

@@ -22,8 +22,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     super.viewDidLoad()
     api = AppApi.sharedClient()
     self.title = "Question and Answer"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
+   
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -128,7 +127,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
-    aParams.setValue(/*dictClasses.valueForKey("id")*/4, forKey: "class_id")
+    aParams.setValue(classID, forKey: "class_id")
     self.api.clsQuestion(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
 
       println(responseObject)

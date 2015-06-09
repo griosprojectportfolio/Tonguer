@@ -21,17 +21,18 @@
 		0A4145271B0B196700B3183D /* Notes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4145261B0B196700B3183D /* Notes.m */; };
 		0A43E8FB1AF200C4009D3787 /* DiscussViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43E8FA1AF200C4009D3787 /* DiscussViewController.swift */; };
 		0A43E8FD1AF204A4009D3787 /* AddTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43E8FC1AF204A4009D3787 /* AddTopicViewController.swift */; };
-		0A43E8FF1AF21196009D3787 /* TopicDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43E8FE1AF21196009D3787 /* TopicDetailViewController.swift */; };
 		0A5370141ADE6AA100ACE5C0 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5370131ADE6AA100ACE5C0 /* SettingViewController.swift */; };
 		0A5F29C81AD80CA900BDA404 /* AppApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5F29C71AD80CA900BDA404 /* AppApi.m */; };
 		0A65251A1AD3D64F00762BBD /* AdAnsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6525191AD3D64E00762BBD /* AdAnsTableViewCell.swift */; };
 		0A65251D1AD3DFA600762BBD /* AppFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A65251C1AD3DFA600762BBD /* AppFlowViewController.swift */; };
 		0A6525211AD3EEF700762BBD /* MyOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6525201AD3EEF700762BBD /* MyOrderViewController.swift */; };
 		0A6525261AD407E700762BBD /* StartLearnViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6525251AD407E700762BBD /* StartLearnViewController.swift */; };
+		0A682CAF1B25708800C54204 /* LearnStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A682CAE1B25708800C54204 /* LearnStatusViewController.swift */; };
 		0A78B1301AE62D61002AC651 /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78B12F1AE62D61002AC651 /* SettingTableViewCell.swift */; };
 		0A7D82381AE0ED1B00A29692 /* CourseDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D82371AE0ED1B00A29692 /* CourseDetailTableViewCell.swift */; };
 		0A7D823A1AE1403000A29692 /* CourseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D82391AE1403000A29692 /* CourseListCell.swift */; };
 		0A7D823C1AE1453300A29692 /* CalssCenterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D823B1AE1453300A29692 /* CalssCenterCell.swift */; };
+		0A87C8301B22D87E00559499 /* VideoDone.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A87C82F1B22D87E00559499 /* VideoDone.m */; };
 		0A88B2021AFC923A00003AFE /* UserClsVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A88B2011AFC923A00003AFE /* UserClsVideo.m */; };
 		0A88B2051AFCB81800003AFE /* HostPayCls.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A88B2041AFCB81800003AFE /* HostPayCls.m */; };
 		0A88B2081AFCBEDA00003AFE /* Addvertiesment.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A88B2071AFCBEDA00003AFE /* Addvertiesment.m */; };
@@ -148,7 +149,6 @@
 		0A4145261B0B196700B3183D /* Notes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Notes.m; sourceTree = SOURCE_ROOT; };
 		0A43E8FA1AF200C4009D3787 /* DiscussViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscussViewController.swift; sourceTree = "<group>"; };
 		0A43E8FC1AF204A4009D3787 /* AddTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTopicViewController.swift; sourceTree = "<group>"; };
-		0A43E8FE1AF21196009D3787 /* TopicDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicDetailViewController.swift; sourceTree = "<group>"; };
 		0A5370131ADE6AA100ACE5C0 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		0A5F29C51AD7C96400BDA404 /* Tonguer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tonguer-Bridging-Header.h"; sourceTree = "<group>"; };
 		0A5F29C61AD80CA900BDA404 /* AppApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppApi.h; sourceTree = "<group>"; };
@@ -157,11 +157,14 @@
 		0A65251C1AD3DFA600762BBD /* AppFlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppFlowViewController.swift; sourceTree = "<group>"; };
 		0A6525201AD3EEF700762BBD /* MyOrderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyOrderViewController.swift; sourceTree = "<group>"; };
 		0A6525251AD407E700762BBD /* StartLearnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartLearnViewController.swift; sourceTree = "<group>"; };
+		0A682CAE1B25708800C54204 /* LearnStatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LearnStatusViewController.swift; sourceTree = "<group>"; };
 		0A78B12F1AE62D61002AC651 /* SettingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		0A78B1391AE684FC002AC651 /* TonguerPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TonguerPrefixHeader.pch; sourceTree = "<group>"; };
 		0A7D82371AE0ED1B00A29692 /* CourseDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseDetailTableViewCell.swift; sourceTree = "<group>"; };
 		0A7D82391AE1403000A29692 /* CourseListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseListCell.swift; sourceTree = "<group>"; };
 		0A7D823B1AE1453300A29692 /* CalssCenterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalssCenterCell.swift; sourceTree = "<group>"; };
+		0A87C82E1B22D87E00559499 /* VideoDone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoDone.h; sourceTree = SOURCE_ROOT; };
+		0A87C82F1B22D87E00559499 /* VideoDone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoDone.m; sourceTree = SOURCE_ROOT; };
 		0A88B2001AFC923A00003AFE /* UserClsVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserClsVideo.h; sourceTree = SOURCE_ROOT; };
 		0A88B2011AFC923A00003AFE /* UserClsVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserClsVideo.m; sourceTree = SOURCE_ROOT; };
 		0A88B2031AFCB81800003AFE /* HostPayCls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HostPayCls.h; sourceTree = SOURCE_ROOT; };
@@ -364,7 +367,6 @@
 				0AE94C031AD25F8C00CBEA76 /* AddAnswerviewController */,
 				0A43E8FA1AF200C4009D3787 /* DiscussViewController.swift */,
 				0A43E8FC1AF204A4009D3787 /* AddTopicViewController.swift */,
-				0A43E8FE1AF21196009D3787 /* TopicDetailViewController.swift */,
 			);
 			path = Discuss;
 			sourceTree = "<group>";
@@ -638,6 +640,7 @@
 				0AC252A51AE7A213005286F3 /* HomeTableViewCell.swift */,
 				0AF2C0081AFB958400DCBFDA /* LearnTableViewCell.swift */,
 				0AF2C00A1AFB9BB800DCBFDA /* LearnedTableViewCell.swift */,
+				0A682CAE1B25708800C54204 /* LearnStatusViewController.swift */,
 			);
 			path = HomeViewController;
 			sourceTree = "<group>";
@@ -788,6 +791,8 @@
 				0ABA48991B15F5A500EDE728 /* UserClassOrder.m */,
 				0AAA25F11B1F1E8900EB82FC /* DownloadedData.h */,
 				0AAA25F21B1F1E8900EB82FC /* DownloadedData.m */,
+				0A87C82E1B22D87E00559499 /* VideoDone.h */,
+				0A87C82F1B22D87E00559499 /* VideoDone.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1014,7 +1019,6 @@
 				0A08B34F1AF0E6980076226C /* CourselistViewController.swift in Sources */,
 				0A08B3491AF0B5A30076226C /* MyNotesTableViewCell.swift in Sources */,
 				0ABA48901B15B4FE00EDE728 /* ClsOutLineModule.m in Sources */,
-				0A43E8FF1AF21196009D3787 /* TopicDetailViewController.swift in Sources */,
 				0A43E8FD1AF204A4009D3787 /* AddTopicViewController.swift in Sources */,
 				0AAFC7F11B13413C00426D22 /* UserLearnClsList.m in Sources */,
 				0A890C061ADFD8A4000B2176 /* StartLearnTableViewCell.swift in Sources */,
@@ -1049,6 +1053,7 @@
 				0A7D823A1AE1403000A29692 /* CourseListCell.swift in Sources */,
 				0AC4ED901AEDF93000C8882F /* FreeCls.m in Sources */,
 				0AAFC7F21B13413C00426D22 /* UserLearnedClsList.m in Sources */,
+				0A87C8301B22D87E00559499 /* VideoDone.m in Sources */,
 				0A65251A1AD3D64F00762BBD /* AdAnsTableViewCell.swift in Sources */,
 				0AC4ED961AEDFD2000C8882F /* ClassViewController.swift in Sources */,
 				0ABA488D1B158E2500EDE728 /* Aboutus.m in Sources */,
@@ -1082,6 +1087,7 @@
 				174531F01ACD15C000E6DF2E /* BaseViewController.swift in Sources */,
 				0A88B2021AFC923A00003AFE /* UserClsVideo.m in Sources */,
 				0A8C760D1ADD1FB300BADA01 /* ChargeViewController.swift in Sources */,
+				0A682CAF1B25708800C54204 /* LearnStatusViewController.swift in Sources */,
 				0AE94C2A1AD25F8C00CBEA76 /* RagistrationViewController.swift in Sources */,
 				0AAFC7E01B12F8D200426D22 /* HCYoutubeParser.m in Sources */,
 				0AC252A61AE7A213005286F3 /* HomeTableViewCell.swift in Sources */,

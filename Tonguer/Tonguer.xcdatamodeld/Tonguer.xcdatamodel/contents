@@ -153,7 +153,10 @@
         <attribute name="user_id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="UserClassOrder" representedClassName="UserClassOrder" syncable="YES">
+        <attribute name="cls_amount" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cls_days" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="cls_image" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cls_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="is_buy" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -203,6 +206,11 @@
         <attribute name="notes_img" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notes_like_count" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
+    <entity name="VideoDone" representedClassName="VideoDone" syncable="YES">
+        <attribute name="video_cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="video_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="video_is" optional="YES" attributeType="Boolean" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Aboutus" positionX="-234" positionY="-90" width="128" height="90"/>
         <element name="Addvertiesment" positionX="-216" positionY="-72" width="128" height="105"/>
@@ -212,6 +220,7 @@
         <element name="DisAdminTopic" positionX="-234" positionY="-90" width="128" height="88"/>
         <element name="DisTopicComments" positionX="-234" positionY="-90" width="128" height="105"/>
         <element name="DisUserToic" positionX="-225" positionY="-81" width="128" height="90"/>
+        <element name="DownloadedData" positionX="-234" positionY="-90" width="128" height="73"/>
         <element name="FreeCls" positionX="-432" positionY="57" width="128" height="208"/>
         <element name="FreeClsCat" positionX="-2" positionY="65" width="128" height="88"/>
         <element name="FreeClssVideo" positionX="-234" positionY="-90" width="128" height="120"/>
@@ -225,12 +234,12 @@
         <element name="QuestionComment" positionX="-225" positionY="-81" width="128" height="90"/>
         <element name="Questions" positionX="-234" positionY="-90" width="128" height="73"/>
         <element name="User" positionX="-378" positionY="-234" width="128" height="180"/>
-        <element name="UserClassOrder" positionX="-207" positionY="-63" width="128" height="118"/>
+        <element name="UserClassOrder" positionX="-207" positionY="-63" width="128" height="165"/>
         <element name="UserClsVideo" positionX="-234" positionY="-90" width="128" height="120"/>
         <element name="UserDefaultClsList" positionX="-234" positionY="-90" width="128" height="150"/>
         <element name="UserLearnClsList" positionX="-234" positionY="-90" width="128" height="148"/>
         <element name="UserLearnedClsList" positionX="-225" positionY="-81" width="128" height="148"/>
         <element name="UserNotes" positionX="-234" positionY="-90" width="128" height="163"/>
-        <element name="DownloadedData" positionX="-234" positionY="-90" width="128" height="73"/>
+        <element name="VideoDone" positionX="-234" positionY="-90" width="128" height="90"/>
     </elements>
 </model>

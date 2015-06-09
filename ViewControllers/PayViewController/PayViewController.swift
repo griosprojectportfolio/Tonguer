@@ -11,7 +11,6 @@ import UIKit
 class PayViewController: BaseViewController {
   
   var barBackBtn :UIBarButtonItem!
-  var barforwordBtn :UIBarButtonItem!
   
   var lblText : UILabel!
   var lblmoney : UILabel!
@@ -40,7 +39,6 @@ class PayViewController: BaseViewController {
      print(clsDict)
     
     self.title = "Select the way to pay"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -121,11 +119,11 @@ class PayViewController: BaseViewController {
     var aParams: NSMutableDictionary = NSMutableDictionary()
         aParams.setValue(self.auth_token[0], forKey:"auth_token")
         aParams.setValue(clsDict.valueForKey("id"), forKey: "cls_id")
-        aParams.setValue(clsDict.valueForKey("price"), forKey: "cls_amount")
+        aParams.setValue(clsDict.valueForKey("price"), forKey: "money")
     
     self.api.walletApi(aParams as NSDictionary,success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      
+      self.UserUpadteApiCall()
       var alert: UIAlertView = UIAlertView(title: "Alert", message: "Your Transaction Successfully", delegate:self, cancelButtonTitle:"OK")
       alert.show()
       
@@ -137,20 +135,33 @@ class PayViewController: BaseViewController {
     })
   }
   
-//  //************ Wallet Api methode Call*********
-//  
-//  func walletApiCall(){
-//    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
-//    
-//    self.api.walletApi(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-//      println(responseObject)
-//      
-//      },
-//      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-//        println(error)
-//        
-//    })
-//  }
+  //****** Update User Recodes ans Api call ************
+  
+  func UserUpadteApiCall(){
+    var money: NSInteger!
+    var cls_amount: NSInteger!
+    var remainingMoney: NSInteger!
+    cls_amount = clsDict.valueForKey("price") as NSInteger
+    let arrFetchedData : NSArray = User.MR_findAll()
+    let userObject : User = arrFetchedData.objectAtIndex(0) as User
+    if((userObject.money) != nil){
+      money = userObject.money.integerValue
+    }
+    remainingMoney = money - cls_amount
+    var aParam:NSMutableDictionary = NSMutableDictionary()
+    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+    aParam.setValue(remainingMoney, forKey: "user[money]")
+    
+    self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
 
 
   

@@ -36,7 +36,6 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
   func defaultUIDesign(){
     
     self.title = "Setting"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -80,15 +79,17 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     tableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(tableview)
     tableview.registerClass(SettingTableViewCell.self, forCellReuseIdentifier: "cell")
-    
-    
-    
-    fetchDataFromdataBase()
+  
   }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    fetchDataFromdataBase()
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -186,6 +187,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     var name: NSString!
     if((fname != nil && lname  != nil)){
       name = fname+" "+lname
+      lblname.text = name
     }else{
       name = ""
     }

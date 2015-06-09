@@ -55,7 +55,6 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   func defaultUIDesign(){
     
     self.title = "Try Class Centre"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -119,14 +118,6 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     lblTilte.textColor = UIColor.whiteColor()
     vWheader.addSubview(lblTilte)
     
-    var btnMore: UIButton! = UIButton(frame: CGRectMake(tableview.frame.width-80, 5, 60, 20))
-    btnMore.setTitle("more", forState: UIControlState.Normal)
-    btnMore.setTitleColor(UIColor.redColor(), forState: UIControlState.Normal)
-    btnMore.titleLabel?.font = btnMore.titleLabel?.font.fontWithSize(12)
-    btnMore.tag = section
-    //btnmore.backgroundColor = UIColor.blueColor()
-    btnMore.addTarget(self, action: "btnMoreTapped:", forControlEvents:UIControlEvents.TouchUpInside)
-    //vWheader.addSubview(btnMore)
     return vWheader
   }
   
@@ -256,7 +247,9 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
       
       let sub_CatFilter : NSPredicate = NSPredicate(format: "cat_id CONTAINS %@",str_cat_id)!
       let subcatData : NSArray = FreeSubCat.MR_findAllWithPredicate(sub_CatFilter)
+      print(subcatData.count)
       if (subcatData.count > 0){
+        var subCatArr: NSMutableArray! = NSMutableArray()
       for var index = 0; index < subcatData.count; ++index {
         let subCatObject : FreeSubCat = subcatData.objectAtIndex(index) as FreeSubCat
         var catDict2: NSMutableDictionary! = NSMutableDictionary()
@@ -274,8 +267,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
           var strName = ""
           catDict2.setObject(strName, forKey: "name")
         }
-        //subCatArr.addObject(catDict2)
-        var subCatArr: NSMutableArray! = NSMutableArray(object: catDict2)
+         subCatArr.addObject(catDict2)
         dictData.setObject(subCatArr, forKey: "array")
         print(subCatArr.count)
       }

@@ -32,6 +32,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   var lblPublish: UILabel!
   var dictNote: NSDictionary!
   var is_Call: NSString!
+  var actiIndecatorVw: ActivityIndicatorView!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -47,8 +48,6 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   }
   
   func defaultUIDesign(){
-    
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -143,7 +142,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     var btnImgPick: UIButton = UIButton(frame:ImgVW.frame)
     btnImgPick.setTitle("Press", forState: UIControlState.Normal)
     btnImgPick.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-   btnImgPick.addTarget(self, action: "btnImgPickTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    btnImgPick.addTarget(self, action: "btnImgPickTapped:", forControlEvents: UIControlEvents.TouchUpInside)
    // btnImgPick.backgroundColor = UIColor.redColor()
     scrollVW.addSubview(btnImgPick)
     scrollVW.bringSubviewToFront(btnImgPick)
@@ -213,6 +212,9 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   
   func btnSaveTapped(sender:AnyObject){
     
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+    
     if(is_Call == "Upadte"){
      notesUpdateApiCall()
     }else if(is_Call == "Save"){
@@ -223,7 +225,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   
   
   func notesSaveApiCall(){
-
+    
     var base64String:NSString!
     if((imagePick) != nil){
       var imageData = UIImagePNGRepresentation(imagePick)
@@ -232,6 +234,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     }else{
       base64String = ""
     }
+    
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
     
@@ -242,10 +245,16 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     //aParams.setValue(cusTxtFieldCls.text, forKey: "note[cls_name]")
     self.api.createUserNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      self.actiIndecatorVw.removeFromSuperview()
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "Note successfully created.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+         self.actiIndecatorVw.removeFromSuperview()
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Note not created.", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
         
     })
 
@@ -262,7 +271,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     if((imagePick) != nil){
       var imageData = UIImagePNGRepresentation(imagePick)
       base64String = imageData.base64EncodedStringWithOptions(.allZeros) as NSString
-      println(base64String)
+      //println(base64String)
     }else{
       var imageData = UIImagePNGRepresentation(imagePick)
       base64String = imageData.base64EncodedStringWithOptions(.allZeros) as NSString
@@ -279,10 +288,16 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     
     self.api.callNotesUpdateApi(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      self.actiIndecatorVw.removeFromSuperview()
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "Note successfully updated.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        self.actiIndecatorVw.removeFromSuperview()
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Note not updated successfully.", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
         
     })
   }
@@ -407,7 +422,11 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
       
       let url = NSURL(string: dictNote.objectForKey("image") as NSString)
       var data = NSData(contentsOfURL: url!)
-      imagePick = UIImage(data: data!)
+      if((data) != nil){
+        imagePick = UIImage(data: data!)
+      }else{
+        imagePick = UIImage(named: "defaultImg")
+      }
       ImgVW.sd_setImageWithURL(url)
     
       cls_id = dictNote.valueForKey("cls_id") as NSInteger

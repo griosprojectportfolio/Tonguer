@@ -75,8 +75,8 @@ class VideoTableViewCell: BaseTableViewCell {
     btnComplete.layer.masksToBounds = true
     celltxtView.addSubview(btnComplete)
     
-//    downloadProgress.setProgress(0, animated:false)
-//    celltxtView.addSubview(downloadProgress)
+    //downloadProgress.setProgress(10, animated:true)
+    //celltxtView.addSubview(downloadProgress)
     
     btnplay.backgroundColor = UIColor.whiteColor()
     btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)

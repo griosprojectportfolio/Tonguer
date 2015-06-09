@@ -32,7 +32,6 @@ class CourselistViewController: UIViewController, UITableViewDataSource,UITableV
   }
   
   func defaultUIDesign(){
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     

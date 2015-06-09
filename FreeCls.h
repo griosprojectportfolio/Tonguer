@@ -19,7 +19,7 @@
 @property (nonatomic, retain) NSString * cls_name;
 @property (nonatomic, retain) NSString * img_url;
 @property (nonatomic, retain) FreeSubCat *freesubcat;
-@property (nonatomic, retain) NSNumber * cls_price;
+@property (nonatomic, retain) NSString * cls_price;
 @property (nonatomic, retain) NSString * cls_arrange;
 @property (nonatomic, retain) NSString * cls_suitable;
 @property (nonatomic, retain) NSString * cls_target;

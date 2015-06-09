@@ -72,9 +72,9 @@ class ClassTableViewCell: BaseTableViewCell {
     vWcell.addSubview(lblPriz)
     
     lblDate = UILabel(frame: CGRectMake(10,vWcell.frame.height-30,lblPriz.frame.origin.x-10,30))
-    var strValid: NSString! = "Valid to"
-    var strDays: NSString! = "Days"
-    lblDate.text = aParam.objectForKey("day")?.stringValue
+    var strValid: NSString! = "Valid to "
+    var strDays: NSString! = aParam.objectForKey("day") as NSString
+    lblDate.text = strValid+strDays+" Days"
     lblDate.font = lblDate.font.fontWithSize(12)
     lblDate.textColor = UIColor.grayColor()
     //lblDate.backgroundColor = UIColor.redColor()

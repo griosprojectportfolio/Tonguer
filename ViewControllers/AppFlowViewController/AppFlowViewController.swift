@@ -29,8 +29,7 @@ class AppFlowViewController: BaseViewController {
     api = AppApi.sharedClient()
     
     self.title = "About App"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
+  
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))

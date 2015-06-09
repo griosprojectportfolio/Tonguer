@@ -33,8 +33,6 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     
     self.title = "Add Topic"
     
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))

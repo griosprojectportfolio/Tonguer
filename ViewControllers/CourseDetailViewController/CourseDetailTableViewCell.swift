@@ -17,7 +17,7 @@ class CourseDetailTableViewCell: UITableViewCell {
     // Initialization code
   }
   
-  func defaultCellContentForCourseDetail (dict : NSDictionary , btnIndex:Int){
+  func defaultCellContentForCourseDetail (dict : NSDictionary,btnIndex:Int,frame:CGRect){
     
     println(dict)
     
@@ -54,16 +54,26 @@ class CourseDetailTableViewCell: UITableViewCell {
         var imgVw: UIImageView! = UIImageView(frame: CGRectMake(10,10, 30, 30))
         imgVw.image = UIImage(named: dict.objectForKey("image")as NSString)
         self.contentView.addSubview(imgVw)
+        
+        let str1 = dict.valueForKey("data") as NSString
+        let str2 = dict.objectForKey("tilte") as NSString
+        
+        let str = str1+str2
+        
+        var rect: CGRect! = str.boundingRectWithSize(CGSize(width:frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
+        
        
         var lblTitle: UILabel = UILabel(frame: CGRectMake(imgVw.frame.width+50,imgVw.frame.origin.y+((imgVw.frame.height-30)/2), 200,30))
         lblTitle.text = dict.objectForKey("tilte") as NSString
         lblTitle.font = lblTitle.font.fontWithSize(16)
         lblTitle.textColor = UIColor.blackColor()
         self.contentView.addSubview(lblTitle)
+  
         
-        var lblData: UILabel = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,lblTitle.frame.origin.y+lblTitle.frame.height, 200, 30))
+        var lblData: UILabel = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,30,frame.width-lblTitle.frame.origin.x,rect.height+20))
         lblData.text = dict.objectForKey("data") as NSString
         lblData.font = lblData.font.fontWithSize(15)
+        lblData.numberOfLines = 0
         lblData.textColor = UIColor.grayColor()
         self.contentView.addSubview(lblData)
         

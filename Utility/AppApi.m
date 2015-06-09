@@ -34,6 +34,7 @@
 #import "ClsModElement.h"
 #import "UserClassOrder.h"
 #import "DownloadedData.h"
+#import "VideoDone.h"
 
 /* API Constants */
 static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
@@ -125,8 +126,18 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     return [self POST:url parameters:dictParams success:^(AFHTTPRequestOperation *task, id responseObject) {
       
       NSLog(@"%@",responseObject);
-      successBlock(task, responseObject);
+      NSDictionary *dict = [responseObject valueForKey:@"user"];
+      
       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+      
+      [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+        
+        [User entityWithDictionaty:dict inContext:localContext];
+        
+      } completion:^(BOOL success, NSError *error) {
+          successBlock(task, responseObject);
+      }];
+      
     } failure:^(AFHTTPRequestOperation *task, NSError *error) {
         if(failureBlock){
           
@@ -989,12 +1000,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     
-    NSArray *arrUserNotes = [responseObject valueForKey:@"note"];
+    NSDictionary *dictUser = [responseObject valueForKey:@"note"];
    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      [UserNotes entityWithDictionaty:responseObject inContext:localContext];
+      [UserNotes entityWithDictionaty:dictUser inContext:localContext];
      
     }];
     
@@ -1054,11 +1065,11 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
- // NSString *url = [NSString stringWithFormat:@"%@",[aParams objectForKey:@"url"]];
-   NSString *url = @"http://download.wavetlan.com/SVV/Media/HTTP/MP4/ConvertedFiles/MediaCoder/MediaCoder_test1_1m9s_AVC_VBR_256kbps_640x480_24fps_MPEG2Layer3_CBR_160kbps_Stereo_22050Hz.mp4";
-//  NSString *strFileNameWithExt = [[NSString alloc] initWithFormat:@"%@",[aParams objectForKey:@"fileName"]];
-//  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
+    NSString *url = [NSString stringWithFormat:@"%@",[aParams objectForKey:@"url"]];
+//   NSString *url = @"http://download.wavetlan.com/SVV/Media/HTTP/MP4/ConvertedFiles/MediaCoder/MediaCoder_test1_1m9s_AVC_VBR_256kbps_640x480_24fps_MPEG2Layer3_CBR_160kbps_Stereo_22050Hz.mp4";
+  NSString *strFileNameWithExt = [[NSString alloc] initWithFormat:@"%@",[aParams objectForKey:@"fileName"]];
+  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
  
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
   AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
@@ -1395,8 +1406,19 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
   return [self POST:url parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
-    successBlock(task, responseObject);
+
+    NSDictionary *dict = [[responseObject valueForKey:@"data"]valueForKey:@"video"];
+    NSMutableDictionary *dictDone = [[NSMutableDictionary alloc]init];
+    [dictDone setObject:[dict valueForKey:@"id"] forKey:@"id"];
+    [dictDone setObject:[dict valueForKey:@"a_class_id"] forKey:@"cls_id"];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      [VideoDone entityWithDictionaty:dictDone inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"video_cls_id CONTAINS %i",[[dict valueForKey:@"a_class_id"]integerValue]];
+      NSArray *arry = [VideoDone MR_findAllWithPredicate:predicate];
+      successBlock(task, arry);
+    }];
     
     
   } failure:^(AFHTTPRequestOperation *task, NSError *error) {

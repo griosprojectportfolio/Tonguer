@@ -62,8 +62,6 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     dict4.setObject("Notes", forKey: "name")
     self.title = "Start To Learn"
     
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -142,7 +140,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     circVw.addSubview(lblprogress)
     
     lblDayLeft = UILabel(frame: CGRectMake(imgVwAlpha.frame.width-100, lblClassScore.frame.origin.y, 100,20))
-    lblDayLeft.text = "Day Left"
+    lblDayLeft.text = "Days Left"
     lblDayLeft.textAlignment = NSTextAlignment.Center
     //lblDayLeft.backgroundColor = UIColor.redColor()
     lblDayLeft.textColor = UIColor.darkGrayColor()
@@ -214,14 +212,14 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   }
   
   func btnStartLearnTapped(){
-    startLearningApiCall()
+    //startLearningApiCall()
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
+    vc.classID = self.dictClasses.objectForKey("id") as NSInteger
+    vc.isActive = "Paied"
+    self.navigationController?.pushViewController(vc, animated: true)
   }
   
-//  func btnforwardTapped(){
-//    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassCenterID") as ClassCenterViewController
-//    self.navigationController?.pushViewController(vc, animated: true)
-//  }
-//  
+
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return dataArr.count
@@ -296,29 +294,29 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     })
   }
   
-  //**************Start Learning Api Calling***********
-  
-  func startLearningApiCall(){
-    
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
-    aParams.setValue(dictClasses.valueForKey("id"), forKey: "cls_id")
-    
-    self.api.startLearning(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-      println(responseObject)
-      
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
-      vc.classID = self.dictClasses.objectForKey("id") as NSInteger
-      vc.isActive = "Paied"
-      self.navigationController?.pushViewController(vc, animated: true)
-      
-      },
-      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-        println(error)
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry Somethig Worng", delegate:self, cancelButtonTitle:"OK")
-        alert.show()
-    })
-  }
+//  //**************Start Learning Api Calling***********
+//  
+//  func startLearningApiCall(){
+//    
+//    var aParams: NSMutableDictionary! = NSMutableDictionary()
+//    aParams.setValue(auth_token[0], forKey: "auth_token")
+//    aParams.setValue(dictClasses.valueForKey("id"), forKey: "cls_id")
+//    
+//    self.api.startLearning(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+//      println(responseObject)
+//      
+//      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
+//      vc.classID = self.dictClasses.objectForKey("id") as NSInteger
+//      vc.isActive = "Paied"
+//      self.navigationController?.pushViewController(vc, animated: true)
+//      
+//      },
+//      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+//        println(error)
+//        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry Somethig Worng", delegate:self, cancelButtonTitle:"OK")
+//        alert.show()
+//    })
+//  }
 
 
   //***************Fetching Data From Database Discus *********

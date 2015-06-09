@@ -52,7 +52,9 @@ class CourseOrderTableViewCell: UITableViewCell {
     vwCell.addSubview(btnNotPay)
     
     var lblDate: UILabel = UILabel(frame: CGRectMake(5,vwCell.frame.height-40,btnNotPay.frame.origin.x-20,40))
-    lblDate.text = obj.date
+    var strDate = obj.date as NSString
+    var strUpdateDate = strDate.substringToIndex(strDate.length-5)
+    lblDate.text = strUpdateDate
     lblDate.font = lblClassName.font.fontWithSize(15)
     lblDate.textColor = UIColor.lightGrayColor()
     vwCell.addSubview(lblDate)

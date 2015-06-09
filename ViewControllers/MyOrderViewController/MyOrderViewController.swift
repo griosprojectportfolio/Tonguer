@@ -35,8 +35,23 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     super.viewDidLoad()
     api = AppApi.sharedClient()
     
+    self.defaultUIDesign()
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+     userClassOrdersApiCall()
+  }
+
+  
+  func defaultUIDesign(){
+    
     self.title = "My Order"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -80,16 +95,6 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     HorizVw2 = UIView(frame: CGRectMake(btn2.frame.origin.x,btn2.frame.origin.y+btn2.frame.size.height , btn2.frame.size.width, 1))
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
     self.view.addSubview(HorizVw2)
-    userClassOrdersApiCall()
-    
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  func defaultUIDesign(){
     
     myordertableview = UITableView(frame: CGRectMake(btn1.frame.origin.x,HorizVw2.frame.origin.y+HorizVw2.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-HorizVw2.frame.height-20))
     //myordertableview.backgroundColor = UIColor.grayColor()
@@ -188,8 +193,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     self.api.userClassOrders(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.dataFetchFromDatabase(responseObject as NSDictionary)
-      self.defaultUIDesign()
-      self.myordertableview.reloadData()
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -200,6 +204,10 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   func dataFetchFromDatabase(dicrOrders:NSDictionary){
     arryTrue = dicrOrders.objectForKey("True") as NSArray
     arryFalse = dicrOrders.objectForKey("False") as NSArray
+    
+    if(arryTrue.count > 0 || arryFalse.count > 0){
+      myordertableview.reloadData()
+    }
    
   }
   

@@ -22,6 +22,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var actiIndecatorVw: ActivityIndicatorView!
   var moviePlayerController:MPMoviePlayerController!
   var doenloadedData:NSInteger = 0
+  var videoDone:NSArray! = NSArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -29,8 +30,8 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
 
     arrClassVideo.removeAllObjects()
     self.title = "Videos"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
+  
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -60,7 +61,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     let userDefaults = NSUserDefaults.standardUserDefaults()
     userDefaults.setValue(doenloadedData, forKey: "downloadedData")
     userDefaults.synchronize()
-    
+    dataFetchVedioDone()
     self.defaultUIDesign()
   
   }
@@ -71,6 +72,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     //self.defaultUIDesign()
     if(isActive.isEqualToString("Paied")){
       self.userClsVideoApiCalling()
+      startLearningApiCall()
     }else if (isActive.isEqualToString("Free")){
       self.freeClsVideoApiCalling()
     }
@@ -113,6 +115,18 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.btnComplete.tag = dict.valueForKey("id") as NSInteger
     cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    //cell.downloadProgress.setProgress(0, animated:false)
+    
+    if(videoDone.count>0){
+      for var index = 0; index < videoDone.count; ++index{
+        let obj = videoDone.objectAtIndex(index) as VideoDone
+        if((obj.video_id) != nil){
+          cell.btnComplete.userInteractionEnabled = false
+          cell.btnComplete.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
+        }
+      }
+      
+    }
    
     var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
     let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
@@ -261,12 +275,37 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     
   }
   
+  
+  //**************Start Learning Api Calling***********
+  
+  func startLearningApiCall(){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(classID, forKey: "cls_id")
+    
+    self.api.startLearning(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry Somethig Worng", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+    })
+  }
+
+  
   func videoDoneApiCall(video_id:NSInteger){
     var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,video_id], forKeys: ["auth_token","cls_id","video_id"])
     
     self.api.videoComplete(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      
+      if(responseObject?.count>0){
+      self.videoDone = responseObject as NSArray
+      self.tableview.reloadData()
+        
+      }
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -274,6 +313,12 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     })
     
   }
+  
+  func dataFetchVedioDone(){
+    var predicate:NSPredicate = NSPredicate (format: "video_cls_id CONTAINS %i", classID)!
+    self.videoDone = VideoDone.MR_findAllWithPredicate(predicate)
+  }
+  
   
   func dataFetchFreeClsDB(arrFetchCat: NSArray){
     arrClassVideo.removeAllObjects()

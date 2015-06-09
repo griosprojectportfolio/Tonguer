@@ -38,7 +38,6 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   func defaultUIDesign(){
     
     self.title = "User Registration"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
    self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -65,29 +64,24 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
     var framefname:CGRect = CGRectMake(scrollview.frame.origin.x+20, self.imgVwLogo.frame.origin.y+120, scrollview.frame.size.width-40, 40)
     custxtFname = CustomTextFieldBlurView(frame:framefname, imgName:"user.png")
     custxtFname.attributedPlaceholder = NSAttributedString(string:"First Name",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
-    // custxtEmail.returnKeyType = UIReturnType.Done
     custxtFname.delegate = self;
-    custxtFname.returnKeyType = UIReturnKeyType.Done
+    custxtFname.returnKeyType = UIReturnKeyType.Next
     custxtFname.clearButtonMode = UITextFieldViewMode.Always
-    custxtFname.keyboardType = .EmailAddress
     scrollview.addSubview(custxtFname)
     
     var framelname:CGRect = CGRectMake(framefname.origin.x,framefname.origin.y+framefname.size.height+10, framefname.size.width,framefname.size.height)
     custxtLname = CustomTextFieldBlurView(frame:framelname, imgName:"user.png")
     custxtLname.attributedPlaceholder = NSAttributedString(string:"Last Name",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
-    // custxtEmail.returnKeyType = UIReturnType.Done
     custxtLname.delegate = self;
-    custxtLname.returnKeyType = UIReturnKeyType.Done
+    custxtLname.returnKeyType = UIReturnKeyType.Next
     custxtLname.clearButtonMode = UITextFieldViewMode.Always
-    custxtLname.keyboardType = .EmailAddress
     scrollview.addSubview(custxtLname)
     
     var frameEmail:CGRect = CGRectMake(framelname.origin.x,framelname.origin.y+framelname.size.height+10, framelname.width, framelname.height)
     custxtEmail = CustomTextFieldBlurView(frame:frameEmail, imgName:"emailicon.png")
     custxtEmail.attributedPlaceholder = NSAttributedString(string:"Email",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
-    // custxtEmail.returnKeyType = UIReturnType.Done
     custxtEmail.delegate = self;
-    custxtEmail.returnKeyType = UIReturnKeyType.Done
+    custxtEmail.returnKeyType = UIReturnKeyType.Next
     custxtEmail.clearButtonMode = UITextFieldViewMode.Always
     custxtEmail.keyboardType = .EmailAddress
     scrollview.addSubview(custxtEmail)
@@ -95,9 +89,8 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
     var framePass:CGRect = CGRectMake(frameEmail.origin.x,frameEmail.origin.y+frameEmail.height+10,frameEmail.width, frameEmail.height)
     custxtPassword = CustomTextFieldBlurView(frame:framePass, imgName:"passicon.png")
     custxtPassword.attributedPlaceholder = NSAttributedString(string:"Password",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
-    // custxtEmail.returnKeyType = UIReturnType.Done
     custxtPassword.delegate = self;
-    custxtPassword.returnKeyType = UIReturnKeyType.Done
+    custxtPassword.returnKeyType = UIReturnKeyType.Next
     custxtPassword.secureTextEntry = true
     custxtPassword.clearButtonMode = UITextFieldViewMode.Always
    scrollview.addSubview(custxtPassword)
@@ -105,7 +98,6 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
     var frameConPass:CGRect = CGRectMake(framePass.origin.x, framePass.origin.y+framePass.height+10, framePass.width, framePass.height)
     custxtConpass = CustomTextFieldBlurView(frame:frameConPass, imgName:"passicon.png")
     custxtConpass.attributedPlaceholder = NSAttributedString(string:"Confirm Password",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
-    // custxtEmail.returnKeyType = UIReturnType.Done
     custxtConpass.delegate = self;
     custxtConpass.returnKeyType = UIReturnKeyType.Done
     custxtConpass.secureTextEntry = true
@@ -115,7 +107,6 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
     var framedob:CGRect = CGRectMake(frameConPass.origin.x,frameConPass.origin.y+frameConPass.height+10, frameConPass.width, frameConPass.height)
     custxtDOB = CustomTextFieldBlurView(frame:framedob, imgName:"calander.png")
     custxtDOB.attributedPlaceholder = NSAttributedString(string:"DOB",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
-    // custxtEmail.returnKeyType = UIReturnType.Done
     custxtDOB.delegate = self;
     custxtDOB.returnKeyType = UIReturnKeyType.Done
     custxtDOB.clearButtonMode = UITextFieldViewMode.Always

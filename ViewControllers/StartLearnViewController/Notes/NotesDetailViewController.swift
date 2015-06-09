@@ -36,8 +36,7 @@ class NotesDetailViewController: BaseViewController {
   }
   
   func defaultUIDesign() {
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
+   
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -129,8 +128,6 @@ class NotesDetailViewController: BaseViewController {
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
     })
-
-    
     
   }
   

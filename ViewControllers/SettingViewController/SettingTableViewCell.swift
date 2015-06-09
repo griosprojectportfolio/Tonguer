@@ -57,8 +57,10 @@ class SettingTableViewCell:BaseTableViewCell {
       if (arry.count > 0) {
         var obj = arry.objectAtIndex(0) as DownloadedData
         var data = obj.download_data.doubleValue
-        var str: NSString = NSString(format: "%.2f",data)
-        lblFileSize.text = str+" KB"
+        var dataKB = data/1024
+        var dataMB = dataKB/1024
+        var str: NSString = NSString(format: "%.2f",dataMB)
+        lblFileSize.text = str+" MB"
         //lblFileSize.backgroundColor = UIColor.redColor()
       }
     }

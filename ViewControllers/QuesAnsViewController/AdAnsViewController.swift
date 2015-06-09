@@ -37,8 +37,6 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
   
   func defaultUIDesign(){
   
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -109,7 +107,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
   func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
     
     if(text == "\n"){
-      scrollview.contentOffset = CGPoint(x:0, y:0)
+      scrollview.contentOffset = CGPoint(x:0, y:-70)
       textView.resignFirstResponder()
       return false
     }
@@ -117,7 +115,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
   }
  
   func textViewDidBeginEditing(textView: UITextView) {
-   // scrollview.contentOffset = CGPoint(x:0, y:0)
+   scrollview.contentOffset = CGPoint(x:0, y:0)
   }
   
   

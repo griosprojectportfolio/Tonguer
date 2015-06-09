@@ -45,6 +45,9 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   var HorizVw3 : UIView!
   var HorizVw : UIView!
   var HorizVw2 : UIView!
+  
+  var alredayVW : UIView!
+  var tapGuesture:UITapGestureRecognizer!
 
   var btnFreeOpentryCls :UIButton!
   var leftswip: UISwipeGestureRecognizer!
@@ -120,8 +123,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func defaultUIDesign(){
     self.title = "Home"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-
+    
     self.navigationItem.setHidesBackButton(true, animated:false)
 
 
@@ -154,10 +156,12 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
     imgVwblur = UIImageView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64,self.view.frame.width,180))
     imgVwblur.image = UIImage(named: "User.png")
+    imgVwblur.userInteractionEnabled = true
     self.view.addSubview(imgVwblur)
 
     imgVwAlpha = UIImageView()
     imgVwAlpha.frame = imgVwblur.bounds
+    imgVwAlpha.userInteractionEnabled = true
     imgVwAlpha.backgroundColor = UIColor(white: 1.0, alpha:0.91)
     imgVwblur.addSubview(imgVwAlpha)
 
@@ -212,27 +216,33 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     lblScoretext.textColor = UIColor.grayColor()
     //lblScoretext.backgroundColor = UIColor.greenColor()
     imgVwAlpha.addSubview(lblScoretext)
+    
+    
 
-    lblAleday = UILabel(frame: CGRectMake(lblScore.frame.origin.x+lblScore.frame.size.width+20, lblScore.frame.origin.y,40,30))
-    lblAleday.text = "0"
+    lblAleday = UILabel(frame: CGRectMake(lblScore.frame.origin.x+lblScore.frame.size.width+20, lblScore.frame.origin.y,80,30))
+    lblAleday.text = "0      >"
     //lblAleday.textAlignment = NSTextAlignment.Center
     lblAleday.font = lblMoney.font.fontWithSize(20)
     lblAleday.textColor = UIColor.grayColor()
+    lblAleday.userInteractionEnabled = true
     //lblAleday.backgroundColor = UIColor.redColor()
     imgVwAlpha.addSubview(lblAleday)
 
-    lblAledaytext = UILabel(frame: CGRectMake(lblAleday.frame.origin.x, lblAleday.frame.origin.y+lblAleday.frame.size.height, 40,15))
-    lblAledaytext.text = "Aleday"
+    lblAledaytext = UILabel(frame: CGRectMake(lblAleday.frame.origin.x, lblAleday.frame.origin.y+lblAleday.frame.size.height,60,15))
+    lblAledaytext.text = "Already"
     //lblMoneytext.textAlignment = NSTextAlignment.Center
     lblAledaytext.font = lblMoney.font.fontWithSize(12)
     lblAledaytext.textColor = UIColor.grayColor()
     //lblAledaytext.backgroundColor = UIColor.greenColor()
     imgVwAlpha.addSubview(lblAledaytext)
-
-    //    btnsView = UIView(frame: CGRectMake(self.view.frame.origin.x,imgVwblur.frame.origin.y+imgVwblur.frame.size.height+5,self.view.frame.width,50))
-    //    //btnsView.backgroundColor = UIColor.greenColor()
-    //    self.view.addSubview(btnsView)
-
+    
+    tapGuesture = UITapGestureRecognizer(target:self, action:"alredayTapGuesture")
+    
+    alredayVW = UIView(frame: CGRectMake(lblAleday.frame.origin.x,lblAleday.frame.origin.y,60,50))
+    //alredayVW.backgroundColor = UIColor.lightGrayColor()
+    alredayVW.userInteractionEnabled = true
+    alredayVW.addGestureRecognizer(tapGuesture)
+    imgVwAlpha.addSubview(alredayVW)
 
     btn1 = UIButton(frame: CGRectMake(self.view.frame.origin.x,imgVwblur.frame.origin.y+imgVwblur.frame.size.height+5,self.view.frame.width/3,40))
     //btn1.backgroundColor = UIColor.grayColor()
@@ -300,6 +310,12 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     hometableVw.registerClass(HomeTableViewCell.self, forCellReuseIdentifier: "cell")
     hometableVw.registerClass(LearnTableViewCell.self, forCellReuseIdentifier: "LearnCell")
     hometableVw.registerClass(LearnedTableViewCell.self, forCellReuseIdentifier: "LearnedCell")
+  }
+  
+  
+  func alredayTapGuesture(){
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LearnStatusID") as LearnStatusViewController
+    self.navigationController?.pushViewController(vc, animated: true)
   }
 
   func btnNaviCheckInTapped(sender:AnyObject){
@@ -466,8 +482,8 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
 
   func btnAlertTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AlertID") as AlertViewController
-    self.navigationController?.pushViewController(vc, animated: true)
+//    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AlertID") as AlertViewController
+//    self.navigationController?.pushViewController(vc, animated: true)
   }
 
   //****** Update User Recodes ans Api call ************
@@ -679,6 +695,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     }
 
     print(arrClsLearn.count)
+    lblAleday.text = NSString(format: "%i",arrClsLearn.count)
 
   }
 
@@ -743,7 +760,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func userLearnClsApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
 
     self.api.userLearnCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -757,7 +774,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func userLearnedClsApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
 
     self.api.userLearnedCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -771,7 +788,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func userClassApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
 
     self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)

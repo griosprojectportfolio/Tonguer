@@ -57,7 +57,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     
     api = AppApi.sharedClient()
   
-    self.allDataFetchFromDataBase()
+    
     self.hostDataFetchFromDataBase()
     self.defaultUIDesign()
     //pickupTableView.reloadData()
@@ -76,8 +76,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   func defaultUIDesign(){
     self.title = "Pick Up Course Center"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
+       
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     backbtn = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -95,10 +94,6 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
 
     self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
     
-//    btnsVw = UIView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64,self.view.frame.width, 40))
-//    btnsVw.layer.borderWidth = 0.5
-//    btnsVw.layer.borderColor = UIColor.lightGrayColor().CGColor
-//    self.view.addSubview(btnsVw)
     
     btnHost = UIButton(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64,(self.view.frame.width/2)-2, 40))
     btnHost.setTitle("Host", forState: UIControlState.Normal)
@@ -344,6 +339,14 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
       //self.hometableVw.reloadData()
       self.allDataFetchFromDataBase()
+      
+      if(self.dataArr.count == 0){
+        if(self.btntag == 2){
+          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
+          alert.show()
+        }
+      }
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -362,6 +365,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
       //self.hometableVw.reloadData()
       self.hostDataFetchFromDataBase()
+      if(self.dataArr.count == 0){
+        if(self.btntag == 1){
+          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
+          alert.show()
+        }
+      }
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -390,6 +399,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       let sub_CatFilter : NSPredicate = NSPredicate(format:"cat_id CONTAINS %@",str_cat_id)!
       let subcatData : NSArray = PaySubCat.MR_findAllWithPredicate(sub_CatFilter)
       if (subcatData.count > 0){
+        var subCatArr: NSMutableArray! = NSMutableArray()
       for var index = 0; index < subcatData.count; ++index {
         let subCatObject : PaySubCat = subcatData.objectAtIndex(index) as PaySubCat
         var strID = subCatObject.sub_cat_id
@@ -397,7 +407,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
         var catDict2: NSMutableDictionary! = NSMutableDictionary()
         catDict2.setObject(strID, forKey: "id")
         catDict2.setObject(strName, forKey: "name")
-        var subCatArr: NSMutableArray! = NSMutableArray(object: catDict2)
+        subCatArr.addObject(catDict2)
         dictData.setObject(subCatArr, forKey: "array")
         print(subCatArr.count)
       }
@@ -489,8 +499,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     }
     print(arrHost.count)
     if(arrHost.count == 0){
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
-      alert.show()
+      
     }
   }
 

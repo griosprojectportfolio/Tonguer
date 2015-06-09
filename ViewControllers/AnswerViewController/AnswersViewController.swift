@@ -184,6 +184,8 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     var cell: UITableViewCell! = ansTableview.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
     var dict: NSDictionary! = arrComments.objectAtIndex(indexPath.row) as NSDictionary
      cell.textLabel.text = dict.valueForKey("comment") as NSString
+     cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
+     cell.textLabel.textColor = UIColor.lightGrayColor()
     return cell
   }
   
@@ -242,7 +244,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
       dict.setValue(clsObj.comt_id, forKey: "id")
       dict.setValue(clsObj.comment, forKey:"comment")
       arrComments.addObject(dict)
-      ansTableview.reloadData()
+     
     }
   }
 

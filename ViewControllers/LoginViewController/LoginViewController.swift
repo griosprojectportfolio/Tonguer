@@ -24,6 +24,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.defaultUIDesign()
 
     if (self.auth_token.count != 0) {
       var authToken:NSString = self.auth_token[0]
@@ -39,9 +40,13 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     super.viewWillAppear(animated)
 
     api = AppApi.sharedClient()
-    self.defaultUIDesign()
   }
 
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    custxtEmail.text = ""
+    custxtPassword.text = ""
+  }
 
   func defaultUIDesign(){
 
@@ -56,24 +61,35 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
     var frameEmail:CGRect = CGRectMake(self.view.frame.origin.x+20,self.imgVwLogo.frame.size.height+124,self.view.frame.size.width-40, 40)
 
+    if (custxtEmail != nil) {
+      custxtEmail = nil
+    }
     custxtEmail = CustomTextFieldBlurView(frame:frameEmail, imgName:"emailicon.png")
     custxtEmail.attributedPlaceholder = NSAttributedString(string:"Email",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
     //custxtEmail.returnKeyType = UIReturnType.Done
     custxtEmail.delegate = self;
+    custxtEmail.text = ""
     custxtEmail.returnKeyType = UIReturnKeyType.Done
     custxtEmail.clearButtonMode = UITextFieldViewMode.Always
     custxtEmail.keyboardType = .EmailAddress
     self.view.addSubview(custxtEmail)
 
+    
+    if (custxtPassword != nil) {
+      custxtPassword = nil
+    }
+    
     var framePass:CGRect = CGRectMake(frameEmail.origin.x, (frameEmail.origin.y + frameEmail.size.height)+20, frameEmail.size.width, frameEmail.size.height)
     custxtPassword = CustomTextFieldBlurView(frame:framePass, imgName:"passicon.png")
     custxtPassword.attributedPlaceholder = NSAttributedString(string:"Password",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
     // custxtEmail.returnKeyType = UIReturnType.Done
     custxtPassword.delegate = self;
+    custxtPassword.text = ""
     custxtPassword.secureTextEntry = true
     custxtPassword.returnKeyType = UIReturnKeyType.Done
     custxtPassword.clearButtonMode = UITextFieldViewMode.Always
     self.view.addSubview(custxtPassword)
+    
     btnSignup = UIButton()
     btnSignup.frame = CGRectMake(framePass.origin.x,framePass.origin.y+60,(framePass.size.width-5)/2,40)
     btnSignup.setTitle("SignUp", forState: UIControlState.Normal)
@@ -98,8 +114,23 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     self.view.addSubview(btnForgotpass)
 
   }
+  
+  func textFieldDidBeginEditing(textField: UITextField) {
+    
+    var frame:CGRect = self.view.frame
+    frame.origin.y = frame.origin.y - 40
+    self.view.frame = frame
+  }
 
+  func textFieldDidEndEditing(textField: UITextField) {
+    
+    var frame:CGRect = self.view.frame
+    frame.origin.y = frame.origin.y + 40
+    self.view.frame = frame
+  }
+  
   func textFieldShouldReturn(textField: UITextField) -> Bool {
+    
     textField.resignFirstResponder()
     return false
   }
@@ -122,13 +153,13 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+    
   }
 
   func loginApiCall(){
-    var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
+   var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
 
-    //var aParams: NSDictionary = ["user[email]" : "ajulwania@grepruby.com", "user[password]" : "arun123456"]
+    //var aParams: NSDictionary = ["user[email]" : "iphone@grepruby.com", "user[password]" : "gr123456"]
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
@@ -212,7 +243,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
     self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -227,7 +258,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
     self.api.userLearnCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      
 
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -243,7 +274,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
     self.api.userLearnedCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      
 
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -283,10 +314,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     var aParams: NSDictionary = ["auth_token":auth_token[0]]
     self.api.hostpayClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
-      //self.hometableVw.reloadData()
-
+      
       self.delay(4, closure: { () -> () in
 
         self.actiIndecatorVw.loadingIndicator.stopAnimating()
@@ -303,8 +331,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   
   func getAddvertiesmentApiCall(){
     
-    var aParams: NSDictionary = ["auth_token":auth_token[0]] //NSDictionary(objects: [auth_token], forKeys: ["auth_token"])
-    
+    var aParams: NSDictionary = ["auth_token":auth_token[0]]     
     self.api.addvertiesment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       let arry = responseObject as NSArray

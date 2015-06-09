@@ -22,6 +22,7 @@
 @dynamic cls_target;
 @dynamic cls_score;
 @dynamic cls_progress;
+@dynamic cls_subcategory_Id;
 
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
@@ -59,8 +60,8 @@
     if (![[aDictionary objectForKey:@"image"] isKindOfClass:[NSNull class]])
       obj.cls_img_url = [aDictionary valueForKey:@"image"] ;
     
-    if (![[aDictionary objectForKey:@"left_days"] isKindOfClass:[NSNull class]])
-      obj.cls_days = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"left_days"] integerValue]];
+    if (![[aDictionary objectForKey:@"valid_days"] isKindOfClass:[NSNull class]])
+      obj.cls_days = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"valid_days"] integerValue]];
     
     if (![[aDictionary objectForKey:@"price"] isKindOfClass:[NSNull class]])
       obj.cls_price = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"price"] integerValue]];
@@ -78,7 +79,7 @@
       obj.cls_suitable = [aDictionary valueForKey:@"suitable"] ;
     
     if (![[aDictionary objectForKey:@"target"] isKindOfClass:[NSNull class]])
-      obj.cls_suitable = [aDictionary valueForKey:@"target"] ;
+      obj.cls_target = [aDictionary valueForKey:@"target"] ;
 
     obj.cls_subcategory_Id = categoryId;
 

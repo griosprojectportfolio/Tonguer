@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DiscussViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class DiscussViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var btnAdd :UIButton!
@@ -17,38 +17,37 @@ class DiscussViewController: UIViewController,UITableViewDataSource,UITableViewD
   var arrDatalist: NSMutableArray!
   var arrUserTopic:NSArray! = NSArray()
   var arrAdminTopic:NSArray! = NSArray()
-   var arrTopics: NSMutableArray! = NSMutableArray()
-   var classID: NSInteger!
+  var arrTopics: NSMutableArray! = NSMutableArray()
+  var classID: NSInteger!
   var arrAdmin:NSMutableArray! = NSMutableArray()
   var arrUser:NSMutableArray! = NSMutableArray()
+  var actiIndecatorVw: ActivityIndicatorView!
+  var api: AppApi!
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    api = AppApi.sharedClient()
    self.defaultUIDesign()
    //self.getDataFromDatabase()
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    arrTopics.removeAllObjects()
-    arrUser.removeAllObjects()
-    arrAdmin.removeAllObjects()
+   
     self.dataFetchFromDatabaseDiscus()
-    tblDiscuss.reloadData()
+    getClsTopicApiCall()
+    
     
   }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+    
   }
   
   func defaultUIDesign(){
     
     self.title = "Discuss"
-    
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -154,11 +153,39 @@ class DiscussViewController: UIViewController,UITableViewDataSource,UITableViewD
       dict.setValue(arrSecton.objectAtIndex(index) as NSString, forKey: "name")
       dict.setValue(arrDatalist.objectAtIndex(index), forKey: "array")
       arrTopics.addObject(dict)
+      tblDiscuss.reloadData()
   }
   }
   
+  
+  //**************Discus topic Api Calling***********
+  
+  func getClsTopicApiCall(){
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(classID, forKey: "class_id")
+    
+    self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      self.actiIndecatorVw.loadingIndicator.stopAnimating()
+      self.actiIndecatorVw.removeFromSuperview()
+      self.dataFetchFromDatabaseDiscus()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+  }
+
   
   func dataFetchFromDatabaseDiscus(){
+    
+    arrTopics.removeAllObjects()
+    arrUser.removeAllObjects()
+    arrAdmin.removeAllObjects()
+    
     let arrFetchAdmin: NSArray = DisAdminTopic.MR_findAll()
     let arrFetchUser: NSArray = DisUserToic.MR_findAll()
     var count: NSInteger = arrFetchAdmin.count + arrFetchUser.count

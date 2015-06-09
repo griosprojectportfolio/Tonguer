@@ -29,7 +29,7 @@ class CreditTableViewCell: UITableViewCell {
     vwCell.layer.borderColor = UIColor.lightGrayColor().CGColor
     contentView.addSubview(vwCell)
     
-    var price:NSString = NSString(format:"%i",obj.cls_amount.doubleValue)
+    var price:NSString = NSString(format:"%i",obj.cls_amount.integerValue)
     
     var lblPrice: UILabel! = UILabel(frame: CGRectMake(vwCell.frame.width-60,0,50,40))
     lblPrice.text = "$"+price
@@ -45,7 +45,9 @@ class CreditTableViewCell: UITableViewCell {
     
     
     var lblDate: UILabel = UILabel(frame: CGRectMake(5,vwCell.frame.height-40,vwCell.frame.width-40,40))
-    lblDate.text = obj.date
+    var strDate = obj.date as NSString
+    var strUpdateDate = strDate.substringToIndex(strDate.length-5)
+    lblDate.text = strUpdateDate
     lblDate.font = lblClassName.font.fontWithSize(15)
     lblDate.textColor = UIColor.lightGrayColor()
     vwCell.addSubview(lblDate)

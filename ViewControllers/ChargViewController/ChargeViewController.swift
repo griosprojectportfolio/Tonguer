@@ -23,8 +23,8 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
     self.defaultUIDesign()
+    fetchDataFromdataBase()
   }
   
   override func didReceiveMemoryWarning() {
@@ -34,7 +34,6 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
   
   func defaultUIDesign(){
     self.title = "Charge"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -153,6 +152,19 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
   func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
     scrollview.contentOffset = CGPoint(x:0, y:40)
     return true
+  }
+  
+  //****** User Data fetch from database ************
+  
+  func fetchDataFromdataBase(){
+    let arrFetchedData : NSArray = User.MR_findAll()
+    let userObject : User = arrFetchedData.objectAtIndex(0) as User
+      if((userObject.money) != nil){
+      lblMoney.text = userObject.money.stringValue
+    }else{
+      lblMoney.text = "0.0"
+    }
+  
   }
 
   

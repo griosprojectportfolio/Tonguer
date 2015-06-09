@@ -66,7 +66,7 @@
       obj.cls_amount = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"price"] doubleValue]];
     
     if (![[aDictionary objectForKey:@"valid_days"] isKindOfClass:[NSNull class]])
-      obj.cls_amount = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"valid_days"] doubleValue]];
+      obj.cls_days = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"valid_days"] doubleValue]];
 
     
     return obj;

@@ -28,8 +28,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     dict = NSDictionary(objects: ["ClassName","000.0","date","defaultImg.png"], forKeys: ["class_name","priz","date","image"])
     
     self.title = "Classes"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
+        
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -44,12 +43,10 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     self.view.addSubview(actiIndecatorVw)
 
     var predicate:NSPredicate = NSPredicate (format: "cls_subcategory_Id CONTAINS %i", sub_cat_id)!;
-
     var arrFetchCat:NSArray;
     if (flgClass.isEqualToString("Free")){
       arrFetchCat  = FreeCls.MR_findAllWithPredicate(predicate);
       self.dataFetchFromDatabaseFreeCls(arrFetchCat)
-     
 
     } else if (flgClass.isEqualToString("Pay")) {
       arrFetchCat  = PayCls.MR_findAllWithPredicate(predicate);
@@ -129,7 +126,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   func freeClassListApiCall(){
     
     
-    var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],sub_cat_id], forKeys: ["auth_token","sub_category_id"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],sub_cat_id], forKeys: ["auth_token","sub_category_id"])
     
     self.api.freeClsList(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -197,11 +194,10 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
       }
       if((clsObject.cls_day) != nil){
-        var strDay: NSNumber = clsObject.cls_day
+        var strDay: NSString = NSString(format: "%i",clsObject.cls_day.integerValue)
         dictClass.setValue(strDay, forKey: "day")
       }else {
-        var strDay: NSNumber = 0
-        dictClass.setValue(strDay, forKey: "day")
+        dictClass.setValue("", forKey: "day")
       }
       if((clsObject.img_url) != nil){
         var strImgUrl: NSString = clsObject.img_url
@@ -261,20 +257,23 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
       }
       if((clsObject.cls_days) != nil){
-        var strDay: NSNumber = clsObject.cls_days
+        var strDay: NSString = NSString(format: "%i",clsObject.cls_days.integerValue)
         dictClass.setValue(strDay, forKey: "day")
       }else {
-        var strDay: NSNumber = 0
-        dictClass.setValue(strDay, forKey: "day")
+        dictClass.setValue("0", forKey: "day")
       }
       if((clsObject.cls_img_url) != nil){
         var strImgUrl: NSString = clsObject.cls_img_url
         dictClass.setValue(strImgUrl, forKey: "image")
-        dictClass.setValue("Free", forKey: "price")
       }else{
         var strImgUrl: NSString = "http://www.popular.com.my/images/no_image.gif"
         dictClass.setValue(strImgUrl, forKey: "image")
-        dictClass.setValue("", forKey: "price")
+      }
+      if((clsObject.cls_price) != nil){
+        var strPrice = NSString(format: "%i",clsObject.cls_price.integerValue)
+         dictClass.setValue(strPrice, forKey: "price")
+      }else{
+        dictClass.setValue("0", forKey: "price")
       }
 
       if ((clsObject.cls_arrange) != nil) {
