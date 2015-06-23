@@ -26,9 +26,7 @@ class LearnTableViewCell: UITableViewCell {
 
     
     var imgVw: UIImageView!
-    var lblTitle: UILabel!
-    var lblVaild: UILabel!
-    var lblDate: UILabel!
+    var lblTitle,lblVaild,lblDate: UILabel!
     var vWcell:UIView!
     
     

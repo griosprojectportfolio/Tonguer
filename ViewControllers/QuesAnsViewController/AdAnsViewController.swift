@@ -13,11 +13,11 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
   
   var scrollview: UIScrollView!
   var barBackBtn :UIBarButtonItem!
-  var txtViewQues :UITextView!
-  var txtViewAddAns :UITextView!
+  var txtViewQues,txtViewAddAns :UITextView!
+  
   var imgVw :UIImageView!
-  var vWLine :  UIView!
-  var vWQues :  UIView!
+  var vWLine,vWQues :  UIView!
+
   var btnSend :UIButton!
   var strQuestion: NSString!
   var dictQus: NSDictionary!

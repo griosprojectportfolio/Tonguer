@@ -40,7 +40,7 @@ class CreditTableViewCell: UITableViewCell {
     var lblClassName: UILabel! = UILabel(frame: CGRectMake(2, 0,lblPrice.frame.origin.x-5,40))
     lblClassName.text = obj.cls_name
     lblClassName.font = lblClassName.font.fontWithSize(15)
-    lblClassName.textColor = UIColor.lightGrayColor()
+    lblClassName.textColor = UIColor.darkGrayColor()
     vwCell.addSubview(lblClassName)
     
     
@@ -49,7 +49,7 @@ class CreditTableViewCell: UITableViewCell {
     var strUpdateDate = strDate.substringToIndex(strDate.length-5)
     lblDate.text = strUpdateDate
     lblDate.font = lblClassName.font.fontWithSize(15)
-    lblDate.textColor = UIColor.lightGrayColor()
+    lblDate.textColor = UIColor.darkGrayColor()
     vwCell.addSubview(lblDate)
   }
 

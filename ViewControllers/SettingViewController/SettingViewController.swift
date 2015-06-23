@@ -17,8 +17,8 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
   var lblname: UILabel!
   var btnLogout: UIButton!
   
-  var userDict: NSDictionary!
-  var dictParam: NSDictionary!
+  var userDict,dictParam: NSDictionary!
+
   var api: AppApi!
   var arrSettData: NSArray!
   

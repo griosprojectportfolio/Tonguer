@@ -26,9 +26,7 @@ class HomeTableViewCell: UITableViewCell {
       vwSub.removeFromSuperview()
     }
     var imgVw: UIImageView!
-    var lblTitle: UILabel!
-    var lblVaild: UILabel!
-    var lblDate: UILabel!
+    var lblTitle,lblDate,lblVaild: UILabel!
     var vWcell:UIView!
     
     imgVw = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80,80))

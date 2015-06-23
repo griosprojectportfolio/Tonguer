@@ -11,14 +11,11 @@ import UIKit
 class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UISearchBarDelegate {
   
   var barBackBtn :UIBarButtonItem!
-  var btnMyNotes: UIButton!
-  var btnNotes: UIButton!
-  var vWHori1: UIView!
-  var vWHori2: UIView!
+  var btnMyNotes,btnNotes: UIButton!
+  var vWHori1,vWHori2: UIView!
   var tblVwNotes: UITableView!
   var tapTag: NSInteger = 1
-  var btnSearch: UIButton!
-  var btnfilter: UIButton!
+  var btnSearch,btnfilter: UIButton!
   var api: AppApi!
   var pickerVW: UIPickerView!
   var vwPicker: UIView!
@@ -30,9 +27,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   var scopeSearch:NSString = "user"
   var arrySearchNotes:NSMutableArray = NSMutableArray()
 
-  var btnBarFilter: UIBarButtonItem!
-  var btnBarSearch: UIBarButtonItem!
-  var btnBarAdd: UIBarButtonItem!
+  var btnBarFilter,btnBarSearch,btnBarAdd: UIBarButtonItem!
   var search:UISearchBar!
 
   override func viewDidLoad() {

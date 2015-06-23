@@ -12,10 +12,7 @@ class NotesDetailViewController: BaseViewController {
   
   var isShow: NSInteger!
   var barBackBtn :UIBarButtonItem!
-  var btnDelete: UIButton!
-  var btnEdit: UIButton!
-  var btnLike: UIButton!
-  var btnAdd: UIButton!
+  var btnDelete,btnLike,btnEdit,btnAdd: UIButton!
   var dictNotes: NSDictionary!
   var scrollVW: UIScrollView!
   var lblContent:UILabel!

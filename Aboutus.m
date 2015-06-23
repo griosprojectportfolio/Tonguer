@@ -47,8 +47,8 @@
     if (![[aDictionary objectForKey:@"message"] isKindOfClass:[NSNull class]])
       obj.ab_content = [aDictionary valueForKey:@"message"] ;
     
-    if (![[aDictionary objectForKey:@"video_url"] isKindOfClass:[NSNull class]])
-      obj.ab_videourl = [aDictionary valueForKey:@"video_url"] ;
+    if (![[[aDictionary objectForKey:@"video"] objectForKey:@"url"] isKindOfClass:[NSNull class]])
+      obj.ab_videourl = [[aDictionary valueForKey:@"video"] objectForKey:@"url"] ;
 
     
     return obj;

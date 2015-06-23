@@ -954,6 +954,19 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   } failure:failureBlock];
 }
 
+#pragma mark - User Score Api call
+
+- (AFHTTPRequestOperation *)getUserScore:(NSDictionary *)aParams
+                            success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                            failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/get_score" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+     successBlock(task, responseObject);
+  } failure:failureBlock];
+}
+
+
 
 #pragma mark - Class Outline Us Api call
 

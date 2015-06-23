@@ -17,17 +17,10 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
   var btnsVw :UIView!
-  var btn1:UIButton!
-  var btn2:UIButton!
+  var btn1,btn2:UIButton!
   var api: AppApi!
-  
   var btnTag: NSInteger = 1
-  
-  var HorizVw : UIView!
-  var vertiVw :UIView!
-  var HorizVw2 : UIView!
-  var vertiVw2 :UIView!
-  var HorizVw3 : UIView!
+  var HorizVw,vertiVw,HorizVw2,vertiVw2,HorizVw3: UIView!
   var arryTrue: NSArray! = NSArray()
   var arryFalse: NSArray! = NSArray()
   

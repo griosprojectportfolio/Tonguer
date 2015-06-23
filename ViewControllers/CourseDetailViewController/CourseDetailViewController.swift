@@ -19,32 +19,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   
   var tableview: UITableView!
   var imgVw: UIImageView!
-  var btnCourseDetail: UIButton!
-  var btnCourselist: UIButton!
-  var btnCourseask: UIButton!
-  var btnCDetail: UIButton!
-  var horiVw: UIView!
-  var horiVw1: UIView!
-  var horiVw2: UIView!
-  
+  var btnCourseDetail,btnCourselist,btnCourseask,btnCDetail,btnServiceChat,btnHaveClass,btnCall,btnbuy: UIButton!
+  var horiVw,horiVw1,horiVw2: UIView!
   var api: AppApi!
-  
-  var btnHaveClass: UIButton!
-  var btnServiceChat: UIButton!
-  var btnCall: UIButton!
-  var btnbuy: UIButton!
   var dataArr: NSArray!
-  var dict1: NSDictionary!
-  var dict2: NSDictionary!
-  var dict3: NSDictionary!
-  var dict4: NSDictionary!
-  var dict5: NSDictionary!
+  var dict1,dict2,dict3,dict4,dict5,dictClist,clsDictDe: NSDictionary!
   
   var clistarr: NSArray!
   var arrOutline: NSArray! = NSArray()
-  var dictClist: NSDictionary!
-  
-  var clsDictDe: NSDictionary!
   
   var btnTag: NSInteger! = 1
   

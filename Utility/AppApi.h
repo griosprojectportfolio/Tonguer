@@ -197,6 +197,12 @@
                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
 
+- (AFHTTPRequestOperation *)getUserScore:(NSDictionary *)aParams
+                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
+
+
 -(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams;
 
 -(void)saveDownloadedData:(NSDictionary *)aParams;

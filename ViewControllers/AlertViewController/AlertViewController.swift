@@ -18,15 +18,14 @@ class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDe
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    arryNotification.addObject(self.appDelegate.arryNotification)
     self.defaultUIDesign()
-    
   }
   
   func defaultUIDesign(){
-    self.title = "Notification"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     
+    print(arryNotification.count)
+    
+    self.title = "Notification"
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -35,14 +34,7 @@ class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDe
     
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
-    
-//    var rightbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-//    rightbtn.setImage(UIImage(named: "deleteicon.png"), forState: UIControlState.Normal)
-//    //rightbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
-//    
-//    barRigthBtn = UIBarButtonItem(customView: rightbtn)
-//    self.navigationItem.setRightBarButtonItem(barRigthBtn, animated: true)
-    
+        
     tblNotification = UITableView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y,self.view.frame.size.width,self.view.frame.size.height))
     tblNotification.delegate = self
     tblNotification.dataSource = self
@@ -61,9 +53,11 @@ class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDe
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     
-    var strNotification = arryNotification.objectAtIndex(indexPath.row) as NSString
+    var dict = arryNotification.objectAtIndex(indexPath.row) as NSDictionary
+    var dictAlert = dict.valueForKey("aps") as NSDictionary
+    var strNotification = dictAlert.valueForKey("alert") as NSString
     
-     var rect: CGRect! = strNotification.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(18)], context: nil)
+    var rect: CGRect! = strNotification.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(18)], context: nil)
     return (rect.height+40)
   }
   

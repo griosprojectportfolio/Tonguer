@@ -17,26 +17,14 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   var sartlTableview :UITableView!
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
-  var imgVwAlpha :UIImageView!
-  var imgVwblur :UIImageView!
+  var imgVwAlpha,imgVwblur :UIImageView!
   var circVw :UIView!
-  var lblprogress :UILabel!
-  var lblProNum :UILabel!
-  var lblPerZ :UILabel!
-  var btnStartLearn :UIButton!
-  var btnFreeOpen :UIButton!
   
-  var lblClassScore :UILabel!
-  var lblClassScoreDigit :UILabel!
+  var btnStartLearn,btnFreeOpen:UIButton!
   var useImgUrl:NSString!
-  
-  var lblDayLeft :UILabel!
-  var lblDayLeftDigit :UILabel!
+  var lblDayLeft,lblDayLeftDigit,lblClassScore,lblClassScoreDigit,lblPerZ,lblProNum,lblprogress:UILabel!
   var dataArr: NSMutableArray = NSMutableArray()
-  var dict1:NSMutableDictionary!
-  var dict2:NSMutableDictionary!
-  var dict3:NSMutableDictionary!
-  var dict4:NSMutableDictionary!
+  var dict1,dict2,dict3,dict4:NSMutableDictionary!
   var arrAdmin:NSMutableArray! = NSMutableArray()
   var arrUser:NSMutableArray! = NSMutableArray()
   var actiIndecatorVw: ActivityIndicatorView!

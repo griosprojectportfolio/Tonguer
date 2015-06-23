@@ -10,10 +10,9 @@ import UIKit
 
 class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
 
-  var btnMyClass: UIButton!
-  var btnPickUp: UIButton!
-  var imgVw1: UIImageView!
-  var imgVwLogo: UIImageView!
+  var btnMyClass,btnPickUp: UIButton!
+  var imgVw1,imgVwLogo: UIImageView!
+  
   var sideNavigation: UINavigationController!
   
   

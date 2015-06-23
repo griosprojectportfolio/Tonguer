@@ -13,8 +13,7 @@ class AppFlowViewController: BaseViewController {
   
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
-  var imgVwVedio : UIImageView!
-  var imgVwAlpha : UIImageView!
+  var imgVwVedio,imgVwAlpha: UIImageView!
   var VwimgBG :UIView!
   var lblDescrip : UILabel!
   var btnplay : UIButton!

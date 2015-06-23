@@ -28,8 +28,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   var toolBar: UIToolbar!
   var arrclass:NSMutableArray! = NSMutableArray()
   var cls_id:NSInteger!
-  var lblSelectImg: UILabel!
-  var lblPublish: UILabel!
+  var lblSelectImg,lblPublish: UILabel!
   var dictNote: NSDictionary!
   var is_Call: NSString!
   var actiIndecatorVw: ActivityIndicatorView!

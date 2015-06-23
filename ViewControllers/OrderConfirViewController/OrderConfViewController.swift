@@ -12,16 +12,10 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var imgVw :UIImageView!
-  var lblDetail :UILabel!
-  var lblmoney :UILabel!
-  var lblVaild :UILabel!
-  var txtFieldMoney : CustomTextFieldBlurView!
-  var txtFieldContact : CustomTextFieldBlurView!
+  var lblDetail,lblmoney,lblVaild,lblNeed,lblNeedmoney:UILabel!
+  var txtFieldMoney,txtFieldContact : CustomTextFieldBlurView!
   var btnConfirmpay :UIButton!
   var clsDict: NSDictionary = NSDictionary()
-  
-  var lblNeed :UILabel!
-  var lblNeedmoney :UILabel!
   
   override func viewDidLoad() {
     super.viewDidLoad()

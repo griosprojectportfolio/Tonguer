@@ -21,32 +21,16 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
-  var btnMiddleNavi :UIButton!
-
-  var imgVwblur :UIImageView!
   var blur:UIBlurEffect!
   var effectView:UIVisualEffectView!
-  var imgVwAlpha :UIImageView!
-  var lblblurVwtextTitle :UILabel!
-  var imgVwProfilrPic :UIImageView!
-  var lblMoney :UILabel!
-  var lblScore :UILabel!
-  var lblAleday :UILabel!
-
-  var lblMoneytext :UILabel!
-  var lblScoretext :UILabel!
-  var lblAledaytext :UILabel!
-
+  var imgVwAlpha,imgVwProfilrPic,imgVwblur :UIImageView!
+  var lblMoney,lblScore,lblAleday,lblMoneytext,lblScoretext,lblAledaytext,lblblurVwtextTitle :UILabel!
+  
   var btnsView :UIView!
   var useImgUrl: NSString!
-  var btn1 :UIButton!
-  var btn2 :UIButton!
-  var btn3 :UIButton!
-  var HorizVw3 : UIView!
-  var HorizVw : UIView!
-  var HorizVw2 : UIView!
-  
-  var alredayVW : UIView!
+  var btn1,btn2,btn3,btnMiddleNavi:UIButton!
+  var HorizVw3,HorizVw,HorizVw2,alredayVW: UIView!
+ 
   var tapGuesture:UITapGestureRecognizer!
 
   var btnFreeOpentryCls :UIButton!
@@ -98,7 +82,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       self.userClassApiCall()
       self.userLearnClsApiCall()
       self.userLearnedClsApiCall()
-    
+      self.userScoreApiCall()
   }
 
   func rightswipeGestureRecognizer(){
@@ -796,6 +780,29 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
         println(error)
         
     })
-  }  
+  }
+  
+  func userScoreApiCall(){
+    
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
+    
+    self.api.getUserScore(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      var dict  = responseObject?.valueForKey("data") as NSDictionary
+      if((dict.valueForKey("score")) != nil){
+        self.lblScore.text = NSString(format: "%i",dict.valueForKey("score") as NSInteger)
+      }else{
+        self.lblScore.text = "0"
+      }
+      
+      
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+    })
+    
+  }
+
+  
 }
 

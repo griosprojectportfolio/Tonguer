@@ -150,10 +150,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     println("Recived: \(userInfo)")
     //Parsing userinfo:
     var temp : NSDictionary = userInfo
-    arryNotification.addObject(temp)
-    if let info = userInfo["aps"] as? Dictionary<String, AnyObject>
+    if let info = userInfo["aps"] as? NSDictionary
     {
-     
+      var mainstoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+      let nvc = mainstoryboard.instantiateViewControllerWithIdentifier("AlertID") as AlertViewController
+      nvc.arryNotification.addObject(temp)
+      self.window?.rootViewController?.presentViewController(nvc, animated: true, completion:nil)
     }
   }
 

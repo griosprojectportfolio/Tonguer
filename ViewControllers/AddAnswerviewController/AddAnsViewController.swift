@@ -14,12 +14,12 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   
   var scrollview: UIScrollView!
   var adAnstableView: UITableView!
-  var barBackBtn :UIBarButtonItem!
-  var txtViewQues :UITextView!
-  var txtViewAddAns :UITextView!
-  var imgVw :UIImageView!
-  var vWLine :  UIView!
-  var vWQues :  UIView!
+  var barBackBtn: UIBarButtonItem!
+  var txtViewQues,txtViewAddAns: UITextView!
+  
+  var imgVw: UIImageView!
+  var vWLine,vWQues:  UIView!
+  
   var btnSend :UIButton!
   var strdata: NSString!
   var dictTopic: NSDictionary!

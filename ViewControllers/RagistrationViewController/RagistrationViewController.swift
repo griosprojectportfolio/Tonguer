@@ -11,22 +11,12 @@ import UIKit
 class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   
   var scrollview : UIScrollView!
-  
   var imgVwLogo : UIImageView!
-  
   var btnSignUp : UIButton!
-  
   var barBackBtn :UIBarButtonItem!
   var actiIndecatorVw: ActivityIndicatorView!
-  
   var api: AppApi!
-  
-  var custxtEmail:CustomTextFieldBlurView!
-  var custxtPassword:CustomTextFieldBlurView!
-  var custxtFname:CustomTextFieldBlurView!
-  var custxtLname:CustomTextFieldBlurView!
-  var custxtConpass:CustomTextFieldBlurView!
-  var custxtDOB:CustomTextFieldBlurView!
+  var custxtEmail,custxtPassword,custxtFname,custxtLname,custxtConpass,custxtDOB:CustomTextFieldBlurView!
   let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
 
     override func viewDidLoad() {

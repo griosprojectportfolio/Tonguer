@@ -18,33 +18,19 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
-  
   var pickupTableView: UITableView!
-  var allTableView: UITableView!
-  
   var dataArr: NSMutableArray! = NSMutableArray()
-  
-   var arrHost: NSMutableArray! = NSMutableArray()
-  
+  var arrHost: NSMutableArray! = NSMutableArray()
   var btnsVw: UIView!
-  var dict: NSDictionary!
-  var allCatDict: NSDictionary!
-  var allSubCatDict: NSDictionary!
-  var btnHost: UIButton!
-  var btnAll: UIButton!
-  var arrclasses:NSArray!
-  var arrCat:NSArray!
-  var arrSubCat:NSArray!
-  var horiVw: UIView!
-  var horiVw1: UIView!
-
+  var dict,allCatDict,allSubCatDict: NSDictionary!
+  var btnHost,btnAll: UIButton!
+  var arrclasses,arrCat,arrSubCat:NSArray!
+  var horiVw,horiVw1: UIView!
   var listingShow:NSString = "Host"
   var arrySearch:NSMutableArray = NSMutableArray()
   var isSearch:Bool = false
-
   var search:UISearchBar!
   var backbtn:UIButton!
-  var btnforword:UIButton!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -54,10 +40,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     arrCat = NSArray(object: allCatDict)
     allSubCatDict = NSDictionary(objects: ["lblSubCategories"], forKeys: ["sub_id"])
     arrSubCat = NSArray(object: allSubCatDict)
-    
     api = AppApi.sharedClient()
-  
-    
     self.hostDataFetchFromDataBase()
     self.defaultUIDesign()
     //pickupTableView.reloadData()
@@ -75,6 +58,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   }
   
   func defaultUIDesign(){
+    
     self.title = "Pick Up Course Center"
        
     self.navigationItem.setHidesBackButton(true, animated:false)

@@ -12,15 +12,10 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   var imgVwLogo : UIImageView!
 
-  var btnLogin : UIButton!
-  var btnSignup : UIButton!
-
-  var btnForgotpass : UIButton!
-
+  var btnLogin,btnForgotpass,btnSignup: UIButton!
   var api: AppApi!
   var actiIndecatorVw: ActivityIndicatorView!
-  var custxtEmail:CustomTextFieldBlurView!
-  var custxtPassword:CustomTextFieldBlurView!
+  var custxtEmail,custxtPassword:CustomTextFieldBlurView!
   
   let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
 
@@ -181,9 +176,9 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   func loginApiCall(){
     
   let strDeviceToken = appDelegate.deviceTokenString
-   var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
+   //var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
 
-  // var aParams: NSDictionary = ["user[email]" : "ton@yopmai.com", "user[password]" : "gr123456"]
+    var aParams: NSDictionary = ["user[email]" : "ios@yopmail.com", "user[password]" : "gr123456"]
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)

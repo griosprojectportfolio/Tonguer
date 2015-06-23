@@ -24,9 +24,7 @@ class LearnedTableViewCell: UITableViewCell {
     }
 
     var imgVw: UIImageView!
-    var lblTitle: UILabel!
-    var lblVaild: UILabel!
-    var lblDate: UILabel!
+    var lblTitle,lblVaild,lblDate: UILabel!
     var vWcell:UIView!
     
     imgVw = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80,80))

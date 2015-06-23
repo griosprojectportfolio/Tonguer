@@ -51,8 +51,8 @@
     if (![[[aDictionary objectForKey:@"image"] valueForKey:@"url"] isKindOfClass:[NSNull class]])
       obj.video_img_url = [[aDictionary valueForKey:@"image"] valueForKey:@"url"] ;
     
-    if (![[aDictionary objectForKey:@"video"] isKindOfClass:[NSNull class]])
-      obj.video_url = [aDictionary valueForKey:@"video"] ;
+    if (![[[aDictionary objectForKey:@"video"] objectForKey:@"url"] isKindOfClass:[NSNull class]])
+      obj.video_url = [[aDictionary valueForKey:@"video"] objectForKey:@"url"] ;
     
     if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
       obj.video_name = [aDictionary valueForKey:@"name"] ;
