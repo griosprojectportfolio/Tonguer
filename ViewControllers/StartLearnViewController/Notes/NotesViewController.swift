@@ -27,6 +27,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   var arrclass: NSMutableArray! = NSMutableArray()
   var arrNotes: NSMutableArray! = NSMutableArray()
   var isSearch:Bool = false
+  var scopeSearch:NSString = "user"
   var arrySearchNotes:NSMutableArray = NSMutableArray()
 
   var btnBarFilter: UIBarButtonItem!
@@ -162,6 +163,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
   
   func btnSearchTapped(sender:AnyObject){
+    
     self.navigationItem.rightBarButtonItems = nil
     self.navigationItem.leftBarButtonItem = nil
     search.hidden = false
@@ -179,6 +181,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
   
   func btnMyNotesTapped(sender:AnyObject){
+    scopeSearch = "user"
     var btn = sender as UIButton
     tapTag = btn.tag
     vWHori1.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
@@ -187,8 +190,10 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
   
   func btnNotesTapped(sender:AnyObject){
+    scopeSearch = "all"
     var btn = sender as UIButton
     tapTag = btn.tag
+    isSearch = false
     vWHori2.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWHori1.backgroundColor = UIColor.lightGrayColor()
     tblVwNotes.reloadData()
@@ -239,6 +244,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       if (isSearch == false) {
        cell.defaultUIDesign(arrNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
       } else {
+        print(arrySearchNotes)
         cell.defaultUIDesign(arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
       }
       return cell
@@ -332,7 +338,6 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
         dict.setValue("", forKey:"cls_name")
       }
 
-      
       arrUserNotes.addObject(dict)
     }
     print(arrUserNotes.count)
@@ -410,11 +415,12 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
 
   func filterApiCall (classId:NSInteger) {
-    let param:NSDictionary = NSDictionary(objects: [auth_token[0],classId], forKeys: ["auth_token","cls_id"])
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],classId,scopeSearch], forKeys: ["auth_token","cls_id","scope"])
     self.api.callFilterNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
       
       let arryNot = responseObject as? NSArray
+      self.arrySearchNotes.removeAllObjects()
       for var index = 0; index < arryNot?.count; ++index{
         var dictData = arryNot?.objectAtIndex(index) as NSDictionary
         print(dictData)
@@ -457,7 +463,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }
       print(self.arrySearchNotes.count)
       if(arryNot?.count == 0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no notes found.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
       }else{
         self.isSearch = true
@@ -540,17 +546,18 @@ extension NotesViewController:UISearchBarDelegate {
   }
 
   func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-    let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text], forKeys: ["auth_token","notes_key_word"])
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text,scopeSearch], forKeys: ["auth_token","notes_key_word","scope"])
     self.api.callSearchNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
       searchBar.resignFirstResponder()
       let arryNotes = responseObject as? NSArray
+      self.arrySearchNotes.removeAllObjects()
+
       for var index = 0; index < arryNotes?.count; ++index{
        var dictData = arryNotes?.objectAtIndex(index) as NSDictionary
         print(dictData)
-        
         var dict: NSMutableDictionary! = NSMutableDictionary()
-        
+
         dict.setValue(dictData.valueForKey("id"), forKey: "id")
         dict.setValue(dictData.valueForKey("a_class")!.valueForKey("id")!, forKey: "cls_id")
         
@@ -589,7 +596,7 @@ extension NotesViewController:UISearchBarDelegate {
       }
       
       if(arryNotes?.count == 0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no notes found.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
         }else{
         self.isSearch = true

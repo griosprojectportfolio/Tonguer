@@ -122,11 +122,15 @@ class NotesDetailViewController: BaseViewController {
       println(responseObject)
       self.actiIndecatorVw.loadingIndicator.startAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note Added Successfully", delegate:nil, cancelButtonTitle: "OK")
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note added successfully", delegate:nil, cancelButtonTitle: "OK")
       alert.show()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        self.actiIndecatorVw.loadingIndicator.startAnimating()
+        self.actiIndecatorVw.removeFromSuperview()
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note is not added successfully", delegate:nil, cancelButtonTitle: "OK")
+        alert.show()
     })
     
   }
@@ -179,6 +183,9 @@ class NotesDetailViewController: BaseViewController {
     self.api.callNotesDeleteApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       self.deleteNotes()
       }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in
+       
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Note is not deleted.", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
     }
   }
 

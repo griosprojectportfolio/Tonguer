@@ -71,9 +71,9 @@
     
     if (![[[aDictionary objectForKey:@"image"]valueForKey:@"url"] isKindOfClass:[NSNull class]]){
       
-      NSString *strImgBaseUrl = @"https://tonguer.herokuapp.com";
-      NSString *imgUrl = [strImgBaseUrl stringByAppendingString:[[aDictionary valueForKey:@"image"]valueForKey:@"url"]];
-      obj.notes_img = imgUrl;
+//      NSString *strImgBaseUrl = @"https://tonguer.herokuapp.com";
+//      NSString *imgUrl = [strImgBaseUrl stringByAppendingString:[[aDictionary valueForKey:@"image"]valueForKey:@"url"]];
+      obj.notes_img = [[aDictionary valueForKey:@"image"]valueForKey:@"url"];
       
     }
     

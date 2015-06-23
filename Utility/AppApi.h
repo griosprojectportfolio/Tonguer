@@ -12,6 +12,7 @@
 #import "AFHTTPSessionManager.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import <UIProgressView+AFNetworking.h>
+#import "Netconection.h"
 
 @interface AppApi : AFHTTPRequestOperationManager
 
@@ -199,6 +200,8 @@
 -(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams;
 
 -(void)saveDownloadedData:(NSDictionary *)aParams;
+
+
 
 
 

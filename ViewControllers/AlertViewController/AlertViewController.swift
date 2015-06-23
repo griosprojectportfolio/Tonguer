@@ -8,14 +8,17 @@
 
 import UIKit
 
-class AlertViewController: UIViewController {
+class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
   var barBackBtn :UIBarButtonItem!
   var barRigthBtn :UIBarButtonItem!
+  var tblNotification: UITableView!
+  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  var arryNotification: NSMutableArray! = NSMutableArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    arryNotification.addObject(self.appDelegate.arryNotification)
     self.defaultUIDesign()
     
   }
@@ -33,14 +36,18 @@ class AlertViewController: UIViewController {
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
-    var rightbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-    rightbtn.setImage(UIImage(named: "deleteicon.png"), forState: UIControlState.Normal)
-    //rightbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
+//    var rightbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
+//    rightbtn.setImage(UIImage(named: "deleteicon.png"), forState: UIControlState.Normal)
+//    //rightbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
+//    
+//    barRigthBtn = UIBarButtonItem(customView: rightbtn)
+//    self.navigationItem.setRightBarButtonItem(barRigthBtn, animated: true)
     
-    barRigthBtn = UIBarButtonItem(customView: rightbtn)
-    self.navigationItem.setRightBarButtonItem(barRigthBtn, animated: true)
-
-
+    tblNotification = UITableView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y,self.view.frame.size.width,self.view.frame.size.height))
+    tblNotification.delegate = self
+    tblNotification.dataSource = self
+    tblNotification.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    self.view.addSubview(tblNotification)
   }
   
   override func didReceiveMemoryWarning() {
@@ -52,5 +59,42 @@ class AlertViewController: UIViewController {
     self.navigationController?.popViewControllerAnimated(true)
   }
   
+  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    
+    var strNotification = arryNotification.objectAtIndex(indexPath.row) as NSString
+    
+     var rect: CGRect! = strNotification.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(18)], context: nil)
+    return (rect.height+40)
+  }
+  
+  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return arryNotification.count
+  }
+  
+  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+    cell.selectionStyle = UITableViewCellSelectionStyle.None
+    if(arryNotification.count > 0){
+      var dict = arryNotification.objectAtIndex(indexPath.row) as NSDictionary
+      var dictAlert = dict.valueForKey("aps") as NSDictionary
+      cell.textLabel.text = dictAlert.valueForKey("alert") as NSString
+      cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
+      cell.textLabel.textColor = UIColor.darkGrayColor()
+      cell.textLabel.numberOfLines = 0
+    }else{
+      cell.textLabel.text = ""
+    }
+    //cell.backgroundColor = UIColor.redColor()
+    return cell
+  }
+  
+  func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    
+    if(editingStyle == UITableViewCellEditingStyle.Delete){
+      arryNotification.removeObjectAtIndex(indexPath.row)
+      tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation:UITableViewRowAnimation.Fade)
+    }
+    
+  }
     
 }

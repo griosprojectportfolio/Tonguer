@@ -123,7 +123,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     cusTxtFieldCls.inputView = pickerVW
     cusTxtFieldCls.inputAccessoryView = toolBar
     cusTxtFieldCls.delegate = self;
-    cusTxtFieldCls.clearButtonMode = UITextFieldViewMode.Always
+    //cusTxtFieldCls.clearButtonMode = UITextFieldViewMode.Always
     scrollVW.addSubview(cusTxtFieldCls)
     
    
@@ -212,6 +212,12 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   
   func btnSaveTapped(sender:AnyObject){
     
+    if(txtVwContent.text.isEmpty || cusTxtFieldCls.text.isEmpty){
+      
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "You missing a some entries please fill up.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
+      
+    }else{
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
     
@@ -219,6 +225,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
      notesUpdateApiCall()
     }else if(is_Call == "Save"){
       notesSaveApiCall()
+    }
     }
     
   }
@@ -230,7 +237,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     if((imagePick) != nil){
       var imageData = UIImagePNGRepresentation(imagePick)
         base64String = imageData.base64EncodedStringWithOptions(.allZeros) as NSString
-      println(base64String)
+      //println(base64String)
     }else{
       base64String = ""
     }

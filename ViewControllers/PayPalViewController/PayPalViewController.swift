@@ -143,9 +143,6 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
       self.resultText = completedPayment!.description
      
       self.showSuccess()
-      let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
-      self.navigationController!.popToViewController(viewControllers[1], animated: true);
-
       //self.navigationController?.popToViewController(, animated: <#Bool#>))(true)
     })
   }
@@ -221,9 +218,8 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     
     self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var alertVw:UIAlertView = UIAlertView(title: "Success!!", message: "Successfully add into Wallet.", delegate: nil, cancelButtonTitle: "OK")
-      alertVw.show()
-      
+      let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+      self.navigationController!.popToViewController(viewControllers[1], animated: true);
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
@@ -243,9 +239,8 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     
     self.api.paypalApi(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var alertVw:UIAlertView = UIAlertView(title: "Success!!", message: "Successfully add into Wallet.", delegate: nil, cancelButtonTitle: "OK")
-      alertVw.show()
-      
+      let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+      self.navigationController!.popToViewController(viewControllers[1], animated: true);
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

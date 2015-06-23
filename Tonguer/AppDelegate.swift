@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
   var objSideBar:SideBarView!
   var deviceTokenString:NSString!
+  var arryNotification:NSMutableArray = NSMutableArray()
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -37,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       var settings: UIUserNotificationSettings = UIUserNotificationSettings( forTypes: types, categories: nil )
       application.registerUserNotificationSettings(settings)
       application.registerForRemoteNotifications()
-
+      UIApplication.sharedApplication().applicationIconBadgeNumber = 0
       return true
     }
 
@@ -143,6 +144,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
       println( error.localizedDescription )
     }
+  
+  func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+    
+    println("Recived: \(userInfo)")
+    //Parsing userinfo:
+    var temp : NSDictionary = userInfo
+    arryNotification.addObject(temp)
+    if let info = userInfo["aps"] as? Dictionary<String, AnyObject>
+    {
+     
+    }
+  }
 
 }
 

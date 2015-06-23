@@ -42,31 +42,30 @@
 
 + (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
   
-  if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
+  if (![[aDictionary objectForKey:@"a_class_id"] isKindOfClass:[NSNull class]]){
     
-    UserLearnedClsList *obj = (UserLearnedClsList*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
+    UserLearnedClsList *obj = (UserLearnedClsList*)[self findOrCreateByID:[aDictionary objectForKey:@"a_class_id"] inContext:localContext];
     
     
-    obj.cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
+    obj.cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"a_class_id"] integerValue]];
     
-    if (![[aDictionary objectForKey:@"price"] isKindOfClass:[NSNull class]])
-      obj.cls_price = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"price"] doubleValue]];
+    if (![[[aDictionary objectForKey:@"a_class"] objectForKey:@"price"] isKindOfClass:[NSNull class]])
+      obj.cls_price = [NSNumber numberWithInteger:[[[aDictionary objectForKey:@"a_class"] objectForKey:@"price"] doubleValue]];
     
-    if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
-      obj.cls_name = [aDictionary valueForKey:@"name"] ;
+    if (![[[aDictionary objectForKey:@"a_class"] objectForKey:@"name"] isKindOfClass:[NSNull class]])
+      obj.cls_name = [[aDictionary valueForKey:@"a_class"] objectForKey:@"name"] ;
     
-    if (![[aDictionary objectForKey:@"image"] isKindOfClass:[NSNull class]])
-      obj.cls_img_url = [aDictionary objectForKey:@"image"];
+    if (![[[[aDictionary objectForKey:@"a_class"] valueForKey:@"image"] objectForKey:@"url"] isKindOfClass:[NSNull class]])
+      obj.cls_img_url = [[[aDictionary objectForKey:@"a_class"] valueForKey:@"image"] objectForKey:@"url"];
     
-    if (![[aDictionary objectForKey:@"progress"] isKindOfClass:[NSNull class]])
-      obj.cls_progress = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"progress"] doubleValue]];
+    if (![[aDictionary objectForKey:@"learn_status"] isKindOfClass:[NSNull class]])
+      obj.cls_progress = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"learn_status"] doubleValue]];
     
-    if (![[aDictionary objectForKey:@"score"] isKindOfClass:[NSNull class]])
-      obj.cls_score =[NSNumber numberWithInteger:[[aDictionary objectForKey:@"score"] integerValue]];
+    if (![[[aDictionary objectForKey:@"a_class"] objectForKey:@"score"] isKindOfClass:[NSNull class]])
+      obj.cls_score =[NSNumber numberWithInteger:[[[aDictionary objectForKey:@"a_class"] objectForKey:@"score"] integerValue]];
     
-    if (![[aDictionary objectForKey:@"valid_days"] isKindOfClass:[NSNull class]])
-      obj.cls_vaild_days =[NSNumber numberWithInteger:[[aDictionary objectForKey:@"valid_days"] integerValue]];
-    
+    if (![[[aDictionary objectForKey:@"a_class"] objectForKey:@"valid_days"] isKindOfClass:[NSNull class]])
+      obj.cls_vaild_days =[NSNumber numberWithInteger:[[[aDictionary objectForKey:@"a_class"] objectForKey:@"valid_days"] integerValue]];
 
     return obj;
   }

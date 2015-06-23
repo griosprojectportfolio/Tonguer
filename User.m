@@ -68,9 +68,9 @@
       obj.score =[NSNumber numberWithInteger:[[aDictionary objectForKey:@"score"] integerValue]];
     
     if (![[[aDictionary objectForKey:@"image"]valueForKey:@"url"] isKindOfClass:[NSNull class]]){
-      NSString *strImgBaseUrl = @"http://tonguer.herokuapp.com";
-      NSString *imgUrl = [strImgBaseUrl stringByAppendingString:[[aDictionary valueForKey:@"image"]valueForKey:@"url"]];
-      obj.pro_img =imgUrl;
+//      NSString *strImgBaseUrl = @"https://pro-tonguer.s3.amazonaws.com";
+//      NSString *imgUrl = [strImgBaseUrl stringByAppendingString:[[aDictionary valueForKey:@"image"]valueForKey:@"url"]];
+      obj.pro_img =[[aDictionary valueForKey:@"image"]valueForKey:@"url"];
     }
     
     

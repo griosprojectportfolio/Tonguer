@@ -38,14 +38,18 @@ class MyNotesTableViewCell:BaseTableViewCell  {
     
     imageVW = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80, 70))
     
-    let img = aParam.valueForKey("image") as? NSString
+    var object:AnyObject! = aParam["image"]
+    var strImgUrl: NSString!
+    if(object.isKindOfClass(NSDictionary)){
+      strImgUrl = aParam.valueForKey("image")?.valueForKey("url") as String
+    }else if(object.isKindOfClass(NSString)){
+      strImgUrl = aParam["image"] as String
+    }
     
-    if(img == nil){
-      // let url = NSURL(string:"http://www.popular.com.my/images/no_image.gif" as NSString)
-      // imageVW.sd_setImageWithURL(url)
+    if(strImgUrl == nil){
       imageVW.image = UIImage(named:"defaultImg")!
     }else{
-      let url = NSURL(string: aParam.objectForKey("image") as NSString)
+      let url = NSURL(string:strImgUrl)
       imageVW.sd_setImageWithURL(url)
     }
     self.contentView.addSubview(imageVW)
@@ -94,7 +98,9 @@ class MyNotesTableViewCell:BaseTableViewCell  {
       formatter.dateFormat = "yyyy-MM-dd"
       strDate = formatter.stringFromDate(date)
     }else if(dateObj.isKindOfClass(NSString)){
-      
+      var str = aParam.valueForKey("date") as NSString
+      var strDet = str.substringToIndex(str.length-14)
+      strDate = strDet//aParam.valueForKey("date") as NSString
     }
     
     lblDate = UILabel(frame: CGRectMake(imageVWDateAntime.frame.origin.x+20,vwCell.frame.height-23,vwCell.frame.width-imageVWDateAntime.frame.origin.x-30,20))

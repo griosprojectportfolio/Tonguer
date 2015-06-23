@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import CoreTelephony
+
 
 class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate {
   
@@ -402,8 +404,17 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   }
   
   func btnCallTapped(sender:UIButton){
-    let phoneString = NSString(format: "tel://%@", 8602699798/*self.meeting.phone*/) as String
-    UIApplication.sharedApplication().openURL(NSURL(string: phoneString)!)
+    if let cellularProvider  = CTTelephonyNetworkInfo().subscriberCellularProvider {
+      if let mnCode = cellularProvider.mobileNetworkCode {
+        println(mnCode)
+        
+        let phoneString = NSString(format: "tel://%@",123456/*self.meeting.phone*/) as String
+        UIApplication.sharedApplication().openURL(NSURL(string: phoneString)!)
+      }
+    } else {
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Please check your network.", delegate: self, cancelButtonTitle: "Ok")
+      alert.show()
+    }
   }
   
   //********* Class Outline Api Calling Method *********

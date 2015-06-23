@@ -42,8 +42,21 @@ class NotesTableViewCell:BaseTableViewCell {
     
     imageVW = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80, 70))
     
-    let url = NSURL(string: aParam.objectForKey("image") as NSString)
-    imageVW.sd_setImageWithURL(url)
+    var object:AnyObject! = aParam["image"]
+    var strImgUrl: NSString!
+    if(object.isKindOfClass(NSDictionary)){
+      strImgUrl = aParam.valueForKey("image")?.valueForKey("url") as String
+    }else if(object.isKindOfClass(NSString)){
+      strImgUrl = aParam["image"] as String
+    }
+    
+    if(strImgUrl == nil){
+      imageVW.image = UIImage(named:"defaultImg")!
+    }else{
+      let url = NSURL(string:strImgUrl)
+      imageVW.sd_setImageWithURL(url)
+    }
+
     self.contentView.addSubview(imageVW)
     print(Frame.width)
     vwCell = UIView(frame: CGRectMake(imageVW.frame.origin.x+imageVW.frame.width,imageVW.frame.origin.y,(Frame.width)-(imageVW.frame.width+40),imageVW.frame.height))
@@ -81,11 +94,20 @@ class NotesTableViewCell:BaseTableViewCell {
     lblClassNam.textColor = UIColor.grayColor()
     vwCell.addSubview(lblClassNam)
     
-    var date:NSDate! = aParam.valueForKey("date") as NSDate
-    var formatter: NSDateFormatter! = NSDateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-    formatter.dateFormat = "yyyy-MM-dd"
-    var strDate: NSString! = formatter.stringFromDate(date)
+    print(aParam)
+    var strDate: NSString = ""
+    var dateObj: NSObject = aParam.valueForKey("date") as NSObject
+    if(dateObj.isKindOfClass(NSDate)){
+      var date:NSDate = aParam.valueForKey("date") as NSDate
+      var formatter: NSDateFormatter! = NSDateFormatter()
+      formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+      formatter.dateFormat = "yyyy-MM-dd"
+      strDate = formatter.stringFromDate(date)
+    }else if(dateObj.isKindOfClass(NSString)){
+      var str = aParam.valueForKey("date") as NSString
+      var strDet = str.substringToIndex(str.length-14)
+      strDate = strDet//aParam.valueForKey("date") as NSString
+    }
     
     lblDate = UILabel(frame: CGRectMake(imageVWDateAntime.frame.origin.x+20,vwCell.frame.height-23,vwCell.frame.width-imageVWDateAntime.frame.origin.x-30,20))
     lblDate.text = strDate

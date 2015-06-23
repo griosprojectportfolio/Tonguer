@@ -71,7 +71,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.defaultUIDesign()
     var date: NSDate! = NSDate()
 
-    updateDeviceTokenCall()
+    //updateDeviceTokenCall()
     self.fetchDataFromDBforDefaultCls()
     self.fetchDataFromDBforLearnCls()
     self.fetchDataFromDBforLearnedCls()
@@ -95,11 +95,9 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   override func viewWillAppear(animated: Bool) {
     //self.userClassApiCall()
     self.fetchDataFromdataBase()
-
-    self.userClassApiCall()
-    self.userLearnClsApiCall()
-    self.userLearnedClsApiCall()
-    
+      self.userClassApiCall()
+      self.userLearnClsApiCall()
+      self.userLearnedClsApiCall()
     
   }
 
@@ -185,7 +183,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.view.addSubview(btnProfilePic)
     self.view.bringSubviewToFront(btnProfilePic)
 
-    lblMoney = UILabel(frame: CGRectMake(imgVwProfilrPic.frame.origin.x+imgVwProfilrPic.frame.size.width+10, imgVwProfilrPic.frame.origin.y+13,40,30))
+    lblMoney = UILabel(frame: CGRectMake(imgVwProfilrPic.frame.origin.x+imgVwProfilrPic.frame.size.width+10, imgVwProfilrPic.frame.origin.y+13,50,30))
     lblMoney.text = "0.0"
     //lblMoney.textAlignment = NSTextAlignment.Center
     lblMoney.font = lblMoney.font.fontWithSize(20)
@@ -193,7 +191,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     //lblMoney.backgroundColor = UIColor.redColor()
     imgVwAlpha.addSubview(lblMoney)
 
-    lblMoneytext = UILabel(frame: CGRectMake(lblMoney.frame.origin.x,lblMoney.frame.size.height+lblMoney.frame.origin.y,40,15))
+    lblMoneytext = UILabel(frame: CGRectMake(lblMoney.frame.origin.x,lblMoney.frame.size.height+lblMoney.frame.origin.y,50,15))
     lblMoneytext.text = "Money"
     //lblMoneytext.textAlignment = NSTextAlignment.Center
     lblMoneytext.font = lblMoney.font.fontWithSize(12)
@@ -482,8 +480,8 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
 
   func btnAlertTapped(){
-//    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AlertID") as AlertViewController
-//    self.navigationController?.pushViewController(vc, animated: true)
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AlertID") as AlertViewController
+    self.navigationController?.pushViewController(vc, animated: true)
   }
 
   //****** Update User Recodes ans Api call ************
@@ -510,25 +508,25 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
   
   
-  func updateDeviceTokenCall(){
-    
-    var aParam:NSMutableDictionary = NSMutableDictionary()
-    
-    let strDeviceToken = appDelegate.deviceTokenString
-    
-    aParam.setValue(self.auth_token[0], forKey: "auth_token")
-    aParam.setValue(strDeviceToken, forKey: "user[device_token]")
-    
-    self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-      println(responseObject)
-      
-      },
-      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-        println(error)
-        
-    })
-    
-  }
+//  func updateDeviceTokenCall(){
+//    
+//    var aParam:NSMutableDictionary = NSMutableDictionary()
+//    
+//    let strDeviceToken = appDelegate.deviceTokenString
+//    
+//    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+//    aParam.setValue(strDeviceToken, forKey: "user[device_token]")
+//    
+//    self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+//      println(responseObject)
+//      
+//      },
+//      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+//        println(error)
+//        
+//    })
+//    
+//  }
 
 
 

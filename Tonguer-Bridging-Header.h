@@ -45,6 +45,8 @@
 #import "Addvertiesment.h"
 #import "DownloadedData.h"
 #import "VideoDone.h"
+#import "Reachability.h"
+#import "Netconection.h"
 
 
 #endif

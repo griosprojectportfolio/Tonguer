@@ -15,6 +15,7 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   var txtVwContent: UITextView!
   var lblTxtVwPlace: UILabel!
   var classID: NSInteger!
+  var toolBar: UIToolbar!
   var api: AppApi!
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -57,9 +58,16 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     txtTitle.clearButtonMode = UITextFieldViewMode.Always
     self.view.addSubview(txtTitle)
     
-    txtVwContent = UITextView(frame: CGRectMake(txtTitle.frame.origin.x,txtTitle.frame.origin.y+txtTitle.frame.height+20, txtTitle.frame.width, 150))
+    var barBtnDone: UIBarButtonItem! = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: "barBtnDonTapped:")
+    var barSpace: UIBarButtonItem! = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target:self, action: nil)
+    
+    toolBar = UIToolbar(frame: CGRectMake(0, 0, self.view.frame.width,50))
+    toolBar.items = [barSpace,barBtnDone]
+    
+    txtVwContent = UITextView(frame: CGRectMake(txtTitle.frame.origin.x,txtTitle.frame.origin.y+txtTitle.frame.height+20, txtTitle.frame.width, 140))
     txtVwContent.delegate = self
     txtVwContent.layer.borderWidth = 1
+    txtVwContent.inputAccessoryView = toolBar
     txtVwContent.layer.borderColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0).CGColor
     self.view.addSubview(txtVwContent)
     
@@ -73,6 +81,10 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
 
   }
   
+  func barBtnDonTapped(sender:UIBarButtonItem){
+    txtVwContent.resignFirstResponder()
+  }
+  
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
   }
@@ -83,11 +95,7 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   }
   
   func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-    
-    if(text == "\n"){
-      textView.resignFirstResponder()
-      return false
-    }
+  
     return true
   }
   
@@ -97,8 +105,13 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   }
   
   func btnBarPostTapped(sender:AnyObject){
-    self.postCreateNewTopicApi()
     
+    if(txtTitle.text.isEmpty || txtVwContent.text.isEmpty){
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "You missing a some entries please fill up.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
+    }else{
+       self.postCreateNewTopicApi()
+    }
   }
 
   //************* Create New toic Api Call**************

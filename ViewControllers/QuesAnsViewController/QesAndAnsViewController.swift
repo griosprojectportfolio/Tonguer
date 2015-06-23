@@ -136,6 +136,10 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
 
       var arry:NSArray = responseObject as NSArray
       self.dataFetchFromDataBaseQuestion(arry)
+      if(arry.count == 0){
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No HomeWork Found", delegate:self, cancelButtonTitle:"OK")
+              alert.show()
+      }
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

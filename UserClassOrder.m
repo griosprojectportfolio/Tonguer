@@ -59,8 +59,8 @@
     if (![[aDictionary objectForKey:@"is_buy"] isKindOfClass:[NSNull class]])
       obj.is_buy = [aDictionary valueForKey:@"is_buy"];
     
-    if (![[aDictionary objectForKey:@"image"] isKindOfClass:[NSNull class]])
-      obj.cls_image = [aDictionary valueForKey:@"image"];
+    if (![[[aDictionary objectForKey:@"image"] valueForKey:@"url"] isKindOfClass:[NSNull class]])
+      obj.cls_image = [[aDictionary valueForKey:@"image"] valueForKey:@"url"];
     
     if (![[aDictionary objectForKey:@"price"] isKindOfClass:[NSNull class]])
       obj.cls_amount = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"price"] doubleValue]];

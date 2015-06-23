@@ -73,7 +73,7 @@ class ClassTableViewCell: BaseTableViewCell {
     
     lblDate = UILabel(frame: CGRectMake(10,vWcell.frame.height-30,lblPriz.frame.origin.x-10,30))
     var strValid: NSString! = "Valid to "
-    var strDays: NSString! = aParam.objectForKey("day") as NSString
+    var strDays: NSString! = aParam.objectForKey("valid_days") as NSString
     lblDate.text = strValid+strDays+" Days"
     lblDate.font = lblDate.font.fontWithSize(12)
     lblDate.textColor = UIColor.grayColor()

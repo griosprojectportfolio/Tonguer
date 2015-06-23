@@ -50,12 +50,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     if(isActive.isEqualToString("Paied")){
       let arryVideo:NSArray = UserClsVideo.MR_findAllWithPredicate(predicate)
       self.dataFetchUserClsDB(arryVideo)
-     // self.userClsVideoApiCalling()
       
     } else if (isActive.isEqualToString("Free")){
      let arryVideo:NSArray = FreeClssVideo.MR_findAllWithPredicate(predicate)
       self.dataFetchFreeClsDB(arryVideo)
-      //self.freeClsVideoApiCalling()
+  
     }
     
     let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -70,12 +69,13 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     super.viewWillAppear(animated)
     self.view.bringSubviewToFront(self.actiIndecatorVw)
     //self.defaultUIDesign()
-    if(isActive.isEqualToString("Paied")){
-      self.userClsVideoApiCalling()
-      startLearningApiCall()
-    }else if (isActive.isEqualToString("Free")){
-      self.freeClsVideoApiCalling()
-    }
+    
+      if(isActive.isEqualToString("Paied")){
+        self.userClsVideoApiCalling()
+        startLearningApiCall()
+      }else if (isActive.isEqualToString("Free")){
+        self.freeClsVideoApiCalling()
+      }
   }
 
   func defaultUIDesign(){
@@ -115,7 +115,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.btnComplete.tag = dict.valueForKey("id") as NSInteger
     cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    
     //cell.downloadProgress.setProgress(0, animated:false)
+    if (isActive.isEqualToString("Free")){
+       cell.btnComplete.hidden = true
+    }
     
     if(videoDone.count>0){
       for var index = 0; index < videoDone.count; ++index{
@@ -162,34 +166,36 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   
   
   func btnCompleteTapped(sender:AnyObject){
-     var btn = sender as UIButton
-    print(btn.tag)
-    btn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
-    videoDoneApiCall(btn.tag)
+    
+      var btn = sender as UIButton
+      print(btn.tag)
+      btn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
+      videoDoneApiCall(btn.tag)
   }
   
   
   func btnPalyTapped(sender:AnyObject){
-    var btn = sender as UIButton
-    btn.hidden = false
-    btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
-    var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as NSDictionary
-    var video_url: NSString! = dict.valueForKey("video_url") as NSString
-    var str: NSString = dict.valueForKey("name") as NSString
     
-    var fileName: NSString! = str.stringByAppendingString(".mp4")
-    let aPara : NSDictionary = ["fileName":fileName]
-    
-    var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName], forKeys: ["url","fileName"])
-    
-    self.api.downloadMediaData(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-      println(responseObject)
-      btn.hidden = true
-      },
-      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-        println(error)
-        
-    })
+      var btn = sender as UIButton
+      btn.hidden = false
+      btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
+      var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as NSDictionary
+      var video_url: NSString! = dict.valueForKey("video_url") as NSString
+      var str: NSString = dict.valueForKey("name") as NSString
+      
+      var fileName: NSString! = str.stringByAppendingString(".mp4")
+      let aPara : NSDictionary = ["fileName":fileName]
+      
+      var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName], forKeys: ["url","fileName"])
+      
+      self.api.downloadMediaData(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+        println(responseObject)
+        btn.hidden = true
+        },
+        failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+          println(error)
+          
+      })
     
   }
   
@@ -244,6 +250,10 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       let arryVideo:NSArray = responseObject as NSArray
       self.dataFetchFreeClsDB(arryVideo)
       self.tableview.reloadData()
+      if(arryVideo.count==0){
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no video found.", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+      }
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

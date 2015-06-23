@@ -28,6 +28,7 @@
 		0A6525211AD3EEF700762BBD /* MyOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6525201AD3EEF700762BBD /* MyOrderViewController.swift */; };
 		0A6525261AD407E700762BBD /* StartLearnViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6525251AD407E700762BBD /* StartLearnViewController.swift */; };
 		0A682CAF1B25708800C54204 /* LearnStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A682CAE1B25708800C54204 /* LearnStatusViewController.swift */; };
+		0A68CE181B37EEF500BAE8BA /* Netconection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A68CE171B37EEF500BAE8BA /* Netconection.m */; };
 		0A78B1301AE62D61002AC651 /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78B12F1AE62D61002AC651 /* SettingTableViewCell.swift */; };
 		0A7D82381AE0ED1B00A29692 /* CourseDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D82371AE0ED1B00A29692 /* CourseDetailTableViewCell.swift */; };
 		0A7D823A1AE1403000A29692 /* CourseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D82391AE1403000A29692 /* CourseListCell.swift */; };
@@ -49,6 +50,7 @@
 		0A9FC4B71AE527BC008BF6FC /* QesAndAnsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9FC4B61AE527BC008BF6FC /* QesAndAnsViewController.swift */; };
 		0AA0C7D71AEA78C4004A0215 /* FreeClsCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA0C7D61AEA78C4004A0215 /* FreeClsCat.m */; };
 		0AAA25F31B1F1E8900EB82FC /* DownloadedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAA25F21B1F1E8900EB82FC /* DownloadedData.m */; };
+		0AAB801F1B3536AD0087B721 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB801E1B3536AD0087B721 /* Reachability.m */; };
 		0AAFC7D01B12F8D200426D22 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAFC7AD1B12F8D200426D22 /* MKAnnotationView+WebCache.m */; };
 		0AAFC7D11B12F8D200426D22 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAFC7AF1B12F8D200426D22 /* NSData+ImageContentType.m */; };
 		0AAFC7D21B12F8D200426D22 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAFC7B11B12F8D200426D22 /* SDImageCache.m */; };
@@ -158,6 +160,8 @@
 		0A6525201AD3EEF700762BBD /* MyOrderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyOrderViewController.swift; sourceTree = "<group>"; };
 		0A6525251AD407E700762BBD /* StartLearnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartLearnViewController.swift; sourceTree = "<group>"; };
 		0A682CAE1B25708800C54204 /* LearnStatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LearnStatusViewController.swift; sourceTree = "<group>"; };
+		0A68CE161B37EEF500BAE8BA /* Netconection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Netconection.h; sourceTree = "<group>"; };
+		0A68CE171B37EEF500BAE8BA /* Netconection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Netconection.m; sourceTree = "<group>"; };
 		0A78B12F1AE62D61002AC651 /* SettingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		0A78B1391AE684FC002AC651 /* TonguerPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TonguerPrefixHeader.pch; sourceTree = "<group>"; };
 		0A7D82371AE0ED1B00A29692 /* CourseDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -203,6 +207,8 @@
 		0AA0C7D61AEA78C4004A0215 /* FreeClsCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeClsCat.m; sourceTree = SOURCE_ROOT; };
 		0AAA25F11B1F1E8900EB82FC /* DownloadedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadedData.h; sourceTree = SOURCE_ROOT; };
 		0AAA25F21B1F1E8900EB82FC /* DownloadedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadedData.m; sourceTree = SOURCE_ROOT; };
+		0AAB801D1B3536AD0087B721 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		0AAB801E1B3536AD0087B721 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		0AAFC7AC1B12F8D200426D22 /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		0AAFC7AD1B12F8D200426D22 /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		0AAFC7AE1B12F8D200426D22 /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -455,6 +461,15 @@
 				0A8C760F1ADD300900BADA01 /* AlertViewController.swift */,
 			);
 			path = AlertViewController;
+			sourceTree = "<group>";
+		};
+		0AAB801C1B3536AD0087B721 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB801D1B3536AD0087B721 /* Reachability.h */,
+				0AAB801E1B3536AD0087B721 /* Reachability.m */,
+			);
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 		0AAFC7AB1B12F8D200426D22 /* SDWebImage */ = {
@@ -800,6 +815,7 @@
 		174531E61ACD14F300E6DF2E /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				0AAB801C1B3536AD0087B721 /* Reachability */,
 				0A89DA961B1476A000CB0AE9 /* PayPalMobile */,
 				0AAFC7AB1B12F8D200426D22 /* SDWebImage */,
 				0A5F29C61AD80CA900BDA404 /* AppApi.h */,
@@ -807,6 +823,8 @@
 				0A8B5EAB1AF8A81A0015C536 /* ActivityIndicatorView.swift */,
 				0AE94C2D1AD25FD900CBEA76 /* CustomTextFieldBlurView.swift */,
 				174531F31ACD162F00E6DF2E /* CommonUtilities.swift */,
+				0A68CE161B37EEF500BAE8BA /* Netconection.h */,
+				0A68CE171B37EEF500BAE8BA /* Netconection.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -1005,6 +1023,7 @@
 			files = (
 				0AE94C221AD25F8C00CBEA76 /* CourseDetailViewController.swift in Sources */,
 				0A89DAAA1B14797500CB0AE9 /* PayPalViewController.swift in Sources */,
+				0A68CE181B37EEF500BAE8BA /* Netconection.m in Sources */,
 				0A9E2AF81AFE0846003E6531 /* DisUserToic.m in Sources */,
 				0AAFC7D71B12F8D200426D22 /* SDWebImageManager.m in Sources */,
 				0A7D82381AE0ED1B00A29692 /* CourseDetailTableViewCell.swift in Sources */,
@@ -1097,6 +1116,7 @@
 				0ADD8B2B1B0216D100B73AC8 /* QuestionComment.m in Sources */,
 				0AE94C391AD2C2B300CBEA76 /* OrderConfViewController.swift in Sources */,
 				0AB83D321AD557380092322F /* SideBarView.swift in Sources */,
+				0AAB801F1B3536AD0087B721 /* Reachability.m in Sources */,
 				0AAFC7D81B12F8D200426D22 /* SDWebImagePrefetcher.m in Sources */,
 				0AAFC7D51B12F8D200426D22 /* SDWebImageDownloader.m in Sources */,
 				0AC4ED9B1AEE12F300C8882F /* PayClsCat.m in Sources */,

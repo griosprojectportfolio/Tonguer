@@ -13,7 +13,7 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   var barBackBtn :UIBarButtonItem!
   var btnAdd :UIButton!
   var tblDiscuss: UITableView!
-  var arrSecton: NSArray! = NSArray(objects: "Admin","User")
+  var arrSecton: NSArray! = NSArray(objects: "Admin","Users")
   var arrDatalist: NSMutableArray!
   var arrUserTopic:NSArray! = NSArray()
   var arrAdminTopic:NSArray! = NSArray()
@@ -28,6 +28,8 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     super.viewDidLoad()
     api = AppApi.sharedClient()
    self.defaultUIDesign()
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
    //self.getDataFromDatabase()
   }
   
@@ -36,8 +38,6 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
    
     self.dataFetchFromDatabaseDiscus()
     getClsTopicApiCall()
-    
-    
   }
   
   override func didReceiveMemoryWarning() {
@@ -161,8 +161,6 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   //**************Discus topic Api Calling***********
   
   func getClsTopicApiCall(){
-    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
-    self.view.addSubview(actiIndecatorVw)
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
     aParams.setValue(classID, forKey: "class_id")
@@ -175,7 +173,8 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        
+        self.actiIndecatorVw.loadingIndicator.stopAnimating()
+        self.actiIndecatorVw.removeFromSuperview()
     })
   }
 
@@ -212,7 +211,4 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
      print(arrDatalist)
     self.getDataFromDatabase()
   }
-
-  
-  
 }

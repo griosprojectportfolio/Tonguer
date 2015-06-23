@@ -153,6 +153,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   
   func btnHostTapped(sender:AnyObject){
+  self.navigationItem.rightBarButtonItem = barforwordBtn
     isSearch = false
     listingShow = "Host"
     horiVw.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
@@ -165,6 +166,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   }
   
   func btnAllTapped(sender:AnyObject){
+    self.navigationItem.rightBarButtonItem = nil
      isSearch = false
     listingShow = "All"
     horiVw1.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
@@ -365,12 +367,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
       //self.hometableVw.reloadData()
       self.hostDataFetchFromDataBase()
-      if(self.dataArr.count == 0){
-        if(self.btntag == 1){
-          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
-          alert.show()
-        }
-      }
+//      if(self.dataArr.count == 0){
+//        if(self.btntag == 1){
+//          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
+//          alert.show()
+//        }
+//      }
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -509,6 +511,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     for var index = 0; index < arrFetchCat.count; ++index {
 
       let catObject : NSDictionary = arrFetchCat.objectAtIndex(index) as NSDictionary
+      print(catObject)
       var str_cat_id = catObject.objectForKey("") as NSInteger
       var strName = catObject.objectForKey("") as NSString
       var dictData: NSMutableDictionary! = NSMutableDictionary()

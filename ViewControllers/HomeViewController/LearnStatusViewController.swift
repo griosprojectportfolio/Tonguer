@@ -23,7 +23,14 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    userLearnClsApiCall()
+//    let netconnection =   CommonUtilities.checkNetconnection()
+//    if(netconnection){
+//
+//    }else {
+//      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Please check your netconnection.", delegate: self, cancelButtonTitle: "Ok")
+//      alert.show()
+//    }
+     userLearnClsApiCall()
   }
 
     override func didReceiveMemoryWarning() {
@@ -33,7 +40,7 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func defaultUIDesign(){
     
-    self.title = "Alreday"
+    self.title = "Already"
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -49,7 +56,7 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
     tblStatus.dataSource = self
     // hometableVw.backgroundColor = UIColor.grayColor()
     //tblStatus.separatorStyle = UITableViewCellSeparatorStyle.None
-    tblStatus.separatorColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
+    tblStatus.separatorColor = UIColor.lightGrayColor()//UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     self.view.addSubview(tblStatus)
     tblStatus.registerClass(UITableViewCell.self, forCellReuseIdentifier:"cell")
     
@@ -90,11 +97,9 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
     cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(statusData.count > 0){
-      var dict = statusData.objectAtIndex(indexPath.row) as NSDictionary
-      var arrStatus = dict.valueForKey("users_a_classes") as NSArray
-      var dictStatus = arrStatus.objectAtIndex(0) as NSDictionary
-      var strStatus = NSString(format: "%i",dictStatus.valueForKey("learn_status")!.integerValue!)
-      var strClsname = dict.valueForKey("name") as NSString
+      var dict:NSDictionary = statusData.objectAtIndex(indexPath.row) as NSDictionary
+      var strStatus = NSString(format: "%i",dict.valueForKey("learn_status")!.integerValue!)
+      var strClsname = dict.valueForKey("a_class")?.valueForKey("name") as NSString
       cell.textLabel.text = strClsname + " :: " + strStatus
     }
     return cell
@@ -104,7 +109,7 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
     
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
     
-    self.api.userLearnCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       let dictCls = responseObject?.valueForKey("data") as NSDictionary
       self.statusData = dictCls.valueForKey("classes") as NSArray

@@ -125,9 +125,12 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     self.navigationController?.pushViewController(vc, animated: true)
    case 3://Recommand to friend
     print(arrSettData.objectAtIndex(indexPath.row))
+  
+    let firstActivityItem = "Tounger"
+    let url:NSURL = NSURL(string: "http://roadfiresoftware.com/2014/02/how-to-add-facebook-and-twitter-sharing-to-an-ios-app/")!
+    let image: UIImage! = UIImage(named: "Splash")
     
-    let firstActivityItem = "my text"
-    let activityViewController : UIActivityViewController = UIActivityViewController(activityItems: [firstActivityItem], applicationActivities: nil)
+    let activityViewController : UIActivityViewController = UIActivityViewController(activityItems: [firstActivityItem,url,image], applicationActivities: nil)
     self.presentViewController(activityViewController, animated: true, completion:nil)
     
    case 4: //About us

@@ -57,8 +57,8 @@
     if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
       obj.cls_name = [aDictionary valueForKey:@"name"] ;
     
-    if (![[aDictionary objectForKey:@"image"] isKindOfClass:[NSNull class]])
-      obj.img_url = [aDictionary valueForKey:@"image"] ;
+    if (![[[aDictionary objectForKey:@"image"] valueForKey:@"url"] isKindOfClass:[NSNull class]])
+      obj.img_url = [[aDictionary valueForKey:@"image"] valueForKey:@"url"] ;
     
     if (![[aDictionary objectForKey:@"valid_days"] isKindOfClass:[NSNull class]])
       obj.cls_day = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"valid_days"] integerValue]];

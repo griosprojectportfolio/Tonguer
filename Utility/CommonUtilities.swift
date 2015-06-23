@@ -19,4 +19,14 @@ class CommonUtilities: NSObject {
         }
         return false
     }
+  
+  class func checkNetconnection() ->Bool {
+    
+  let reachability: Reachability = Reachability.reachabilityForInternetConnection()
+  let networkStatus = reachability.currentReachabilityStatus().value
+    
+  return networkStatus != 0
+  
+  }
+  
 }

@@ -26,7 +26,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   var arrCommentData: NSMutableArray! = NSMutableArray()
   var lblContent: UILabel!
   var actiIndecatorVw: ActivityIndicatorView!
-  
+  var height:CGFloat = 0
+  var toolBar:UIToolbar!
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
@@ -45,7 +46,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
 //    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
 //    self.view.addSubview(actiIndecatorVw)
 
-    self.getCommentTopicApiCall()
+    //self.getCommentTopicApiCall()
     self.defaultUIDesign()
   }
   
@@ -77,12 +78,19 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     vWLine.backgroundColor = UIColor.lightGrayColor()
    scrollview.addSubview(vWLine)
     
+    var barBtnDone: UIBarButtonItem! = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: "barBtnDonTapped")
+    var barSpace: UIBarButtonItem! = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target:self, action: nil)
+    
+    toolBar = UIToolbar(frame: CGRectMake(0, 0, self.view.frame.width,50))
+    toolBar.items = [barSpace,barBtnDone]
+    
     var strContent: NSString = dictTopic.valueForKey("content") as NSString
     
      var rect: CGRect! = strContent.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
     
-    scrollview.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+rect.height)
-    
+//    if(self.view.frame.height+rect.height > self.view.frame.height+100) {
+//      scrollview.contentSize = CGSize(width: self.view.frame.width, height: rect.height+300)
+//    }
     lblContent = UILabel(frame: CGRectMake(vWLine.frame.origin.x+5,vWLine.frame.origin.y-5,self.view.frame.width-50,rect.height))
     
     lblContent.text = strContent
@@ -94,25 +102,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     scrollview.addSubview(lblContent)
 
     
-
-    btnSend = UIButton(frame: CGRectMake(scrollview.frame.origin.x+20,scrollview.frame.size.height-60,scrollview.frame.width-40, 40))
-    self.btnSend.setTitle("Send", forState: UIControlState.Normal)
-    self.btnSend.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0);
-    self.btnSend.tintColor = UIColor.whiteColor()
-    btnSend.addTarget(self, action: "btnSendButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-    scrollview.addSubview(self.btnSend)
-    
-    txtViewAddAns = UITextView(frame: CGRectMake(btnSend.frame.origin.x,btnSend.frame.origin.y-btnSend.frame.size.height-70,btnSend.frame.width, 100))
-    txtViewAddAns.text = ""
-    txtViewAddAns.delegate = self
-    txtViewAddAns.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    txtViewAddAns.layer.borderWidth = 1
-    txtViewAddAns.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
-  
-    scrollview.addSubview(txtViewAddAns)
-    
-    adAnstableView = UITableView(frame: CGRectMake(scrollview.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.size.height+20,scrollview.frame.width ,txtViewAddAns.frame.origin.y - txtViewAddAns.frame.height-lblContent.frame.height+70))
-    // adAnstableView.backgroundColor = UIColor.yellowColor()
+    adAnstableView = UITableView(frame: CGRectMake(scrollview.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.size.height+20,scrollview.frame.width ,200))
+   // adAnstableView.backgroundColor = UIColor.yellowColor()
     adAnstableView.separatorStyle = UITableViewCellSeparatorStyle.None
     adAnstableView.rowHeight = 50
     adAnstableView.delegate = self
@@ -124,13 +115,53 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     
   }
   
+  func barBtnDonTapped () {
+    self.view.endEditing(true)
+    scrollview.contentOffset = CGPoint(x:0, y:-64)
+  }
+  
+  func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    return "Comments"
+  }
+  
+  func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    return 200
+  }
+  
+  func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    
+    var vWFooter: UIView! = UIView(frame: CGRectMake(0,0,self.view.frame.width,200))
+    //vWFooter.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
+    vWFooter.layer.borderWidth = 0.5
+    vWFooter.layer.borderColor = UIColor.lightGrayColor().CGColor
+    
+    txtViewAddAns = UITextView(frame: CGRectMake(5,5,self.view.frame.width-10,100))
+    //txtView.backgroundColor = UIColor.grayColor()
+    txtViewAddAns.text = ""
+    txtViewAddAns.inputAccessoryView = toolBar
+    txtViewAddAns.delegate = self
+    //txtView.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    txtViewAddAns.layer.borderWidth = 1
+    txtViewAddAns.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
+    vWFooter.addSubview(txtViewAddAns)
+    
+    var btnSends: UIButton! = UIButton(frame: CGRectMake(txtViewAddAns.frame.origin.x,txtViewAddAns.frame.origin.y+txtViewAddAns.frame.height+20,txtViewAddAns.frame.width, 40))
+     btnSends.setTitle("Send", forState: UIControlState.Normal)
+     btnSends.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0);
+     btnSends.tintColor = UIColor.whiteColor()
+     btnSends.addTarget(self, action: "btnSendButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+     vWFooter.addSubview(btnSends)
+    
+    return vWFooter
+  }
+  
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return arrCommentData.count
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
-    var cell:AdAnsTableViewCell! = nil
+      var cell:AdAnsTableViewCell! = nil
     
        cell = adAnstableView.dequeueReusableCellWithIdentifier("cell") as AdAnsTableViewCell
       // cell.backgroundColor = UIColor.redColor()
@@ -147,31 +178,52 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     var data: NSString! = dict.valueForKey("comment") as NSString
     
     var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
-    print("****\(rect.height+40)")
     return (rect.height+40)
   }
   
   
   func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-    
-    if(text == "\n"){
-      scrollview.contentOffset = CGPoint(x:0, y:0)
-      textView.resignFirstResponder()
-      return false
-    }
+   
     return true
   }
   
-//  func textViewDidChange(textView: UITextView) {
-//    
-//    if(textView.text == "\n"){
-//      scrollview.contentOffset = CGPoint(x:0, y:0)
-//    }
-//     textView.resignFirstResponder()
-//  }
+  
+  
+
+  
+  func dynamicHeightOfTbleView () {
+    
+    var tbleHeight:CGFloat = 0
+    for var iLoop = 0 ; iLoop<arrCommentData.count ; iLoop++ {
+   
+      var dict: NSDictionary! = arrCommentData.objectAtIndex(iLoop) as NSDictionary
+      
+      var data: NSString! = dict.valueForKey("comment") as NSString
+      
+      var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+   
+      print("****\(rect.height+40)")
+      height = height + rect.height+40;
+      tbleHeight = height
+      if (height > 500) {
+        tbleHeight = 500;
+        break
+      }
+    }
+    adAnstableView.frame = CGRectMake(scrollview.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.size.height+20,scrollview.frame.width ,tbleHeight+200)
+      scrollview.contentSize = CGSize(width: self.view.frame.width, height: adAnstableView.frame.size.height + adAnstableView.frame.origin.y+10)
+  }
   
   func textViewDidBeginEditing(textView: UITextView) {
-    scrollview.contentOffset = CGPoint(x:0, y:txtViewAddAns.frame.height+100)
+    if self.arrCommentData.count > 0 {
+    scrollview.contentOffset = CGPoint(x:0, y:self.scrollview.frame.origin.y+(lblContent.frame.height+20))
+    scrollview.contentSize = CGSize(width: self.view.frame.width, height:self.scrollview.contentSize.height + 250)
+
+    }
+  }
+  
+  func textViewDidEndEditing(textView: UITextView) {
+    scrollview.contentSize = CGSize(width: self.view.frame.width, height:self.scrollview.contentSize.height - 250)
   }
   
   func btnBackTapped(){
@@ -183,6 +235,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
    // self.dataFetchFromDatabaseDiscus()
     var dict: NSMutableDictionary! = NSMutableDictionary()
     dict.setValue(txtViewAddAns.text, forKey: "comment")
+    println(dict)
     dict.setValue("User", forKey: "by")
     arrCommentData.addObject(dict)
     adAnstableView.reloadData()
@@ -206,6 +259,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     self.api.discusTopicComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       self.dataFetchFromDatabaseDiscus(responseObject as NSArray)
       self.adAnstableView.reloadData()
+      self.dynamicHeightOfTbleView()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

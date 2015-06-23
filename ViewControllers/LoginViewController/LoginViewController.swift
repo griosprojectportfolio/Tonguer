@@ -21,6 +21,8 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   var actiIndecatorVw: ActivityIndicatorView!
   var custxtEmail:CustomTextFieldBlurView!
   var custxtPassword:CustomTextFieldBlurView!
+  
+  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -142,8 +144,22 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   func loginButtonTapped(){
 
+    if custxtEmail.text.isEmpty  {
+      self.stringisEmpty(custxtEmail.text, placeholder:"email")
+      return
+    }
+ 
+    if custxtPassword.text.isEmpty  {
+      self.stringisEmpty(custxtEmail.text, placeholder:"password")
+      return
+    }
     self.view.endEditing(true)
-    self.loginApiCall()
+    if(CommonUtilities.checkNetconnection()){
+      self.loginApiCall()
+    }else{
+      var alertVw:UIAlertView = UIAlertView(title:"Alert", message:"Please check your netconection.", delegate: nil, cancelButtonTitle:"OK")
+      alertVw.show()
+    }
   }
 
   func forgotpassButtonTapped(){
@@ -151,15 +167,23 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     self.navigationController?.pushViewController(vc, animated: true)
   }
 
+  func stringisEmpty(string:String, placeholder:String) {
+    var message:String = "Please enter " + placeholder + "."
+    var alertVw:UIAlertView = UIAlertView(title:"Alert", message:message, delegate: nil, cancelButtonTitle:"OK")
+    alertVw.show()
+  }
+  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     
   }
 
   func loginApiCall(){
-   var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
+    
+  let strDeviceToken = appDelegate.deviceTokenString
+   var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
 
-    //var aParams: NSDictionary = ["user[email]" : "iphone@grepruby.com", "user[password]" : "gr123456"]
+  // var aParams: NSDictionary = ["user[email]" : "ton@yopmai.com", "user[password]" : "gr123456"]
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
@@ -183,7 +207,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       self.abouUSApiCall()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-        println(error)
+        println(operation?.responseObject)
         self.actiIndecatorVw.removeFromSuperview()
         self.loginValidation()
     })
@@ -205,11 +229,11 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   func loginValidation(){
 
     if(custxtEmail.text == "" && custxtPassword.text == ""){
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Enter a Email and Password", delegate: self, cancelButtonTitle: "Ok")
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Enter a email and password.", delegate: self, cancelButtonTitle: "Ok")
       alert.show()
     }else{
 
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Some Error Chake Email and Password", delegate: self, cancelButtonTitle: "Ok")
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Some error check email and password.", delegate: self, cancelButtonTitle: "Ok")
       alert.show()
 
     }

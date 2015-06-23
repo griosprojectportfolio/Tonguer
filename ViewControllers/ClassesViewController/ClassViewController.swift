@@ -195,9 +195,9 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }
       if((clsObject.cls_day) != nil){
         var strDay: NSString = NSString(format: "%i",clsObject.cls_day.integerValue)
-        dictClass.setValue(strDay, forKey: "day")
+        dictClass.setValue(strDay, forKey: "valid_days")
       }else {
-        dictClass.setValue("", forKey: "day")
+        dictClass.setValue("", forKey: "valid_days")
       }
       if((clsObject.img_url) != nil){
         var strImgUrl: NSString = clsObject.img_url
@@ -258,9 +258,9 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }
       if((clsObject.cls_days) != nil){
         var strDay: NSString = NSString(format: "%i",clsObject.cls_days.integerValue)
-        dictClass.setValue(strDay, forKey: "day")
+        dictClass.setValue(strDay, forKey: "valid_days")
       }else {
-        dictClass.setValue("0", forKey: "day")
+        dictClass.setValue("0", forKey: "valid_days")
       }
       if((clsObject.cls_img_url) != nil){
         var strImgUrl: NSString = clsObject.cls_img_url

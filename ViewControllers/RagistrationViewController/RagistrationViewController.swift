@@ -17,6 +17,7 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   var btnSignUp : UIButton!
   
   var barBackBtn :UIBarButtonItem!
+  var actiIndecatorVw: ActivityIndicatorView!
   
   var api: AppApi!
   
@@ -26,6 +27,7 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   var custxtLname:CustomTextFieldBlurView!
   var custxtConpass:CustomTextFieldBlurView!
   var custxtDOB:CustomTextFieldBlurView!
+  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -142,53 +144,67 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   
   
   func btnSignupTapped(){
-    
-    self.signupApiCall()
+      self.signUpValidation()
   }
   
   func signupApiCall(){
+    let strDeviceToken = appDelegate.deviceTokenString
     var dict: NSMutableDictionary! = NSMutableDictionary()
     dict.setObject(custxtEmail.text, forKey:"email")
     dict.setObject(custxtFname.text, forKey:"first_name")
     dict.setObject(custxtLname.text, forKey:"last_name")
     dict.setObject(custxtPassword.text, forKey:"password")
     dict.setObject(custxtConpass.text, forKey:"password_confirmation")
+    dict.setObject(strDeviceToken, forKey:"device_token")
     
     var aParam: NSMutableDictionary! = NSMutableDictionary()
     aParam.setObject(dict, forKey: "user")
-
-//var aParams1: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
-    
     println(aParam)
+    
+    actiIndecatorVw = ActivityIndicatorView(frame:CGRectMake(0, 0,self.view.frame.width,self.view.frame.height))
+    self.view.addSubview(actiIndecatorVw)
     
     api.signUpUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var dict: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
       var auth_token: NSString! = dict.objectForKey("auth_token") as NSString
       self.auth_token = [auth_token]
+      self.actiIndecatorVw.removeFromSuperview()
       var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
       self.navigationController?.pushViewController(vc, animated: true)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        self.signUpValidation()
+        self.actiIndecatorVw.removeFromSuperview()
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Don't Left any feild.", delegate: self, cancelButtonTitle: "Ok")
+        alert.show()
     })
-
-    
   }
   
   
   func signUpValidation(){
+    
+    var strPawword = custxtPassword.text as NSString
+    var strPawwordCnf = custxtConpass.text as NSString
+    
     if(custxtEmail.text == "" && custxtPassword.text == "" && custxtFname.text == "" && custxtLname.text == "" && custxtConpass.text == ""){
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Don't Left any feild", delegate: self, cancelButtonTitle: "Ok")
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Don't Left any feild.", delegate: self, cancelButtonTitle: "Ok")
       alert.show()
-    }else{
-      
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Something Worng", delegate: self, cancelButtonTitle: "Ok")
-      alert.show()
-      
+      return
     }
-
+    
+    if(strPawword.length<8){
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Password is too short (minimum is 8 characters).", delegate: self, cancelButtonTitle: "Ok")
+      alert.show()
+      return
+    }
+    
+    if(strPawword != strPawwordCnf){
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Password does't match.", delegate: self, cancelButtonTitle: "Ok")
+      alert.show()
+      return
+    }
+    self.signupApiCall()
   }
   
   

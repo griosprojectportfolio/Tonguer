@@ -19,6 +19,7 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   var custxtEmail:CustomTextFieldBlurView!
   var scrollVW:UIScrollView!
   var lblComment: UILabel!
+  var toolBar:UIToolbar!
   var api: AppApi!
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -79,12 +80,20 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     custxtEmail.keyboardType = .EmailAddress
    // scrollVW.addSubview(custxtEmail)
     
+    var barBtnDone: UIBarButtonItem! = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: "barBtnDonTapped:")
+    var barSpace: UIBarButtonItem! = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target:self, action: nil)
+    
+    toolBar = UIToolbar(frame: CGRectMake(0, 0, self.view.frame.width,50))
+    toolBar.items = [barSpace,barBtnDone]
+
+    
     txtViewComment = UITextView(frame: CGRectMake(frameEmail.origin.x, framefname.origin.y+framefname.height+10, frameEmail.width, 200))
     txtViewComment.text = ""
     txtViewComment.delegate = self
     txtViewComment.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     txtViewComment.layer.borderWidth = 1
     txtViewComment.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
+    txtViewComment.inputAccessoryView = toolBar
     scrollVW.addSubview(txtViewComment)
     
     lblComment = UILabel(frame: CGRectMake((txtViewComment.frame.size.width-140)/2,(txtViewComment.frame.size.height-30)/2,150, 30))
@@ -99,22 +108,24 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     self.btnSend.tintColor = UIColor.whiteColor()
     btnSend.addTarget(self, action: "btnSendTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     scrollVW.addSubview(self.btnSend)
-
-    
+  }
+  
+  func barBtnDonTapped(sender:UIBarButtonItem){
+    scrollVW.contentOffset = CGPoint(x:0, y:-40)
+    txtViewComment.resignFirstResponder()
   }
   
   func btnSendTapped(sender:AnyObject){
-    userLearnClsApiCall()
+    if(custxtFname.text.isEmpty || custxtEmail.text.isEmpty){
+      var alert: UIAlertView = UIAlertView(title: "", message: "Please Don't left any field", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
+    }else{
+      userLearnClsApiCall()
+    }
   }
   
   func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-    
-    if(text == "\n"){
-      scrollVW.contentOffset = CGPoint(x:0, y:0)
-      textView.resignFirstResponder()
-      return false
-    }
-    return true
+  return true
   }
   
   func textViewDidBeginEditing(textView: UITextView) {
@@ -125,7 +136,7 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+       
     }
   
   func textViewDidChange(textView: UITextView) {

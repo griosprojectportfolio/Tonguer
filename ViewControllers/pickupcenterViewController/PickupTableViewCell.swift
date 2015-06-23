@@ -36,13 +36,19 @@ class PickupTableViewCell: BaseTableViewCell {
   
   func setContentProperties(aParam:NSDictionary){
     
-    let strImgUrl = aParam["image"] as? String
+    var object:AnyObject! = aParam["image"]
+    var strImgUrl: NSString!
+    if(object.isKindOfClass(NSDictionary)){
+       strImgUrl = aParam.valueForKey("image")?.valueForKey("url") as String
+    }else if(object.isKindOfClass(NSString)){
+      strImgUrl = aParam["image"] as String
+    }
     
-    if(strImgUrl == nil){
+    if(strImgUrl == ""){
       let url = NSURL(string:"http://www.popular.com.my/images/no_image.gif")
       imgVw.sd_setImageWithURL(url)
     }else{
-      let url = NSURL(string: aParam.objectForKey("image") as NSString)
+      let url = NSURL(string: strImgUrl)
       imgVw.sd_setImageWithURL(url)
     }
     //imgVw.backgroundColor = UIColor.redColor()
