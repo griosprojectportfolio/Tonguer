@@ -182,10 +182,12 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell: UITableViewCell! = ansTableview.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+    if(arrComments.count>0){
     var dict: NSDictionary! = arrComments.objectAtIndex(indexPath.row) as NSDictionary
      cell.textLabel.text = dict.valueForKey("comment") as NSString
      cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
      cell.textLabel.textColor = UIColor.lightGrayColor()
+    }
     return cell
   }
   
@@ -201,9 +203,10 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
 
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-
       let arryQuestion:NSArray = responseObject as NSArray
+      if(arryQuestion.count>0){
       self.dataFetchFromDataBaseComments(arryQuestion)
+      }
       self.defaultUIDesign()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -227,8 +230,10 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
       self.actiIndecatorVw.removeFromSuperview()
      
       let arryAnswer:NSArray = responseObject as NSArray
+      if(arryAnswer.count>0){
       self.dataFetchFromDataBaseUserAnswer(arryAnswer)
       self.getAdminCommentApiCall()
+      }
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

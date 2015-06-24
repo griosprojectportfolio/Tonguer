@@ -518,39 +518,41 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func fetchDataFromdataBase(){
     let arrFetchedData : NSArray = User.MR_findAll()
-    let userObject : User = arrFetchedData.objectAtIndex(0) as User
-    print(userObject.fname)
-    let fname = userObject.fname
-    let lname = userObject.lname
-    var name: NSString!
-    if((fname != nil && lname  != nil)){
-      name = fname+" "+lname
-    }else{
-      name = ""
-    }
-    lblblurVwtextTitle.text = name
-    
-    if((userObject.money) != nil){
-    lblMoney.text = userObject.money.stringValue
-    }else{
-       lblMoney.text = "0.0"
-    }
-    
-    if((userObject.score) != nil){
-      lblScore.text = userObject.score.stringValue
-    }else{
-      lblScore.text = "0.0"
-    }
-    
-    if((userObject.pro_img) != nil){
-      useImgUrl = userObject.pro_img as NSString
-      let url = NSURL(string: userObject.pro_img as NSString)
-      imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
-      imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
-    }else{
-      useImgUrl = "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png"
-      let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
-      imgVwProfilrPic.sd_setImageWithURL(url)
+    if(arrFetchedData.count>0){
+      let userObject : User = arrFetchedData.objectAtIndex(0) as User
+      print(userObject.fname)
+      let fname = userObject.fname
+      let lname = userObject.lname
+      var name: NSString!
+      if((fname != nil && lname  != nil)){
+        name = fname+" "+lname
+      }else{
+        name = ""
+      }
+      lblblurVwtextTitle.text = name
+      
+      if((userObject.money) != nil){
+        lblMoney.text = userObject.money.stringValue
+      }else{
+        lblMoney.text = "0.0"
+      }
+      
+      if((userObject.score) != nil){
+        lblScore.text = userObject.score.stringValue
+      }else{
+        lblScore.text = "0.0"
+      }
+      
+      if((userObject.pro_img) != nil){
+        useImgUrl = userObject.pro_img as NSString
+        let url = NSURL(string: userObject.pro_img as NSString)
+        imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+        imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+      }else{
+        useImgUrl = "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png"
+        let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
+        imgVwProfilrPic.sd_setImageWithURL(url)
+      }
     }
     
   }

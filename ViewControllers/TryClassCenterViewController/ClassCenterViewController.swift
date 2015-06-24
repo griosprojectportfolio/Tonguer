@@ -85,7 +85,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     lbldeatil.textColor = UIColor.blackColor()
     vWContent.addSubview(lbldeatil)
    
-    tableview = UITableView(frame: CGRectMake(vWContent.frame.origin.x,vWContent.frame.origin.y+vWContent.frame.height, vWContent.frame.width, self.view.frame.height/1.8))
+    tableview = UITableView(frame: CGRectMake(vWContent.frame.origin.x,vWContent.frame.origin.y+vWContent.frame.height, vWContent.frame.width, self.view.frame.height-vWContent.frame.origin.y-vWContent.frame.height))
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self

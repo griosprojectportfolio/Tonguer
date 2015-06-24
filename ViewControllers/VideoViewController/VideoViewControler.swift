@@ -109,13 +109,14 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as VideoTableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
+    if(arrClassVideo.count>0){
     cell.defaultUIDesign(arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
     var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
     cell.btnplay.tag = indexPath.row
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.btnComplete.tag = dict.valueForKey("id") as NSInteger
     cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-    
+   
     //cell.downloadProgress.setProgress(0, animated:false)
     if (isActive.isEqualToString("Free")){
        cell.btnComplete.hidden = true
@@ -141,6 +142,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     if (manager.fileExistsAtPath(path)){
       cell.btnplay.hidden = true
       self.calculateVideofileSize(path)
+    }
     }
     return cell
   }

@@ -81,11 +81,13 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as QuesAnsTableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
+    if(arrQuestion.count>0){
     cell.defaultUIDesign(arrQuestion.objectAtIndex(indexPath.row) as NSDictionary)
     cell.cellbtnAddAns.tag = indexPath.row
     cell.cellbtnAddAns.addTarget(self, action: "btnAddAnswerTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.cellbtnAns.tag = indexPath.row
     cell.cellbtnAns.addTarget(self, action: "btnAnswerTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    }
     
     return cell
     

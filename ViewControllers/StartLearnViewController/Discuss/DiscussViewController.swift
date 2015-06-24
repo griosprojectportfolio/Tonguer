@@ -102,12 +102,14 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell = tblDiscuss.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
+    if(arrTopics.count>0){
     var dict:NSDictionary! = NSDictionary()
          dict = arrTopics.objectAtIndex(indexPath.section) as NSDictionary
     var arrTopc: NSArray! = dict.valueForKey("array") as NSArray
     var aParams:NSDictionary! = arrTopc.objectAtIndex(indexPath.row) as NSDictionary
     cell.textLabel.text = aParams.valueForKey("name") as NSString
     cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+    }
     return cell
   }
   

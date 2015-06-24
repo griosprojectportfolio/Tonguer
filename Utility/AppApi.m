@@ -486,8 +486,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
   [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
    return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/advertiesment" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
-    NSDictionary *dict = [[NSDictionary alloc ]init];
-    dict = [responseObject valueForKey:@"advertiesment"];
+    NSDictionary *dict = [responseObject valueForKey:@"advertiesment"];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [Addvertiesment entityWithDictionaty:dict  inContext:localContext];
     }completion:^(BOOL success, NSError *error) {
@@ -781,9 +780,9 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
     NSString *url = [NSString stringWithFormat:@"%@",[aParams objectForKey:@"url"]];
 //   NSString *url = @"http://download.wavetlan.com/SVV/Media/HTTP/MP4/ConvertedFiles/MediaCoder/MediaCoder_test1_1m9s_AVC_VBR_256kbps_640x480_24fps_MPEG2Layer3_CBR_160kbps_Stereo_22050Hz.mp4";
-  NSString *strFileNameWithExt = [[NSString alloc] initWithFormat:@"%@",[aParams objectForKey:@"fileName"]];
-  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
+//  NSString *strFileNameWithExt = [[NSString alloc] initWithFormat:@"%@",[aParams objectForKey:@"fileName"]];
+//  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
  
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
   AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];

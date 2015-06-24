@@ -227,9 +227,13 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       cell.selectionStyle = UITableViewCellSelectionStyle.None
 
       if (isSearch == false) {
-        cell.defaultUIDesign(arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+        if(arrUserNotes.count>0){
+          cell.defaultUIDesign(arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+        }
       } else {
+        if(arrySearchNotes.count>0){
         cell.defaultUIDesign(arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+        }
       }
        return cell
     } else if(tapTag == 2){
@@ -237,10 +241,13 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
        cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
        cell.selectionStyle = UITableViewCellSelectionStyle.None
       if (isSearch == false) {
-       cell.defaultUIDesign(arrNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+        if(arrNotes.count > 0){
+          cell.defaultUIDesign(arrNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+        }
       } else {
-        print(arrySearchNotes)
+        if(arrySearchNotes.count>0){
         cell.defaultUIDesign(arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
+        }
       }
       return cell
     }

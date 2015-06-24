@@ -183,27 +183,26 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
   
   func fetchDataFromdataBase(){
     let arrFetchedData : NSArray = User.MR_findAll()
-    let userObject : User = arrFetchedData.objectAtIndex(0) as User
-    print(userObject.fname)
-    let fname = userObject.fname
-    let lname = userObject.lname
-    var name: NSString!
-    if((fname != nil && lname  != nil)){
-      name = fname+" "+lname
-      lblname.text = name
-    }else{
-      name = ""
+    if(arrFetchedData.count>0){
+      let userObject : User = arrFetchedData.objectAtIndex(0) as User
+      print(userObject.fname)
+      let fname = userObject.fname
+      let lname = userObject.lname
+      var name: NSString!
+      if((fname != nil && lname  != nil)){
+        name = fname+" "+lname
+        lblname.text = name
+      }else{
+        name = ""
+      }
+      
+      if((userObject.pro_img) != nil){
+        let url = NSURL(string: userObject.pro_img as NSString)
+        imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+      }else{
+        let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
+        imgVwPPic.sd_setImageWithURL(url)
+      }
     }
-    
-    if((userObject.pro_img) != nil){
-      let url = NSURL(string: userObject.pro_img as NSString)
-      imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
-    }else{
-      let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
-      imgVwPPic.sd_setImageWithURL(url)
-    }
-    
-    
-   
   }
 }

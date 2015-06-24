@@ -176,9 +176,9 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   func loginApiCall(){
     
   let strDeviceToken = appDelegate.deviceTokenString
-   //var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
-
-    var aParams: NSDictionary = ["user[email]" : "ios@yopmail.com", "user[password]" : "gr123456"]
+   
+    //var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
+     var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)

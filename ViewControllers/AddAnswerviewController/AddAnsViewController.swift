@@ -166,7 +166,9 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
        cell = adAnstableView.dequeueReusableCellWithIdentifier("cell") as AdAnsTableViewCell
       // cell.backgroundColor = UIColor.redColor()
        cell.selectionStyle = UITableViewCellSelectionStyle.None
+    if(arrCommentData.count>0){
        cell.defaultUIDesign(arrCommentData.objectAtIndex(indexPath.row) as NSDictionary)
+    }
     
     return cell
   }

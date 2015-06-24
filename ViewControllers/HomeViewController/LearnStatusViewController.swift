@@ -67,16 +67,20 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
   }
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    var vWheader: UIView! = UIView(frame: CGRectMake(5, 5, 100, 40))
+    var vWheader: UIView! = UIView(frame: CGRectMake(5, 5,self.view.frame.width, 40))
     vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWheader.layer.borderWidth = 0.5
     vWheader.layer.borderColor = UIColor.lightGrayColor().CGColor
     var lblTilte: UILabel! = UILabel(frame: CGRectMake(10, 2,200,20))
-    lblTilte.text = "Class Name" + " :: " + "Learn Status"
+    lblTilte.text = "Class Name"
     lblTilte.font = lblTilte.font.fontWithSize(16)
     lblTilte.textColor = UIColor.whiteColor()
     vWheader.addSubview(lblTilte)
-    
+    var lblStatus: UILabel! = UILabel(frame: CGRectMake(vWheader.frame.width-100, 2,100,20))
+    lblStatus.text = "Learn Status"
+    lblStatus.font = lblTilte.font.fontWithSize(16)
+    lblStatus.textColor = UIColor.whiteColor()
+    vWheader.addSubview(lblStatus)
     return vWheader
   }
   
@@ -92,15 +96,21 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var  cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-     cell.textLabel.text = ""
-    cell.textLabel.textColor = UIColor.lightGrayColor()
+    cell.textLabel.text = ""
+    cell.textLabel.textColor = UIColor.darkGrayColor()
     cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
     cell.selectionStyle = UITableViewCellSelectionStyle.None
+    var lblStatus: UILabel! = UILabel(frame: CGRectMake(self.view.frame.width-100,10,100,20))
+        lblStatus.textColor = UIColor.darkGrayColor()
+        lblStatus.font = lblStatus.font.fontWithSize(15)
+        lblStatus.textAlignment = NSTextAlignment.Center
+    cell.contentView.addSubview(lblStatus)
     if(statusData.count > 0){
       var dict:NSDictionary = statusData.objectAtIndex(indexPath.row) as NSDictionary
       var strStatus = NSString(format: "%i",dict.valueForKey("learn_status")!.integerValue!)
       var strClsname = dict.valueForKey("a_class")?.valueForKey("name") as NSString
-      cell.textLabel.text = strClsname + " :: " + strStatus
+      lblStatus.text = strStatus
+      cell.textLabel.text = strClsname
     }
     return cell
   }

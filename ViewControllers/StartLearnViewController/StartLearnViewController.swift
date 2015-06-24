@@ -86,7 +86,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     print(dictClasses)
     
     imgVwblur = UIImageView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64,self.view.frame.width,180))
-    let url = NSURL(string:useImgUrl)
+    let url = NSURL(string:dictClasses.valueForKey("image") as NSString)
     imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
     self.view.addSubview(imgVwblur)
     
@@ -218,14 +218,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     cell = sartlTableview.dequeueReusableCellWithIdentifier("cell") as StartLearnTableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-    
-    
-    if(cell == nil){
-      
-      var arr: NSArray! = NSBundle.mainBundle().loadNibNamed("cell", owner: self, options: nil)
-      
-    }
-    
+
     cell.defaultCellContent(dataArr.objectAtIndex(indexPath.row) as NSDictionary,index:indexPath.row)
     
     
@@ -282,42 +275,22 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     })
   }
   
-//  //**************Start Learning Api Calling***********
-//  
-//  func startLearningApiCall(){
-//    
-//    var aParams: NSMutableDictionary! = NSMutableDictionary()
-//    aParams.setValue(auth_token[0], forKey: "auth_token")
-//    aParams.setValue(dictClasses.valueForKey("id"), forKey: "cls_id")
-//    
-//    self.api.startLearning(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-//      println(responseObject)
-//      
-//      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
-//      vc.classID = self.dictClasses.objectForKey("id") as NSInteger
-//      vc.isActive = "Paied"
-//      self.navigationController?.pushViewController(vc, animated: true)
-//      
-//      },
-//      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-//        println(error)
-//        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry Somethig Worng", delegate:self, cancelButtonTitle:"OK")
-//        alert.show()
-//    })
-//  }
-
-
   //***************Fetching Data From Database Discus *********
   
   func dataFetchFromDatabaseDiscus(var dictData:NSDictionary){
     let arrFetchAdmin: NSArray = dictData.objectForKey("Admin") as NSArray
     let arrFetchUser: NSArray = dictData.objectForKey("User") as NSArray
-    var count: NSInteger = arrFetchAdmin.count + arrFetchUser.count
+    var count: NSInteger!
+    if(arrFetchUser.count>0 && arrFetchAdmin.count>0){
+    count = arrFetchAdmin.count + arrFetchUser.count
     print(count)
+    }else{
+      count = 0
+      print(count)
+    }
     dict3.setObject(count, forKey: "count")
     dataArr = [dict1,dict2,dict3,dict4]
     self.sartlTableview.reloadData()
-
     for var index = 0; index < arrFetchAdmin.count; ++index{
       let clsObject: DisAdminTopic = arrFetchAdmin.objectAtIndex(index) as DisAdminTopic
       var dict: NSMutableDictionary! = NSMutableDictionary()
