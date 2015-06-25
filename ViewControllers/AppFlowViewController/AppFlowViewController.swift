@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MediaPlayer
 
 class AppFlowViewController: BaseViewController {
   
@@ -20,7 +19,6 @@ class AppFlowViewController: BaseViewController {
   var video_url: NSString!
   var scrollVW: UIScrollView!
   var api: AppApi!
-  var moviePlayerController:MPMoviePlayerController!
   var strMessage: NSString = ""
   
   override func viewDidLoad() {
@@ -133,13 +131,18 @@ class AppFlowViewController: BaseViewController {
     let aParams : NSDictionary = ["fileName":fileName]
     let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams)
     
-    moviePlayerController = MPMoviePlayerController(contentURL:viedoUrl)
-    moviePlayerController.view.frame = imgVwAlpha.bounds
-    imgVwAlpha.addSubview(moviePlayerController.view)
-    moviePlayerController.fullscreen = false
-    moviePlayerController.controlStyle = MPMovieControlStyle.Embedded
-    moviePlayerController.shouldAutoplay = false
-    moviePlayerController.play()
+    let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+    let url: NSString = documentsPath.objectAtIndex(0) as NSString
+    let path: NSString! = url.stringByAppendingString("/Video.mp4")
+    
+    let manager = NSFileManager.defaultManager()
+    if (manager.fileExistsAtPath(path)){
+      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as VideoPalyViewController
+      vc.viedoUrl = viedoUrl
+      self.navigationController?.pushViewController(vc, animated: true)
+    }else {
+      
+    }
     
   }
   

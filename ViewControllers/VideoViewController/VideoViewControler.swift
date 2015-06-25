@@ -125,7 +125,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     if(videoDone.count>0){
       for var index = 0; index < videoDone.count; ++index{
         let obj = videoDone.objectAtIndex(index) as VideoDone
-        if((obj.video_id) != nil){
+        if(obj.video_id.integerValue == cell.btnComplete.tag){
           cell.btnComplete.userInteractionEnabled = false
           cell.btnComplete.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
         }
@@ -133,46 +133,63 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       
     }
    
-    var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
-    let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-       let url: NSString = documentsPath.objectAtIndex(0) as NSString
-       let path: NSString! = url+"/"+fileName
-    
-    let manager = NSFileManager.defaultManager()
-    if (manager.fileExistsAtPath(path)){
-      cell.btnplay.hidden = true
-      self.calculateVideofileSize(path)
-    }
+      var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
+      let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+      let url: NSString = documentsPath.objectAtIndex(0) as NSString
+      let path: NSString! = url+"/"+fileName
+      
+      let manager = NSFileManager.defaultManager()
+      if (manager.fileExistsAtPath(path)){
+        cell.btnplay.hidden = true
+        self.calculateVideofileSize(path)
+      }
     }
     return cell
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+   
     var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
-
-    var str: NSString = dict.valueForKey("name") as NSString
     
-    var fileName: NSString! = str.stringByAppendingString(".mp4")
-    let aParams : NSDictionary = ["fileName":fileName]
-    let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams)
-    
-    moviePlayerController = MPMoviePlayerController(contentURL:viedoUrl)
-    moviePlayerController.view.frame = CGRectMake(self.view.frame.origin.x+20, self.view.frame.origin.y+74, self.view.frame.width-40,200)
-    self.view.addSubview(moviePlayerController.view)
-    moviePlayerController.fullscreen = false
-    moviePlayerController.controlStyle = MPMovieControlStyle.Embedded
-    moviePlayerController.shouldAutoplay = false
-    moviePlayerController.play()
+    var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
+    let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+    let url: NSString = documentsPath.objectAtIndex(0) as NSString
+    let path: NSString! = url+"/"+fileName
+    let manager = NSFileManager.defaultManager()
+    if (manager.fileExistsAtPath(path)){
+      
+      var str: NSString = dict.valueForKey("name") as NSString
+      
+      var fileName: NSString! = str.stringByAppendingString(".mp4")
+      let aParams : NSDictionary = ["fileName":fileName]
+      let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams)
+      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as VideoPalyViewController
+       vc.viedoUrl = viedoUrl
+       self.navigationController?.pushViewController(vc, animated: true)
+    }
     
   }
   
   
   func btnCompleteTapped(sender:AnyObject){
+    var btn = sender as UIButton
+    print(btn.tag)
+    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,btn.tag], forKeys: ["auth_token","cls_id","video_id"])
     
-      var btn = sender as UIButton
-      print(btn.tag)
-      btn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
-      videoDoneApiCall(btn.tag)
+    self.api.videoComplete(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+         btn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
+
+      if(responseObject?.count>0){
+        self.videoDone = responseObject as NSArray
+        self.tableview.reloadData()
+      }
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        var alert: UIAlertView = UIAlertView(title: "Alert", message:operation?.responseString, delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+    })
   }
   
   
@@ -193,9 +210,13 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       self.api.downloadMediaData(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
         println(responseObject)
         btn.hidden = true
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloaded successfully..", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
         },
         failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
           println(error)
+          var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloading failed.", delegate:self, cancelButtonTitle:"OK")
+          alert.show()
           
       })
     
@@ -307,24 +328,6 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     })
   }
 
-  
-  func videoDoneApiCall(video_id:NSInteger){
-    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,video_id], forKeys: ["auth_token","cls_id","video_id"])
-    
-    self.api.videoComplete(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-      println(responseObject)
-      if(responseObject?.count>0){
-      self.videoDone = responseObject as NSArray
-      self.tableview.reloadData()
-        
-      }
-      },
-      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-        println(error)
-        
-    })
-    
-  }
   
   func dataFetchVedioDone(){
     var predicate:NSPredicate = NSPredicate (format: "video_cls_id CONTAINS %i", classID)!

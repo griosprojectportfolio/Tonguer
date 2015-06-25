@@ -95,7 +95,7 @@ class NotesDetailViewController: BaseViewController {
     //lblContent.backgroundColor = UIColor.greenColor()
     scrollVW.addSubview(lblContent)
     
-    imgVW = UIImageView(frame: CGRectMake(lblContent.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.height+30,lblContent.frame.width,150))
+    imgVW = UIImageView(frame: CGRectMake(lblContent.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.height+30,lblContent.frame.width,400))
     let url = NSURL(string: dictNotes.objectForKey("image") as NSString)
     imgVW.sd_setImageWithURL(url)
     //imgVW.backgroundColor = UIColor.redColor()

@@ -808,12 +808,15 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     successBlock(operation, responseObject);
   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     NSLog(@"Error: %@", error);
+    
  
   }];
   
   [operation start];
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
       double progress = (double)totalBytesRead / totalBytesExpectedToRead;
+     [self.progressVW setProgress:progress animated:true];
+      
       NSLog(@"Progress: %.2f", progress);
       
     }];

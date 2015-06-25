@@ -17,7 +17,7 @@
 @interface AppApi : AFHTTPRequestOperationManager
 
 
-
+@property UIProgressView *progressVW;
 + (AppApi *)sharedClient ;
 + (AppApi *)sharedAuthorizedClient;
 - (id)initWithBaseURL:(NSURL *)url;

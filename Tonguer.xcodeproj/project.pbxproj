@@ -49,6 +49,7 @@
 		0A9FC4B31AE50213008BF6FC /* VideoViewControler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9FC4B21AE50213008BF6FC /* VideoViewControler.swift */; };
 		0A9FC4B71AE527BC008BF6FC /* QesAndAnsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9FC4B61AE527BC008BF6FC /* QesAndAnsViewController.swift */; };
 		0AA0C7D71AEA78C4004A0215 /* FreeClsCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA0C7D61AEA78C4004A0215 /* FreeClsCat.m */; };
+		0AA27B851B3BFF44001D83DB /* VideoPalyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA27B841B3BFF44001D83DB /* VideoPalyViewController.swift */; };
 		0AAA25F31B1F1E8900EB82FC /* DownloadedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAA25F21B1F1E8900EB82FC /* DownloadedData.m */; };
 		0AAB801F1B3536AD0087B721 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB801E1B3536AD0087B721 /* Reachability.m */; };
 		0AAFC7D01B12F8D200426D22 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAFC7AD1B12F8D200426D22 /* MKAnnotationView+WebCache.m */; };
@@ -205,6 +206,7 @@
 		0A9FC4B61AE527BC008BF6FC /* QesAndAnsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QesAndAnsViewController.swift; sourceTree = "<group>"; };
 		0AA0C7D51AEA78C4004A0215 /* FreeClsCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeClsCat.h; sourceTree = SOURCE_ROOT; };
 		0AA0C7D61AEA78C4004A0215 /* FreeClsCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeClsCat.m; sourceTree = SOURCE_ROOT; };
+		0AA27B841B3BFF44001D83DB /* VideoPalyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPalyViewController.swift; sourceTree = "<group>"; };
 		0AAA25F11B1F1E8900EB82FC /* DownloadedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadedData.h; sourceTree = SOURCE_ROOT; };
 		0AAA25F21B1F1E8900EB82FC /* DownloadedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadedData.m; sourceTree = SOURCE_ROOT; };
 		0AAB801D1B3536AD0087B721 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -644,6 +646,7 @@
 			children = (
 				0AE94C1C1AD25F8C00CBEA76 /* VideoTableViewCell.swift */,
 				0A9FC4B21AE50213008BF6FC /* VideoViewControler.swift */,
+				0AA27B841B3BFF44001D83DB /* VideoPalyViewController.swift */,
 			);
 			path = VideoViewController;
 			sourceTree = "<group>";
@@ -1039,6 +1042,7 @@
 				0A08B3491AF0B5A30076226C /* MyNotesTableViewCell.swift in Sources */,
 				0ABA48901B15B4FE00EDE728 /* ClsOutLineModule.m in Sources */,
 				0A43E8FD1AF204A4009D3787 /* AddTopicViewController.swift in Sources */,
+				0AA27B851B3BFF44001D83DB /* VideoPalyViewController.swift in Sources */,
 				0AAFC7F11B13413C00426D22 /* UserLearnClsList.m in Sources */,
 				0A890C061ADFD8A4000B2176 /* StartLearnTableViewCell.swift in Sources */,
 				0ABA48951B15E49100EDE728 /* CourseOrderTableViewCell.swift in Sources */,

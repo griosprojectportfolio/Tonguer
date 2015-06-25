@@ -12,7 +12,7 @@ import CoreData
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+  var window: UIWindow?
   var objSideBar:SideBarView!
   var deviceTokenString:NSString!
   var arryNotification:NSMutableArray = NSMutableArray()

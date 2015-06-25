@@ -130,10 +130,10 @@
             </objects>
             <point key="canvasLocation" x="1218" y="766"/>
         </scene>
-        <!--Search View Controller-->
+        <!--Video Paly View Controller-->
         <scene sceneID="Hrj-xT-3EQ">
             <objects>
-                <viewController storyboardIdentifier="SearchID" id="rVf-Lm-oQw" customClass="SearchViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PalyVideoVW" id="rVf-Lm-oQw" customClass="VideoPalyViewController" customModule="Tonguer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5aI-zE-qm7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -167,33 +167,33 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.view.addSubview(btnProfilePic)
     self.view.bringSubviewToFront(btnProfilePic)
 
-    lblMoney = UILabel(frame: CGRectMake(imgVwProfilrPic.frame.origin.x+imgVwProfilrPic.frame.size.width+10, imgVwProfilrPic.frame.origin.y+13,50,30))
+    lblMoney = UILabel(frame: CGRectMake(imgVwProfilrPic.frame.origin.x+imgVwProfilrPic.frame.size.width, imgVwProfilrPic.frame.origin.y+13,self.view.frame.width/4.5,30))
     lblMoney.text = "0.0"
-    //lblMoney.textAlignment = NSTextAlignment.Center
+    lblMoney.textAlignment = NSTextAlignment.Center
     lblMoney.font = lblMoney.font.fontWithSize(20)
     lblMoney.textColor = UIColor.grayColor()
     //lblMoney.backgroundColor = UIColor.redColor()
     imgVwAlpha.addSubview(lblMoney)
 
-    lblMoneytext = UILabel(frame: CGRectMake(lblMoney.frame.origin.x,lblMoney.frame.size.height+lblMoney.frame.origin.y,50,15))
+    lblMoneytext = UILabel(frame: CGRectMake(lblMoney.frame.origin.x,lblMoney.frame.size.height+lblMoney.frame.origin.y,lblMoney.frame.width,15))
     lblMoneytext.text = "Money"
-    //lblMoneytext.textAlignment = NSTextAlignment.Center
+    lblMoneytext.textAlignment = NSTextAlignment.Center
     lblMoneytext.font = lblMoney.font.fontWithSize(12)
     lblMoneytext.textColor = UIColor.grayColor()
     //lblMoneytext.backgroundColor = UIColor.greenColor()
     imgVwAlpha.addSubview(lblMoneytext)
 
-    lblScore = UILabel(frame: CGRectMake(lblMoney.frame.origin.x+lblMoney.frame.size.width+20, lblMoney.frame.origin.y,40,30))
+    lblScore = UILabel(frame: CGRectMake(lblMoney.frame.origin.x+lblMoney.frame.size.width, lblMoney.frame.origin.y,lblMoney.frame.width,30))
     lblScore.text = "0"
-    //lblScore.textAlignment = NSTextAlignment.Center
+    lblScore.textAlignment = NSTextAlignment.Center
     lblScore.font = lblMoney.font.fontWithSize(20)
     lblScore.textColor = UIColor.grayColor()
     //lblScore.backgroundColor = UIColor.redColor()
     imgVwAlpha.addSubview(lblScore)
 
-    lblScoretext = UILabel(frame: CGRectMake(lblScore.frame.origin.x,lblScore.frame.origin.y+lblScore.frame.size.height, 40, 15))
+    lblScoretext = UILabel(frame: CGRectMake(lblScore.frame.origin.x,lblScore.frame.origin.y+lblScore.frame.size.height,lblScore.frame.width, 15))
     lblScoretext.text = "Score"
-    //lblMoneytext.textAlignment = NSTextAlignment.Center
+    lblScoretext.textAlignment = NSTextAlignment.Center
     lblScoretext.font = lblMoney.font.fontWithSize(12)
     lblScoretext.textColor = UIColor.grayColor()
     //lblScoretext.backgroundColor = UIColor.greenColor()
@@ -201,18 +201,18 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     
     
 
-    lblAleday = UILabel(frame: CGRectMake(lblScore.frame.origin.x+lblScore.frame.size.width+20, lblScore.frame.origin.y,80,30))
-    lblAleday.text = "0      >"
-    //lblAleday.textAlignment = NSTextAlignment.Center
+    lblAleday = UILabel(frame: CGRectMake(lblScore.frame.origin.x+lblScore.frame.size.width, lblScore.frame.origin.y,lblScore.frame.width,30))
+    lblAleday.text = "0"
+    lblAleday.textAlignment = NSTextAlignment.Center
     lblAleday.font = lblMoney.font.fontWithSize(20)
     lblAleday.textColor = UIColor.grayColor()
     lblAleday.userInteractionEnabled = true
     //lblAleday.backgroundColor = UIColor.redColor()
     imgVwAlpha.addSubview(lblAleday)
 
-    lblAledaytext = UILabel(frame: CGRectMake(lblAleday.frame.origin.x, lblAleday.frame.origin.y+lblAleday.frame.size.height,60,15))
+    lblAledaytext = UILabel(frame: CGRectMake(lblAleday.frame.origin.x, lblAleday.frame.origin.y+lblAleday.frame.size.height,lblAleday.frame.width,15))
     lblAledaytext.text = "Already"
-    //lblMoneytext.textAlignment = NSTextAlignment.Center
+    lblAledaytext.textAlignment = NSTextAlignment.Center
     lblAledaytext.font = lblMoney.font.fontWithSize(12)
     lblAledaytext.textColor = UIColor.grayColor()
     //lblAledaytext.backgroundColor = UIColor.greenColor()
