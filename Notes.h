@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSNumber * notes_cls_id;
 @property (nonatomic, retain) NSString * notes_cls_name;
 @property (nonatomic, retain) NSNumber * isenable;
+@property (nonatomic, retain) NSNumber * isdelete;
 @property (nonatomic, retain) NSNumber * notes_like_cont;
 @property (nonatomic, retain) NSString * notes_img;
 

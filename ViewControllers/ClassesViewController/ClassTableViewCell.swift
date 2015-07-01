@@ -60,6 +60,9 @@ class ClassTableViewCell: BaseTableViewCell {
     lblClassName.text = aParam.objectForKey("name") as NSString
     lblClassName.font = lblClassName.font.fontWithSize(15)
     lblClassName.textColor = UIColor.blackColor()
+    lblClassName.numberOfLines = 0
+    lblClassName.lineBreakMode = NSLineBreakMode.ByWordWrapping
+    lblClassName.sizeToFit()
     vWcell.addSubview(lblClassName)
     
     

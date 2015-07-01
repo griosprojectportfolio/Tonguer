@@ -123,7 +123,7 @@ class NotesDetailViewController: BaseViewController {
       alert.show()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-        println(error)
+        println(operation?.responseString)
         self.actiIndecatorVw.loadingIndicator.startAnimating()
         self.actiIndecatorVw.removeFromSuperview()
         var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note is not added successfully", delegate:nil, cancelButtonTitle: "OK")
@@ -170,6 +170,8 @@ class NotesDetailViewController: BaseViewController {
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message:"You have already like this note.", delegate:nil, cancelButtonTitle: "OK")
+        alert.show()
     })
   }
 

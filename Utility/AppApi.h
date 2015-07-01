@@ -206,6 +206,7 @@
 -(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams;
 
 -(void)saveDownloadedData:(NSDictionary *)aParams;
+-(void)userMoneyUpdate:(NSDictionary *)aParams;
 
 
 

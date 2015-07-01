@@ -194,6 +194,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/default_classes_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    
+    NSArray *arrNotes = [UserDefaultClsList MR_findAll];
+    if(arrNotes.count > 0){
+      [UserDefaultClsList MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
 
     NSMutableArray *arrClass = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -262,6 +268,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/learn_classes_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arrClass = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
+    NSArray *arrNotes = [UserLearnClsList MR_findAll];
+    if(arrNotes.count > 0){
+      [UserLearnClsList MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
+    
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserLearnClsList entityFromArray:arrClass inContext:localContext];
     } completion:^(BOOL success, NSError *error) {
@@ -282,6 +294,11 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
  
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/learned_classes_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arrClass = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
+    NSArray *arrNotes = [UserLearnedClsList MR_findAll];
+    if(arrNotes.count > 0){
+      [UserLearnedClsList MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserLearnedClsList entityFromArray:arrClass inContext:localContext];
     }completion:^(BOOL success, NSError *error) {
@@ -302,6 +319,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   [self.requestSerializer setValue:strToken forHTTPHeaderField:@"auth_token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/free_class" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arrCategory = [[responseObject objectForKey:@"data"] objectForKey:@"category"];
+    
+    NSArray *arrNotes = [FreeClsCat MR_findAll];
+    if(arrNotes.count > 0){
+      [FreeClsCat MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [FreeClsCat entityFromArray:arrCategory inContext:localContext];
@@ -328,6 +351,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/free_class/class_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    
+    NSArray *arrNotes = [FreeCls MR_findAll];
+    if(arrNotes.count > 0){
+      [FreeCls MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
    
     NSMutableArray *arrClsList = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
     NSNumber *subCategoryId = [aParams objectForKey:@"sub_category_id"];
@@ -353,6 +382,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/free_class/class_list/videos" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     
     NSMutableArray *arrClsList = [[responseObject objectForKey:@"data"] objectForKey:@"video"];
+    
+//    NSArray *arrNotes = [FreeClssVideo MR_findAll];
+//    if(arrNotes.count > 0){
+//      [FreeClssVideo MR_truncateAll];
+//      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+//    }
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       
@@ -380,6 +415,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/pay_class" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
    
     NSMutableArray *arrCategory = [[responseObject objectForKey:@"data"] objectForKey:@"category"];
+    
+    NSArray *arrNotes = [PayClsCat MR_findAll];
+    if(arrNotes.count > 0){
+      [PayClsCat MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [PayClsCat entityFromArray:arrCategory inContext:localContext];
@@ -415,6 +456,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     NSMutableArray *arrClsList = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
     NSLog(@"%lu",(unsigned long)arrClsList.count);
     NSNumber *subCategoryId = [aParams objectForKey:@"sub_category_id"];
+    
+    NSArray *arrNotes = [PayCls MR_findAll];
+    if(arrNotes.count > 0){
+      [PayCls MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [PayCls entityFromArray:arrClsList withSubcategoryId:subCategoryId inContext:localContext];
@@ -445,6 +492,13 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/host/class_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     
     NSMutableArray *arrClsList = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
+    
+    NSArray *arrNotes = [HostPayCls MR_findAll];
+    if(arrNotes.count > 0){
+      [HostPayCls MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
+    
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [HostPayCls entityFromArray:arrClsList inContext:localContext];
     }completion:^(BOOL success, NSError *error) {
@@ -465,6 +519,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/pay_class/class_list/videos" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arrVideoList = [[responseObject objectForKey:@"data"] objectForKey:@"video"];
+//    NSArray *arrNotes = [UserClsVideo MR_findAll];
+//    if(arrNotes.count > 0){
+//      [UserClsVideo MR_truncateAll];
+//      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+//      }
+    
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserClsVideo entityFromArray:arrVideoList inContext:localContext];
     }completion:^(BOOL success, NSError *error) {
@@ -710,6 +770,16 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     
     NSArray *arrUserNotes = [responseObject valueForKey:@"user_notes"];
     NSArray *arrOtherUserNotes = [responseObject valueForKey:@"other_user_notes"];
+    
+    NSArray *arrNotes = [Notes MR_findAll];
+    if(arrNotes.count > 0){
+      [Notes MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+//      for (Notes *entity in arrNotes) {
+//        [entity MR_deleteEntity];
+//      }
+    }
+    
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserNotes entityFromArray:arrUserNotes inContext:localContext];
@@ -911,6 +981,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     
     UserNotes *deleteEntity = [arryModEle objectAtIndex:0];
     [deleteEntity MR_deleteEntity];
+    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
     successBlock(task, responseObject);
     
   } failure:failureBlock];
@@ -1071,7 +1142,11 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/buyclassorder" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSArray *srryOrders = [responseObject valueForKey:@"data"];
-   
+    NSArray *arry = [UserClassOrder MR_findAll];
+    if(arry.count > 0){
+      [UserClassOrder MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+    }
         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
     
           [UserClassOrder entityFromArray:srryOrders inContext:localContext];
@@ -1126,6 +1201,27 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [DownloadedData entityWithDictionaty:aParams inContext:localContext];
   }];
 
+}
+
+-(void)userMoneyUpdate:(NSDictionary *)aParams {
+  
+  NSArray *arry = [User MR_findAll];
+  if(arry.count>0){
+    
+    User *obj = [arry objectAtIndex:0];
+    
+    NSNumber *userid = obj.user_id;
+    NSNumber *userMoney = [aParams valueForKey:@"user[money]"];
+   
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+    [dict setValue:userid forKey:@"id"];
+    [dict setValue:userMoney forKey:@"money"];
+    
+  [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    [User entityFromDictionary:dict inContext:localContext];
+    
+  }];
+  }
 }
 
 @end

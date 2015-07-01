@@ -88,6 +88,10 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
     
     return "Class Name"
   }
+  
+  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return 50
+  }
 
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -96,11 +100,14 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var  cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-    cell.textLabel.text = ""
-    cell.textLabel.textColor = UIColor.darkGrayColor()
-    cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
+    
+    var arry = cell.contentView.subviews
+    var vwSub: UIView!
+    for vwSub in arry {
+      vwSub.removeFromSuperview()
+    }
     cell.selectionStyle = UITableViewCellSelectionStyle.None
-    var lblStatus: UILabel! = UILabel(frame: CGRectMake(self.view.frame.width-100,10,100,20))
+    var lblStatus: UILabel! = UILabel(frame: CGRectMake(self.view.frame.width-100,15,100,20))
         lblStatus.textColor = UIColor.darkGrayColor()
         lblStatus.font = lblStatus.font.fontWithSize(15)
         lblStatus.textAlignment = NSTextAlignment.Center
@@ -110,7 +117,15 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
       var strStatus = NSString(format: "%i",dict.valueForKey("learn_status")!.integerValue!)
       var strClsname = dict.valueForKey("a_class")?.valueForKey("name") as NSString
       lblStatus.text = strStatus
-      cell.textLabel.text = strClsname
+      var lblClsName: UILabel! = UILabel(frame: CGRectMake(10,15,lblStatus.frame.origin.x+10,20))
+      lblClsName.textColor = UIColor.darkGrayColor()
+      lblClsName.text = strClsname
+      lblClsName.font = lblStatus.font.fontWithSize(15)
+      lblClsName.numberOfLines = 0
+      lblClsName.lineBreakMode = NSLineBreakMode.ByWordWrapping
+      lblClsName.sizeToFit()
+      //lblClsName.textAlignment = NSTextAlignment.Center
+      cell.contentView.addSubview(lblClsName)
     }
     return cell
   }

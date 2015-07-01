@@ -20,6 +20,7 @@
 @dynamic isenable;
 @dynamic notes_like_cont;
 @dynamic notes_img;
+@dynamic isdelete;
 
 
 
@@ -27,7 +28,7 @@
   
   Notes *obj = [Notes MR_findFirstByAttribute:@"notes_id" withValue:anID inContext:localContext];
   
-  if (!obj) {
+  if (!obj || [obj isEqual:[NSNull null]]) {
     obj = [Notes MR_createInContext:localContext];
   }
   return obj;
@@ -84,8 +85,10 @@
       obj.isenable = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"is_enable"] integerValue]];
     
     if (![[[aDictionary objectForKey:@"a_class"]valueForKey:@"name"] isKindOfClass:[NSNull class]])
+    {
       obj.notes_cls_name =  [[aDictionary valueForKey:@"a_class"]valueForKey:@"name"];
-    
+    }
+    obj.isdelete = 0;
     return obj;
   }
   return nil;

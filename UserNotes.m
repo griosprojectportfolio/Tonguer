@@ -24,7 +24,7 @@
   
   UserNotes *obj = [UserNotes MR_findFirstByAttribute:@"notes_id" withValue:anID inContext:localContext];
   
-  if (!obj) {
+  if (!obj || [obj isEqual:[NSNull class]] ) {
     obj = [UserNotes MR_createInContext:localContext];
   }
   return obj;

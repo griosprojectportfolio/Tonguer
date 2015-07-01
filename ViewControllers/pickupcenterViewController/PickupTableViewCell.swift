@@ -39,7 +39,13 @@ class PickupTableViewCell: BaseTableViewCell {
     var object:AnyObject! = aParam["image"]
     var strImgUrl: NSString!
     if(object.isKindOfClass(NSDictionary)){
+      var img: NSString? = aParam.valueForKey("image")?.valueForKey("url") as? NSString
+      
+      if((img?.isKindOfClass(NSNull)) != nil){
        strImgUrl = aParam.valueForKey("image")?.valueForKey("url") as String
+      }else{
+        strImgUrl = ""
+      }
     }else if(object.isKindOfClass(NSString)){
       strImgUrl = aParam["image"] as String
     }
@@ -61,10 +67,14 @@ class PickupTableViewCell: BaseTableViewCell {
     vWcell.backgroundColor = UIColor.whiteColor()
     self.contentView.addSubview(vWcell)
     
-    lblClassName = UILabel(frame: CGRectMake(10,0, vWcell.frame.width-20,30))
+    lblClassName = UILabel(frame: CGRectMake(10,0,vWcell.frame.size.width,30))
     lblClassName.text = aParam.objectForKey("name") as NSString
+    //lblClassName.backgroundColor = UIColor.blueColor()
     lblClassName.font = lblClassName.font.fontWithSize(15)
     lblClassName.textColor = UIColor.blackColor()
+    lblClassName.numberOfLines = 0
+    lblClassName.lineBreakMode = NSLineBreakMode.ByWordWrapping
+    lblClassName.sizeToFit()
     vWcell.addSubview(lblClassName)
     
     

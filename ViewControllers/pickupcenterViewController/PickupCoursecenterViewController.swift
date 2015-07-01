@@ -145,7 +145,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     var btn = sender as UIButton
     btntag = btn.tag
     print(btntag)
-    getHostPayClsApiCall()
+    //getHostPayClsApiCall()
     pickupTableView.reloadData()
   }
   
@@ -158,7 +158,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     var btn = sender as UIButton
     btntag = btn.tag
     print(btntag)
-    self.getPayClassApiCall()
+    //self.getPayClassApiCall()
    pickupTableView.reloadData()
   }
 
@@ -496,11 +496,11 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
 
       let catObject : NSDictionary = arrFetchCat.objectAtIndex(index) as NSDictionary
       print(catObject)
-      var str_cat_id = catObject.objectForKey("") as NSInteger
-      var strName = catObject.objectForKey("") as NSString
+//      var str_cat_id = catObject.objectForKey("") as NSInteger
+//      var strName = catObject.objectForKey("") as NSString
       var dictData: NSMutableDictionary! = NSMutableDictionary()
-      dictData.setObject(str_cat_id, forKey: "id")
-      dictData.setObject(strName, forKey: "name")
+//      dictData.setObject(str_cat_id, forKey: "id")
+//      dictData.setObject(strName, forKey: "name")
 
       let subcatData : NSArray = catObject.objectForKey("") as NSArray
 

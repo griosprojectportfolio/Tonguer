@@ -46,11 +46,18 @@ class HomeTableViewCell: UITableViewCell {
     vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
     self.contentView.addSubview(vWcell)
     
-    lblTitle.text = aParam.objectForKey("name") as NSString
+     lblTitle.text = aParam.objectForKey("name") as NSString
     //lblTitle.backgroundColor = UIColor.grayColor()
     lblTitle.textColor = UIColor.blackColor()
     lblTitle.font = lblTitle.font.fontWithSize(15)
+    lblTitle.tag = 20
+    lblTitle.numberOfLines = 0
+    lblTitle.lineBreakMode = NSLineBreakMode.ByWordWrapping
+    lblTitle.sizeToFit()
     vWcell.addSubview(lblTitle)
+    
+//    var lbl = self.contentView.viewWithTag(20) as UILabel
+//    lbl.text =  aParam.objectForKey("name") as NSString
     
     //lblTitle.backgroundColor = UIColor.lightGrayColor()
     lblVaild.text = "Valid Days-"

@@ -70,6 +70,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
+    self.userScoreApiCall()
   }
 
   override func didReceiveMemoryWarning() {
@@ -79,10 +80,10 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   override func viewWillAppear(animated: Bool) {
     //self.userClassApiCall()
     self.fetchDataFromdataBase()
-      self.userClassApiCall()
-      self.userLearnClsApiCall()
-      self.userLearnedClsApiCall()
-      self.userScoreApiCall()
+    self.userClassApiCall()
+    self.userLearnClsApiCall()
+    self.userLearnedClsApiCall()
+    
   }
 
   func rightswipeGestureRecognizer(){
@@ -184,7 +185,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     imgVwAlpha.addSubview(lblMoneytext)
 
     lblScore = UILabel(frame: CGRectMake(lblMoney.frame.origin.x+lblMoney.frame.size.width, lblMoney.frame.origin.y,lblMoney.frame.width,30))
-    lblScore.text = "0"
+    lblScore.text = ""
     lblScore.textAlignment = NSTextAlignment.Center
     lblScore.font = lblMoney.font.fontWithSize(20)
     lblScore.textColor = UIColor.grayColor()
@@ -365,7 +366,6 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     HorizVw.backgroundColor  = UIColor.lightGrayColor()
     HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     HorizVw3.backgroundColor = UIColor.lightGrayColor()
-
     hometableVw.reloadData()
   }
 
@@ -377,7 +377,6 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     HorizVw.backgroundColor  = UIColor.lightGrayColor()
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
     HorizVw3.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-
     hometableVw.reloadData()
   }
 
@@ -538,9 +537,9 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       }
       
       if((userObject.score) != nil){
-        lblScore.text = userObject.score.stringValue
+       // lblScore.text = userObject.score.stringValue
       }else{
-        lblScore.text = "0.0"
+        //lblScore.text = "0.0"
       }
       
       if((userObject.pro_img) != nil){
@@ -794,7 +793,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       if((dict.valueForKey("score")) != nil){
         self.lblScore.text = NSString(format: "%i",dict.valueForKey("score") as NSInteger)
       }else{
-        self.lblScore.text = "0"
+        self.lblScore.text = ""
       }
       
       

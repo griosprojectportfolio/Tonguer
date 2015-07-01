@@ -53,6 +53,9 @@ class LearnTableViewCell: UITableViewCell {
     //lblTitle.backgroundColor = UIColor.grayColor()
     lblTitle.textColor = UIColor.blackColor()
     lblTitle.font = lblTitle.font.fontWithSize(15)
+    lblTitle.numberOfLines = 0
+    lblTitle.lineBreakMode = NSLineBreakMode.ByWordWrapping
+    lblTitle.sizeToFit()
     vWcell.addSubview(lblTitle)
     
     

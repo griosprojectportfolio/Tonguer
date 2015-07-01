@@ -181,6 +181,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     tapTag = btn.tag
     vWHori1.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWHori2.backgroundColor = UIColor.lightGrayColor()
+    getNotesApiCall()
     tblVwNotes.reloadData()
   }
   
@@ -191,6 +192,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     isSearch = false
     vWHori2.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWHori1.backgroundColor = UIColor.lightGrayColor()
+    getNotesApiCall()
     tblVwNotes.reloadData()
   }
   

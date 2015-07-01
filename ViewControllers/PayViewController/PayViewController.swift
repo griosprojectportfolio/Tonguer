@@ -141,7 +141,7 @@ class PayViewController: BaseViewController {
     var money: NSInteger!
     var cls_amount: NSInteger!
     var remainingMoney: NSInteger!
-    cls_amount = clsDict.valueForKey("price") as NSInteger
+    cls_amount = clsDict.valueForKey("price")?.integerValue
     let arrFetchedData : NSArray = User.MR_findAll()
     let userObject : User = arrFetchedData.objectAtIndex(0) as User
     if((userObject.money) != nil){
@@ -150,17 +150,8 @@ class PayViewController: BaseViewController {
     remainingMoney = money - cls_amount
     var aParam:NSMutableDictionary = NSMutableDictionary()
     aParam.setValue(self.auth_token[0], forKey: "auth_token")
-    aParam.setValue(remainingMoney, forKey: "user[money]")
-    
-    self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-      println(responseObject)
-      
-      },
-      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-        println(error)
-        
-    })
-    
+    aParam.setValue(remainingMoney, forKey: "user[money]")    
+    self.api.userMoneyUpdate(aParam)
   }
 
 
