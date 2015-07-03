@@ -200,6 +200,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       self.getHostPayClsApiCall()
       self.getAddvertiesmentApiCall()
       self.abouUSApiCall()
+      self.adminContactApi()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(operation?.responseObject)
@@ -236,6 +237,20 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   //************ Data Store in the Database And Api Calling Methodes****************
   
+  func adminContactApi(){
+    
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    
+    self.api.getAdminContact(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+    
+  }
+  
   
   func abouUSApiCall(){
     
@@ -243,10 +258,6 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     
     self.api.aboutUS(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var arry = responseObject as NSArray
-      let obj = arry.objectAtIndex(0) as Aboutus
-      let data = obj.ab_content
-      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

@@ -35,6 +35,7 @@
 #import "UserClassOrder.h"
 #import "DownloadedData.h"
 #import "VideoDone.h"
+#import "AdminContact.h"
 
 /* API Constants */
 static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
@@ -536,6 +537,31 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
 
   } failure:failureBlock];
 }
+
+
+#pragma mark - Get Admin Contact details
+
+- (AFHTTPRequestOperation *)getAdminContact:(NSDictionary *)aParams
+                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  
+  return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/get_admin_contact" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    
+    //NSMutableArray *arrVideoList = [[responseObject objectForKey:@"data"] objectForKey:@"video"];
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      [AdminContact entityWithDictionaty:responseObject inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+       successBlock(task, responseObject);
+    }];
+    
+  } failure:failureBlock];
+}
+
+
 
 
 #pragma mark - Call Addvertiesment Api

@@ -10,68 +10,79 @@ import UIKit
 
 class HomeTableViewCell: UITableViewCell {
   
- 
+  @IBOutlet var imgVw: UIImageView!
+  @IBOutlet  var lblTitle : UILabel!
+  @IBOutlet  var lblVaild: UILabel!
+  @IBOutlet var lblDate : UILabel!
+  @IBOutlet  var vWcell:UIView!
   
   override func awakeFromNib() {
     super.awakeFromNib()
     // Initialization code
-   
+    
   }
   
-  func defaultCellContent(aParam:NSDictionary!,Frame:CGRect){
-    
-    var arry = self.contentView.subviews
-    var vwSub: UIView!
-    for vwSub in arry {
-      vwSub.removeFromSuperview()
-    }
-    var imgVw: UIImageView!
-    var lblTitle,lblDate,lblVaild: UILabel!
-    var vWcell:UIView!
-    
-    imgVw = UIImageView(frame: CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80,80))
-    vWcell = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.origin.y,Frame.width-(imgVw.frame.origin.x+imgVw.frame.width+20),imgVw.frame.height))
-    lblTitle = UILabel(frame: CGRectMake(5,3,vWcell.frame.width-10,30))
-    lblVaild = UILabel(frame: CGRectMake(lblTitle.frame.origin.x,vWcell.frame.height-30,100, 30))
-    lblDate = UILabel(frame: CGRectMake(lblVaild.frame.origin.x+lblVaild.frame.width, lblVaild.frame.origin.y,150, 30))
-    
-    let url = NSURL(string: aParam.objectForKey("image") as NSString)
-    imgVw.sd_setImageWithURL(url)
+  
+//  override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+//    super.init(style: style, reuseIdentifier: reuseIdentifier)
+//  }
+//
+//  required init(coder aDecoder: NSCoder) {
+//      fatalError("init(coder:) has not been implemented")
+//  }
+  
+  
+  func configureCellView(Frame:CGRect){
+    cellContentReset()
+    imgVw.frame = CGRectMake(Frame.origin.x+10,Frame.origin.y+10,80,80)
     imgVw.layer.borderWidth = 0.5
     imgVw.layer.borderColor = UIColor.lightGrayColor().CGColor
-    self.contentView.addSubview(imgVw)
-  
+   
+    
+    vWcell.frame =  CGRectMake(imgVw.frame.origin.x+imgVw.frame.width,imgVw.frame.origin.y,Frame.width-(imgVw.frame.origin.x+imgVw.frame.width+20),imgVw.frame.height)
     vWcell.backgroundColor = UIColor.whiteColor()
     vWcell.layer.borderWidth = 0.5
     vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
-    self.contentView.addSubview(vWcell)
     
-     lblTitle.text = aParam.objectForKey("name") as NSString
-    //lblTitle.backgroundColor = UIColor.grayColor()
+    
+    lblTitle.frame = CGRectMake(5,3,vWcell.frame.width-10,30)
     lblTitle.textColor = UIColor.blackColor()
     lblTitle.font = lblTitle.font.fontWithSize(15)
-    lblTitle.tag = 20
     lblTitle.numberOfLines = 0
     lblTitle.lineBreakMode = NSLineBreakMode.ByWordWrapping
-    lblTitle.sizeToFit()
-    vWcell.addSubview(lblTitle)
     
-//    var lbl = self.contentView.viewWithTag(20) as UILabel
-//    lbl.text =  aParam.objectForKey("name") as NSString
     
-    //lblTitle.backgroundColor = UIColor.lightGrayColor()
+    
+    lblVaild.frame = CGRectMake(lblTitle.frame.origin.x,vWcell.frame.height-30,100, 30)
     lblVaild.text = "Valid Days-"
     lblVaild.textColor = UIColor.grayColor()
     lblVaild.font = lblVaild.font.fontWithSize(13)
-    vWcell.addSubview(lblVaild)
     
-    var day: NSNumber! = aParam.objectForKey("days") as NSNumber
     
-    lblDate.text = day.stringValue
-    //lblDate.backgroundColor = UIColor.redColor()
+    lblDate.frame = CGRectMake(lblVaild.frame.origin.x+lblVaild.frame.width, lblVaild.frame.origin.y,150, 30)
     lblDate.textColor = UIColor.grayColor()
     lblDate.font = lblDate.font.fontWithSize(12)
-    vWcell.addSubview(lblDate)
+    
+    self.cellContentReset()
+    
+  }
+  
+  func defaultCellContent(aParam:NSDictionary!){
+    
+    print(aParam)
+    cellContentReset()
+    let url = NSURL(string: aParam.objectForKey("image") as NSString)
+    imgVw.sd_setImageWithURL(url)
+    lblTitle.text = aParam.objectForKey("name") as NSString
+    lblTitle.sizeToFit()
+    var day: NSNumber! = aParam.objectForKey("days") as NSNumber
+    lblDate.text = day.stringValue
+  }
+  
+  func cellContentReset(){
+    lblTitle.text = ""
+    imgVw.image = nil
+    lblDate.text = ""
   }
   
   

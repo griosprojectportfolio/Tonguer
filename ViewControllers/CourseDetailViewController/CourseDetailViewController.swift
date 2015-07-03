@@ -29,6 +29,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   var arrOutline: NSArray! = NSArray()
   
   var btnTag: NSInteger! = 1
+  var serviceCallNo:NSNumber!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -52,14 +53,13 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     dict4 = NSDictionary(objects: ["target.png","Target for",clsDictDe.valueForKey("target") as NSString,"3"], forKeys: ["image","tilte","data","id"])
     
     dataArr = NSArray(objects: dict1,dict2,dict3,dict4)
-    
-    dictClist = NSDictionary(objects: ["img2.png","jdhdjdjdhsdjdsjsdhdjs"], forKeys: ["image","title"])
-    clistarr = NSArray(object: dictClist)
+    dataFetchAdminContact()
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
     classOutlineApiCall()
+    adminContactApi()
   }
   
   func defaultUIDesign(){
@@ -390,7 +390,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       if let mnCode = cellularProvider.mobileNetworkCode {
         println(mnCode)
         
-        let phoneString = NSString(format: "tel://%@",123456/*self.meeting.phone*/) as String
+        let phoneString = NSString(format: "tel://%@",serviceCallNo) as String
         UIApplication.sharedApplication().openURL(NSURL(string: phoneString)!)
       }
     } else {
@@ -422,11 +422,35 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
         if(self.btnTag == 2){
-          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry some technical problam.", delegate: self, cancelButtonTitle: "Ok")
+          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry No data found.", delegate: self, cancelButtonTitle: "Ok")
           alert.show()
         }
     })
   }
+  
+  func adminContactApi(){
+    
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    
+    self.api.getAdminContact(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      self.dataFetchAdminContact()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        
+    })
+  }
+  
+  func dataFetchAdminContact(){
+    var arry = AdminContact .MR_findAll() as NSArray
+    if(arry.count>0){
+    var obj = arry.objectAtIndex(0) as AdminContact
+    serviceCallNo = obj.admin_contact_no
+    }
+  
+  }
+
 
   
   

@@ -11,6 +11,11 @@
         <attribute name="add_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="add_video" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="AdminContact" representedClassName="AdminContact" syncable="YES">
+        <attribute name="admin_contact_no" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="admin_email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="admin_id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
     <entity name="Answer" representedClassName="Answer" syncable="YES">
         <attribute name="ans_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
@@ -221,7 +226,7 @@
         <element name="DisAdminTopic" positionX="-234" positionY="-90" width="128" height="88"/>
         <element name="DisTopicComments" positionX="-234" positionY="-90" width="128" height="105"/>
         <element name="DisUserToic" positionX="-225" positionY="-81" width="128" height="90"/>
-        <element name="DownloadedData" positionX="-234" positionY="-90" width="128" height="73"/>
+        <element name="DownloadedData" positionX="-234" positionY="-90" width="128" height="75"/>
         <element name="FreeCls" positionX="-432" positionY="57" width="128" height="208"/>
         <element name="FreeClsCat" positionX="-2" positionY="65" width="128" height="88"/>
         <element name="FreeClssVideo" positionX="-234" positionY="-90" width="128" height="120"/>
@@ -242,5 +247,6 @@
         <element name="UserLearnedClsList" positionX="-225" positionY="-81" width="128" height="148"/>
         <element name="UserNotes" positionX="-234" positionY="-90" width="128" height="163"/>
         <element name="VideoDone" positionX="-234" positionY="-90" width="128" height="90"/>
+        <element name="AdminContact" positionX="-234" positionY="-90" width="128" height="88"/>
     </elements>
 </model>

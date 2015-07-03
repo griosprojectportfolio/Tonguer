@@ -16,6 +16,7 @@
 		0A08B3581AF0F97D0076226C /* PickupCoursecenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B3541AF0F97D0076226C /* PickupCoursecenterViewController.swift */; };
 		0A08B3591AF0F97D0076226C /* PickupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B3551AF0F97D0076226C /* PickupTableViewCell.swift */; };
 		0A08B35F1AF1019E0076226C /* NotesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B35E1AF1019E0076226C /* NotesDetailViewController.swift */; };
+		0A1D45B31B45140E00BF5A8C /* AdminContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1D45B21B45140E00BF5A8C /* AdminContact.m */; };
 		0A32585B1AFB534D00B897DA /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A32585A1AFB534D00B897DA /* User.m */; };
 		0A4145241B0B196500B3183D /* UserNotes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4145231B0B196500B3183D /* UserNotes.m */; };
 		0A4145271B0B196700B3183D /* Notes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4145261B0B196700B3183D /* Notes.m */; };
@@ -144,6 +145,8 @@
 		0A08B3541AF0F97D0076226C /* PickupCoursecenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickupCoursecenterViewController.swift; sourceTree = "<group>"; };
 		0A08B3551AF0F97D0076226C /* PickupTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickupTableViewCell.swift; sourceTree = "<group>"; };
 		0A08B35E1AF1019E0076226C /* NotesDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesDetailViewController.swift; sourceTree = "<group>"; };
+		0A1D45B11B45140E00BF5A8C /* AdminContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdminContact.h; sourceTree = SOURCE_ROOT; };
+		0A1D45B21B45140E00BF5A8C /* AdminContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdminContact.m; sourceTree = SOURCE_ROOT; };
 		0A3258591AFB534D00B897DA /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = SOURCE_ROOT; };
 		0A32585A1AFB534D00B897DA /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = SOURCE_ROOT; };
 		0A4145221B0B196500B3183D /* UserNotes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserNotes.h; sourceTree = SOURCE_ROOT; };
@@ -811,6 +814,8 @@
 				0AAA25F21B1F1E8900EB82FC /* DownloadedData.m */,
 				0A87C82E1B22D87E00559499 /* VideoDone.h */,
 				0A87C82F1B22D87E00559499 /* VideoDone.m */,
+				0A1D45B11B45140E00BF5A8C /* AdminContact.h */,
+				0A1D45B21B45140E00BF5A8C /* AdminContact.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1034,6 +1039,7 @@
 				0AC4ED9E1AEE12F400C8882F /* PayCls.m in Sources */,
 				0AA0C7D71AEA78C4004A0215 /* FreeClsCat.m in Sources */,
 				0AC4ED981AEDFE9E00C8882F /* ClassTableViewCell.swift in Sources */,
+				0A1D45B31B45140E00BF5A8C /* AdminContact.m in Sources */,
 				0ADD8B271B01E6E600B73AC8 /* AdAnsViewController.swift in Sources */,
 				174531F21ACD15FE00E6DF2E /* UIColor+RGB.swift in Sources */,
 				0AE94C271AD25F8C00CBEA76 /* LoginViewController.swift in Sources */,

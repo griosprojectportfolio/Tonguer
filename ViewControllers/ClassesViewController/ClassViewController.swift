@@ -10,14 +10,14 @@ import UIKit
 
 class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
-   var flgClass:NSString!
+  var flgClass:NSString!
   var flag: NSString = "PicupCourse"
-   var barBackBtn :UIBarButtonItem!
-   var tblClass :UITableView!
-   var dict: NSDictionary!
-   var arrClasses: NSMutableArray! = NSMutableArray()
-   var sub_cat_id: NSInteger!
-   var actiIndecatorVw: ActivityIndicatorView!
+  var barBackBtn :UIBarButtonItem!
+  @IBOutlet var tblClass :UITableView!
+  var dict: NSDictionary!
+  var arrClasses: NSMutableArray! = NSMutableArray()
+  var sub_cat_id: NSInteger!
+  var actiIndecatorVw: ActivityIndicatorView!
   
   var api: AppApi!
   
@@ -74,14 +74,12 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
 
   func defaultUIDesign(){
-    
-    
-    tblClass = UITableView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width, self.view.frame.height-64))
+    tblClass.frame =  CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width, self.view.frame.height-64)
     tblClass.delegate = self
     tblClass.dataSource = self
     tblClass.separatorStyle = UITableViewCellSeparatorStyle.None
-    self.view.addSubview(tblClass)
-    tblClass.registerClass(ClassTableViewCell.self, forCellReuseIdentifier: "cell")
+    tblClass.contentInset = UIEdgeInsets(top: -64, left: 0, bottom: 0, right: 0)
+    //tblClass.registerClass(ClassTableViewCell.self, forCellReuseIdentifier: "cell")
   
   }
   
@@ -107,12 +105,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       vc.callVw = flgClass
       vc.clsDictDe = self.arrClasses.objectAtIndex(indexPath.row) as NSDictionary
       self.navigationController?.pushViewController(vc, animated: true)
-    }else if (flgClass.isEqualToString("Free")){
-//      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
-//      var dict: NSDictionary! = arrClasses.objectAtIndex(indexPath.row) as NSDictionary
-//      vc.classID = dict.valueForKey("id") as NSInteger
-//      self.navigationController?.pushViewController(vc, animated: true)
-      
+    }else if (flgClass.isEqualToString("Free")){      
       var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
       vc.callVw = flgClass
       vc.clsDictDe = self.arrClasses.objectAtIndex(indexPath.row) as NSDictionary
@@ -234,7 +227,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       dictClass.setValue(clsID, forKey: "id")
       arrClasses.addObject(dictClass)
     }
-  
+    self.tblClass.reloadData()
   }
 
   //************ Fetch Data From DataBase ***********
@@ -301,7 +294,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       dictClass.setValue(clsID, forKey: "id")
       arrClasses.addObject(dictClass)
     }
-    
+    self.tblClass.reloadData()
   }
 
   func btnBackTapped(){

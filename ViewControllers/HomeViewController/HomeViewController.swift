@@ -14,7 +14,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
 
 
-  var hometableVw : UITableView!
+ @IBOutlet var hometableVw : UITableView!
   var imagePicker = UIImagePickerController()
 
   var btnTag: NSInteger! = 1
@@ -59,7 +59,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.fetchDataFromDBforDefaultCls()
     self.fetchDataFromDBforLearnCls()
     self.fetchDataFromDBforLearnedCls()
-    self.hometableVw.reloadData()
+   //self.hometableVw.reloadData()
     
 
     if (NSUserDefaults.standardUserDefaults().valueForKey("checkIns") == nil) {
@@ -71,6 +71,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
     self.userScoreApiCall()
+    self.hometableVw.reloadData()
   }
 
   override func didReceiveMemoryWarning() {
@@ -284,15 +285,13 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
     self.view.addSubview(btnFreeOpentryCls)
 
-    hometableVw = UITableView(frame:CGRectMake(btn1.frame.origin.x,btn1.frame.origin.y+btn1.frame.size.height+1,self.view.frame.width-10,btnFreeOpentryCls.frame.origin.y-btn1.frame.origin.y+btn1.frame.size.height-80))
+    hometableVw.frame = CGRectMake(btn1.frame.origin.x,btn1.frame.origin.y+btn1.frame.size.height+1,self.view.frame.width-10,btnFreeOpentryCls.frame.origin.y-btn1.frame.origin.y+btn1.frame.size.height-80)
     hometableVw.delegate = self
     hometableVw.dataSource = self
-    // hometableVw.backgroundColor = UIColor.grayColor()
+   // hometableVw.backgroundColor = UIColor.grayColor()
     hometableVw.separatorStyle = UITableViewCellSeparatorStyle.None
-    self.view.addSubview(hometableVw)
-    hometableVw.registerClass(HomeTableViewCell.self, forCellReuseIdentifier: "cell")
-    hometableVw.registerClass(LearnTableViewCell.self, forCellReuseIdentifier: "LearnCell")
-    hometableVw.registerClass(LearnedTableViewCell.self, forCellReuseIdentifier: "LearnedCell")
+    hometableVw.contentInset = UIEdgeInsetsMake(-64,0,0,0)
+
   }
   
   
@@ -395,21 +394,25 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell: UITableViewCell!
-
     if(btnTag == 1){
-      var  cell = tableView.dequeueReusableCellWithIdentifier("cell") as HomeTableViewCell
+      var cell:HomeTableViewCell! = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath:indexPath) as HomeTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-      cell.defaultCellContent(arrclass.objectAtIndex(indexPath.row)as NSDictionary,Frame: self.view.frame)
+      cell.configureCellView(self.view.frame)
+      cell.defaultCellContent(arrclass.objectAtIndex(indexPath.row)as NSDictionary)
+      print(arrclass.objectAtIndex(indexPath.row))
       return cell
     } else if (btnTag == 2){
-      var  cell = tableView.dequeueReusableCellWithIdentifier("LearnCell") as LearnTableViewCell
+      var cell:LearnTableViewCell!
+      cell = tableView.dequeueReusableCellWithIdentifier("LearnCell") as LearnTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-      cell.defaultCellContent(arrClsLearn.objectAtIndex(indexPath.row)as NSDictionary,Frame: self.view.frame)
+      cell.configureCellView(self.view.frame)
+      cell.defaultCellContent(arrClsLearn.objectAtIndex(indexPath.row)as NSDictionary)
       return cell
     } else if (btnTag == 3){
       var  cell = tableView.dequeueReusableCellWithIdentifier("LearnedCell") as LearnedTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-      cell.defaultCellContent(arrClsLearned.objectAtIndex(indexPath.row)as NSDictionary,Frame: self.view.frame)
+      cell.configureCellView(self.view.frame)
+      cell.defaultCellContent(arrClsLearned.objectAtIndex(indexPath.row)as NSDictionary)
       return cell
     }
 
@@ -616,7 +619,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     }
 
     print(arrclass.count)
-
+    self.hometableVw.reloadData()
   }
 
   //****** User Data fetch from database for user Learn class ************
@@ -675,6 +678,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
         dict.setObject("0", forKey:"progress")
       }
       arrClsLearn.addObject(dict)
+      self.hometableVw.reloadData()
     }
 
     print(arrClsLearn.count)
@@ -739,6 +743,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       arrClsLearned.addObject(dict)
     }
     print(arrClsLearned.count)
+    self.hometableVw.reloadData()
   }
 
   func userLearnClsApiCall(){
