@@ -17,7 +17,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var isActive: NSString!
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
-  var tableview: UITableView!
+@IBOutlet  var tableview: UITableView!
   var arrClassVideo: NSMutableArray = NSMutableArray()
   var actiIndecatorVw: ActivityIndicatorView!
   var moviePlayerController:MPMoviePlayerController!
@@ -80,13 +80,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
 
   func defaultUIDesign(){
     
-    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width,self.view.frame.height))
+    tableview.frame =  CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width,self.view.frame.height)
     tableview.delegate = self
     tableview.dataSource = self
     tableview.separatorStyle = UITableViewCellSeparatorStyle.None
-    self.view.addSubview(tableview)
     
-    tableview.registerClass(VideoTableViewCell.self, forCellReuseIdentifier: "cell")
   }
 
   func btnBackTapped(){

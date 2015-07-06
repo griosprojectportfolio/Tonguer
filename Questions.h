@@ -13,6 +13,7 @@
 @interface Questions : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * ques_id;
+@property (nonatomic, retain) NSNumber * class_id;
 @property (nonatomic, retain) NSString * question;
 
 + (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;

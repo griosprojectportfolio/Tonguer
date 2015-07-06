@@ -227,10 +227,13 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
         height = 50+rect.height
       }
       
-      
     }else if(btnTag == 2){
-
-      height = 50
+      let dict = arrOutline.objectAtIndex(indexPath.section) as NSDictionary
+      let arry = dict.valueForKey("array") as NSArray
+      let obj = arry.objectAtIndex(indexPath.row) as ClsModElement
+      var str = obj.mod_element_content
+      var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
+      height = 50+rect.height
     }
     return height
   }
@@ -253,6 +256,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
         let arry = dict.valueForKey("array") as NSArray
         let obj = arry.objectAtIndex(indexPath.row) as ClsModElement
         cell.textLabel.text = obj.mod_element_content
+        cell.textLabel.numberOfLines = 0
       }else{
         cell.textLabel.text = ""
       }
@@ -270,13 +274,13 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     if(btnTag == 1){
       return vWheader
     }else if(btnTag == 2){
-      vWheader = UIView(frame: CGRectMake(5, 5, 100, 40))
+      vWheader = UIView(frame: CGRectMake(5,5,self.view.frame.width, 40))
       vWheader.backgroundColor = UIColor.whiteColor()
       vWheader.layer.borderWidth = 0.5
       vWheader.layer.borderColor = UIColor.lightGrayColor().CGColor
       vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
   
-      var lbltilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
+      var lbltilte: UILabel! = UILabel(frame: CGRectMake(10,2,vWheader.frame.width-10,20))
       lbltilte.font = lbltilte.font.fontWithSize(12)
       lbltilte.textColor = UIColor.whiteColor()
       lbltilte.text = " "
@@ -432,7 +436,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     
     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
     
-    self.api.getAdminContact(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.getAdminContact(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.dataFetchAdminContact()
       },

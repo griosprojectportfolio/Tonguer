@@ -10,50 +10,49 @@ import UIKit
 
 class SettingTableViewCell:BaseTableViewCell {
   
-  var lbltitle: UILabel!
-  var vWCell: UIView!
-  var swtRemind: UISwitch!
+  @IBOutlet var lbltitle: UILabel!
+  @IBOutlet  var vWCell: UIView!
+  @IBOutlet  var swtRemind: UISwitch!
+  @IBOutlet  var lblFileSize: UILabel!
   override func awakeFromNib() {
     super.awakeFromNib()
     // Initialization code
   }
   
   func defaultUICellContent(name: NSString , index: NSInteger,frame:CGRect){
+    print("\(frame), \(vWCell)")
     
-    var arry = self.contentView.subviews
-    var vwSub: UIView!
-    for vwSub in arry {
-      vwSub.removeFromSuperview()
-    }
-    
-    vWCell = UIView(frame: CGRectMake(20,10,frame.width-50,60))
+  
+    vWCell.frame = CGRectMake(20,10,frame.width-50,60)//CGRectMake(20,10,frame.width-50,60)
     vWCell.layer.borderWidth = 0.5
     vWCell.layer.borderColor = UIColor.lightGrayColor().CGColor
-    self.contentView.addSubview(vWCell)
     
-    lbltitle = UILabel(frame: CGRectMake(5,5,200,50))
+    
+    lbltitle.frame = CGRectMake(5,5,200,50)
     lbltitle.text = name
     lbltitle.font = lbltitle.font.fontWithSize(15)
     //lbltitle.backgroundColor = UIColor.redColor()
-    vWCell.addSubview(lbltitle)
+   
 
-    swtRemind = UISwitch(frame: CGRectMake(vWCell.frame.width - 40,25, 30,30))
+    swtRemind.frame = CGRectMake(vWCell.frame.width-60,15,30,30)
+    swtRemind.hidden = true
     
     if(index == 1){
-      self.contentView.addSubview(swtRemind)
+      swtRemind.hidden = false
     }
+    
+    lblFileSize.frame = CGRectMake(vWCell.frame.width-150,15,150,30)
+    lblFileSize.textAlignment = NSTextAlignment.Center
+    lblFileSize.font = lbltitle.font.fontWithSize(15)
+    lblFileSize.text = "0 KB"
+    lblFileSize.hidden = true
     
     if(index == 0){
 //      var defaults=NSUserDefaults()
 //      var fileSize=defaults.integerForKey("downloadedData")
-      
       let arry = DownloadedData.MR_findAll() as NSArray
-      var lblFileSize: UILabel = UILabel(frame: CGRectMake(vWCell.frame.width-150,15,150,30))
-      lblFileSize.textAlignment = NSTextAlignment.Center
-      lblFileSize.font = lbltitle.font.fontWithSize(15)
-      lblFileSize.text = "0 KB"
-      vWCell.addSubview(lblFileSize)
-
+      lblFileSize.hidden = false
+      
       if (arry.count > 0) {
         var obj = arry.objectAtIndex(0) as DownloadedData
         var data = obj.download_data.doubleValue

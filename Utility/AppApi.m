@@ -713,7 +713,8 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [Questions entityFromArray:arrQues inContext:localContext];
     }completion:^(BOOL success, NSError *error) {
-      NSArray *arry = [Questions MR_findAll];
+       NSPredicate *predicate = [NSPredicate predicateWithFormat:@"class_id CONTAINS %i",[[aParams valueForKey:@"class_id"]integerValue]];
+      NSArray *arry = [Questions MR_findAllWithPredicate:predicate];
       successBlock(task, arry);
     }];
   } failure:failureBlock];
@@ -1085,8 +1086,8 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       }
       
     } completion:^(BOOL success, NSError *error) {
-      
-      NSArray *arryData = [ClsOutLineModule MR_findAll];
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cls_id CONTAINS %i",[[aParams valueForKey:@"cls_id"]integerValue]];
+      NSArray *arryData = [ClsOutLineModule MR_findAllWithPredicate:predicate];
       for (int i = 0; i<arryData.count; i++) {
         NSMutableDictionary *dictElement = [[NSMutableDictionary alloc]init];
         ClsOutLineModule *obj = [arryData objectAtIndex:i];

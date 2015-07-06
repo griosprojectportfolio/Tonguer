@@ -72,6 +72,11 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       self.freeClassListApiCall()
     }
   }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    self.tblClass.reloadData()
+  }
 
   func defaultUIDesign(){
     tblClass.frame =  CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width, self.view.frame.height-64)

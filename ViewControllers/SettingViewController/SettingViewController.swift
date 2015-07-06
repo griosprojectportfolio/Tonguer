@@ -11,7 +11,7 @@ import UIKit
 class SettingViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
   var barBackBtn :UIBarButtonItem!
-  var tableview: UITableView!
+@IBOutlet  var tableview: UITableView!
   var VwUserDetail: UIView!
   var imgVwPPic: UIImageView!
   var lblname: UILabel!
@@ -72,13 +72,12 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     //btnLogout.backgroundColor = UIColor.blackColor()
     VwUserDetail.addSubview(btnLogout)
     
-    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,VwUserDetail.frame.origin.y+VwUserDetail.frame.height, self.view.frame.width, self.view.frame.height - (VwUserDetail.frame.origin.y+VwUserDetail.frame.height+10)))
-    //tableview.backgroundColor = UIColor.grayColor()
+    tableview.frame =  CGRectMake(self.view.frame.origin.x,VwUserDetail.frame.origin.y+VwUserDetail.frame.height, self.view.frame.width, self.view.frame.height - (VwUserDetail.frame.origin.y+VwUserDetail.frame.height+10))
+   // tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self
     tableview.separatorStyle = UITableViewCellSeparatorStyle.None
-    self.view.addSubview(tableview)
-    tableview.registerClass(SettingTableViewCell.self, forCellReuseIdentifier: "cell")
+    tableview.contentInset = UIEdgeInsets(top:-(VwUserDetail.frame.origin.y-20), left: 0, bottom: 0, right: 0)
   
   }
   

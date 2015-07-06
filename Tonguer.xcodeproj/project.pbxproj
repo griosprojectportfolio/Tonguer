@@ -33,7 +33,6 @@
 		0A78B1301AE62D61002AC651 /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78B12F1AE62D61002AC651 /* SettingTableViewCell.swift */; };
 		0A7D82381AE0ED1B00A29692 /* CourseDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D82371AE0ED1B00A29692 /* CourseDetailTableViewCell.swift */; };
 		0A7D823A1AE1403000A29692 /* CourseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D82391AE1403000A29692 /* CourseListCell.swift */; };
-		0A7D823C1AE1453300A29692 /* CalssCenterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D823B1AE1453300A29692 /* CalssCenterCell.swift */; };
 		0A87C8301B22D87E00559499 /* VideoDone.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A87C82F1B22D87E00559499 /* VideoDone.m */; };
 		0A88B2021AFC923A00003AFE /* UserClsVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A88B2011AFC923A00003AFE /* UserClsVideo.m */; };
 		0A88B2051AFCB81800003AFE /* HostPayCls.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A88B2041AFCB81800003AFE /* HostPayCls.m */; };
@@ -170,7 +169,6 @@
 		0A78B1391AE684FC002AC651 /* TonguerPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TonguerPrefixHeader.pch; sourceTree = "<group>"; };
 		0A7D82371AE0ED1B00A29692 /* CourseDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseDetailTableViewCell.swift; sourceTree = "<group>"; };
 		0A7D82391AE1403000A29692 /* CourseListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseListCell.swift; sourceTree = "<group>"; };
-		0A7D823B1AE1453300A29692 /* CalssCenterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalssCenterCell.swift; sourceTree = "<group>"; };
 		0A87C82E1B22D87E00559499 /* VideoDone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoDone.h; sourceTree = SOURCE_ROOT; };
 		0A87C82F1B22D87E00559499 /* VideoDone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoDone.m; sourceTree = SOURCE_ROOT; };
 		0A88B2001AFC923A00003AFE /* UserClsVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserClsVideo.h; sourceTree = SOURCE_ROOT; };
@@ -556,7 +554,6 @@
 			isa = PBXGroup;
 			children = (
 				0AE1DDD31AD504070059A719 /* ClassCenterViewController.swift */,
-				0A7D823B1AE1453300A29692 /* CalssCenterCell.swift */,
 			);
 			path = TryClassCenterViewController;
 			sourceTree = "<group>";
@@ -1072,7 +1069,6 @@
 				0AE94C281AD25F8C00CBEA76 /* QuesAnsTableViewCell.swift in Sources */,
 				0AAFC7D91B12F8D200426D22 /* UIButton+WebCache.m in Sources */,
 				0AC302441AF3B8A800AB2952 /* FreeClssVideo.m in Sources */,
-				0A7D823C1AE1453300A29692 /* CalssCenterCell.swift in Sources */,
 				0AAFC7DA1B12F8D200426D22 /* UIImage+GIF.m in Sources */,
 				0A6525261AD407E700762BBD /* StartLearnViewController.swift in Sources */,
 				174531C01ACD145400E6DF2E /* AppDelegate.swift in Sources */,

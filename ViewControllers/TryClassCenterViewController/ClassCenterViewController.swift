@@ -89,9 +89,9 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self
-    tableview.separatorStyle = UITableViewCellSeparatorStyle.None
+   // tableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(tableview)
-   tableview.registerClass(CalssCenterCell.self, forCellReuseIdentifier: "cell")
+   tableview.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
     
   }
   
@@ -105,7 +105,6 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     return dataArr.count
   }
-  
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     var vWheader: UIView! = UIView(frame: CGRectMake(5, 5, 100, 40))
     vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
@@ -127,7 +126,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as CalssCenterCell
+    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
      cell.selectionStyle = UITableViewCellSelectionStyle.None
     var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as NSDictionary
     var cellArr: NSArray! = dict.objectForKey("array") as NSArray

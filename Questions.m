@@ -12,6 +12,7 @@
 @implementation Questions
 
 @dynamic ques_id;
+@dynamic class_id;
 @dynamic question;
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
@@ -42,6 +43,9 @@
     Questions *obj = (Questions*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
     
     obj.ques_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
+    
+    if (![[aDictionary objectForKey:@"a_class_id"] isKindOfClass:[NSNull class]])
+    obj.class_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"a_class_id"] integerValue]];
     
     if (![[aDictionary objectForKey:@"question"] isKindOfClass:[NSNull class]])
       obj.question = [aDictionary valueForKey:@"question"] ;

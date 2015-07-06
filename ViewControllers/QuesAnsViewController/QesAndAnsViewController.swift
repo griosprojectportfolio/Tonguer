@@ -31,22 +31,22 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
-
-    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
-    self.view.addSubview(actiIndecatorVw)
     self.arrQuestion.removeAllObjects()
-    self.getQuestionApiCall()
+    self.defaultUIDesign()
+    var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)!
+    var arry:NSArray = Questions.MR_findAllWithPredicate(predicate)
+    self.dataFetchFromDataBaseQuestion(arry)
   }
   
   override func viewWillAppear(animated: Bool) {
-
     super.viewWillAppear(animated)
+    self.getQuestionApiCall()
 
-    self.defaultUIDesign()
-    self.view.bringSubviewToFront(self.actiIndecatorVw)
-
-    var arry:NSArray = Questions.MR_findAll()
-    self.dataFetchFromDataBaseQuestion(arry)
+    }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    self.tableview.reloadData()
   }
 
   func defaultUIDesign(){
@@ -59,7 +59,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     btnAddQues.hidden = true
     self.view.addSubview(btnAddQues)
     
-    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width,btnAddQues.frame.origin.y - btnAddQues.frame.height-30))
+    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width,self.view.frame.height-64))
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self
@@ -88,9 +88,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     cell.cellbtnAns.tag = indexPath.row
     cell.cellbtnAns.addTarget(self, action: "btnAnswerTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     }
-    
     return cell
-    
   }
   
   func btnBackTapped(){
@@ -126,17 +124,20 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   //********Question Api calling Methode*********
   
   func getQuestionApiCall(){
-    
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
     aParams.setValue(classID, forKey: "class_id")
     self.api.clsQuestion(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
 
       println(responseObject)
+      self.arrQuestion.removeAllObjects()
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
 
       var arry:NSArray = responseObject as NSArray
+      print(arry.count)
       self.dataFetchFromDataBaseQuestion(arry)
       if(arry.count == 0){
         var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No HomeWork Found", delegate:self, cancelButtonTitle:"OK")
@@ -149,7 +150,6 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   }
 
   func dataFetchFromDataBaseQuestion(var arrFetchQues:NSArray){
-
     arrQuestion.removeAllObjects()
     for var index = 0 ; index < arrFetchQues.count ; index++ {
       let clsObj: Questions! = arrFetchQues.objectAtIndex(index) as Questions
@@ -161,10 +161,6 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     }
     print(arrQuestion)
     if (arrQuestion.count != 0) {
-
-      self.actiIndecatorVw.loadingIndicator.stopAnimating()
-      self.actiIndecatorVw.removeFromSuperview()
-
       self.tableview.reloadData()
     }
   }

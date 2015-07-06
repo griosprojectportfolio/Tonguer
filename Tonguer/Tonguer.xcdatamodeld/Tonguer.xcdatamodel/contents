@@ -144,6 +144,7 @@
         <attribute name="comt_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="Questions" representedClassName="Questions" syncable="YES">
+        <attribute name="class_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="ques_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -220,6 +221,7 @@
     <elements>
         <element name="Aboutus" positionX="-234" positionY="-90" width="128" height="90"/>
         <element name="Addvertiesment" positionX="-216" positionY="-72" width="128" height="105"/>
+        <element name="AdminContact" positionX="-234" positionY="-90" width="128" height="88"/>
         <element name="Answer" positionX="-234" positionY="-90" width="128" height="90"/>
         <element name="ClsModElement" positionX="-216" positionY="-72" width="128" height="88"/>
         <element name="ClsOutLineModule" positionX="-225" positionY="-81" width="128" height="88"/>
@@ -238,7 +240,7 @@
         <element name="PayClsCat" positionX="25" positionY="-108" width="128" height="88"/>
         <element name="PaySubCat" positionX="-153" positionY="-54" width="128" height="120"/>
         <element name="QuestionComment" positionX="-225" positionY="-81" width="128" height="90"/>
-        <element name="Questions" positionX="-234" positionY="-90" width="128" height="73"/>
+        <element name="Questions" positionX="-234" positionY="-90" width="128" height="90"/>
         <element name="User" positionX="-378" positionY="-234" width="128" height="180"/>
         <element name="UserClassOrder" positionX="-207" positionY="-63" width="128" height="165"/>
         <element name="UserClsVideo" positionX="-234" positionY="-90" width="128" height="120"/>
@@ -247,6 +249,5 @@
         <element name="UserLearnedClsList" positionX="-225" positionY="-81" width="128" height="148"/>
         <element name="UserNotes" positionX="-234" positionY="-90" width="128" height="163"/>
         <element name="VideoDone" positionX="-234" positionY="-90" width="128" height="90"/>
-        <element name="AdminContact" positionX="-234" positionY="-90" width="128" height="88"/>
     </elements>
 </model>
