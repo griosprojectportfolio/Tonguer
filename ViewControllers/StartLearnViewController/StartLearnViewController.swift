@@ -19,7 +19,8 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   var barforwordBtn :UIBarButtonItem!
   var imgVwAlpha,imgVwblur :UIImageView!
   var circVw :UIView!
-  
+  internal var isLearnd:Bool!
+
   var btnStartLearn,btnFreeOpen:UIButton!
   var useImgUrl:NSString!
   var lblDayLeft,lblDayLeftDigit,lblClassScore,lblClassScoreDigit,lblPerZ,lblProNum,lblprogress:UILabel!
@@ -48,7 +49,12 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     dict4 = NSMutableDictionary()
     dict4.setObject("notes.png", forKey: "image")
     dict4.setObject("Notes", forKey: "name")
-    self.title = "Start To Learn"
+
+    if(isLearnd == true) {
+        self.title = "Already Learnt"
+    } else {
+        self.title = "Start To Learn"
+    }
     
     self.navigationItem.setHidesBackButton(true, animated:false)
     
@@ -64,14 +70,14 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     self.view.addSubview(actiIndecatorVw)
     self.arrAdmin.removeAllObjects()
     self.arrUser.removeAllObjects()
-
+    self.defaultUIDesign()
     }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    self.defaultUIDesign()
     self.view.bringSubviewToFront(self.actiIndecatorVw)
     self.getClsTopicApiCall()
+    self.navigationController?.navigationBar.translucent = true
   }
 
   override func didReceiveMemoryWarning() {
@@ -142,11 +148,11 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     lblDayLeftDigit.textColor = UIColor(red: 241.0/255.0, green: 132.0/255.0, blue: 131.0/255.0,alpha:1.0)
     lblDayLeftDigit.font = lblDayLeftDigit.font.fontWithSize(30)
     imgVwAlpha.addSubview(lblDayLeftDigit)
-
     
     
     btnStartLearn = UIButton(frame: CGRectMake(self.view.frame.origin.x,imgVwblur.frame.origin.y+imgVwblur.frame.size.height, self.view.frame.width, 40))
-    btnStartLearn.setTitle("Start To Learn", forState: UIControlState.Normal)
+
+    btnStartLearn.setTitle(self.title, forState: UIControlState.Normal)
     btnStartLearn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     btnStartLearn.tintColor = UIColor.whiteColor()
     btnStartLearn.addTarget(self, action: "btnStartLearnTapped", forControlEvents: UIControlEvents.TouchUpInside)
@@ -181,6 +187,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     sartlTableview.delegate = self
     sartlTableview.dataSource = self
     sartlTableview.scrollEnabled = true
+    sartlTableview.showsVerticalScrollIndicator = false
     //sartlTableview.backgroundColor = UIColor.grayColor()
     sartlTableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(sartlTableview)

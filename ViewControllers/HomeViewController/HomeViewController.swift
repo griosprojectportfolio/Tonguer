@@ -39,7 +39,11 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   var arrclass: NSMutableArray!
   var arrClsLearn: NSMutableArray! = NSMutableArray()
   var arrClsLearned: NSMutableArray! = NSMutableArray()
+  var lblNoData:UILabel!
+  var imagViewNoData:UIImageView!
+  var totalLearnCls:NSInteger!
 
+  var isLearnd:Bool = false
   var api: AppApi!
 
   override func viewDidLoad() {
@@ -53,7 +57,8 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.appDelegate.objSideBar.addGestureRecognizer(leftswip)
     api = AppApi.sharedClient()
     self.defaultUIDesign()
-    var date: NSDate! = NSDate()
+    setDataNofoundImg()
+//    var date: NSDate! = NSDate()
 
     //updateDeviceTokenCall()
     self.fetchDataFromDBforDefaultCls()
@@ -65,6 +70,12 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     if (NSUserDefaults.standardUserDefaults().valueForKey("checkIns") == nil) {
       return;
     }
+    NSNotificationCenter.defaultCenter().addObserver(
+      self,
+      selector: "checkInButton:",
+      name: UIApplicationDidBecomeActiveNotification,
+      object: nil)
+    
     findDifferenceIndates() //difference in date
   }
 
@@ -72,6 +83,38 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     super.viewDidAppear(animated)
     self.userScoreApiCall()
     self.hometableVw.reloadData()
+    if(arrClsLearn.count > 0 || arrClsLearned.count > 0){
+      totalLearnCls = arrClsLearned.count + arrClsLearn.count
+      lblAleday.text = NSString(format: "%i",totalLearnCls)
+    }
+    
+    if(arrclass.count == 0){
+      if(btnTag == 1){
+        showSetDataNofoundImg()
+        lblNoData.text = "Please buy the classes."
+      }
+    }else{
+      resetShowSetDataNofoundImg()
+    }
+    
+    if(arrClsLearn.count == 0){
+      if(btnTag == 2){
+        showSetDataNofoundImg()
+        lblNoData.text = "Please start to learning."
+      }
+    }else{
+      resetShowSetDataNofoundImg()
+    }
+    
+    if(arrClsLearned.count == 0){
+      if(btnTag == 3){
+        showSetDataNofoundImg()
+        lblNoData.text = ""
+      }
+    }else{
+      resetShowSetDataNofoundImg()
+    }
+    
   }
 
   override func didReceiveMemoryWarning() {
@@ -80,11 +123,31 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
   override func viewWillAppear(animated: Bool) {
     //self.userClassApiCall()
+
+    super.viewWillAppear(animated)
+    self.navigationController?.navigationBar.translucent = true
+
     self.fetchDataFromdataBase()
     self.userClassApiCall()
     self.userLearnClsApiCall()
     self.userLearnedClsApiCall()
+  }
+  
+  //When App come into forground from background
+   func checkInButton(notification: NSNotification){
     
+    let previousCheckDate = NSUserDefaults.standardUserDefaults().valueForKey("checkIns") as NSDate
+    var calendar: NSCalendar = NSCalendar.currentCalendar()
+    let dateCheckIn = calendar.startOfDayForDate(previousCheckDate)
+    let dateCurrent = calendar.startOfDayForDate(NSDate())
+    
+    let flags = NSCalendarUnit.DayCalendarUnit
+    let components = calendar.components(flags, fromDate: dateCheckIn, toDate: dateCurrent, options: nil)
+    
+    if components.day > 0 {
+      btnMiddleNavi.enabled = true
+      btnMiddleNavi.backgroundColor = UIColor.clearColor()
+    }
   }
 
   func rightswipeGestureRecognizer(){
@@ -331,9 +394,14 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
     if components.day > 0 {
 
-      NSUserDefaults.standardUserDefaults().setValue(currentDate, forKey: "checkIns")
-      NSUserDefaults.standardUserDefaults().synchronize()
-      btnMiddleNavi.backgroundColor = UIColor.grayColor()
+      if(btnMiddleNavi.enabled == false) {
+        NSUserDefaults.standardUserDefaults().setValue(currentDate, forKey: "checkIns")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        btnMiddleNavi.backgroundColor = UIColor.grayColor()
+      } else {
+        btnMiddleNavi.enabled = true
+        btnMiddleNavi.backgroundColor = UIColor.clearColor()
+      }
       // btnMiddleNavi.enabled = false
     }
     if components.day == 0 {
@@ -356,6 +424,14 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
     HorizVw3.backgroundColor = UIColor.lightGrayColor()
     hometableVw.reloadData()
+    if(arrclass.count == 0){
+      if(btnTag == 1){
+        showSetDataNofoundImg()
+      }
+    }else{
+      resetShowSetDataNofoundImg()
+    }
+
   }
 
   func btnLearnlistTapped(sender:AnyObject){
@@ -366,6 +442,13 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     HorizVw3.backgroundColor = UIColor.lightGrayColor()
     hometableVw.reloadData()
+    if(arrClsLearn.count == 0){
+      if(btnTag == 2){
+        showSetDataNofoundImg()
+      }
+    }else{
+      resetShowSetDataNofoundImg()
+    }
   }
 
   func btnLearnedTapped(sender:AnyObject){
@@ -377,6 +460,13 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
     HorizVw3.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     hometableVw.reloadData()
+    if(arrClsLearned.count == 0){
+      if(btnTag == 3){
+        showSetDataNofoundImg()
+      }
+    }else{
+      resetShowSetDataNofoundImg()
+    }
   }
 
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -434,11 +524,14 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       dict = arrClsLearn.objectAtIndex(indexPath.row) as NSDictionary
     }else if(btnTag == 3){
       dict = arrClsLearned.objectAtIndex(indexPath.row) as NSDictionary
+        isLearnd = true
     }
 
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("LearnID") as StartLearnViewController
+    vc.isLearnd = isLearnd
     vc.dictClasses = dict
     vc.useImgUrl = useImgUrl
+
     self.navigationController?.pushViewController(vc, animated: true)
 
   }
@@ -476,23 +569,21 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     var imageData = UIImagePNGRepresentation(image)
     let base64String = imageData.base64EncodedStringWithOptions(.allZeros)
     //println(base64String)
-
+    
     var aParam:NSMutableDictionary = NSMutableDictionary()
     aParam.setValue(self.auth_token[0], forKey: "auth_token")
     aParam.setValue(base64String, forKey: "user[image]")
-
+    
     self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      var aParam: NSDictionary = responseObject?.objectForKey("user") as NSDictionary
+      CommonUtilities.addUserInformation(aParam)
       self.fetchDataFromdataBase()
-
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-
     })
-
   }
-  
   
 //  func updateDeviceTokenCall(){
 //    
@@ -519,46 +610,45 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   //****** User Data fetch from database ************
 
   func fetchDataFromdataBase(){
-    let arrFetchedData : NSArray = User.MR_findAll()
-    if(arrFetchedData.count>0){
-      let userObject : User = arrFetchedData.objectAtIndex(0) as User
-      print(userObject.fname)
-      let fname = userObject.fname
-      let lname = userObject.lname
+    var userDefault:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    var data:NSData = userDefault.objectForKey("user") as NSData
+    var dictFetchedData:NSDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data) as NSDictionary
+
+    CommonUtilities.sharedDelegate().dictUserInfo = dictFetchedData
+    print(dictFetchedData)
+
+    if(dictFetchedData.count>0){
+      print(dictFetchedData)
+      let fname = dictFetchedData.valueForKey("first_name") as String
+      let lname = dictFetchedData.valueForKey("last_name")as String
+
       var name: NSString!
-      if((fname != nil && lname  != nil)){
+      if((fname.isEmpty == false && lname.isEmpty == false )){
         name = fname+" "+lname
       }else{
         name = ""
       }
       lblblurVwtextTitle.text = name
-      
-      if((userObject.money) != nil){
-        lblMoney.text = userObject.money.stringValue
-      }else{
+
+      if((dictFetchedData.valueForKey("money") as String).isEmpty == false){
+        lblMoney.text = dictFetchedData.valueForKey("money") as? String
+      } else{
         lblMoney.text = "0.0"
       }
+ 
       
-      if((userObject.score) != nil){
-       // lblScore.text = userObject.score.stringValue
-      }else{
-        //lblScore.text = "0.0"
-      }
-      
-      if((userObject.pro_img) != nil){
-        useImgUrl = userObject.pro_img as NSString
-        let url = NSURL(string: userObject.pro_img as NSString)
-        imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
-        imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
-      }else{
+      if(((dictFetchedData.valueForKey("image")?.objectForKey("url"))?.isKindOfClass(NSNull)) != nil){
         useImgUrl = "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png"
         let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
         imgVwProfilrPic.sd_setImageWithURL(url)
+      }else{
+        useImgUrl = dictFetchedData.valueForKey("image")?.valueForKey("url") as String
+        let url = NSURL(string:useImgUrl)
+        imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+        imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
       }
     }
-    
   }
-
 
   //****** User Data fetch from database for user default class ************
 
@@ -682,7 +772,8 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     }
 
     print(arrClsLearn.count)
-    lblAleday.text = NSString(format: "%i",arrClsLearn.count)
+   
+    
 
   }
 
@@ -807,6 +898,31 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
         println(error)
     })
     
+  }
+  
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(hometableVw.frame.origin.x+20,hometableVw.frame.origin.y-((hometableVw.frame.height+150)/2),hometableVw.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    lblNoData.hidden = true
+    hometableVw.addSubview(lblNoData)
+    self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake(hometableVw.frame.origin.x+((hometableVw.frame.width-100)/2),hometableVw.frame.origin.y-((hometableVw.frame.height+100)/2),100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    //imagViewNoData.backgroundColor = UIColor.blackColor()
+    imagViewNoData.hidden = true
+    hometableVw.addSubview(imagViewNoData)
+    self.view.bringSubviewToFront(imagViewNoData)
+  }
+  
+  func showSetDataNofoundImg(){
+     lblNoData.hidden = false
+    imagViewNoData.hidden = false
+  }
+  
+  func resetShowSetDataNofoundImg(){
+    lblNoData.hidden = true
+    imagViewNoData.hidden = true
   }
 
   

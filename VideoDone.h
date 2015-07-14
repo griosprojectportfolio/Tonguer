@@ -13,11 +13,12 @@
 @interface VideoDone : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * video_id;
+@property (nonatomic, retain) NSNumber * user_id;
 @property (nonatomic, retain) NSNumber * video_cls_id;
 @property (nonatomic, retain) NSNumber * video_is;
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext userid:(NSNumber*)userid;
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext userid:(NSNumber*)userid;
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext userid:(NSNumber*)userid;
 
 @end

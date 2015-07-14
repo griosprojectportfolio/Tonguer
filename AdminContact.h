@@ -16,8 +16,8 @@
 @property (nonatomic, retain) NSString * admin_email;
 @property (nonatomic, retain) NSNumber * admin_contact_no;
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext adminid:(NSNumber*)adminid;
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContex adminid:(NSNumber*)adminid;
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext adminid:(NSNumber*)adminid;
 
 @end

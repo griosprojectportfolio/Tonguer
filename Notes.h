@@ -21,6 +21,7 @@
 @property (nonatomic, retain) NSNumber * isdelete;
 @property (nonatomic, retain) NSNumber * notes_like_cont;
 @property (nonatomic, retain) NSString * notes_img;
+@property (nonatomic, retain) NSNumber * note_like_status;
 
 + (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
 + (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;

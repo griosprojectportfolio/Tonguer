@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var objSideBar:SideBarView!
   var deviceTokenString:NSString!
   var arryNotification:NSMutableArray = NSMutableArray()
-
+    var dictUserInfo:NSDictionary!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       self.window?.addSubview(objSideBar)
       self.window?.bringSubviewToFront(objSideBar)
 
-    PayPalMobile.initializeWithClientIdsForEnvironments([PayPalEnvironmentSandbox:"AeXH1pDAunezMi2uSCm_nav3jV8QnUhly1GB0IlqxtUlgQBiTCRDEgt0Dq_TXLkCjlAoIabdE_N3Wc_R"])
+    PayPalMobile.initializeWithClientIdsForEnvironments([PayPalEnvironmentSandbox:"AXR3L7aTpquYVo0y_CRbqRRnmcCmGpN_kKbCfqje4HcIwHUnm1CP-isSN6729iUaRrizAWuhfST6KHJa"])
       // [PayPalMobile initializeWithClientIdsForEnvironments:@{PayPalEnvironmentProduction : @"YOUR_CLIENT_ID_FOR_PRODUCTION",
 
       MagicalRecord.setupCoreDataStack()

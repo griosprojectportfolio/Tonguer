@@ -157,14 +157,14 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
   //****** User Data fetch from database ************
   
   func fetchDataFromdataBase(){
-    let arrFetchedData : NSArray = User.MR_findAll()
-    let userObject : User = arrFetchedData.objectAtIndex(0) as User
-      if((userObject.money) != nil){
-      lblMoney.text = userObject.money.stringValue
-    }else{
-      lblMoney.text = "0.0"
-    }
-  
+    let userObject:NSDictionary = CommonUtilities.sharedDelegate().dictUserInfo
+
+    println(userObject)
+      if(userObject.valueForKey("money") as String).isEmpty == false {
+        lblMoney.text = userObject.valueForKey("money") as? String
+      } else  {
+        lblMoney.text = "0.0"
+      }
   }
 
   

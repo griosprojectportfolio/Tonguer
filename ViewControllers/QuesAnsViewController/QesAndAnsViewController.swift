@@ -11,12 +11,14 @@ import UIKit
 class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
   var barBackBtn :UIBarButtonItem!
-  var tableview: UITableView!
+  @IBOutlet var tableview: UITableView!
   var btnAddQues: UIButton!
   var classID: NSInteger!
   var api: AppApi!
   var actiIndecatorVw: ActivityIndicatorView!
   var arrQuestion: NSMutableArray = NSMutableArray()
+  var lblNoData:UILabel!
+  var imagViewNoData:UIImageView!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -31,11 +33,16 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     
     barBackBtn = UIBarButtonItem(customView: backbtn)
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    
     self.arrQuestion.removeAllObjects()
     self.defaultUIDesign()
+    self.setDataNofoundImg()
     var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)!
     var arry:NSArray = Questions.MR_findAllWithPredicate(predicate)
     self.dataFetchFromDataBaseQuestion(arry)
+    
+    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
+    self.view.addSubview(actiIndecatorVw)
   }
   
   override func viewWillAppear(animated: Bool) {
@@ -59,14 +66,9 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     btnAddQues.hidden = true
     self.view.addSubview(btnAddQues)
     
-    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width,self.view.frame.height-64))
-    //tableview.backgroundColor = UIColor.grayColor()
-    tableview.delegate = self
-    tableview.dataSource = self
+    tableview.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64, self.view.frame.width,self.view.frame.height-64)
     tableview.separatorStyle = UITableViewCellSeparatorStyle.None
-    self.view.addSubview(tableview)
-    
-    tableview.registerClass(QuesAnsTableViewCell.self, forCellReuseIdentifier: "cell")
+    tableview.contentInset = UIEdgeInsets(top: -64, left: 0, bottom: 0, right: 0)
     
   }
   
@@ -82,7 +84,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     var cell = tableview.dequeueReusableCellWithIdentifier("cell") as QuesAnsTableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(arrQuestion.count>0){
-    cell.defaultUIDesign(arrQuestion.objectAtIndex(indexPath.row) as NSDictionary)
+    cell.defaultUIDesign(arrQuestion.objectAtIndex(indexPath.row) as NSDictionary,frame:self.view.frame)
     cell.cellbtnAddAns.tag = indexPath.row
     cell.cellbtnAddAns.addTarget(self, action: "btnAddAnswerTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.cellbtnAns.tag = indexPath.row
@@ -124,8 +126,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   //********Question Api calling Methode*********
   
   func getQuestionApiCall(){
-    actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
-    self.view.addSubview(actiIndecatorVw)
+
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
     aParams.setValue(classID, forKey: "class_id")
@@ -140,8 +141,11 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
       print(arry.count)
       self.dataFetchFromDataBaseQuestion(arry)
       if(arry.count == 0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No HomeWork Found", delegate:self, cancelButtonTitle:"OK")
-              alert.show()
+//        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry No HomeWork Found", delegate:self, cancelButtonTitle:"OK")
+//              alert.show()
+       self.showSetDataNofoundImg()
+      }else{
+        self.reSetshowSetDataNofoundImg()
       }
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -162,6 +166,36 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     print(arrQuestion)
     if (arrQuestion.count != 0) {
       self.tableview.reloadData()
+     // reSetshowSetDataNofoundImg()
+    }else{
+      //showSetDataNofoundImg()
     }
   }
+  
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    lblNoData.hidden = true
+    self.view.addSubview(lblNoData)
+    //self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake((self.view.frame.width-100)/2,(self.view.frame.height-100)/2,100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    imagViewNoData.hidden = true
+    self.view.addSubview(imagViewNoData)
+    //self.view.bringSubviewToFront(imagViewNoData)
+  }
+  
+  func showSetDataNofoundImg(){
+    lblNoData.hidden = false
+    imagViewNoData.hidden = false
+  }
+  
+  func reSetshowSetDataNofoundImg(){
+    lblNoData.hidden = true
+    imagViewNoData.hidden = true
+  }
+
+  
+  
 }

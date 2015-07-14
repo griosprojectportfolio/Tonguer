@@ -22,7 +22,7 @@ class VideoPalyViewController:BaseViewController {
       self.navigationItem.setHidesBackButton(true, animated:false)
       
       var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-      backbtn.setImage(UIImage(named: "back.png"), forState: UIControlState.Normal)
+      backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
       backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
       
       barBackBtn = UIBarButtonItem(customView: backbtn)

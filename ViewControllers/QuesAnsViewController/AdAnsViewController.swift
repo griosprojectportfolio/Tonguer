@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AdAnsViewController: BaseViewController,UITextViewDelegate {
+class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDelegate {
   
   
   var scrollview: UIScrollView!
@@ -23,6 +23,9 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
   var dictQus: NSDictionary!
   var lblQues: UILabel!
   var api: AppApi!
+  var alertSend: UIAlertView!
+  var toolBar:UIToolbar!
+  var isTecxtViewUp:Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,20 +56,22 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
     scrollview.userInteractionEnabled = true
     //scrollview.backgroundColor = UIColor.grayColor()
     
-    
     self.view.addSubview(scrollview)
-    
-    
+
+    var barBtnDone: UIBarButtonItem! = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: "barBtnDonTapped")
+    var barSpace: UIBarButtonItem! = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target:self, action: nil)
+    toolBar = UIToolbar(frame: CGRectMake(0, 0, self.view.frame.width,50))
+    toolBar.items = [barSpace,barBtnDone]
+
     var strQuest = dictQus.valueForKey("question") as NSString
     var rect: CGRect! = strQuest.boundingRectWithSize(CGSize(width:self.view.frame.size.width-40,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
-    scrollview.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+rect.height)
+    scrollview.contentSize = CGSize(width: self.view.frame.width, height: 180+rect.height)
     
     imgVw = UIImageView(frame: CGRectMake(5,5, 20, 20))
     //imgVw.backgroundColor = UIColor.grayColor()
     imgVw.image = UIImage(named: "Q.png")
     scrollview.addSubview(imgVw)
-    
-    
+
     vWLine = UIView(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width, imgVw.frame.origin.y, 1, imgVw.frame.height))
     vWLine.backgroundColor = UIColor.lightGrayColor()
     scrollview.addSubview(vWLine)
@@ -95,6 +100,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
     txtViewAddAns.delegate = self
     txtViewAddAns.textColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     txtViewAddAns.layer.borderWidth = 1
+    txtViewAddAns.inputAccessoryView = toolBar
     txtViewAddAns.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
     scrollview.addSubview(txtViewAddAns)
     
@@ -103,34 +109,33 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
   }
-  
-  func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-    
-    if(text == "\n"){
-      scrollview.contentOffset = CGPoint(x:0, y:-70)
-      textView.resignFirstResponder()
-      return false
-    }
-    return true
-  }
- 
+
   func textViewDidBeginEditing(textView: UITextView) {
-   scrollview.contentOffset = CGPoint(x:0, y:0)
+    println((self.view.frame.size.height - 280))
+    if txtViewAddAns.frame.origin.y + txtViewAddAns.frame.size.height > (scrollview.frame.size.height - 280) {
+      scrollview.contentOffset = CGPoint(x:0, y:(lblQues.frame.size.height-30))
+      //scrollview.contentSize = CGSizeMake(scrollview.frame.size.width,scrollview.frame.size.height + txtViewAddAns.frame.origin.y)
+      isTecxtViewUp = true;
+    }
+    println("\(txtViewAddAns.frame.origin.y) \(scrollview.contentOffset)")
   }
   
-  
+  func textViewDidEndEditing(textView: UITextView) {
+    if isTecxtViewUp == true {
+      scrollview.contentOffset = CGPoint(x:0, y:-(lblQues.frame.size.height+30))
+    }
+  }
+
   func btnSendButtonTapped(sender: AnyObject){
     
     if(txtViewAddAns.text == ""){
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Please enter a Answer", delegate: self, cancelButtonTitle: "Ok")
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Please enter a Answer.", delegate: nil, cancelButtonTitle: "Ok")
       alert.show()
 
     }else{
       self.postAddAnswerApiCall()
     }
-  
   }
-  
 
   //******************* Add Answer Api call Methode ************
   
@@ -143,17 +148,29 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate {
     aParams.setValue(txtViewAddAns.text, forKey: "answer[answer]")
     self.api.clsQueaAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Answer Send Successfully", delegate: self, cancelButtonTitle: "Ok")
-      alert.show()
+       self.alertSend = UIAlertView(title: "Alert", message: "Answer Send Successfully.", delegate: self, cancelButtonTitle: "Ok")
+        self.alertSend.show()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Don't Send", delegate: self, cancelButtonTitle: "Ok")
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Don't Send.", delegate: nil, cancelButtonTitle: "Ok")
         alert.show()
         
     })
+  }
 
-    
+  func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+
+    if (alertView == alertSend) {
+      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AnswerID") as AnswersViewController
+      vc.dictQues = self.dictQus
+      self.navigationController?.pushViewController(vc, animated:true)
+    }
+  }
+
+  func barBtnDonTapped () {
+    self.view.endEditing(true)
+    scrollview.contentOffset = CGPoint(x:0, y:-64)
   }
 
 }

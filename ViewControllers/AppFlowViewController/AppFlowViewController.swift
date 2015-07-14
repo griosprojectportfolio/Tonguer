@@ -85,11 +85,13 @@ class AppFlowViewController: BaseViewController {
     imgVwAlpha.addGestureRecognizer(tapGuesture)
     VwimgBG.addSubview(imgVwAlpha)
     
-    btnplay = UIButton(frame: CGRectMake((imgVwAlpha.frame.width-40)/2,(imgVwAlpha.frame.height-40)/2,40, 40))
-    btnplay.backgroundColor = UIColor.whiteColor()
-    btnplay.layer.cornerRadius = 20
-    btnplay.layer.borderWidth = 1
+    btnplay = UIButton(frame: CGRectMake((imgVwAlpha.frame.width-50)/2,(imgVwAlpha.frame.height-50)/2,50,50))
+    btnplay.backgroundColor = UIColor.clearColor()
     btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
+    btnplay.tintColor = UIColor.redColor()
+    btnplay.layer.cornerRadius = 25
+    btnplay.layer.borderWidth = 1
+    btnplay.layer.borderColor = UIColor.clearColor().CGColor
     btnplay.addTarget(self, action: "btnPlayTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     imgVwAlpha.addSubview(btnplay)
     self.view.bringSubviewToFront(btnplay)

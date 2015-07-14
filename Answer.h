@@ -15,6 +15,7 @@
 @property (nonatomic, retain) NSNumber * ans_id;
 @property (nonatomic, retain) NSString * answer;
 @property (nonatomic, retain) NSNumber * ques_id;
+@property (nonatomic, retain) NSNumber * user_id;
 
 + (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
 + (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;

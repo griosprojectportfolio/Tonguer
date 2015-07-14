@@ -23,11 +23,14 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   var arrUser:NSMutableArray! = NSMutableArray()
   var actiIndecatorVw: ActivityIndicatorView!
   var api: AppApi!
+  var lblNoData:UILabel!
+  var imagViewNoData:UIImageView!
 
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
    self.defaultUIDesign()
+    setDataNofoundImg()
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
    //self.getDataFromDatabase()
@@ -73,7 +76,6 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     self.view.addSubview(tblDiscuss)
     
     tblDiscuss.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-    
     
   }
   
@@ -155,8 +157,8 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
       dict.setValue(arrSecton.objectAtIndex(index) as NSString, forKey: "name")
       dict.setValue(arrDatalist.objectAtIndex(index), forKey: "array")
       arrTopics.addObject(dict)
-      tblDiscuss.reloadData()
   }
+      tblDiscuss.reloadData()
   }
   
   
@@ -212,5 +214,37 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
      arrDatalist = NSMutableArray(objects:arrAdmin,arrUser)
      print(arrDatalist)
     self.getDataFromDatabase()
+    if(arrAdmin.count == 0 && arrUser.count == 0){
+      showSetDataNofoundImg()
+    }else{
+      reSetshowSetDataNofoundImg()
+    }
   }
+  
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    lblNoData.hidden = true
+    self.view.addSubview(lblNoData)
+    //self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake((self.view.frame.width-100)/2,(self.view.frame.height-100)/2,100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    imagViewNoData.hidden = true
+    self.view.addSubview(imagViewNoData)
+    //self.view.bringSubviewToFront(imagViewNoData)
+  }
+  
+  func showSetDataNofoundImg(){
+    lblNoData.hidden = false
+    imagViewNoData.hidden = false
+  }
+  
+  func reSetshowSetDataNofoundImg(){
+    lblNoData.hidden = true
+    imagViewNoData.hidden = true
+  }
+
+  
+  
 }

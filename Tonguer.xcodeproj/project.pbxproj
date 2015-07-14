@@ -31,6 +31,7 @@
 		0A682CAF1B25708800C54204 /* LearnStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A682CAE1B25708800C54204 /* LearnStatusViewController.swift */; };
 		0A68CE181B37EEF500BAE8BA /* Netconection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A68CE171B37EEF500BAE8BA /* Netconection.m */; };
 		0A78B1301AE62D61002AC651 /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78B12F1AE62D61002AC651 /* SettingTableViewCell.swift */; };
+		0A7B4B2F1B4BD43D00D38A6C /* AdminChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7B4B2E1B4BD43D00D38A6C /* AdminChatViewController.swift */; };
 		0A7D82381AE0ED1B00A29692 /* CourseDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D82371AE0ED1B00A29692 /* CourseDetailTableViewCell.swift */; };
 		0A7D823A1AE1403000A29692 /* CourseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D82391AE1403000A29692 /* CourseListCell.swift */; };
 		0A87C8301B22D87E00559499 /* VideoDone.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A87C82F1B22D87E00559499 /* VideoDone.m */; };
@@ -167,6 +168,7 @@
 		0A68CE171B37EEF500BAE8BA /* Netconection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Netconection.m; sourceTree = "<group>"; };
 		0A78B12F1AE62D61002AC651 /* SettingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		0A78B1391AE684FC002AC651 /* TonguerPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TonguerPrefixHeader.pch; sourceTree = "<group>"; };
+		0A7B4B2E1B4BD43D00D38A6C /* AdminChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminChatViewController.swift; sourceTree = "<group>"; };
 		0A7D82371AE0ED1B00A29692 /* CourseDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseDetailTableViewCell.swift; sourceTree = "<group>"; };
 		0A7D82391AE1403000A29692 /* CourseListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseListCell.swift; sourceTree = "<group>"; };
 		0A87C82E1B22D87E00559499 /* VideoDone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoDone.h; sourceTree = SOURCE_ROOT; };
@@ -417,6 +419,14 @@
 				0A890C051ADFD8A3000B2176 /* StartLearnTableViewCell.swift */,
 			);
 			path = StartLearnViewController;
+			sourceTree = "<group>";
+		};
+		0A7B4B2D1B4BD41F00D38A6C /* AdminchatViewController */ = {
+			isa = PBXGroup;
+			children = (
+				0A7B4B2E1B4BD43D00D38A6C /* AdminChatViewController.swift */,
+			);
+			path = AdminchatViewController;
 			sourceTree = "<group>";
 		};
 		0A89DA961B1476A000CB0AE9 /* PayPalMobile */ = {
@@ -837,6 +847,7 @@
 		174531E71ACD14F300E6DF2E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				0A7B4B2D1B4BD41F00D38A6C /* AdminchatViewController */,
 				0A89DAA81B14797500CB0AE9 /* PayPalViewController */,
 				0A08B3521AF0F97D0076226C /* pickupcenterViewController */,
 				0AC4ED941AEDFCFA00C8882F /* ClassesViewController */,
@@ -944,7 +955,7 @@
 					};
 					174531D11ACD145400E6DF2E = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 75V25T9GAG;
+						DevelopmentTeam = ZJG828Y48M;
 						TestTargetID = 174531B91ACD145400E6DF2E;
 					};
 				};
@@ -1054,6 +1065,7 @@
 				0AC0C40F1B061BA9003C3BB9 /* Answer.m in Sources */,
 				0AAFC7D11B12F8D200426D22 /* NSData+ImageContentType.m in Sources */,
 				174531F41ACD162F00E6DF2E /* CommonUtilities.swift in Sources */,
+				0A7B4B2F1B4BD43D00D38A6C /* AdminChatViewController.swift in Sources */,
 				0A8C76101ADD300900BADA01 /* AlertViewController.swift in Sources */,
 				0A88B2081AFCBEDA00003AFE /* Addvertiesment.m in Sources */,
 				0A08B34D1AF0C7AB0076226C /* AddNotesViewController.swift in Sources */,

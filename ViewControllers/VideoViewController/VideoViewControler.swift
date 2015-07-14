@@ -23,7 +23,8 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var moviePlayerController:MPMoviePlayerController!
   var doenloadedData:NSInteger = 0
   var videoDone:NSArray! = NSArray()
-  
+  var imagViewNoData:UIImageView!
+  var lblNoData: UILabel!
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
@@ -35,7 +36,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-    backbtn.setImage(UIImage(named: "back.png"), forState: UIControlState.Normal)
+    backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
     backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
     
     barBackBtn = UIBarButtonItem(customView: backbtn)
@@ -172,8 +173,9 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   func btnCompleteTapped(sender:AnyObject){
     var btn = sender as UIButton
     print(btn.tag)
-    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,btn.tag], forKeys: ["auth_token","cls_id","video_id"])
-    
+    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as Int
+    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,btn.tag,userId], forKeys: ["auth_token","cls_id","video_id", "userId"])
+
     self.api.videoComplete(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
          btn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
@@ -208,7 +210,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       self.api.downloadMediaData(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
         println(responseObject)
         btn.hidden = true
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloaded successfully..", delegate:self, cancelButtonTitle:"OK")
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloaded successfully.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
         },
         failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -272,8 +274,9 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       self.dataFetchFreeClsDB(arryVideo)
       self.tableview.reloadData()
       if(arryVideo.count==0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no video found.", delegate:self, cancelButtonTitle:"OK")
-        alert.show()
+//        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no video found.", delegate:self, cancelButtonTitle:"OK")
+//        alert.show()
+        self.setDataNofoundImg()
       }
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -294,8 +297,9 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
         self.dataFetchUserClsDB(arryVideo)
         self.tableview.reloadData()
       }else{
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no video found.", delegate:self, cancelButtonTitle:"OK")
-        alert.show()
+//        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no video found.", delegate:self, cancelButtonTitle:"OK")
+//        alert.show()
+        self.setDataNofoundImg()
       }
       
       },
@@ -334,9 +338,9 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   
   
   func dataFetchFreeClsDB(arrFetchCat: NSArray){
+    if(arrFetchCat.count>0){
     arrClassVideo.removeAllObjects()
      print(arrFetchCat.count)
-
     for var index = 0; index < arrFetchCat.count; ++index{
       let clsObject: FreeClssVideo = arrFetchCat.objectAtIndex(index) as FreeClssVideo
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
@@ -369,9 +373,13 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
 
       arrClassVideo.addObject(dictClass)
     }
+    }else{
+      //setDataNofoundImg()
+    }
     }
   
   func dataFetchUserClsDB(arrFetchCat: NSArray){
+    if(arrFetchCat.count>0){
     arrClassVideo.removeAllObjects()
     for var index = 0; index < arrFetchCat.count; ++index{
       let clsObject: UserClsVideo = arrFetchCat.objectAtIndex(index) as UserClsVideo
@@ -405,7 +413,22 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       arrClassVideo.addObject(dictClass)
      
     }
+    }else{
+      //setDataNofoundImg()
+    }
 
+  }
+  
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    self.view.addSubview(lblNoData)
+    self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake((self.view.frame.width-100)/2,(self.view.frame.height-100)/2,100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    self.view.addSubview(imagViewNoData)
+    self.view.bringSubviewToFront(imagViewNoData)
   }
 
 

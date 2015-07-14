@@ -18,7 +18,7 @@
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
   
-  Answer *obj = [Answer MR_findFirstByAttribute:@"ans_id" withValue:anID inContext:localContext];
+  Answer *obj = [Answer MR_findFirstByAttribute:@"ques_id" withValue:anID inContext:localContext];
   
   if (!obj) {
     obj = [Answer MR_createInContext:localContext];
@@ -41,7 +41,7 @@
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
-    Answer *obj = (Answer*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
+    Answer *obj = (Answer*)[self findOrCreateByID:[aDictionary objectForKey:@"question_id"] inContext:localContext];
     
     obj.ans_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
     
@@ -51,8 +51,9 @@
     if (![[aDictionary objectForKey:@"question_id"] isKindOfClass:[NSNull class]])
       obj.ques_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"question_id"] integerValue]];
 
-    
-    
+    if (![[aDictionary objectForKey:@"user_id"] isKindOfClass:[NSNull class]])
+      obj.user_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"user_id"] integerValue]];
+
     return obj;
   }
   return nil;

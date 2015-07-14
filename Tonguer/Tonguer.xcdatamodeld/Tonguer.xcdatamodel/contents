@@ -20,6 +20,7 @@
         <attribute name="ans_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ques_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="user_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="ClsModElement" representedClassName="ClsModElement" syncable="YES">
         <attribute name="mod_element_content" optional="YES" attributeType="String" syncable="YES"/>
@@ -98,6 +99,7 @@
     <entity name="Notes" representedClassName="Notes" syncable="YES">
         <attribute name="isdelete" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isenable" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="note_like_status" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notes_cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="notes_cls_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notes_content" optional="YES" attributeType="String" syncable="YES"/>
@@ -205,6 +207,7 @@
     </entity>
     <entity name="UserNotes" representedClassName="UserNotes" syncable="YES">
         <attribute name="isenable" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="note_like_status" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notes_cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="notes_cls_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notes_content" optional="YES" attributeType="String" syncable="YES"/>
@@ -214,6 +217,7 @@
         <attribute name="notes_like_count" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="VideoDone" representedClassName="VideoDone" syncable="YES">
+        <attribute name="user_id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="video_cls_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="video_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="video_is" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -222,7 +226,7 @@
         <element name="Aboutus" positionX="-234" positionY="-90" width="128" height="90"/>
         <element name="Addvertiesment" positionX="-216" positionY="-72" width="128" height="105"/>
         <element name="AdminContact" positionX="-234" positionY="-90" width="128" height="88"/>
-        <element name="Answer" positionX="-234" positionY="-90" width="128" height="90"/>
+        <element name="Answer" positionX="-234" positionY="-90" width="128" height="105"/>
         <element name="ClsModElement" positionX="-216" positionY="-72" width="128" height="88"/>
         <element name="ClsOutLineModule" positionX="-225" positionY="-81" width="128" height="88"/>
         <element name="DisAdminTopic" positionX="-234" positionY="-90" width="128" height="88"/>
@@ -234,7 +238,7 @@
         <element name="FreeClssVideo" positionX="-234" positionY="-90" width="128" height="120"/>
         <element name="FreeSubCat" positionX="-225" positionY="68" width="128" height="120"/>
         <element name="HostPayCls" positionX="-225" positionY="-81" width="128" height="193"/>
-        <element name="Notes" positionX="-225" positionY="-81" width="128" height="180"/>
+        <element name="Notes" positionX="-225" positionY="-81" width="128" height="195"/>
         <element name="PayClassVideo" positionX="-234" positionY="-90" width="128" height="103"/>
         <element name="PayCls" positionX="-198" positionY="-27" width="128" height="223"/>
         <element name="PayClsCat" positionX="25" positionY="-108" width="128" height="88"/>
@@ -247,7 +251,7 @@
         <element name="UserDefaultClsList" positionX="-234" positionY="-90" width="128" height="150"/>
         <element name="UserLearnClsList" positionX="-234" positionY="-90" width="128" height="148"/>
         <element name="UserLearnedClsList" positionX="-225" positionY="-81" width="128" height="148"/>
-        <element name="UserNotes" positionX="-234" positionY="-90" width="128" height="163"/>
-        <element name="VideoDone" positionX="-234" positionY="-90" width="128" height="90"/>
+        <element name="UserNotes" positionX="-234" positionY="-90" width="128" height="180"/>
+        <element name="VideoDone" positionX="-234" positionY="-90" width="128" height="105"/>
     </elements>
 </model>

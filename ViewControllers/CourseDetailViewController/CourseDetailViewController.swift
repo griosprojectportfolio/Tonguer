@@ -24,7 +24,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   var api: AppApi!
   var dataArr: NSArray!
   var dict1,dict2,dict3,dict4,dict5,dictClist,clsDictDe: NSDictionary!
-  
+  var isSearch:Bool!
   var clistarr: NSArray!
   var arrOutline: NSArray! = NSArray()
   
@@ -50,9 +50,12 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     dict1 = NSDictionary(objects: [clsDictDe.objectForKey("name") as NSString,strPrice,"0"], forKeys: ["coursename","courserate","id"])
     dict2 = NSDictionary(objects: ["course.png","Arrange",clsDictDe.valueForKey("arrange") as NSString,"1"], forKeys: ["image","tilte","data","id"])
     dict3 = NSDictionary(objects: ["userred.png","Suitable for user",clsDictDe.valueForKey("suitable") as NSString,"2"], forKeys: ["image","tilte","data","id"])
-    dict4 = NSDictionary(objects: ["target.png","Target for",clsDictDe.valueForKey("target") as NSString,"3"], forKeys: ["image","tilte","data","id"])
-    
-    dataArr = NSArray(objects: dict1,dict2,dict3,dict4)
+    if(clsDictDe.valueForKey("target") != nil) {
+      dict4 = NSDictionary(objects: ["target.png","Target for",clsDictDe.valueForKey("target") as NSString,"3"], forKeys: ["image","tilte","data","id"])
+      dataArr = NSArray(objects: dict1,dict2,dict3,dict4)
+    } else {
+      dataArr = NSArray(objects: dict1,dict2,dict3)
+    }
     dataFetchAdminContact()
   }
   
@@ -76,7 +79,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
     imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.size.width, 200))
-    let url = NSURL(string: clsDictDe.objectForKey("image") as NSString)
+
+    var url:NSURL!
+    if (isSearch == true) {
+      url = NSURL(string: clsDictDe.objectForKey("image")?.objectForKey("url") as NSString)
+    } else {
+      url = NSURL(string: clsDictDe.objectForKey("image") as NSString)
+    }
+
     imgVw.sd_setImageWithURL(url, placeholderImage:UIImage(named:"defaultImg"))
     self.view.addSubview(imgVw)
     
@@ -143,6 +153,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     tableview.dataSource = self
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.separatorStyle = UITableViewCellSeparatorStyle.None
+    tableview.showsVerticalScrollIndicator = false
     self.view.addSubview(tableview)
     tableview.registerClass(CourseDetailTableViewCell.self, forCellReuseIdentifier: "cell")
     tableview.registerClass(CourseListCell.self, forCellReuseIdentifier: "CourseList")
@@ -170,7 +181,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     btnbuy.addTarget(self, action: "btnBuyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btnbuy)
     
-    tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,horiVw.frame.origin.y+5,self.view.frame.width, btnbuy.frame.origin.y-horiVw2.frame.origin.y-10))
+   tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,horiVw.frame.origin.y+5,self.view.frame.width, btnbuy.frame.origin.y-horiVw2.frame.origin.y-10))
     
   }
   
@@ -184,13 +195,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     btnHaveClass.addTarget(self, action: "btnHaveClasstapped", forControlEvents: UIControlEvents.TouchUpInside)
     self.view.addSubview(btnHaveClass)
 
+    
     tableview = UITableView(frame: CGRectMake(self.view.frame.origin.x,horiVw.frame.origin.y+5,self.view.frame.width, btnHaveClass.frame.origin.y-horiVw2.frame.origin.y-10))
     
   }
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    var count: NSInteger!
+    var count: NSInteger = 0
     if(btnTag == 1){
       count = dataArr.count
     }else if(btnTag == 2){
@@ -203,7 +215,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   }
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    var count: NSInteger!
+    var count: NSInteger = 0
     if(btnTag == 1){
       count = 1
     }else if(btnTag == 2){
@@ -211,6 +223,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     }
     return count
   }
+  
+//  func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+////    let dict = arrOutline.objectAtIndex(section) as NSDictionary
+////    let obj = dict.valueForKey("module") as ClsOutLineModule
+//    
+//    
+//    return 30
+//  }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     
@@ -235,6 +255,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
       height = 50+rect.height
     }
+    
     return height
   }
   
@@ -262,7 +283,6 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       }
       cell.textLabel.textColor = UIColor.grayColor()
       cell.textLabel.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
-  
       return cell
     }
     return cell
@@ -284,6 +304,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       lbltilte.font = lbltilte.font.fontWithSize(12)
       lbltilte.textColor = UIColor.whiteColor()
       lbltilte.text = " "
+      lbltilte.numberOfLines = 0
       vWheader.addSubview(lbltilte)
       
       if(arrOutline.count>0){
@@ -369,7 +390,6 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     horiVw.backgroundColor = UIColor.lightGrayColor()
     horiVw1.backgroundColor = UIColor.lightGrayColor()
     horiVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    
     skypeIntegrationMethode()
   }
   
@@ -379,13 +399,15 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   
   
   func skypeIntegrationMethode(){
-    
-    var installed = UIApplication.sharedApplication().canOpenURL(NSURL(string: "skype:")!)
-    if(installed){
-      UIApplication.sharedApplication().openURL(NSURL(string: "skype:echo123?call")!)
-    }else{
-      UIApplication.sharedApplication().openURL(NSURL(string: "http://itunes.com/apps/skype/skype")!)
-    }
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AdminChatID") as AdminChatViewController
+    self.navigationController?.pushViewController(vc, animated:true)
+
+//    var installed = UIApplication.sharedApplication().canOpenURL(NSURL(string: "skype:")!)
+//    if(installed){
+//      UIApplication.sharedApplication().openURL(NSURL(string: "skype:echo123?call")!)
+//    }else{
+//      UIApplication.sharedApplication().openURL(NSURL(string: "http://itunes.com/apps/skype/skype")!)
+//    }
     
   }
   
@@ -394,12 +416,12 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       if let mnCode = cellularProvider.mobileNetworkCode {
         println(mnCode)
         
-        let phoneString = NSString(format: "tel://%@",serviceCallNo) as String
-        UIApplication.sharedApplication().openURL(NSURL(string: phoneString)!)
-      }
+       let phoneString = NSString(format: "tel://%@",serviceCallNo) as String
+       UIApplication.sharedApplication().openURL(NSURL(string: phoneString)!)
+     }
     } else {
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Please check your network.", delegate: self, cancelButtonTitle: "Ok")
-      alert.show()
+     var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Please check your network.", delegate: self, cancelButtonTitle: "Ok")
+     alert.show()
     }
   }
   
@@ -451,6 +473,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     if(arry.count>0){
     var obj = arry.objectAtIndex(0) as AdminContact
     serviceCallNo = obj.admin_contact_no
+      print(serviceCallNo)
     }
   
   }

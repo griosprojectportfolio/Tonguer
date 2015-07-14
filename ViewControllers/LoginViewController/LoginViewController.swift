@@ -69,6 +69,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     custxtEmail.returnKeyType = UIReturnKeyType.Done
     custxtEmail.clearButtonMode = UITextFieldViewMode.Always
     custxtEmail.keyboardType = .EmailAddress
+    custxtEmail.autocorrectionType = UITextAutocorrectionType.No
     self.view.addSubview(custxtEmail)
 
     
@@ -185,12 +186,12 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
     self.api.loginUser(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
 
-      println(responseObject)
-      var dict: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      var aParam: NSDictionary! = responseObject?.objectForKey("user") as NSDictionary
+        println(responseObject)
+        var dict: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+        var aParam: NSDictionary = responseObject?.objectForKey("user") as NSDictionary
 
-      self.auth_token = [dict.objectForKey("auth_token") as NSString];
-
+        self.auth_token = [dict.objectForKey("auth_token") as NSString];
+        CommonUtilities.addUserInformation(aParam)
 
       self.getFreeClassApiCall()
       self.getPayClassApiCall()

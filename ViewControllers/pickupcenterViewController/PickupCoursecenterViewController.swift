@@ -18,7 +18,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
-  var pickupTableView: UITableView!
+ @IBOutlet var pickupTableView: UITableView!
   var dataArr: NSMutableArray! = NSMutableArray()
   var arrHost: NSMutableArray! = NSMutableArray()
   var btnsVw: UIView!
@@ -31,6 +31,8 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   var isSearch:Bool = false
   var search:UISearchBar!
   var backbtn:UIButton!
+  var lblNoData:UILabel!
+  var imagViewNoData:UIImageView!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -41,6 +43,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     allSubCatDict = NSDictionary(objects: ["lblSubCategories"], forKeys: ["sub_id"])
     arrSubCat = NSArray(object: allSubCatDict)
     api = AppApi.sharedClient()
+    self.setDataNofoundImg()
     self.hostDataFetchFromDataBase()
     self.defaultUIDesign()
     //pickupTableView.reloadData()
@@ -50,6 +53,29 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     super.viewWillAppear(animated)
     getHostPayClsApiCall()
     getPayClassApiCall()
+    pickupTableView.reloadData()
+  }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    if(btntag == 1){
+     setTableContentinset()
+    }
+    if(btntag == 1){
+      if(arrHost.count == 0){
+        showSetDataNofoundImg()
+        reSetshowSetDataNofoundImg()
+      }else{
+        reSetshowSetDataNofoundImg()
+      }
+    }else if(btntag == 2){
+      if(dataArr.count == 0){
+        showSetDataNofoundImg()
+      }else{
+        reSetshowSetDataNofoundImg()
+      }
+    }
+  pickupTableView.reloadData()
   }
   
   override func didReceiveMemoryWarning() {
@@ -77,7 +103,6 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     barforwordBtn = UIBarButtonItem(customView: btnSearch)
 
     self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
-    
     
     btnHost = UIButton(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64,(self.view.frame.width/2)-2, 40))
     btnHost.setTitle("Host", forState: UIControlState.Normal)
@@ -108,21 +133,19 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
     self.view.addSubview(horiVw1)
     
-    pickupTableView = UITableView(frame: CGRectMake(self.view.frame.origin.x,horiVw1.frame.origin.y+horiVw1.frame.size.height+5,self.view.frame.width,self.view.frame.height-104))
+    pickupTableView.frame =  CGRectMake(self.view.frame.origin.x,horiVw1.frame.origin.y+horiVw1.frame.size.height+5,self.view.frame.width,self.view.frame.height-104)
     pickupTableView.delegate = self
     pickupTableView.dataSource = self
     pickupTableView.separatorStyle = UITableViewCellSeparatorStyle.None
-    self.view.addSubview(pickupTableView)
+    //pickupTableView.backgroundColor = UIColor.grayColor()
     
-    pickupTableView.registerClass(PickupTableViewCell.self, forCellReuseIdentifier: "cell")
-    pickupTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "allcell")
-
     search = UISearchBar(frame: CGRectMake(0, 0, 100, 30))
     search.hidden = true
     search.delegate = self
     search.showsCancelButton = true
     search.tintColor = UIColor.whiteColor()
     self.navigationItem.titleView = search
+    
   }
   
   
@@ -136,6 +159,11 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   }
   
   
+  func setTableContentinset(){
+    pickupTableView.contentInset = UIEdgeInsets(top:-(btnAll.frame.origin.y-30), left: 0, bottom: 0, right: 0)
+  }
+  
+  
   func btnHostTapped(sender:AnyObject){
   self.navigationItem.rightBarButtonItem = barforwordBtn
     isSearch = false
@@ -145,8 +173,14 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     var btn = sender as UIButton
     btntag = btn.tag
     print(btntag)
-    //getHostPayClsApiCall()
+    setTableContentinset()
     pickupTableView.reloadData()
+    print(arrHost.count)
+    if(arrHost.count<=0){
+      showSetDataNofoundImg()
+    }else{
+      reSetshowSetDataNofoundImg()
+    }
   }
   
   func btnAllTapped(sender:AnyObject){
@@ -158,8 +192,13 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     var btn = sender as UIButton
     btntag = btn.tag
     print(btntag)
-    //self.getPayClassApiCall()
-   pickupTableView.reloadData()
+    pickupTableView.contentInset = UIEdgeInsets(top:0, left: 0, bottom: 0, right: 0)
+    pickupTableView.reloadData()
+    if(dataArr.count<=0){
+      showSetDataNofoundImg()
+    }else{
+      reSetshowSetDataNofoundImg()
+    }
   }
 
   
@@ -291,12 +330,15 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     if(btntag == 1){
     var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
     vc.callVw = "Pay"
+      vc.isSearch = false
       if (isSearch == false) {
         vc.clsDictDe = arrHost.objectAtIndex(indexPath.row) as NSDictionary
       } else {
+        println(arrySearch.objectAtIndex(indexPath.row))
         vc.clsDictDe  = arrySearch.objectAtIndex(indexPath.row)as NSDictionary
+        vc.isSearch = true
       }
-    self.navigationController?.pushViewController(vc, animated: true)
+      self.navigationController?.pushViewController(vc, animated: true)
     }else if(btntag == 2){
       var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as NSDictionary
       var cellArr: NSArray! = dict.objectForKey("array") as NSArray
@@ -328,8 +370,9 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       
       if(self.dataArr.count == 0){
         if(self.btntag == 2){
-          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
-          alert.show()
+//          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
+//          alert.show()
+          //self.showSetDataNofoundImg()
         }
       }
       
@@ -351,12 +394,13 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
       //self.hometableVw.reloadData()
       self.hostDataFetchFromDataBase()
-//      if(self.dataArr.count == 0){
-//        if(self.btntag == 1){
+      if(self.dataArr.count == 0){
+        if(self.btntag == 1){
 //          var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
 //          alert.show()
-//        }
-//      }
+         //self.showSetDataNofoundImg()
+        }
+      }
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -402,7 +446,11 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       }
       dataArr.addObject(dictData)
     }
-    
+    if(dataArr.count == 0){
+      if(btntag == 2){
+      showSetDataNofoundImg()
+      }
+    }
   }
   
   func hostDataFetchFromDataBase(){
@@ -485,10 +533,36 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     }
     print(arrHost.count)
     if(arrHost.count == 0){
-      
+      if(btntag == 1){
+         showSetDataNofoundImg()
+      }
+     
     }
   }
 
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    lblNoData.hidden = true
+    self.view.addSubview(lblNoData)
+    //self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake((self.view.frame.width-100)/2,(self.view.frame.height-100)/2,100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    imagViewNoData.hidden = true
+    self.view.addSubview(imagViewNoData)
+    //self.view.bringSubviewToFront(imagViewNoData)
+  }
+  
+  func showSetDataNofoundImg(){
+    lblNoData.hidden = false
+    imagViewNoData.hidden = false
+  }
+  
+  func reSetshowSetDataNofoundImg(){
+    lblNoData.hidden = true
+    imagViewNoData.hidden = true
+  }
 
   func convertResponseIntoSectionData(arrFetchCat : NSArray){
 

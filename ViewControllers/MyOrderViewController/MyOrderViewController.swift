@@ -12,7 +12,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   
   let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
   
-  var myordertableview :UITableView!
+  @IBOutlet var myordertableview :UITableView!
   
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
@@ -23,12 +23,14 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   var HorizVw,vertiVw,HorizVw2,vertiVw2,HorizVw3: UIView!
   var arryTrue: NSArray! = NSArray()
   var arryFalse: NSArray! = NSArray()
+  var lblNoData:UILabel!
+  var imagViewNoData:UIImageView!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
-    
     self.defaultUIDesign()
+     setDataNofoundImg()
   }
   
   override func didReceiveMemoryWarning() {
@@ -39,6 +41,25 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
      userClassOrdersApiCall()
+  }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    if(arryTrue.count == 0){
+      if(btnTag == 2){
+        showSetDataNofoundImg()
+      }
+    }else {
+      resetShowSetDataNofoundImg()
+    }
+    if(arryFalse.count == 0){
+      if(btnTag == 1){
+        showSetDataNofoundImg()
+      }
+    }else{
+      resetShowSetDataNofoundImg()
+    }
+
   }
 
   
@@ -89,16 +110,11 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
     self.view.addSubview(HorizVw2)
     
-    myordertableview = UITableView(frame: CGRectMake(btn1.frame.origin.x,HorizVw2.frame.origin.y+HorizVw2.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-HorizVw2.frame.height-20))
+    myordertableview.frame = CGRectMake(btn1.frame.origin.x,HorizVw2.frame.origin.y+HorizVw2.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-HorizVw2.frame.height-10)
     //myordertableview.backgroundColor = UIColor.grayColor()
-    myordertableview.separatorStyle = UITableViewCellSeparatorStyle.None
-    myordertableview.delegate = self
-    myordertableview.dataSource = self
-    self.view.addSubview(myordertableview)
-    
-     myordertableview.registerClass(CourseOrderTableViewCell.self, forCellReuseIdentifier: "courseCell")
-    myordertableview.registerClass(CreditTableViewCell.self, forCellReuseIdentifier: "creditCell")
+    myordertableview.contentInset = UIEdgeInsetsMake(-64,0,0,0)
 
+    myordertableview.separatorStyle = UITableViewCellSeparatorStyle.None
   }
   
   func btnBackTapped(){
@@ -121,6 +137,12 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     HorizVw.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
     myordertableview.reloadData()
+    if(arryFalse.count == 0){
+      showSetDataNofoundImg()
+    }else{
+      resetShowSetDataNofoundImg()
+    }
+
   }
   
   func btn2Tapped(sender:AnyObject){
@@ -129,6 +151,12 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     HorizVw.backgroundColor = UIColor.lightGrayColor()
      myordertableview.reloadData()
+    if(arryTrue.count == 0){
+      showSetDataNofoundImg()
+    }else{
+      resetShowSetDataNofoundImg()
+    }
+    
   }
   
   
@@ -175,7 +203,25 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    return 100
+    var height:CGFloat = 100
+    if(btnTag == 2){
+      if(arryTrue.count > 0){
+      var obj =  arryTrue.objectAtIndex(indexPath.row) as UserClassOrder
+      var strMessage = obj.cls_name
+      var rect: CGRect! = strMessage.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+        height = height+rect.height
+      }
+    }else if(btnTag == 1){
+      if(arryFalse.count > 0){
+        var obj =  arryFalse.objectAtIndex(indexPath.row) as UserClassOrder
+        var strMessage = obj.cls_name
+        var rect: CGRect! = strMessage.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+        height = height+rect.height
+      }
+
+    }
+    
+    return height
   }
 
   //**************** User Classes Orders Api Call **************
@@ -201,7 +247,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     if(arryTrue.count > 0 || arryFalse.count > 0){
       myordertableview.reloadData()
     }
-   
+    
   }
   
   func btnNotPayTapped(sender:UIButton){
@@ -237,6 +283,31 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as OrderConfViewController
     vc.clsDict = dictCls
     self.navigationController?.pushViewController(vc, animated: true)
+  }
+  
+  
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    lblNoData.hidden = true
+    self.view.addSubview(lblNoData)
+    self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake((self.view.frame.width-100)/2,(self.view.frame.height-100)/2,100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    imagViewNoData.hidden = true
+    self.view.addSubview(imagViewNoData)
+    self.view.bringSubviewToFront(imagViewNoData)
+  }
+  
+  func showSetDataNofoundImg(){
+    lblNoData.hidden = false
+    imagViewNoData.hidden = false
+  }
+  
+  func resetShowSetDataNofoundImg(){
+    lblNoData.hidden = true
+    imagViewNoData.hidden = true
   }
   
   

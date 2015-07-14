@@ -34,7 +34,7 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
    self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-        backbtn.setImage(UIImage(named: "back.png"), forState: UIControlState.Normal)
+        backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
         backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
     
     barBackBtn = UIBarButtonItem(customView: backbtn)
@@ -134,7 +134,7 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   
   
   func btnSignupTapped(){
-      self.signUpValidation()
+    signUpValidation()
   }
   
   func signupApiCall(){
@@ -157,6 +157,8 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
     api.signUpUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var dict: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      var aParam: NSDictionary = responseObject?.objectForKey("user") as NSDictionary
+      CommonUtilities.addUserInformation(aParam)
       var auth_token: NSString! = dict.objectForKey("auth_token") as NSString
       self.auth_token = [auth_token]
       self.actiIndecatorVw.removeFromSuperview()
@@ -172,12 +174,13 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   }
   
   
+  
   func signUpValidation(){
     
     var strPawword = custxtPassword.text as NSString
     var strPawwordCnf = custxtConpass.text as NSString
     
-    if(custxtEmail.text == "" && custxtPassword.text == "" && custxtFname.text == "" && custxtLname.text == "" && custxtConpass.text == ""){
+    if(custxtEmail.text == "" || custxtPassword.text == "" || custxtFname.text == "" || custxtLname.text == "" || custxtConpass.text == ""){
       var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Don't Left any feild.", delegate: self, cancelButtonTitle: "Ok")
       alert.show()
       return
@@ -194,8 +197,26 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
       alert.show()
       return
     }
+    var isValid = isValidEmail(custxtEmail.text)
+    if(isValid){
+      
+    }else{
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Please enter a valid email address.", delegate: self, cancelButtonTitle: "Ok")
+      alert.show()
+      return
+    }
+
     self.signupApiCall()
   }
   
+    func isValidEmail(testStr:String) -> Bool {
+    println("validate calendar: \(testStr)")
+    let emailRegEx = "^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$"
+    
+    if let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx) {
+      return emailTest.evaluateWithObject(testStr)
+    }
+    return false
+  }
   
 }

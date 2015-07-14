@@ -14,6 +14,7 @@
 @dynamic video_id;
 @dynamic video_is;
 @dynamic video_cls_id;
+@dynamic user_id;
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
   
@@ -26,17 +27,17 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext userid:(NSNumber *)userid{
   for(NSDictionary *aDictionary in aArray) {
-    [VideoDone entityFromDictionary:aDictionary inContext:localContext];
+    [VideoDone entityFromDictionary:aDictionary inContext:localContext userid:userid];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [VideoDone entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext userid:(NSNumber *)userid {
+  [VideoDone entityFromDictionary:adictionary inContext:localContext userid:userid];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext userid:(NSNumber *)userid {
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
@@ -44,7 +45,7 @@
     
     obj.video_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
     obj.video_cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"cls_id"] integerValue]];
-    
+    obj.user_id = userid;
       NSNumber *done = [[NSNumber alloc]initWithDouble:1];
       obj.video_is = done;//[NSNumber numberWithInteger:[[aDictionary objectForKey:@"video_is"]boolValue]];
     

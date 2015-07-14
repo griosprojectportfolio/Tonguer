@@ -13,11 +13,11 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
-  var vWContent :UIView!
   var lbldeatil :UILabel!
   var imgVw :UIImageView!
   var tableview: UITableView!
   var api: AppApi!
+    var scrollAdvertise:UIScrollView = UIScrollView()
   var haderArr: NSMutableArray! = NSMutableArray()
   var subCatArr: NSMutableArray! = NSMutableArray()
   var dataArr: NSMutableArray! = NSMutableArray()
@@ -37,8 +37,6 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
       imgVw.image = UIImage(named:"defaultImg.png")
       lbldeatil.text = ""
     }
-    
-    
   }
   
   override func viewDidAppear(animated: Bool) {
@@ -48,6 +46,8 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
+    self.navigationController?.navigationBar.translucent = false
+
     getAddvertiesmentApiCall()
       getFreeClassApiCall()
   }
@@ -65,34 +65,33 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     barBackBtn = UIBarButtonItem(customView: backbtn)
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
-    
-    imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x+10, self.view.frame.origin.y+84,self.view.frame.size.width-20,150))
-    //imgVw.image = UIImage(named: "img2.png")
-    imgVw.layer.borderWidth = 0.5
-    imgVw.layer.borderColor = UIColor.lightGrayColor().CGColor
-    self.view.addSubview(imgVw)
-    
-    vWContent = UIView(frame: CGRectMake(imgVw.frame.origin.x, imgVw.frame.origin.y+imgVw.frame.size.height, imgVw.frame.size.width, 50))
-    vWContent.layer.borderWidth = 0.5
-    vWContent.layer.borderColor = UIColor.lightGrayColor().CGColor
-    self.view.addSubview(vWContent)
-    
-    lbldeatil = UILabel(frame: CGRectMake(vWContent.frame.origin.x+5,0, vWContent.frame.size.width-10,vWContent.frame.size.height-10))
-    lbldeatil.text = "This is a preliminary document for an API or technology in development. Apple is supplying this."
+
+    scrollAdvertise.frame = CGRectMake(self.view.frame.origin.x+10, self.view.frame.origin.y, self.view.frame.size.width-20,180)
+    scrollAdvertise.layer.borderWidth = 0.5
+    scrollAdvertise.showsVerticalScrollIndicator = false
+    scrollAdvertise.layer.borderColor = UIColor.lightGrayColor().CGColor
+    self.view.addSubview(scrollAdvertise)
+
+    imgVw = UIImageView(frame: CGRectMake(0, 5 ,scrollAdvertise.frame.size.width,150))
+    scrollAdvertise.addSubview(imgVw)
+
+    var lblLine:UILabel = UILabel(frame: CGRectMake(imgVw.frame.origin.x,imgVw.frame.origin.y+imgVw.frame.size.height+3, scrollAdvertise.frame.size.width, 0.7))
+    lblLine.backgroundColor = UIColor.darkGrayColor()
+    scrollAdvertise.addSubview(lblLine)
+
+    lbldeatil = UILabel(frame: CGRectMake(imgVw.frame.origin.x+2,imgVw.frame.origin.y+imgVw.frame.size.height+5, imgVw.frame.size.width-4,21))
     lbldeatil.numberOfLines = 0
     lbldeatil.font = lbldeatil.font.fontWithSize(12)
-    //lblDeatil.backgroundColor = UIColor.yellowColor()
     lbldeatil.textColor = UIColor.blackColor()
-    vWContent.addSubview(lbldeatil)
+    scrollAdvertise.addSubview(lbldeatil)
    
-    tableview = UITableView(frame: CGRectMake(vWContent.frame.origin.x,vWContent.frame.origin.y+vWContent.frame.height, vWContent.frame.width, self.view.frame.height-vWContent.frame.origin.y-vWContent.frame.height))
+    tableview = UITableView(frame: CGRectMake(scrollAdvertise.frame.origin.x,scrollAdvertise.frame.origin.y+scrollAdvertise.frame.height, scrollAdvertise.frame.width, self.view.frame.height-scrollAdvertise.frame.origin.y))
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self
-   // tableview.separatorStyle = UITableViewCellSeparatorStyle.None
     self.view.addSubview(tableview)
    tableview.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-    
+   tableview.tableFooterView = UIView(frame: CGRectZero)
   }
   
   
@@ -214,6 +213,12 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     }else{
       lbldeatil.text = ""
     }
+    var strDetail:NSString = lbldeatil.text!
+
+    var rect:CGRect! = strDetail.boundingRectWithSize(CGSize(width:lbldeatil.frame.size.width ,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:lbldeatil.font], context: nil)
+
+    lbldeatil.frame = CGRectMake(lbldeatil.frame.origin.x,lbldeatil.frame.origin.y,lbldeatil.frame.size.width, rect.size.height)
+    scrollAdvertise.contentSize = CGSizeMake(scrollAdvertise.frame.size.width, imgVw.frame.size.height+lbldeatil.frame.size.height+15)
     
     if((obj.add_img) != nil){
       let url: NSURL = NSURL(string: obj.add_img as NSString)!
@@ -222,13 +227,8 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
       let url: NSURL = NSURL(string:"http://www.popular.com.my/images/no_image.gif")!
       imgVw.sd_setImageWithURL(url)
     }
-    
-    
   }
-  
-  
 
-  
   //*************** Data feching Form DataBase **************
   
   func dataFetchFromDataBase(){

@@ -28,5 +28,21 @@ class CommonUtilities: NSObject {
   return networkStatus != 0
   
   }
+
+
+  class func sharedDelegate ()-> AppDelegate! {
+  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  return appDelegate
+
+  }
   
+  class func addUserInformation(var aParam:NSDictionary) {
+    var userDefault:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    var data:NSData = NSKeyedArchiver.archivedDataWithRootObject(aParam);
+    userDefault.setObject(data, forKey: "user")
+    NSUserDefaults.standardUserDefaults().synchronize()
+  }
+  class func removeUserInformation() {
+    NSUserDefaults.standardUserDefaults().removeObjectForKey("user")
+  }
 }

@@ -46,35 +46,37 @@ class AdAnsTableViewCell: BaseTableViewCell {
     var strName: NSString! = aParam.valueForKey("by") as NSString
     var strComment: NSString! = aParam.valueForKey("comment") as NSString
     
-    var strfist: NSString = strName + ": "
-    var stringSize = strfist + strComment
+    var stringSize = strComment.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
 
-    var attrs = [NSFontAttributeName : UIFont.boldSystemFontOfSize(12)]
-     var boldString = NSMutableAttributedString(string:strfist, attributes:attrs)
-    boldString.beginEditing()
-    boldString.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: NSRange(location:0,length:boldString.length))
-    var rect: CGRect! = stringSize.boundingRectWithSize(CGSize(width:width-20,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+    lblAns = UILabel()
+    lblAns.numberOfLines = 0
+    lblAns.font = lblAns.font.fontWithSize(11)
+
+//
+//    var attrs = [NSFontAttributeName : UIFont.boldSystemFontOfSize(12)]
+//     var boldString = NSMutableAttributedString(string:strfist, attributes:attrs)
+//    boldString.beginEditing()
+//    boldString.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: NSRange(location:0,length:boldString.length))
+    var rect: CGRect! = stringSize.boundingRectWithSize(CGSize(width: width-10,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:lblAns.font], context: nil)
     print("****\(rect), *** \(width)")
 
     vWcell = UIView(frame:CGRectMake(40,5, width, rect.size.height + 20))
-    lblAns = UILabel(frame: CGRectMake(5,10, vWcell.frame.size.width-10, rect.size.height))
+    lblAns.frame = CGRectMake(5,10, vWcell.frame.size.width-10, rect.size.height)
+    vWcell.addSubview(lblAns)
 
-    var normalString = NSMutableAttributedString(string:strComment, attributes:attrs)
-    normalString.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSRange(location:0,length:normalString.length))
+    // var normalString = NSMutableAttributedString(string:strComment, attributes:attrs)
+    // normalString.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSRange(location:0,length:normalString.length))
 
-    boldString.appendAttributedString(normalString)
-    
+    // boldString.appendAttributedString(normalString)
+    lblAns.text = stringSize//boldString
+
     //vWcell.backgroundColor = UIColor.lightGrayColor()
     vWcell.layer.cornerRadius = 2
     vWcell.layer.borderWidth = 0.5
     vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
     self.contentView.addSubview(vWcell)
     
-    lblAns.numberOfLines = 0
-    lblAns.font = lblAns.font.fontWithSize(11)
-    lblAns.attributedText = boldString
 
-    vWcell.addSubview(lblAns)
     
     
 //    lblBy.text = "By-"

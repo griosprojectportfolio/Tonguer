@@ -95,9 +95,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             println(indexPath.row)
-            //          var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
-            //          self.sideNavigation.pushViewController(vc, animated: false)
-        })
+          })
       }else{
         UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
@@ -121,8 +119,6 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             println(indexPath.row)
-            //            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("PickCenterID") as PickupCoursecenterViewController
-            //            self.sideNavigation.pushViewController(vc, animated: false)
         })
       }else{
         UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
@@ -175,11 +171,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             println(indexPath.row)
-            //              var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("MyOderID") as MyOrderViewController
-            //              self.sideNavigation.pushViewController(vc, animated: false)
         })
-        
-        
       }else{
         UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
@@ -237,11 +229,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             
-            //  var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("SettingID") as SettingViewController
-            //  self.sideNavigation.pushViewController(vc, animated:false)
-            
         })
-        
         
       }else{
         UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
@@ -253,16 +241,30 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
             
         })
         
-        
       }
       
     case 5:// Chat
-      var installed = UIApplication.sharedApplication().canOpenURL(NSURL(string: "skype:")!)
-      if(installed){
-        UIApplication.sharedApplication().openURL(NSURL(string: "skype:echo123?call")!)
+      var lastViewcontroler: UIViewController! = self.sideNavigation.visibleViewController
+      print(lastViewcontroler)
+      
+      
+      if lastViewcontroler .isKindOfClass(AdminChatViewController){
+        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+          self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
+          }, completion: { (Bool) -> Void in
+            println(indexPath.row)
+        })
       }else{
-        UIApplication.sharedApplication().openURL(NSURL(string: "http://itunes.com/apps/skype/skype")!)
+        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+          self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
+          }, completion: { (Bool) -> Void in
+            println(indexPath.row)
+            let vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("AdminChatID") as AdminChatViewController
+            self.sideNavigation.pushViewController(vc, animated:true)
+        })
+        
       }
+
       
     default:
       println("erroe")

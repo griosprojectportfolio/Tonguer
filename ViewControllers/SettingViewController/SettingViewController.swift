@@ -171,7 +171,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
       User.deleteAllEntityObjects() // delete all table
       NSUserDefaults.standardUserDefaults().removeObjectForKey("auth_token")
       NSUserDefaults.standardUserDefaults().synchronize()
-
+      CommonUtilities.removeUserInformation()
       self.navigationController?.popToRootViewControllerAnimated(false)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -181,27 +181,29 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
 }
   
   func fetchDataFromdataBase(){
-    let arrFetchedData : NSArray = User.MR_findAll()
-    if(arrFetchedData.count>0){
-      let userObject : User = arrFetchedData.objectAtIndex(0) as User
-      print(userObject.fname)
-      let fname = userObject.fname
-      let lname = userObject.lname
+
+    let userObject:NSDictionary = CommonUtilities.sharedDelegate().dictUserInfo
+
+    let fname = userObject.valueForKey("first_name") as String
+      let lname = userObject.valueForKey("last_name") as String
       var name: NSString!
-      if((fname != nil && lname  != nil)){
+      if((fname.isEmpty == false && lname.isEmpty == false )){
         name = fname+" "+lname
         lblname.text = name
       }else{
         name = ""
       }
+    
+    if(((userObject.valueForKey("image")?.objectForKey("url"))?.isKindOfClass(NSNull)) != nil){
       
-      if((userObject.pro_img) != nil){
-        let url = NSURL(string: userObject.pro_img as NSString)
-        imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
-      }else{
-        let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
-        imgVwPPic.sd_setImageWithURL(url)
-      }
+      let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
+      imgVwPPic.sd_setImageWithURL(url)
+    }else{
+      let strImg = userObject.valueForKey("image")?.valueForKey("url") as String
+      let url = NSURL(string:strImg)
+      imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+      
     }
-  }
+    
+    }
 }

@@ -27,6 +27,9 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   var arrComments: NSMutableArray! = NSMutableArray()
   var dictUserAns: NSMutableDictionary! = NSMutableDictionary()
   var actiIndecatorVw: ActivityIndicatorView!
+  var lblNoData:UILabel!
+  var imagViewNoData:UIImageView!
+  var arryAnswer:NSArray = NSArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -46,13 +49,25 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
-    getUserAnswerApiCall()
-    
+
+    self.setDataNofoundImg()
   }
-  
+
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
     self.view.bringSubviewToFront(actiIndecatorVw)
+  }
+  
+  override func viewDidAppear(animated: Bool) {
+
+    super.viewDidAppear(animated)
+    getUserAnswerApiCall()
+
+    if(arryAnswer.count == 0){
+      showSetDataNofoundImg()
+    }else{
+      resetShowSetDataNofoundImg()
+    }
   }
 
   func defaultUIDesign(){
@@ -60,7 +75,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     print(arrComments)
     
     scrollVW = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.size.width,self.view.frame.size.height-64))
-   // scrollVW.backgroundColor = UIColor.grayColor()
+   //scrollVW.backgroundColor = UIColor.grayColor()
     scrollVW.showsHorizontalScrollIndicator = true
     scrollVW.scrollEnabled = true
     scrollVW.userInteractionEnabled = true
@@ -77,6 +92,8 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     
     var strQuest = dictQues.valueForKey("question") as NSString
     var rect: CGRect! = strQuest.boundingRectWithSize(CGSize(width:self.view.frame.size.width-40,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+    
+   
   
     lblQuestion = UILabel(frame: CGRectMake(vWLine.frame.origin.x+5,vWLine.frame.origin.y,rect.width,rect.height))
     lblQuestion.text = strQuest
@@ -93,7 +110,13 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     scrollVW.addSubview(vWHori1)
     
     var strAns = dictUserAns.valueForKey("answer") as NSString
-    var rectAns: CGRect! = strAns.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+    var strAnswer: NSString!
+    if(strAns.isKindOfClass(NSNull)){
+      strAnswer = ""
+    }else{
+      strAnswer = strAns
+    }
+    var rectAns: CGRect! = strAnswer.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
     
     imgVw1 = UIImageView(frame: CGRectMake(imgVw.frame.origin.x,imgVw.frame.origin.y+lblQuestion.frame.size.height+20, 20,20))
     //imgVw1.backgroundColor = UIColor.grayColor()
@@ -107,7 +130,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     
     lblAnswer = UILabel(frame: CGRectMake(vWLine1.frame.origin.x+5,vWLine1.frame.origin.y,rectAns.width,rectAns.height))
     
-    lblAnswer.text = strAns
+    lblAnswer.text = strAnswer
     lblAnswer.numberOfLines = 0
     lblAnswer.textAlignment = NSTextAlignment.Justified
     lblAnswer.font = lblQuestion.font.fontWithSize(12)
@@ -122,7 +145,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     scrollVW.addSubview(vWHori2)
     
     
-    ansTableview = UITableView(frame: CGRectMake(scrollVW.frame.origin.x,vWHori2.frame.height+vWHori2.frame.origin.y+20,scrollVW.frame.width,(scrollVW.frame.height - vWHori2.frame.origin.y-40)))
+    ansTableview = UITableView(frame: CGRectMake(scrollVW.frame.origin.x,vWHori2.frame.height+vWHori2.frame.origin.y+20,scrollVW.frame.width,200))
      ansTableview.delegate = self
      ansTableview.dataSource = self
     ansTableview.scrollEnabled = true
@@ -130,6 +153,8 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     ansTableview.separatorStyle = UITableViewCellSeparatorStyle.None
     scrollVW.addSubview(ansTableview)
     ansTableview.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    
+    scrollVW.contentSize = CGSize(width: self.view.frame.width, height:rect.height+ansTableview.frame.height+lblAnswer.frame.height+200)
     
     if((arrComments).count == 0){
       var vwComment: UIView! = UIView(frame: CGRectMake(0,20,ansTableview.frame.width,ansTableview.frame.height))
@@ -143,7 +168,15 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   }
   
   func btnBackTapped(){
-    self.navigationController?.popViewControllerAnimated(true)
+
+    println(self.navigationController?.viewControllers)
+    if let viewControllers = self.navigationController?.viewControllers {
+      for viewController in viewControllers {
+        if viewController.isKindOfClass(QesAndAnsViewController) {
+          self.navigationController?.popToViewController(viewController as QesAndAnsViewController, animated: true)
+        }
+      }
+    }
   }
   
   override func didReceiveMemoryWarning() {
@@ -205,34 +238,37 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
       self.actiIndecatorVw.removeFromSuperview()
       let arryQuestion:NSArray = responseObject as NSArray
       if(arryQuestion.count>0){
+        self.resetShowSetDataNofoundImg()
       self.dataFetchFromDataBaseComments(arryQuestion)
       }
-      self.defaultUIDesign()
+      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
         
     })
   }
-  
-  
   //********User Answer Api calling Methode*********
   
   func getUserAnswerApiCall(){
-    
+
+    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as Int
     var aParams: NSMutableDictionary! = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
     aParams.setValue(dictQues.valueForKey("id"), forKey: "question_id")
+    aParams.setValue(userId, forKey: "userId")
+    println(aParams)
     self.api.userAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
 
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-     
-      let arryAnswer:NSArray = responseObject as NSArray
-      if(arryAnswer.count>0){
-      self.dataFetchFromDataBaseUserAnswer(arryAnswer)
-      self.getAdminCommentApiCall()
+      self.arryAnswer = responseObject as NSArray
+      if(self.arryAnswer.count>0){
+
+        self.resetShowSetDataNofoundImg()
+        self.dataFetchFromDataBaseUserAnswer(self.arryAnswer)
+        self.getAdminCommentApiCall()
       }
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -256,12 +292,41 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   func dataFetchFromDataBaseUserAnswer(arrFetchAnswer: NSArray){
 
       for var index = 0 ; index < arrFetchAnswer.count ; index++ {
+      dictUserAns.removeAllObjects()
       let ansObj: Answer! = arrFetchAnswer.objectAtIndex(index) as Answer
       
       dictUserAns.setValue(ansObj.ans_id, forKey: "id")
       dictUserAns.setValue(ansObj.answer, forKey:"answer")
+      var strAns = ansObj.answer as NSString
+      self.defaultUIDesign()
       
     }
   }
+  
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    lblNoData.hidden = true
+    self.view.addSubview(lblNoData)
+    self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake((self.view.frame.width-100)/2,(self.view.frame.height-100)/2,100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    imagViewNoData.hidden = true
+    self.view.addSubview(imagViewNoData)
+    self.view.bringSubviewToFront(imagViewNoData)
+  }
+  
+  func showSetDataNofoundImg(){
+    lblNoData.hidden = false
+    imagViewNoData.hidden = false
+  }
+  
+  func resetShowSetDataNofoundImg(){
+    lblNoData.hidden = true
+    imagViewNoData.hidden = true
+  }
+
+  
 
 }

@@ -13,6 +13,7 @@
 @interface DisAdminTopic : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * topic_id;
+@property (nonatomic, retain) NSNumber * class_id;
 @property (nonatomic, retain) NSString * topic_name;
 @property (nonatomic, retain) NSString * topic_content;
 

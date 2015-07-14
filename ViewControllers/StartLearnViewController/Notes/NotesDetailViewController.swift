@@ -22,6 +22,7 @@ class NotesDetailViewController: BaseViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    //self.title = "qwertyuio assdfgghh fvjhsfgajshfgajsf"
     api = AppApi.sharedClient()
     print(dictNotes)
      self.defaultUIDesign()
@@ -65,7 +66,16 @@ class NotesDetailViewController: BaseViewController {
       var btnBarAdd: UIBarButtonItem = UIBarButtonItem(customView: btnAdd)
       
       btnLike = UIButton(frame: CGRectMake(0, 0, 25, 25))
-      btnLike.setImage(UIImage(named: "like.png"), forState: UIControlState.Normal)
+      
+      var like_status = dictNotes.valueForKey("note_like_status") as Bool
+      if(like_status){
+        btnLike.setImage(UIImage(named: "like"), forState: UIControlState.Normal)
+        btnLike.userInteractionEnabled = false
+      }else{
+        btnLike.setImage(UIImage(named: "notLike"), forState: UIControlState.Normal)
+        btnLike.userInteractionEnabled = true
+      }
+
       btnLike.addTarget(self, action: "btnLikeTapped:", forControlEvents: UIControlEvents.TouchUpInside)
       var btnBarLike: UIBarButtonItem = UIBarButtonItem(customView: btnLike)
       
@@ -78,28 +88,41 @@ class NotesDetailViewController: BaseViewController {
     scrollVW.scrollEnabled = true
     scrollVW.userInteractionEnabled = true
     //scrollVW.backgroundColor = UIColor.grayColor()
-    scrollVW.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+100)
     self.view.addSubview(scrollVW)
     
     var strContent: NSString = dictNotes.valueForKey("content") as NSString
+    var strName:NSString = dictNotes.valueForKey("cls_name") as NSString
+
+    println(dictNotes)
+    var lblCLassName:UILabel = UILabel()
+    lblCLassName.text = strName
+    lblCLassName.numberOfLines = 0
+    lblCLassName.textAlignment = NSTextAlignment.Center
+    lblCLassName.font = UIFont.boldSystemFontOfSize(15)
+    lblCLassName.textColor = UIColor.grayColor()
+    scrollVW.addSubview(lblCLassName)
+
+    var rectclassName: CGRect! = strName.boundingRectWithSize(CGSize(width:scrollVW.frame.size.width-45,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:lblCLassName.font], context: nil)
+
+    lblCLassName.frame = CGRectMake(scrollVW.frame.origin.x,5,scrollVW.frame.size.width,rectclassName.height)
+
+    var rect: CGRect! = strContent.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
     
-    var rect: CGRect! = strContent.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(13)], context: nil)
-    
-    lblContent = UILabel(frame: CGRectMake(scrollVW.frame.origin.x+20,5,scrollVW.frame.size.width-40,rect.height))
+    lblContent = UILabel(frame: CGRectMake(scrollVW.frame.origin.x+20,lblCLassName.frame.size.height + lblCLassName.frame.origin.y+5,scrollVW.frame.size.width-40,rect.height))
     
     lblContent.text = strContent
     lblContent.numberOfLines = 0
     lblContent.textAlignment = NSTextAlignment.Justified
     lblContent.font = lblContent.font.fontWithSize(12)
     lblContent.textColor = UIColor.grayColor()
-    //lblContent.backgroundColor = UIColor.greenColor()
     scrollVW.addSubview(lblContent)
-    
-    imgVW = UIImageView(frame: CGRectMake(lblContent.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.height+30,lblContent.frame.width,400))
+
+    imgVW = UIImageView(frame: CGRectMake(lblContent.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.height+20,lblContent.frame.width,400))
     let url = NSURL(string: dictNotes.objectForKey("image") as NSString)
     imgVW.sd_setImageWithURL(url)
-    //imgVW.backgroundColor = UIColor.redColor()
     scrollVW.addSubview(imgVW);
+
+    scrollVW.contentSize = CGSize(width:self.view.frame.width, height:imgVW.frame.origin.y+imgVW.frame.size.height)
   }
   
   func btnBackTapped(){
@@ -119,14 +142,14 @@ class NotesDetailViewController: BaseViewController {
       println(responseObject)
       self.actiIndecatorVw.loadingIndicator.startAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note added successfully", delegate:nil, cancelButtonTitle: "OK")
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note added successfully.", delegate:nil, cancelButtonTitle: "OK")
       alert.show()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(operation?.responseString)
         self.actiIndecatorVw.loadingIndicator.startAnimating()
         self.actiIndecatorVw.removeFromSuperview()
-        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note is not added successfully", delegate:nil, cancelButtonTitle: "OK")
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Note is not added successfully.", delegate:nil, cancelButtonTitle: "OK")
         alert.show()
     })
     
@@ -165,8 +188,8 @@ class NotesDetailViewController: BaseViewController {
     
     self.api.notesLike(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      self.btnLike.enabled = false
-     
+      self.btnLike.setImage(UIImage(named: "like"), forState: UIControlState.Normal)
+      self.btnLike.userInteractionEnabled = false
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

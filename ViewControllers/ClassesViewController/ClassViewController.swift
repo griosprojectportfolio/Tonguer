@@ -18,7 +18,9 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   var arrClasses: NSMutableArray! = NSMutableArray()
   var sub_cat_id: NSInteger!
   var actiIndecatorVw: ActivityIndicatorView!
-  
+  var lblNoData:UILabel!
+  var imagViewNoData:UIImageView!
+  var isSearch = false
   var api: AppApi!
   
   override func viewDidLoad() {
@@ -41,7 +43,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     
     self.actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
-
+    setDataNofoundImg()
     var predicate:NSPredicate = NSPredicate (format: "cls_subcategory_Id CONTAINS %i", sub_cat_id)!;
     var arrFetchCat:NSArray;
     if (flgClass.isEqualToString("Free")){
@@ -53,6 +55,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       self.dataFetchFromDatabasePayCls(arrFetchCat)
 
     }
+    self.navigationController?.navigationBar.translucent = true
   }
   
   override func didReceiveMemoryWarning() {
@@ -76,6 +79,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
     self.tblClass.reloadData()
+    self.navigationController?.navigationBar.translucent = true
   }
 
   func defaultUIDesign(){
@@ -108,11 +112,13 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     if(flgClass .isEqualToString("Pay")){
       var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
       vc.callVw = flgClass
+      vc.isSearch = isSearch
       vc.clsDictDe = self.arrClasses.objectAtIndex(indexPath.row) as NSDictionary
       self.navigationController?.pushViewController(vc, animated: true)
     }else if (flgClass.isEqualToString("Free")){      
       var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
       vc.callVw = flgClass
+      vc.isSearch = isSearch
       vc.clsDictDe = self.arrClasses.objectAtIndex(indexPath.row) as NSDictionary
       self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -133,8 +139,9 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       let arry:NSArray = responseObject as NSArray
       self.dataFetchFromDatabaseFreeCls(arry)
       if self.arrClasses.count == 0{
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
-        alert.show()
+//        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
+//        alert.show()
+        self.showSetDataNofoundImg()
       }
       self.tblClass.reloadData()
       println("\( self.arrClasses)")
@@ -160,8 +167,9 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       let arry:NSArray = responseObject as NSArray
       self.dataFetchFromDatabasePayCls(arry)
       if(self.arrClasses.count == 0){
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
-        alert.show()
+//        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
+//        alert.show()
+       self.showSetDataNofoundImg()
       }
       self.tblClass.reloadData()
       println(self.arrClasses)
@@ -305,5 +313,29 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
   }
-    
+  
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    lblNoData.hidden = true
+    self.view.addSubview(lblNoData)
+    self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake((self.view.frame.width-100)/2,(self.view.frame.height-100)/2,100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    imagViewNoData.hidden = true
+    self.view.addSubview(imagViewNoData)
+    self.view.bringSubviewToFront(imagViewNoData)
+  }
+  
+  func showSetDataNofoundImg(){
+    lblNoData.hidden = false
+    imagViewNoData.hidden = false
+  }
+  
+  func resetShowSetDataNofoundImg(){
+    lblNoData.hidden = true
+    imagViewNoData.hidden = true
+  }
+
 }

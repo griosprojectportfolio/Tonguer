@@ -13,8 +13,9 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   var barBackBtn :UIBarButtonItem!
   var btnMyNotes,btnNotes: UIButton!
   var vWHori1,vWHori2: UIView!
-  var tblVwNotes: UITableView!
+  @IBOutlet var tblVwNotes: UITableView!
   var tapTag: NSInteger = 1
+  var DataFilterTag: NSInteger = 0
   var btnSearch,btnfilter: UIButton!
   var api: AppApi!
   var pickerVW: UIPickerView!
@@ -24,11 +25,14 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   var arrclass: NSMutableArray! = NSMutableArray()
   var arrNotes: NSMutableArray! = NSMutableArray()
   var isSearch:Bool = false
+  var isFilter:Bool = false
   var scopeSearch:NSString = "user"
   var arrySearchNotes:NSMutableArray = NSMutableArray()
 
   var btnBarFilter,btnBarSearch,btnBarAdd: UIBarButtonItem!
   var search:UISearchBar!
+  var lblNoData:UILabel!
+  var imagViewNoData:UIImageView!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -52,6 +56,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     //self.view.addSubview(actiIndecatorVw)
     self.defaultUIDesign()
+    setDataNofoundImg()
     var arryUserNotes:NSArray = UserNotes.MR_findAll()
     var arryNotes:NSArray = Notes.MR_findAll()
     
@@ -76,7 +81,21 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     super.viewWillAppear(animated)
     self.view.bringSubviewToFront(self.actiIndecatorVw)
     self.getNotesApiCall()
-    
+    self.tblVwNotes.reloadData()
+    tblVwNotes.contentInset = UIEdgeInsetsMake(-64,0,0,0)
+    if(tapTag == 1){
+    if(arrUserNotes.count == 0){
+      showSetDataNofoundImg()
+    }else{
+      reSetshowSetDataNofoundImg()
+      }
+    }else if(tapTag == 2){
+      if(arrNotes.count == 0){
+        showSetDataNofoundImg()
+      }else{
+        reSetshowSetDataNofoundImg()
+      }
+    }
     
   }
 
@@ -99,10 +118,12 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
     btnfilter = UIButton(frame: CGRectMake(0, 0, 25, 25))
     btnfilter.setImage(UIImage(named: "filter.png"), forState: UIControlState.Normal)
+    btnfilter.tag = 3
     btnfilter.addTarget(self, action: "btnFilterTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     
     btnSearch = UIButton(frame: CGRectMake(0, 0, 25, 25))
     btnSearch.setImage(UIImage(named: "searchicon.png"), forState: UIControlState.Normal)
+    btnSearch.tag = 4
     btnSearch.addTarget(self, action: "btnSearchTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     
     btnBarFilter = UIBarButtonItem(customView: btnfilter)
@@ -139,15 +160,12 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     vWHori2.backgroundColor = UIColor.lightGrayColor()
     self.view.addSubview(vWHori2)
     
-    tblVwNotes = UITableView(frame: CGRectMake(self.view.frame.origin.x,btnNotes.frame.origin.y+btnNotes.frame.height+2,self.view.frame.width, self.view.frame.height - (btnNotes.frame.origin.y+btnNotes.frame.height+5)))
+    tblVwNotes.frame = CGRectMake(self.view.frame.origin.x,btnNotes.frame.origin.y+btnNotes.frame.height+2,self.view.frame.width, self.view.frame.height - (btnNotes.frame.origin.y+btnNotes.frame.height+5))
     //tblVwNotes.backgroundColor = UIColor.grayColor()
     tblVwNotes.separatorStyle = UITableViewCellSeparatorStyle.None
-    tblVwNotes.delegate = self
-    tblVwNotes.dataSource = self
-    self.view.addSubview(tblVwNotes)
-    
-    tblVwNotes.registerClass(MyNotesTableViewCell.self, forCellReuseIdentifier: "MyNotesCell")
-    tblVwNotes.registerClass(NotesTableViewCell.self, forCellReuseIdentifier: "NotesCell")
+
+    // tblVwNotes.registerClass(MyNotesTableViewCell.self, forCellReuseIdentifier: "MyNotesCell")
+    // tblVwNotes.registerClass(NotesTableViewCell.self, forCellReuseIdentifier: "NotesCell")
 
     search = UISearchBar(frame: CGRectMake(0, 0, 100, 30))
     search.hidden = true
@@ -157,8 +175,34 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     self.navigationItem.titleView = search
   }
   
+  func setDataNofoundImg(){
+    lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
+    lblNoData.text = "Sorry no data found."
+    lblNoData.textAlignment = NSTextAlignment.Center
+    lblNoData.hidden = true
+    self.view.addSubview(lblNoData)
+    //self.view.bringSubviewToFront(lblNoData)
+    imagViewNoData = UIImageView(frame: CGRectMake((self.view.frame.width-100)/2,(self.view.frame.height-100)/2,100,100))
+    imagViewNoData.image = UIImage(named:"smile")
+    imagViewNoData.hidden = true
+    self.view.addSubview(imagViewNoData)
+    //self.view.bringSubviewToFront(imagViewNoData)
+  }
+  
+  func showSetDataNofoundImg(){
+    lblNoData.hidden = false
+    imagViewNoData.hidden = false
+  }
+  
+  func reSetshowSetDataNofoundImg(){
+    lblNoData.hidden = true
+    imagViewNoData.hidden = true
+  }
+
+  
   func btnSearchTapped(sender:AnyObject){
-    
+    var btn = sender as UIButton
+    DataFilterTag = btn.tag
     self.navigationItem.rightBarButtonItems = nil
     self.navigationItem.leftBarButtonItem = nil
     search.hidden = false
@@ -171,6 +215,8 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
   
   func btnFilterTapped(sender:AnyObject){
+    var btn = sender as UIButton
+    DataFilterTag = btn.tag
     vwPicker.hidden = false
     self.view.bringSubviewToFront(vwPicker)
   }
@@ -182,7 +228,17 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     vWHori1.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWHori2.backgroundColor = UIColor.lightGrayColor()
     getNotesApiCall()
+    isFilter = false
+    isSearch = false
     tblVwNotes.reloadData()
+    if(arrUserNotes.count == 0){
+      if(tapTag == 1){
+        showSetDataNofoundImg()
+      }
+    }else{
+      reSetshowSetDataNofoundImg()
+    }
+
   }
   
   func btnNotesTapped(sender:AnyObject){
@@ -193,7 +249,16 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     vWHori2.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWHori1.backgroundColor = UIColor.lightGrayColor()
     getNotesApiCall()
+    isFilter = false
     tblVwNotes.reloadData()
+    if(arrNotes.count == 0){
+      if(tapTag == 2){
+        showSetDataNofoundImg()
+      }
+    }else{
+      reSetshowSetDataNofoundImg()
+    }
+
   }
   
   func btnBackTapped(){
@@ -203,7 +268,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     var count: NSInteger!
 
-    if (isSearch == true) {
+    if (isSearch == true || isFilter == true) {
       count = arrySearchNotes.count
     } else {
       if(tapTag == 1){
@@ -222,38 +287,45 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
     var cell: UITableViewCell! = nil
-    
     if(tapTag == 1){
       var cell: MyNotesTableViewCell!
       cell = tblVwNotes.dequeueReusableCellWithIdentifier("MyNotesCell") as MyNotesTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-
-      if (isSearch == false) {
-        if(arrUserNotes.count>0){
-          cell.defaultUIDesign(arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
-        }
-      } else {
-        if(arrySearchNotes.count>0){
-        cell.defaultUIDesign(arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
-        }
-      }
+      self.searchCellMyNotes(indexPath.row, cell1:cell)
        return cell
     } else if(tapTag == 2){
       var cell: NotesTableViewCell!
        cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
+      self.searchCellNotes(indexPath.row, cell1:cell)
        cell.selectionStyle = UITableViewCellSelectionStyle.None
-      if (isSearch == false) {
-        if(arrNotes.count > 0){
-          cell.defaultUIDesign(arrNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
-        }
-      } else {
-        if(arrySearchNotes.count>0){
-        cell.defaultUIDesign(arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary, Frame: self.view.frame)
-        }
-      }
       return cell
     }
     return cell
+  }
+
+  func searchCellNotes(var rowIndex:Int , var cell1:NotesTableViewCell)  {
+
+    if (isSearch == true || isFilter == true) {
+      if(arrySearchNotes.count>0){
+        cell1.defaultUIDesign(arrySearchNotes.objectAtIndex(rowIndex) as NSDictionary, Frame: self.view.frame)
+      }
+    } else{
+      if(arrNotes.count>0){
+        cell1.defaultUIDesign(arrNotes.objectAtIndex(rowIndex) as NSDictionary, Frame: self.view.frame)
+        }
+    }
+  }
+
+  func searchCellMyNotes(var rowIndex:Int , var cell1:MyNotesTableViewCell) {
+      if (isSearch == true || isFilter == true) {
+        if(arrySearchNotes.count>0){
+          cell1.defaultUIDesign(arrySearchNotes.objectAtIndex(rowIndex) as NSDictionary, Frame: self.view.frame)
+        }
+      } else {
+        if(arrUserNotes.count>0){
+          cell1.defaultUIDesign(arrUserNotes.objectAtIndex(rowIndex) as NSDictionary, Frame: self.view.frame)
+        }
+      }
   }
 
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -265,11 +337,34 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("NotesDetailID") as NotesDetailViewController
     vc.isShow = tapTag
     if(tapTag == 1){
+      if(isSearch == true){
+        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary
+        self.navigationController?.pushViewController(vc, animated: true)
+        return
+      }
+      if(isFilter == true){
+        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary
+        self.navigationController?.pushViewController(vc, animated: true)
+        return
+      }
       vc.dictNotes = arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary
+      self.navigationController?.pushViewController(vc, animated: true)
+      
     }else if(tapTag == 2){
+      if(isSearch == true){
+        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary
+        self.navigationController?.pushViewController(vc, animated: true)
+        return
+      }
+      if(isFilter == true){
+        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary
+        self.navigationController?.pushViewController(vc, animated: true)
+        return
+      }
       vc.dictNotes = arrNotes.objectAtIndex(indexPath.row) as NSDictionary
+      self.navigationController?.pushViewController(vc, animated: true)
     }
-    self.navigationController?.pushViewController(vc, animated: true)
+   // self.navigationController?.pushViewController(vc, animated: true)
     
   }
   
@@ -345,6 +440,13 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       arrUserNotes.addObject(dict)
     }
     print(arrUserNotes.count)
+    if(arrUserNotes.count == 0){
+      if(tapTag == 1){
+        showSetDataNofoundImg()
+      }else{
+        reSetshowSetDataNofoundImg()
+      }
+    }
   }
   
   
@@ -386,10 +488,22 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
       }else{
         dict.setValue("", forKey:"cls_name")
       }
+      if((notesObj.note_like_status) != nil){
+        dict.setValue(notesObj.note_like_status, forKey:"note_like_status")
+      }else{
+        dict.setValue(0, forKey:"note_like_status")
+      }
       
       arrNotes.addObject(dict)
     }
     print(arrNotes.count)
+    if(arrNotes.count == 0){
+      if(tapTag == 2){
+        showSetDataNofoundImg()
+      }
+    }else{
+      //reSetshowSetDataNofoundImg()
+    }
   }
 
 
@@ -470,7 +584,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
         var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no notes found.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
       }else{
-        self.isSearch = true
+        self.isFilter = true
         self.tblVwNotes.reloadData()
       }
 

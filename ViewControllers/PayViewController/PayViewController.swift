@@ -142,10 +142,11 @@ class PayViewController: BaseViewController {
     var cls_amount: NSInteger!
     var remainingMoney: NSInteger!
     cls_amount = clsDict.valueForKey("price")?.integerValue
-    let arrFetchedData : NSArray = User.MR_findAll()
-    let userObject : User = arrFetchedData.objectAtIndex(0) as User
-    if((userObject.money) != nil){
-      money = userObject.money.integerValue
+
+    let userObject:NSDictionary = CommonUtilities.sharedDelegate().dictUserInfo
+
+    if(userObject.valueForKey("money") as String).isEmpty == false {
+      money = userObject.valueForKey("money") as Int
     }
     remainingMoney = money - cls_amount
     var aParam:NSMutableDictionary = NSMutableDictionary()

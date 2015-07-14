@@ -17,6 +17,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   var btnConfirmpay :UIButton!
   var clsDict: NSDictionary = NSDictionary()
   
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     print(clsDict)
@@ -104,9 +105,6 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     lblNeedmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblNeedmoney)
     
-    
-    
-    
     btnConfirmpay = UIButton(frame: CGRectMake(txtFieldContact.frame.origin.x, self.view.frame.size.height-50, txtFieldContact.frame.width, 40))
     btnConfirmpay.setTitle("Confirm Pay", forState: UIControlState.Normal)
     btnConfirmpay.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
@@ -130,4 +128,8 @@ func btnBackTapped(){
     textField.resignFirstResponder()
     return false
   }
+  
+  
+
+  
 }

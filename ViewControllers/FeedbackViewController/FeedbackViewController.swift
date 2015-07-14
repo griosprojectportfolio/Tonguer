@@ -116,7 +116,7 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   }
   
   func btnSendTapped(sender:AnyObject){
-    if(custxtFname.text.isEmpty || custxtEmail.text.isEmpty){
+    if(custxtFname.text.isEmpty || txtViewComment.text.isEmpty){
       var alert: UIAlertView = UIAlertView(title: "", message: "Please Don't left any field", delegate:self, cancelButtonTitle:"OK")
       alert.show()
     }else{

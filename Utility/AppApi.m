@@ -87,18 +87,13 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
     return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/sessions/login" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
-      
-      NSMutableArray *arrResponse = [[NSMutableArray alloc] init];
-      [arrResponse addObject:[responseObject valueForKey:@"user"]];
-      [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        [User entityFromArray:arrResponse inContext:localContext];
-      }completion:^(BOOL success, NSError *error) {
+      dispatch_async(dispatch_get_main_queue(), ^{
         successBlock(task, responseObject);
-      }];
+      });
     } failure:^(AFHTTPRequestOperation *task, NSError *error) {
-        if(failureBlock){
-            failureBlock(task, error);
-        }
+      if(failureBlock){
+        failureBlock(task, error);
+      }
     }];
 }
 
@@ -115,17 +110,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [dictParams removeObjectForKey:@"auth_token"];
 
     return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/registration" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
-      NSDictionary *dict = [responseObject valueForKey:@"user"];
-      [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        [User entityWithDictionaty:dict inContext:localContext];
-        
-      } completion:^(BOOL success, NSError *error) {
-          successBlock(task, responseObject);
-      }];
-      
+      dispatch_async(dispatch_get_main_queue(), ^{
+        successBlock(task, responseObject);
+      });
     } failure:^(AFHTTPRequestOperation *task, NSError *error) {
-        if(failureBlock){
-            failureBlock(task.responseObject,error);
+      if(failureBlock){
+        failureBlock(task, error);
       }
     }];
 }
@@ -140,23 +130,15 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
     return [self baseRequestWithHTTPMethod:@"PATCH" URLString:@"/update" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
       
-      NSDictionary *dict = [responseObject valueForKey:@"user"];
-          
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-         [User entityFromDictionary:dict inContext:localContext];
-      }completion:^(BOOL success, NSError *error) {
+      dispatch_async(dispatch_get_main_queue(), ^{
         successBlock(task, responseObject);
-
-      }];
-      
-  } failure:^(AFHTTPRequestOperation *task, NSError *error) {
-        if(failureBlock){
-            failureBlock(task, error);
-        }
+      });
+    } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+      if(failureBlock){
+        failureBlock(task, error);
+      }
     }];
 }
-
-
 
 #pragma mark- Forgot password
 
@@ -547,13 +529,15 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
   [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
   
-  return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/get_admin_contact" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+  return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/get_admin_contacts" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     
-    //NSMutableArray *arrVideoList = [[responseObject objectForKey:@"data"] objectForKey:@"video"];
-    
+    NSMutableArray *arrVideoList = [[responseObject objectForKey:@"data"] objectForKey:@"contacts"];
+    NSArray *arry = [arrVideoList objectAtIndex:0];
+    NSDictionary *dict =[arry objectAtIndex:0];
+    NSNumber *adminid = [[NSNumber alloc]initWithUnsignedInteger:1];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      [AdminContact entityWithDictionaty:responseObject inContext:localContext];
+      [AdminContact entityWithDictionaty:dict inContext:localContext adminid:adminid];
     } completion:^(BOOL success, NSError *error) {
        successBlock(task, responseObject);
     }];
@@ -610,7 +594,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
       [DisAdminTopic entityFromArray:adminData inContext:localContext];
        [DisUserToic entityFromArray:userData inContext:localContext];
     } completion:^(BOOL success, NSError *error) {
+//      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"class_id CONTAINS %i", [[aParams objectForKey:@""] integerValue]];
+//      NSArray *arrComment  = [DisTopicComments MR_findAllWithPredicate:predicate];
       NSArray *arryAdmin = [DisAdminTopic MR_findAll];
+
+//      NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"class_id CONTAINS %i", [[aParams objectForKey:@""]integerValue]];
+//      NSArray *arrComment1  = [DisTopicComments MR_findAllWithPredicate:predicate];
       NSArray *arryUser = [DisUserToic MR_findAll];
 
       NSDictionary *dictDiscuss = @{@"Admin":arryAdmin,
@@ -777,7 +766,8 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [Answer entityFromArray:arrAns inContext:localContext];
     } completion:^(BOOL success, NSError *error) {
-      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ques_id CONTAINS %i",[[aParams valueForKey:@"question_id"]integerValue]];
+      NSNumber *userid = [aParams objectForKey:@"userId"];
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ques_id CONTAINS %i && user_id CONTAINS %i",[[aParams valueForKey:@"question_id"]integerValue], userid.integerValue];
       NSArray *arry = [Answer MR_findAllWithPredicate:predicate];
       successBlock(task, arry);
     }];
@@ -1112,8 +1102,8 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
 #pragma mark - Video Complete Api call Api call
 
 - (AFHTTPRequestOperation *)videoComplete:(NSDictionary *)aParams
-                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
-                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
+                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
   [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/finished_video" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
@@ -1122,10 +1112,15 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [dictDone setObject:[dict valueForKey:@"id"] forKey:@"id"];
     [dictDone setObject:[dict valueForKey:@"a_class_id"] forKey:@"cls_id"];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
+
+     
+    NSNumber *userid = [aParams objectForKey:@"userId"];
+    
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      [VideoDone entityWithDictionaty:dictDone inContext:localContext];
+      [VideoDone entityWithDictionaty:dictDone inContext:localContext userid:userid];
     } completion:^(BOOL success, NSError *error) {
-      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"video_cls_id CONTAINS %i",[[dict valueForKey:@"a_class_id"]integerValue]];
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_id CONTAINS %i && video_cls_id  CONTAINS %i",userid.integerValue,[[aParams  valueForKey:@"cls_id"]integerValue]];
       NSArray *arry = [VideoDone MR_findAllWithPredicate:predicate];
       successBlock(task, arry);
     }];
