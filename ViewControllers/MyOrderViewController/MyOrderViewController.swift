@@ -227,7 +227,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   //**************** User Classes Orders Api Call **************
   
   func userClassOrdersApiCall(){
-    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0]], forKeys: ["auth_token"])
+    var aParam: NSDictionary = NSDictionary(objects: [auth_token[0]], forKeys: ["auth-token"])
     
     self.api.userClassOrders(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)

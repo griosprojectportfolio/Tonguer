@@ -59,7 +59,7 @@ class ClassTableViewCell: BaseTableViewCell {
     vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
     
     lblClassName.text = aParam.objectForKey("name") as NSString
-    lblClassName.font = lblClassName.font.fontWithSize(15)
+    lblClassName.font = lblClassName.font.fontWithSize(13)
     lblClassName.textColor = UIColor.blackColor()
     lblClassName.numberOfLines = 0
     lblClassName.lineBreakMode = NSLineBreakMode.ByWordWrapping

@@ -130,7 +130,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   func freeClassListApiCall(){
     
     
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],sub_cat_id], forKeys: ["auth_token","sub_category_id"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],sub_cat_id], forKeys: ["auth-token","sub_category_id"])
     
     self.api.freeClsList(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -158,7 +158,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
   func payClassListApiCall(){
     
-    var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],sub_cat_id], forKeys: ["auth_token","sub_category_id"])
+    var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],sub_cat_id], forKeys: ["auth-token","sub_category_id"])
     
     self.api.payClsList(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -316,7 +316,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func setDataNofoundImg(){
     lblNoData = UILabel(frame: CGRectMake(self.view.frame.origin.x+20,self.view.frame.origin.y+120,self.view.frame.width-40, 30))
-    lblNoData.text = "Sorry no data found."
+    lblNoData.text = "Sorry no classes  found."
     lblNoData.textAlignment = NSTextAlignment.Center
     lblNoData.hidden = true
     self.view.addSubview(lblNoData)

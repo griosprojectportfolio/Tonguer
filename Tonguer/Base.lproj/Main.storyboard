@@ -1130,10 +1130,19 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="OfR-bp-Hxs">
+                                                    <rect key="frame" x="147" y="59" width="46" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" title="Button">
+                                                        <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="btnComplete" destination="fdW-vV-TwT" id="rCa-ET-f8e"/>
+                                            <outlet property="btnDownload" destination="OfR-bp-Hxs" id="lcB-KE-32j"/>
                                             <outlet property="btnplay" destination="Dfq-8N-P9K" id="POJ-Sq-WW5"/>
                                             <outlet property="cellImgView" destination="JWX-qM-8Gn" id="ux6-2T-dhn"/>
                                             <outlet property="celltxtView" destination="g2Q-FY-cx4" id="afV-EY-mB2"/>

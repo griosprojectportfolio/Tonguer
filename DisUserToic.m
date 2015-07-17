@@ -14,7 +14,7 @@
 @dynamic topic_id;
 @dynamic topic_name;
 @dynamic topic_content;
-
+@dynamic class_id;
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {
   
   DisUserToic *obj = [DisUserToic MR_findFirstByAttribute:@"topic_id" withValue:anID inContext:localContext];
@@ -26,17 +26,17 @@
 }
 
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext {
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext *)localContext class_id:(NSNumber *)class_id{
   for(NSDictionary *aDictionary in aArray) {
-    [DisUserToic entityFromDictionary:aDictionary inContext:localContext];
+    [DisUserToic entityFromDictionary:aDictionary inContext:localContext class_id:class_id];
   }
 }
 
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext {
-  [DisUserToic entityFromDictionary:adictionary inContext:localContext];
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext class_id:(NSNumber *)class_id {
+  [DisUserToic entityFromDictionary:adictionary inContext:localContext class_id:class_id];
 }
 
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext {
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext class_id:(NSNumber *)class_id {
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
@@ -49,6 +49,8 @@
     
     if (![[aDictionary objectForKey:@"content"] isKindOfClass:[NSNull class]])
       obj.topic_content = [aDictionary valueForKey:@"content"] ;
+    
+    obj.class_id = class_id;
     
     return obj;
   }

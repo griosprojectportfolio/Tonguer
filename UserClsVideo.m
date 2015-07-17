@@ -57,6 +57,9 @@
     
     if (![[aDictionary objectForKey:@"name"] isKindOfClass:[NSNull class]])
       obj.vdo_name = [aDictionary valueForKey:@"name"] ;
+    
+    if (![[aDictionary objectForKey:@"finished_video"] isKindOfClass:[NSNull class]])
+      obj.finished_video = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"finished_video"] integerValue]];
 
     
     return obj;

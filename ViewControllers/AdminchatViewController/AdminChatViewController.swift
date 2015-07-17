@@ -80,7 +80,7 @@ class AdminChatViewController:BaseViewController {
   
   func adminContactApi(){
     
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
     self.api.getAdminContact(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)

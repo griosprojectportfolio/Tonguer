@@ -254,7 +254,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
 
     var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as Int
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictQues.valueForKey("id"), forKey: "question_id")
     aParams.setValue(userId, forKey: "userId")
     println(aParams)

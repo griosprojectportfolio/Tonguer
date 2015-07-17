@@ -117,7 +117,7 @@ class PayViewController: BaseViewController {
   func walletApiCall(){
 
     var aParams: NSMutableDictionary = NSMutableDictionary()
-        aParams.setValue(self.auth_token[0], forKey:"auth_token")
+        aParams.setValue(self.auth_token[0], forKey:"auth-token")
         aParams.setValue(clsDict.valueForKey("id"), forKey: "cls_id")
         aParams.setValue(clsDict.valueForKey("price"), forKey: "money")
     
@@ -146,13 +146,39 @@ class PayViewController: BaseViewController {
     let userObject:NSDictionary = CommonUtilities.sharedDelegate().dictUserInfo
 
     if(userObject.valueForKey("money") as String).isEmpty == false {
-      money = userObject.valueForKey("money") as Int
+      var strmoney = userObject.valueForKey("money") as NSString
+      money = strmoney.integerValue
     }
     remainingMoney = money - cls_amount
+    var strmoney = NSString(format: "%i",remainingMoney)
+    self.updateUserRecode(strmoney)
     var aParam:NSMutableDictionary = NSMutableDictionary()
-    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+    aParam.setValue(self.auth_token[0], forKey: "auth-token")
     aParam.setValue(remainingMoney, forKey: "user[money]")    
-    self.api.userMoneyUpdate(aParam)
+   // self.api.userMoneyUpdate(aParam)
+  }
+  
+  func updateUserRecode(money:NSString){
+    
+    var userDefault:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    var data:NSData = userDefault.objectForKey("user") as NSData
+    var dictFetchedData:NSDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data) as NSDictionary
+    
+    CommonUtilities.sharedDelegate().dictUserInfo = dictFetchedData
+    print(dictFetchedData)
+    var userDict:NSMutableDictionary = NSMutableDictionary()
+    
+    userDict.setValue(dictFetchedData.valueForKey("batch_count"), forKey: "batch_count")
+    userDict.setValue(dictFetchedData.valueForKey("created_at"), forKey: "created_at")
+    userDict.setValue(dictFetchedData.valueForKey("device_token"), forKey: "device_token")
+    userDict.setValue(dictFetchedData.valueForKey("email"), forKey: "email")
+    userDict.setValue(dictFetchedData.valueForKey("first_name"), forKey: "first_name")
+    userDict.setValue(dictFetchedData.valueForKey("id"), forKey: "id")
+    userDict.setValue(dictFetchedData.valueForKey("last_name"), forKey: "last_name")
+    userDict.setValue(money, forKey: "money")
+    userDict.setValue(dictFetchedData.valueForKey("updated_at"), forKey: "updated_at")
+    userDict.setValue(dictFetchedData.valueForKey("image")?.valueForKey("url"), forKey: "image")
+    CommonUtilities.addUserInformation(userDict)
   }
 
 

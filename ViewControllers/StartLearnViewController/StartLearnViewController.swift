@@ -265,7 +265,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   func getClsTopicApiCall(){
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictClasses.valueForKey("id"), forKey: "class_id")
 
     self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
@@ -278,6 +278,8 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        self.actiIndecatorVw.loadingIndicator.stopAnimating()
+        self.actiIndecatorVw.removeFromSuperview()
         
     })
   }
@@ -288,13 +290,15 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     let arrFetchAdmin: NSArray = dictData.objectForKey("Admin") as NSArray
     let arrFetchUser: NSArray = dictData.objectForKey("User") as NSArray
     var count: NSInteger!
-    if(arrFetchUser.count>0 && arrFetchAdmin.count>0){
     count = arrFetchAdmin.count + arrFetchUser.count
     print(count)
-    }else{
-      count = 0
-      print(count)
-    }
+//    if(arrFetchUser.count>=0 && arrFetchAdmin.count>=0){
+//    count = arrFetchAdmin.count + arrFetchUser.count
+//    print(count)
+//    }else{
+//      count = 0
+//      print(count)
+//    }
     dict3.setObject(count, forKey: "count")
     dataArr = [dict1,dict2,dict3,dict4]
     self.sartlTableview.reloadData()

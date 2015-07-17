@@ -17,9 +17,9 @@
 @property (nonatomic, retain) NSString * topic_name;
 @property (nonatomic, retain) NSString * topic_content;
 
-+ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
-+ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;
-+ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext;
++ (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext class_id:(NSNumber*)class_id;
++ (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext class_id:(NSNumber*)class_id;
++ (void)entityWithDictionaty:(NSDictionary *)adictionary inContext:(NSManagedObjectContext *)localContext class_id:(NSNumber*)class_id;
 
 
 @end

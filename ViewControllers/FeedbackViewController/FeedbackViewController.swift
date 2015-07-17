@@ -156,7 +156,7 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   
   func userLearnClsApiCall(){
     
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],custxtFname.text,txtViewComment.text], forKeys: ["auth_token","feedback[name]","feedback[content]"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],custxtFname.text,txtViewComment.text], forKeys: ["auth-token","feedback[name]","feedback[content]"])
     
     self.api.feedback(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)

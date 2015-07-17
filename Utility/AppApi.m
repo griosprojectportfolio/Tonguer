@@ -38,8 +38,9 @@
 #import "AdminContact.h"
 
 /* API Constants */
-static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
+//static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
 //static NSString * const kAppMediaBaseURLString = @"http://192.168.10.30:1234";
+ static NSString * const kAppAPIBaseURLString = @"http://52.25.127.168/api/v1";
 
 @interface AppApi ()
 
@@ -107,7 +108,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   
 
     NSMutableDictionary *dictParams = [[NSMutableDictionary alloc] initWithDictionary:aParams];
-    [dictParams removeObjectForKey:@"auth_token"];
+    [dictParams removeObjectForKey:@"auth-token"];
 
     return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/registration" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
       dispatch_async(dispatch_get_main_queue(), ^{
@@ -126,7 +127,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
     
-    [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+    [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
     return [self baseRequestWithHTTPMethod:@"PATCH" URLString:@"/update" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
       
@@ -157,7 +158,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+    [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
     return [self baseRequestWithHTTPMethod:@"DELETE" URLString:@"/sessions/logout" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
       successBlock(task, responseObject);
     } failure:^(AFHTTPRequestOperation *task, NSError *error) {
@@ -174,7 +175,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/default_classes_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     
@@ -248,7 +249,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/learn_classes_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arrClass = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
     NSArray *arrNotes = [UserLearnClsList MR_findAll];
@@ -260,7 +261,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserLearnClsList entityFromArray:arrClass inContext:localContext];
     } completion:^(BOOL success, NSError *error) {
-      successBlock(task, responseObject);
+      successBlock(task, arrClass);
     }];
   } failure:failureBlock];
 }
@@ -273,7 +274,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
  
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/learned_classes_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arrClass = [[responseObject objectForKey:@"data"] objectForKey:@"classes"];
@@ -285,7 +286,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserLearnedClsList entityFromArray:arrClass inContext:localContext];
     }completion:^(BOOL success, NSError *error) {
-      successBlock(task, responseObject);
+      successBlock(task, arrClass);
     }];
     
   } failure:failureBlock];
@@ -298,8 +299,8 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
 - (AFHTTPRequestOperation *)freeClass:(NSDictionary *)aParams
                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
-  NSString * strToken = [aParams valueForKey:@"auth_token"];
-  [self.requestSerializer setValue:strToken forHTTPHeaderField:@"auth_token"];
+  NSString * strToken = [aParams valueForKey:@"auth-token"];
+  [self.requestSerializer setValue:strToken forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/free_class" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arrCategory = [[responseObject objectForKey:@"data"] objectForKey:@"category"];
     
@@ -331,7 +332,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/free_class/class_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     
@@ -360,7 +361,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/free_class/class_list/videos" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     
@@ -391,9 +392,9 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
 - (AFHTTPRequestOperation *)payClass:(NSDictionary *)aParams
                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
-  NSString * strToken = [aParams valueForKey:@"auth_token"];
+  NSString * strToken = [aParams valueForKey:@"auth-token"];
   
-  [self.requestSerializer setValue:strToken forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:strToken forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/pay_class" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
    
@@ -432,7 +433,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
  
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/pay_class/class_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
    
@@ -470,7 +471,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/host/class_list" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     
@@ -498,15 +499,15 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/pay_class/class_list/videos" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arrVideoList = [[responseObject objectForKey:@"data"] objectForKey:@"video"];
-//    NSArray *arrNotes = [UserClsVideo MR_findAll];
-//    if(arrNotes.count > 0){
-//      [UserClsVideo MR_truncateAll];
-//      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
-//      }
+    NSArray *arrNotes = [UserClsVideo MR_findAll];
+    if(arrNotes.count > 0){
+      [UserClsVideo MR_truncateAll];
+      [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+      }
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
       [UserClsVideo entityFromArray:arrVideoList inContext:localContext];
@@ -527,7 +528,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/get_admin_contacts" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
@@ -554,7 +555,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
    return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/advertiesment" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary *dict = [responseObject valueForKey:@"advertiesment"];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -574,9 +575,10 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/user_a_class_topics" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary * dict1 = [responseObject valueForKey:@"data"];
+    NSNumber *class_id = [[responseObject valueForKey:@"data"] valueForKey:@"class_id"];
     NSArray * arrAdmin = [[dict1 valueForKey:@"disscuss" ]valueForKey:@"admin"];
     NSArray * arrUser = [[dict1 valueForKey:@"disscuss" ]valueForKey:@"user"];
     NSMutableArray *adminData = [[NSMutableArray alloc]init];
@@ -591,17 +593,15 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     }
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      [DisAdminTopic entityFromArray:adminData inContext:localContext];
-       [DisUserToic entityFromArray:userData inContext:localContext];
+      [DisAdminTopic entityFromArray:adminData inContext:localContext class_id:class_id];
+       [DisUserToic entityFromArray:userData inContext:localContext class_id:class_id];
     } completion:^(BOOL success, NSError *error) {
-//      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"class_id CONTAINS %i", [[aParams objectForKey:@""] integerValue]];
-//      NSArray *arrComment  = [DisTopicComments MR_findAllWithPredicate:predicate];
-      NSArray *arryAdmin = [DisAdminTopic MR_findAll];
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"class_id CONTAINS %i", [[aParams objectForKey:@"class_id"] integerValue]];
+      NSArray *arryAdmin  = [DisAdminTopic MR_findAllWithPredicate:predicate];
 
-//      NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"class_id CONTAINS %i", [[aParams objectForKey:@""]integerValue]];
-//      NSArray *arrComment1  = [DisTopicComments MR_findAllWithPredicate:predicate];
-      NSArray *arryUser = [DisUserToic MR_findAll];
-
+      NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"class_id CONTAINS %i", [[aParams objectForKey:@"class_id"]integerValue]];
+      NSArray *arryUser  = [DisUserToic MR_findAllWithPredicate:predicate1];
+     
       NSDictionary *dictDiscuss = @{@"Admin":arryAdmin,
                              @"User":arryUser};
       successBlock(task, dictDiscuss);
@@ -616,7 +616,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/cls/discuss/topic/get_comments" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
    
@@ -653,7 +653,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                         success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                         failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/cls/discuss/topic/comment_post" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary * dict1 = [responseObject valueForKey:@"comment"];
@@ -673,12 +673,12 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
 
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/cls/discuss/add_topic" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary * dict1 = [responseObject valueForKey:@"topic"];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      [DisUserToic entityWithDictionaty:dict1 inContext:localContext];
+      [DisUserToic entityWithDictionaty:dict1 inContext:localContext class_id:[aParams valueForKey:@"class_id"]];
     }completion:^(BOOL success, NSError *error) {
       successBlock(task, responseObject);
     }];
@@ -693,7 +693,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                      success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                      failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/questions" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
@@ -716,7 +716,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                 failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/answer" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     //NSArray *arrQues = [[responseObject valueForKey:@"data"]valueForKey:@"question"];
@@ -735,7 +735,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/admin_comments" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     
     NSArray *arrQues = [[responseObject valueForKey:@"data"]valueForKey:@"admin_comment"];
@@ -759,7 +759,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/get_user_answer" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     NSArray *arrAns = [responseObject valueForKey:@"answers"];
@@ -774,6 +774,28 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
   } failure:failureBlock];
 }
 
+#pragma mark - User Answer Update  Api Call Crossponding Question
+
+- (AFHTTPRequestOperation *)userAnswerUpdateApi:(NSDictionary *)aParams
+                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
+  return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/update_answer" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    NSDictionary *dictAns = [[responseObject valueForKey:@"data"]valueForKey:@"answers"];
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+      [Answer entityFromDictionary:dictAns inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+      NSNumber *userid = [aParams objectForKey:@"userId"];
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ques_id CONTAINS %i && user_id CONTAINS %i",[[aParams valueForKey:@"question_id"]integerValue], userid.integerValue];
+      NSArray *arry = [Answer MR_findAllWithPredicate:predicate];
+      successBlock(task, arry);
+    }];
+  } failure:failureBlock];
+}
+
+
 
 #pragma mark - Get User Notes Api Call
 
@@ -781,7 +803,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/get_all_notes" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     
@@ -821,7 +843,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/user_create_note" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary *dictUser = [responseObject valueForKey:@"note"];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -846,7 +868,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                     success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                     failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/user_like_note" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     successBlock(task, responseObject);
@@ -916,7 +938,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/cls_search" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     NSArray *arryNotes = [[responseObject valueForKey:@"data"]valueForKey:@"classes"];
@@ -938,7 +960,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
 
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/notes_search" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     NSArray *arryNotes = [[responseObject valueForKey:@"data"]valueForKey:@"notes"];
@@ -952,7 +974,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
 
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/notes_filter" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     NSArray *arryNotes = [[responseObject valueForKey:@"data"]valueForKey:@"notes"];
@@ -972,7 +994,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
 
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"PATCH" URLString:@"/user_update_note" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary *dict = [responseObject valueForKey:@"note"];
@@ -989,7 +1011,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
 
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"DELETE" URLString:@"/notes_delete" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
   // Magical recodes delete functionality
     
@@ -1010,7 +1032,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
 
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/user_added_note" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
@@ -1031,16 +1053,19 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                        failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/about_us" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary *dictAbout = [[responseObject valueForKey:@"data"]valueForKey:@"about_us"];
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      NSNumber *ab_id = [[NSNumber alloc]initWithDouble:1];
-      [Aboutus entityWithDictionaty:dictAbout inContext:localContext about_id:ab_id];
-    } completion:^(BOOL success, NSError *error) {
-      NSArray *arryData = [Aboutus MR_findAll];
-      successBlock(task, arryData);
-    }];
+    if(dictAbout != [NSNull null]){
+      [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+        NSNumber *ab_id = [[NSNumber alloc]initWithDouble:1];
+        [Aboutus entityWithDictionaty:dictAbout inContext:localContext about_id:ab_id];
+      } completion:^(BOOL success, NSError *error) {
+        NSArray *arryData = [Aboutus MR_findAll];
+        successBlock(task, arryData);
+      }];
+    }
+    
   } failure:failureBlock];
 }
 
@@ -1050,7 +1075,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/get_score" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
      successBlock(task, responseObject);
   } failure:failureBlock];
@@ -1064,7 +1089,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                             success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                             failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/cls_outline" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSMutableArray *arryModule = [responseObject valueForKey:@"data"];
     NSMutableArray *arrOutLine = [[NSMutableArray alloc]init];
@@ -1105,7 +1130,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/finished_video" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary *dict = [[responseObject valueForKey:@"data"]valueForKey:@"video"];
     NSMutableDictionary *dictDone = [[NSMutableDictionary alloc]init];
@@ -1113,17 +1138,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
     [dictDone setObject:[dict valueForKey:@"a_class_id"] forKey:@"cls_id"];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
-
-     
-    NSNumber *userid = [aParams objectForKey:@"userId"];
-    
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-      [VideoDone entityWithDictionaty:dictDone inContext:localContext userid:userid];
-    } completion:^(BOOL success, NSError *error) {
-      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_id CONTAINS %i && video_cls_id  CONTAINS %i",userid.integerValue,[[aParams  valueForKey:@"cls_id"]integerValue]];
-      NSArray *arry = [VideoDone MR_findAllWithPredicate:predicate];
-      successBlock(task, arry);
-    }];
+    successBlock(task, responseObject);
   } failure:failureBlock];
 }
 
@@ -1134,7 +1149,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/feedback" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     successBlock(task, responseObject);
     
@@ -1147,7 +1162,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/buy_class" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSLog(@"%@",responseObject);
     successBlock(task, responseObject);
@@ -1160,7 +1175,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/buyclassorder" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSArray *srryOrders = [responseObject valueForKey:@"data"];
@@ -1192,7 +1207,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                                     success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                     failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock {
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/start_learn" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     successBlock(task, responseObject);
   } failure:failureBlock];
@@ -1203,7 +1218,7 @@ static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/a
                              success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                              failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
   
-  [self.requestSerializer setValue:[aParams valueForKey:@"auth_token"] forHTTPHeaderField:@"auth_token"];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"POST" URLString:@"/use_wallet" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject)  {
     NSLog(@"%@",responseObject);
       successBlock(task, responseObject);

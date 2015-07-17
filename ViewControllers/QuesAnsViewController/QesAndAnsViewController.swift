@@ -128,7 +128,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   func getQuestionApiCall(){
 
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(classID, forKey: "class_id")
     self.api.clsQuestion(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
 

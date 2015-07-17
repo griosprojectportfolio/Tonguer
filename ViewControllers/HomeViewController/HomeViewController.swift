@@ -249,7 +249,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     imgVwAlpha.addSubview(lblMoneytext)
 
     lblScore = UILabel(frame: CGRectMake(lblMoney.frame.origin.x+lblMoney.frame.size.width, lblMoney.frame.origin.y,lblMoney.frame.width,30))
-    lblScore.text = ""
+    lblScore.text = "0"
     lblScore.textAlignment = NSTextAlignment.Center
     lblScore.font = lblMoney.font.fontWithSize(20)
     lblScore.textColor = UIColor.grayColor()
@@ -427,6 +427,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     if(arrclass.count == 0){
       if(btnTag == 1){
         showSetDataNofoundImg()
+        lblNoData.text = "Please buy the classes."
       }
     }else{
       resetShowSetDataNofoundImg()
@@ -445,6 +446,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     if(arrClsLearn.count == 0){
       if(btnTag == 2){
         showSetDataNofoundImg()
+        lblNoData.text = "Please start to learning."
       }
     }else{
       resetShowSetDataNofoundImg()
@@ -463,6 +465,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     if(arrClsLearned.count == 0){
       if(btnTag == 3){
         showSetDataNofoundImg()
+        lblNoData.text = ""
       }
     }else{
       resetShowSetDataNofoundImg()
@@ -571,7 +574,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     //println(base64String)
     
     var aParam:NSMutableDictionary = NSMutableDictionary()
-    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+    aParam.setValue(self.auth_token[0], forKey: "auth-token")
     aParam.setValue(base64String, forKey: "user[image]")
     
     self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
@@ -581,7 +584,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       self.fetchDataFromdataBase()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
-        println(error)
+        println(operation?.responseString)
     })
   }
   
@@ -635,17 +638,26 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       } else{
         lblMoney.text = "0.0"
       }
- 
       
-      if(((dictFetchedData.valueForKey("image")?.objectForKey("url"))?.isKindOfClass(NSNull)) != nil){
+      var img = dictFetchedData.valueForKey("image") as NSObject
+      if(img.isKindOfClass(NSDictionary)){
+     var dict = dictFetchedData.valueForKey("image") as NSDictionary
+      var strim:NSObject = dict.valueForKey("url") as NSObject
+      
+      if (strim.isKindOfClass(NSNull)){
         useImgUrl = "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png"
         let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
         imgVwProfilrPic.sd_setImageWithURL(url)
-      }else{
-        useImgUrl = dictFetchedData.valueForKey("image")?.valueForKey("url") as String
-        let url = NSURL(string:useImgUrl)
+      }else if((strim.isKindOfClass(NSString))){
+        let url = NSURL(string:strim as NSString)
         imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
         imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+      }
+      }else if(img.isKindOfClass(NSString)){
+        let url = NSURL(string:img as NSString)
+        imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+        imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+
       }
     }
   }
@@ -839,10 +851,13 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func userLearnClsApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
-
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
     self.api.userLearnCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      let data = responseObject as NSArray
+      if data.count != 0 {
+        self.resetShowSetDataNofoundImg()
+      }
         self.fetchDataFromDBforLearnCls()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -853,10 +868,14 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func userLearnedClsApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
 
     self.api.userLearnedCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      let data = responseObject as NSArray
+      if data.count != 0 {
+        self.resetShowSetDataNofoundImg()
+      }
         self.fetchDataFromDBforLearnedCls()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -867,10 +886,14 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func userClassApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
 
     self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+//      let data = responseObject as NSDictionary
+//      if data  {
+//        self.resetShowSetDataNofoundImg()
+//      }
         self.fetchDataFromDBforDefaultCls()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -881,7 +904,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   
   func userScoreApiCall(){
     
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
     
     self.api.getUserScore(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)

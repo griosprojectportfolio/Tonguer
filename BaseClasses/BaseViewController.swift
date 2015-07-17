@@ -18,7 +18,7 @@ class BaseViewController: UIViewController {
   
     var auth_token : [NSString] {
         get {
-            var returnValue: [NSString]? = NSUserDefaults.standardUserDefaults().objectForKey("auth_token") as? [NSString]
+            var returnValue: [NSString]? = NSUserDefaults.standardUserDefaults().objectForKey("auth-token") as? [NSString]
             if returnValue == nil //Check for first run of app
             {
                 returnValue = [""] //Default value
@@ -26,7 +26,7 @@ class BaseViewController: UIViewController {
             return returnValue!
         }
         set (newValue) {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "auth_token")
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "auth-token")
             NSUserDefaults.standardUserDefaults().synchronize()
         }
     }

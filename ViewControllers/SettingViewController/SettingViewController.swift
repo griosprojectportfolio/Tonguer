@@ -162,14 +162,14 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
  //*********** logOut Api calling *********
   func btnLogoutTapped(){
     
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
     self.api.signOutUser(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       //var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
 
       User.deleteAllEntityObjects() // delete all table
-      NSUserDefaults.standardUserDefaults().removeObjectForKey("auth_token")
+      NSUserDefaults.standardUserDefaults().removeObjectForKey("auth-token")
       NSUserDefaults.standardUserDefaults().synchronize()
       CommonUtilities.removeUserInformation()
       self.navigationController?.popToRootViewControllerAnimated(false)
@@ -194,13 +194,21 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
         name = ""
       }
     
-    if(((userObject.valueForKey("image")?.objectForKey("url"))?.isKindOfClass(NSNull)) != nil){
+    var img = userObject.valueForKey("image") as NSObject
+    if(img.isKindOfClass(NSDictionary)){
+      var dict = userObject.valueForKey("image") as NSDictionary
+      var strim:NSObject = dict.valueForKey("url") as NSObject
       
-      let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
-      imgVwPPic.sd_setImageWithURL(url)
-    }else{
-      let strImg = userObject.valueForKey("image")?.valueForKey("url") as String
-      let url = NSURL(string:strImg)
+      if (strim.isKindOfClass(NSNull)){
+        let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
+        imgVwPPic.sd_setImageWithURL(url)
+      }else if((strim.isKindOfClass(NSString))){
+        let url = NSURL(string:strim as NSString)
+        imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
+        
+      }
+    }else if(img.isKindOfClass(NSString)){
+      let url = NSURL(string:img as NSString)
       imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
       
     }

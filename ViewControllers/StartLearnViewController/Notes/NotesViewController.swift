@@ -373,7 +373,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   func getNotesApiCall(){
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
 
     self.api.getUserNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -381,6 +381,14 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
         self.actiIndecatorVw.loadingIndicator.stopAnimating()
         self.actiIndecatorVw.removeFromSuperview()
         var dictResponse:NSDictionary = responseObject as NSDictionary
+        var arrUserNotes = dictResponse.objectForKey("UserNotes") as NSArray
+        var arrNotes = dictResponse.objectForKey("Notes") as NSArray
+       if(arrUserNotes.count != 0){
+       self.reSetshowSetDataNofoundImg()
+       }
+      if(arrUserNotes.count != 0){
+        self.reSetshowSetDataNofoundImg()
+      }
         self.dataFetchFromDatabaseGetUserlNotes(dictResponse.objectForKey("UserNotes") as NSArray)
         self.dataFetchFromDatabaseGetNotes(dictResponse.objectForKey("Notes") as NSArray)
         self.tblVwNotes.reloadData()
@@ -533,7 +541,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
 
   func filterApiCall (classId:NSInteger) {
-    let param:NSDictionary = NSDictionary(objects: [auth_token[0],classId,scopeSearch], forKeys: ["auth_token","cls_id","scope"])
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],classId,scopeSearch], forKeys: ["auth-token","cls_id","scope"])
     self.api.callFilterNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
       
@@ -554,8 +562,8 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
           dict.setValue("", forKey:"content")
         }
         
-        if((dictData.valueForKey("image")?.valueForKey("url")?) != nil){
-          dict.setValue(dictData.valueForKey("image")?.valueForKey("url"), forKey:"image")
+        if(dictData.valueForKey("image") != nil){
+          dict.setValue(dictData.valueForKey("image"),forKey:"image")
         }else{
           dict.setValue("http://www.popular.com.my/images/no_image.gif", forKey:"image")
         }
@@ -565,6 +573,19 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
         }else{
           dict.setValue(0, forKey:"like")
         }
+        
+        if((dictData.valueForKey("is_enable")) != nil){
+          dict.setValue(dictData.valueForKey("is_enable"), forKey:"isenable")
+        }else{
+          dict.setValue(0, forKey:"isenable")
+        }
+        
+        if((dictData.valueForKey("note_liked")) != nil){
+          dict.setValue(dictData.valueForKey("note_liked"), forKey:"note_like_status")
+        }else{
+          dict.setValue(0, forKey:"note_like_status")
+        }
+
         
         if((dictData.valueForKey("created_at")) != nil){
           dict.setValue(dictData.valueForKey("created_at"), forKey:"date")
@@ -577,6 +598,8 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
         }else{
           dict.setValue("", forKey:"cls_name")
         }
+        
+        
         self.arrySearchNotes.addObject(dict)
       }
       print(self.arrySearchNotes.count)
@@ -664,7 +687,7 @@ extension NotesViewController:UISearchBarDelegate {
   }
 
   func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-    let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text,scopeSearch], forKeys: ["auth_token","notes_key_word","scope"])
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text,scopeSearch], forKeys: ["auth-token","notes_key_word","scope"])
     self.api.callSearchNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
       searchBar.resignFirstResponder()
@@ -695,6 +718,18 @@ extension NotesViewController:UISearchBarDelegate {
           dict.setValue(dictData.valueForKey("like_count"), forKey:"like")
         }else{
           dict.setValue(0, forKey:"like")
+        }
+        
+        if((dictData.valueForKey("is_enable")) != nil){
+          dict.setValue(dictData.valueForKey("is_enable"), forKey:"isenable")
+        }else{
+          dict.setValue(0, forKey:"isenable")
+        }
+        
+        if((dictData.valueForKey("note_liked")) != nil){
+          dict.setValue(dictData.valueForKey("note_liked"), forKey:"note_like_status")
+        }else{
+          dict.setValue(0, forKey:"note_like_status")
         }
         
         if((dictData.valueForKey("created_at")) != nil){

@@ -240,7 +240,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   
   func adminContactApi(){
     
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
     self.api.getAdminContact(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -255,7 +255,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   
   func abouUSApiCall(){
     
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
     self.api.aboutUS(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -270,7 +270,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   func userClassApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
 
     self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -285,7 +285,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   func userLearnClsApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
 
     self.api.userLearnCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -301,7 +301,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   func userLearnedClsApiCall(){
 
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
 
     self.api.userLearnedCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -317,7 +317,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   func getFreeClassApiCall(){
 
-    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    var aParams: NSDictionary = ["auth-token":auth_token[0]]
     self.api.freeClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       },
@@ -329,7 +329,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   func getPayClassApiCall(){
 
-    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    var aParams: NSDictionary = ["auth-token":auth_token[0]]
     self.api.payClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       },
@@ -342,7 +342,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   func getHostPayClsApiCall(){
 
-    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    var aParams: NSDictionary = ["auth-token":auth_token[0]]
     self.api.hostpayClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       
@@ -356,13 +356,20 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        self.delay(4, closure: { () -> () in
+          
+          self.actiIndecatorVw.loadingIndicator.stopAnimating()
+          self.actiIndecatorVw.removeFromSuperview()
+          var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+          self.navigationController?.pushViewController(vc, animated: true)
+        })
 
     })
   }
   
   func getAddvertiesmentApiCall(){
     
-    var aParams: NSDictionary = ["auth_token":auth_token[0]]     
+    var aParams: NSDictionary = ["auth-token":auth_token[0]]
     self.api.addvertiesment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       let arry = responseObject as NSArray

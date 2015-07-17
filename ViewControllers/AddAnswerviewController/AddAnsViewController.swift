@@ -191,11 +191,11 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
       var dict: NSDictionary! = arrCommentData.objectAtIndex(iLoop) as NSDictionary
       
       var data: NSString! = dict.valueForKey("comment") as NSString
-      
+       data = data.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
       var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
    
       print("****\(rect.height+40)")
-      height = height + rect.height+40;
+      height = height + rect.height+30;
       tbleHeight = height
       if (height > 500) {
         tbleHeight = 500;
@@ -254,7 +254,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   func getCommentTopicApiCall(){
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictTopic.valueForKey("id"), forKey:"topic_id")
     //aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
     self.api.discusTopicComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
@@ -277,7 +277,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   func postCommentTopicApiCall(){
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictTopic.valueForKey("id"), forKey:"topic_id")
     aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
     self.api.discusTopicPostComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in

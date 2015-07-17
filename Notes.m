@@ -85,8 +85,8 @@
     if (![[aDictionary objectForKey:@"is_enable"] isKindOfClass:[NSNull class]])
       obj.isenable = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"is_enable"] integerValue]];
     
-    if (![[aDictionary objectForKey:@"is_enable"] isKindOfClass:[NSNull class]])
-      obj.note_like_status = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"is_enable"] integerValue]];
+    if (![[aDictionary objectForKey:@"note_liked"] isKindOfClass:[NSNull class]])
+      obj.note_like_status = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"note_liked"] integerValue]];
     
     if (![[[aDictionary objectForKey:@"a_class"]valueForKey:@"name"] isKindOfClass:[NSNull class]])
     {

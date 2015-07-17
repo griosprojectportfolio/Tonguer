@@ -26,11 +26,21 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
   var alertSend: UIAlertView!
   var toolBar:UIToolbar!
   var isTecxtViewUp:Bool = false
+  var arryAnswer:NSArray! = NSArray()
 
     override func viewDidLoad() {
         super.viewDidLoad()
       api = AppApi.sharedClient()
-    self.defaultUIDesign()
+      self.navigationItem.setHidesBackButton(true, animated:false)
+      
+      var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
+      backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
+      backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
+      
+      barBackBtn = UIBarButtonItem(customView: backbtn)
+      self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    getUserAnswerApiCall()
+     
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,19 +48,18 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
         // Dispose of any resources that can be recreated.
     }
   
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    
+  }
+  
   func defaultUIDesign(){
   
-    self.navigationItem.setHidesBackButton(true, animated:false)
     
-    var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
-    backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
-    backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
     
-    barBackBtn = UIBarButtonItem(customView: backbtn)
-    self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,64, self.view.frame.size.width, self.view.frame.height-64))
     
-    scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.height-64))
-    
+    println(scrollview)
     scrollview.showsHorizontalScrollIndicator = true
     scrollview.scrollEnabled = true
     scrollview.userInteractionEnabled = true
@@ -85,13 +94,12 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
     lblQues.textColor = UIColor.grayColor()
     //lblContent.backgroundColor = UIColor.greenColor()
     scrollview.addSubview(lblQues)
-
     
     btnSend = UIButton(frame: CGRectMake(scrollview.frame.origin.x+20,(lblQues.frame.size.height+lblQues.frame.origin.y+150),scrollview.frame.width-40, 40))
-    self.btnSend.setTitle("Add Your Answer", forState: UIControlState.Normal)
+    //self.btnSend.setTitle("Add Your Answer", forState: UIControlState.Normal)
     self.btnSend.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0);
     self.btnSend.tintColor = UIColor.whiteColor()
-    btnSend.addTarget(self, action: "btnSendButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    //btnSend.addTarget(self, action: "btnSendButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     scrollview.addSubview(self.btnSend)
     
     txtViewAddAns = UITextView(frame: CGRectMake(btnSend.frame.origin.x,btnSend.frame.origin.y-btnSend.frame.size.height-70,btnSend.frame.width, 100))
@@ -104,6 +112,17 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
     txtViewAddAns.layer.borderColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0).CGColor
     scrollview.addSubview(txtViewAddAns)
     
+    if(arryAnswer.count > 0){
+      var obj = arryAnswer.objectAtIndex(0) as Answer
+      txtViewAddAns.text = obj.answer as NSString
+      self.btnSend.setTitle("Update Your Answer", forState: UIControlState.Normal)
+      btnSend.addTarget(self, action: "btnUpadteButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    }else{
+      txtViewAddAns.text = ""
+      self.btnSend.setTitle("Add Your Answer", forState: UIControlState.Normal)
+      btnSend.addTarget(self, action: "btnSendButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    }
+
   }
  
   func btnBackTapped(){
@@ -136,6 +155,18 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
       self.postAddAnswerApiCall()
     }
   }
+  
+  func btnUpadteButtonTapped(sender: AnyObject){
+    
+    if(txtViewAddAns.text == ""){
+      var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Please enter a Answer.", delegate: nil, cancelButtonTitle: "Ok")
+      alert.show()
+      
+    }else{
+      self.updateAddAnswerApiCall()
+    }
+  }
+
 
   //******************* Add Answer Api call Methode ************
   
@@ -143,7 +174,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
    
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictQus.valueForKey("id"),forKey: "question_id")
     aParams.setValue(txtViewAddAns.text, forKey: "answer[answer]")
     self.api.clsQueaAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
@@ -167,10 +198,55 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
       self.navigationController?.pushViewController(vc, animated:true)
     }
   }
+  
+  func updateAddAnswerApiCall(){
+    
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var obj = arryAnswer.objectAtIndex(0) as Answer
+    aParams.setValue(auth_token[0], forKey: "auth-token")
+    aParams.setValue(obj.ans_id,forKey: "answer_id")
+    aParams.setValue(txtViewAddAns.text, forKey: "answer")
+    self.api.userAnswerUpdateApi(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      self.alertSend = UIAlertView(title: "Alert", message: "Answer Update Successfully.", delegate: self, cancelButtonTitle: "Ok")
+      self.alertSend.show()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Don't upadte.", delegate: nil, cancelButtonTitle: "Ok")
+        alert.show()
+        
+    })
+  }
+
+  
+  
+  func getUserAnswerApiCall(){
+    
+    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as Int
+    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    aParams.setValue(auth_token[0], forKey: "auth-token")
+    aParams.setValue(dictQus.valueForKey("id"), forKey: "question_id")
+    aParams.setValue(userId, forKey: "userId")
+    println(aParams)
+    self.api.userAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      println(responseObject)
+      self.arryAnswer = responseObject as NSArray
+      if(self.arryAnswer.count>0){
+       print(self.arryAnswer.count)
+      }
+      self.defaultUIDesign()
+      },
+      failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+        println(error)
+       self.defaultUIDesign()
+    })
+  }
+
 
   func barBtnDonTapped () {
     self.view.endEditing(true)
-    scrollview.contentOffset = CGPoint(x:0, y:-64)
+    scrollview.contentOffset = CGPoint(x:0, y:0)
   }
 
 }

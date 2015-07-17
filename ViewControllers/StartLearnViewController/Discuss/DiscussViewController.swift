@@ -166,7 +166,7 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   
   func getClsTopicApiCall(){
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(classID, forKey: "class_id")
     
     self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
@@ -189,8 +189,10 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     arrUser.removeAllObjects()
     arrAdmin.removeAllObjects()
     
-    let arrFetchAdmin: NSArray = DisAdminTopic.MR_findAll()
-    let arrFetchUser: NSArray = DisUserToic.MR_findAll()
+    var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)!
+    
+    let arrFetchAdmin: NSArray = DisAdminTopic.MR_findAllWithPredicate(predicate)
+    let arrFetchUser: NSArray = DisUserToic.MR_findAllWithPredicate(predicate)
     var count: NSInteger = arrFetchAdmin.count + arrFetchUser.count
     print(count)
    

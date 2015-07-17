@@ -132,7 +132,7 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func userLearnClsApiCall(){
     
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
     
     self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)

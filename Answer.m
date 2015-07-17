@@ -14,6 +14,7 @@
 @dynamic ans_id;
 @dynamic answer;
 @dynamic ques_id;
+@dynamic user_id;
 
 
 + (id)findOrCreateByID:(id)anID inContext:(NSManagedObjectContext*)localContext {

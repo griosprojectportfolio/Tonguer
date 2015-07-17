@@ -430,7 +430,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   func classOutlineApiCall(){
     
     var cls_id:NSInteger = self.clsDictDe.valueForKey("id") as NSInteger
-    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],cls_id], forKeys: ["auth_token","cls_id"])
+    var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],cls_id], forKeys: ["auth-token","cls_id"])
     
     self.api.clsOutline(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -456,7 +456,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   
   func adminContactApi(){
     
-    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+    var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
     self.api.getAdminContact(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)

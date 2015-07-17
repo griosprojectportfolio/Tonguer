@@ -242,7 +242,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     }
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     
     aParams.setValue(txtVwContent.text, forKey: "note[content]")
     aParams.setValue(base64String, forKey: "image_code")
@@ -284,7 +284,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     }
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictNote.valueForKey("id"), forKey: "note_id")
     aParams.setValue(txtVwContent.text, forKey: "note[content]")
     aParams.setValue(base64String, forKey: "image_code")
@@ -426,15 +426,30 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
       
       cusTxtFieldCls.text = dictNote.valueForKey("cls_name") as NSString
       
-      let url = NSURL(string: dictNote.objectForKey("image") as NSString)
-      var data = NSData(contentsOfURL: url!)
-      if((data) != nil){
-        imagePick = UIImage(data: data!)
-      }else{
-        imagePick = UIImage(named: "defaultImg")
+      var img = dictNote.objectForKey("image") as NSObject
+      
+      if(img.isKindOfClass(NSDictionary)){
+        let url = NSURL(string: dictNote.objectForKey("image")?.valueForKey("url") as NSString)
+        var data = NSData(contentsOfURL: url!)
+        if((data) != nil){
+          imagePick = UIImage(data: data!)
+        }else{
+          imagePick = UIImage(named: "defaultImg")
+        }
+        ImgVW.sd_setImageWithURL(url)
+        
+      }else if(img.isKindOfClass(NSString)){
+        let url = NSURL(string: dictNote.objectForKey("image") as NSString)
+        var data = NSData(contentsOfURL: url!)
+        if((data) != nil){
+          imagePick = UIImage(data: data!)
+        }else{
+          imagePick = UIImage(named: "defaultImg")
+        }
+        ImgVW.sd_setImageWithURL(url)
+        
       }
-      ImgVW.sd_setImageWithURL(url)
-    
+      
       cls_id = dictNote.valueForKey("cls_id") as NSInteger
     }
   }

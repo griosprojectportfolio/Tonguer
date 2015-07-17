@@ -213,11 +213,14 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
   func UserUpadteApiCall(){
     
     var aParam:NSMutableDictionary = NSMutableDictionary()
-    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+    aParam.setValue(self.auth_token[0], forKey: "auth-token")
     aParam.setValue(moneyQuantity, forKey: "user[money]")
     
     self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      var dict = responseObject?.valueForKey("user") as NSDictionary
+      //var userDict = dict.valueForKey("user") as NSDictionary
+      CommonUtilities.addUserInformation(dict)
       let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
       self.navigationController!.popToViewController(viewControllers[1], animated: true);
       },
@@ -233,7 +236,7 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
   func paypalApiCall(){
      self.is_buy = true
     var aParam:NSMutableDictionary = NSMutableDictionary()
-    aParam.setValue(self.auth_token[0], forKey: "auth_token")
+    aParam.setValue(self.auth_token[0], forKey: "auth-token")
     aParam.setValue(dictCls.valueForKey("id"), forKey: "class_id")
     aParam.setValue(is_buy, forKey: "is_buy")
     

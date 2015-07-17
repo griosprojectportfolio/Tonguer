@@ -133,9 +133,10 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
     self.view.addSubview(horiVw1)
     
-    pickupTableView.frame =  CGRectMake(self.view.frame.origin.x,horiVw1.frame.origin.y+horiVw1.frame.size.height+5,self.view.frame.width,self.view.frame.height-104)
+    pickupTableView.frame =  CGRectMake(self.view.frame.origin.x,horiVw1.frame.origin.y+horiVw1.frame.size.height+5,self.view.frame.width,self.view.frame.height-115)
     pickupTableView.delegate = self
     pickupTableView.dataSource = self
+    pickupTableView.showsVerticalScrollIndicator = false
     pickupTableView.separatorStyle = UITableViewCellSeparatorStyle.None
     //pickupTableView.backgroundColor = UIColor.grayColor()
     
@@ -360,12 +361,13 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   func getPayClassApiCall(){
     
-    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    var aParams: NSDictionary = ["auth-token":auth_token[0]]
     self.api.payClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
-      //self.hometableVw.reloadData()
+      if aParam.isKindOfClass(NSNull){
+        self.reSetshowSetDataNofoundImg()
+      }
       self.allDataFetchFromDataBase()
       
       if(self.dataArr.count == 0){
@@ -387,12 +389,13 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   func getHostPayClsApiCall(){
     
-    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    var aParams: NSDictionary = ["auth-token":auth_token[0]]
     self.api.hostpayClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      //self.haderArr =  aParam.objectForKey("category") as NSMutableArray
-      //self.hometableVw.reloadData()
+      if(aParam.isKindOfClass(NSNull)){
+        self.reSetshowSetDataNofoundImg()
+      }
       self.hostDataFetchFromDataBase()
       if(self.dataArr.count == 0){
         if(self.btntag == 1){
@@ -611,7 +614,7 @@ extension PickupCoursecenterViewController:UISearchBarDelegate {
 
   //***********Search Api Call****************
   func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-    let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text], forKeys: ["auth_token","cls_key_word"])
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text], forKeys: ["auth-token","cls_key_word"])
     self.api.callSearchClassApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
       searchBar.resignFirstResponder()

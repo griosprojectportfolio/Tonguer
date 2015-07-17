@@ -62,10 +62,10 @@ class PickupTableViewCell: BaseTableViewCell {
     vWcell.backgroundColor = UIColor.whiteColor()
     
     
-    lblClassName.frame =  CGRectMake(10,0,vWcell.frame.size.width,30)
+    lblClassName.frame =  CGRectMake(5,0,vWcell.frame.size.width,30)
     lblClassName.text = aParam.objectForKey("name") as NSString
     //lblClassName.backgroundColor = UIColor.blueColor()
-    lblClassName.font = lblClassName.font.fontWithSize(15)
+    lblClassName.font = lblClassName.font.fontWithSize(13)
     lblClassName.textColor = UIColor.blackColor()
     lblClassName.numberOfLines = 0
     lblClassName.lineBreakMode = NSLineBreakMode.ByWordWrapping

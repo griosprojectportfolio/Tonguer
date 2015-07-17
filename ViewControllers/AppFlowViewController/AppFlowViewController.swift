@@ -38,7 +38,9 @@ class AppFlowViewController: BaseViewController {
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
    
     let arry = Aboutus.MR_findAll()
+    if(arry.count != 0){
      dataFetchFromDatabase(arry)
+    }
      self.defaultUIDesign()
     
   }
@@ -175,14 +177,14 @@ class AppFlowViewController: BaseViewController {
   
   func abouUSApiCall(){
     
-     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth_token"])
+     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
     self.api.aboutUS(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var arry = responseObject as NSArray
+      if(arry.count>0){
       self.dataFetchFromDatabase(arry)
-      
-      
+      }
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)

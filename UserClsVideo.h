@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSString * vdo_name;
 @property (nonatomic, retain) NSString * vdo_img;
 @property (nonatomic, retain) NSString * vdo_url;
+@property (nonatomic, retain) NSNumber * finished_video;
 
 + (void)entityFromArray:(NSArray *)aArray inContext:(NSManagedObjectContext*)localContext;
 + (id)entityFromDictionary:(NSDictionary *)aDictionary inContext:(NSManagedObjectContext *)localContext;

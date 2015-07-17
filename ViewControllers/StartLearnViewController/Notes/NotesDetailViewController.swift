@@ -67,8 +67,8 @@ class NotesDetailViewController: BaseViewController {
       
       btnLike = UIButton(frame: CGRectMake(0, 0, 25, 25))
       
-      var like_status = dictNotes.valueForKey("note_like_status") as Bool
-      if(like_status){
+      var like_status = dictNotes.valueForKey("note_like_status") as NSNumber
+      if(like_status == 1){
         btnLike.setImage(UIImage(named: "like"), forState: UIControlState.Normal)
         btnLike.userInteractionEnabled = false
       }else{
@@ -118,8 +118,15 @@ class NotesDetailViewController: BaseViewController {
     scrollVW.addSubview(lblContent)
 
     imgVW = UIImageView(frame: CGRectMake(lblContent.frame.origin.x,lblContent.frame.origin.y+lblContent.frame.height+20,lblContent.frame.width,400))
+    
+    var img = dictNotes.objectForKey("image") as NSObject
+    if(img.isKindOfClass(NSString)){
     let url = NSURL(string: dictNotes.objectForKey("image") as NSString)
     imgVW.sd_setImageWithURL(url)
+    }else if(img.isKindOfClass(NSDictionary)){
+      let url = NSURL(string: dictNotes.objectForKey("image")?.valueForKey("url") as NSString)
+       imgVW.sd_setImageWithURL(url)
+    }
     scrollVW.addSubview(imgVW);
 
     scrollVW.contentSize = CGSize(width:self.view.frame.width, height:imgVW.frame.origin.y+imgVW.frame.size.height)
@@ -134,7 +141,7 @@ class NotesDetailViewController: BaseViewController {
   func btnAddNoteTapped(sender:UIButton){
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictNotes.valueForKey("id"), forKey: "note_id")
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
@@ -183,7 +190,7 @@ class NotesDetailViewController: BaseViewController {
   func notesLikeApiCall(){
     
     var aParams: NSMutableDictionary! = NSMutableDictionary()
-    aParams.setValue(auth_token[0], forKey: "auth_token")
+    aParams.setValue(auth_token[0], forKey: "auth-token")
      aParams.setValue(dictNotes.valueForKey("id"), forKey: "note_id")
     
     self.api.notesLike(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
@@ -201,7 +208,7 @@ class NotesDetailViewController: BaseViewController {
     
   func deleteNotesApiCall (notes_id:NSInteger) {
 
-    let param:NSDictionary = NSDictionary(objects: [auth_token[0],notes_id], forKeys: ["auth_token","note_id"])
+    let param:NSDictionary = NSDictionary(objects: [auth_token[0],notes_id], forKeys: ["auth-token","note_id"])
     self.api.callNotesDeleteApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       self.deleteNotes()
       }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in

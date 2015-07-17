@@ -171,7 +171,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func getAddvertiesmentApiCall(){
     
-    var aParams: NSDictionary = ["auth_token":auth_token[0]] //NSDictionary(objects: [auth_token], forKeys: ["auth_token"])
+    var aParams: NSDictionary = ["auth-token":auth_token[0]] //NSDictionary(objects: [auth_token], forKeys: ["auth_token"])
     
     self.api.addvertiesment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
@@ -189,7 +189,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func getFreeClassApiCall(){
     
-    var aParams: NSDictionary = ["auth_token":auth_token[0]]
+    var aParams: NSDictionary = ["auth-token":auth_token[0]]
     self.api.freeClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
