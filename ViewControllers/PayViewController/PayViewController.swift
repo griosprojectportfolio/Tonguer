@@ -177,7 +177,13 @@ class PayViewController: BaseViewController {
     userDict.setValue(dictFetchedData.valueForKey("last_name"), forKey: "last_name")
     userDict.setValue(money, forKey: "money")
     userDict.setValue(dictFetchedData.valueForKey("updated_at"), forKey: "updated_at")
-    userDict.setValue(dictFetchedData.valueForKey("image")?.valueForKey("url"), forKey: "image")
+    
+    var img = dictFetchedData.valueForKey("image") as NSObject
+    if(img.isKindOfClass(NSDictionary)){
+      userDict.setValue(dictFetchedData.valueForKey("image")?.valueForKey("url"), forKey: "image")
+    }else if(img.isKindOfClass(NSString)){
+      userDict.setValue(dictFetchedData.valueForKey("image"), forKey: "image")
+    }
     CommonUtilities.addUserInformation(userDict)
   }
 

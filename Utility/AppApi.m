@@ -895,14 +895,14 @@
  
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
   AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-  
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
   NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[aParams objectForKey:@"fileName"]];
   operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
   
   [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
     NSLog(@"Successfully downloaded file to %@", path);
-    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     NSUserDefaults *defaults = [[NSUserDefaults alloc]init];
     BOOL state = [defaults boolForKey:@"state"];
     
@@ -925,7 +925,7 @@
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
       double progress = (double)totalBytesRead / totalBytesExpectedToRead;
      [self.progressVW setProgress:progress animated:true];
-      
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
       NSLog(@"Progress: %.2f", progress);
       
     }];
@@ -1097,7 +1097,9 @@
       [ClsOutLineModule entityFromArray:arryModule inContext:localContext classID:[aParams valueForKey:@"cls_id"]];
         for (NSDictionary *dict in arryModule) {
         NSMutableArray *arryElement = [dict valueForKey:@"elements"];
+          if(arryElement.count != 0 ){
         [ClsModElement entityFromArray:arryElement inContext:localContext modId:[dict valueForKey:@"id"]];
+          }
       }
       
     } completion:^(BOOL success, NSError *error) {

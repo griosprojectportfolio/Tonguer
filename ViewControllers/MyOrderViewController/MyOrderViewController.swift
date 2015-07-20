@@ -110,7 +110,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
     self.view.addSubview(HorizVw2)
     
-    myordertableview.frame = CGRectMake(btn1.frame.origin.x,HorizVw2.frame.origin.y+HorizVw2.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-HorizVw2.frame.height-10)
+    myordertableview.frame = CGRectMake(btn1.frame.origin.x,HorizVw2.frame.origin.y+HorizVw2.frame.size.height+10,self.view.frame.width,self.view.frame.height-64-HorizVw2.frame.height-45)
     //myordertableview.backgroundColor = UIColor.grayColor()
     myordertableview.contentInset = UIEdgeInsetsMake(-64,0,0,0)
 

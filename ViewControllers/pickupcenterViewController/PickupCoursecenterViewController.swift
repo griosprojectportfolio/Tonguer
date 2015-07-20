@@ -53,11 +53,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     super.viewWillAppear(animated)
     getHostPayClsApiCall()
     getPayClassApiCall()
-    pickupTableView.reloadData()
+   // pickupTableView.reloadData()
   }
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
+     pickupTableView.reloadData()
     if(btntag == 1){
      setTableContentinset()
     }
@@ -75,7 +76,6 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
         reSetshowSetDataNofoundImg()
       }
     }
-  pickupTableView.reloadData()
   }
   
   override func didReceiveMemoryWarning() {

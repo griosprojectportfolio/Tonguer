@@ -161,7 +161,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    if(vdoDownloadFlag){
+    
     var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
     
     var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
@@ -179,7 +179,6 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as VideoPalyViewController
        vc.viedoUrl = viedoUrl
        self.navigationController?.pushViewController(vc, animated: true)
-    }
   }
   }
   

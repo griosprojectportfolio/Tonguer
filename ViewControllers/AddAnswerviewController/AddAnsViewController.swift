@@ -29,6 +29,8 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   var height:CGFloat = 0
   var toolBar:UIToolbar!
   var vWFooter: UIView!
+  var sendBtnTapped:Bool = false
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
@@ -173,7 +175,9 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     var data: NSString! = dict.valueForKey("comment") as NSString
     data = data.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(11)], context: nil)
-    return (rect.height+40)
+    
+    println(rect.height+30)
+    return (rect.height+30)
   }
   
   
@@ -195,7 +199,14 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
       var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
    
       print("****\(rect.height+40)")
-      height = height + rect.height+30;
+      if(rect.height < 40) {
+        if sendBtnTapped == false || arrCommentData.count == 1 {
+          height = height+40
+        }
+      } else {
+        height = height + rect.height+3;
+      }
+      
       tbleHeight = height
       if (height > 500) {
         tbleHeight = 500;
@@ -230,19 +241,25 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   }  
   
   func btnSendButtonTapped(semder:AnyObject){
+    if(txtViewAddAns.text.isEmpty){
+      var alert: UIAlertView = UIAlertView(title: "Alert", message:"Please enter comment.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
+    }else{
     self.postCommentTopicApiCall()
    // self.dataFetchFromDatabaseDiscus()
     var dict: NSMutableDictionary! = NSMutableDictionary()
     dict.setValue(txtViewAddAns.text, forKey: "comment")
     println(dict)
     txtViewAddAns.text = ""
+      sendBtnTapped = true
     dict.setValue("User", forKey: "by")
     arrCommentData.addObject(dict)
     self.dynamicHeightOfTbleView()
     adAnstableView.reloadData()
     let indexPath = NSIndexPath(forRow: arrCommentData.count-1, inSection: 0)
     adAnstableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
-  }  
+    }
+  }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()

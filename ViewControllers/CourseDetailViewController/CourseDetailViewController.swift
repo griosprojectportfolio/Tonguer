@@ -206,10 +206,12 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     if(btnTag == 1){
       count = dataArr.count
     }else if(btnTag == 2){
+      if(arrOutline.count != 0){
        let dict = arrOutline.objectAtIndex(section) as NSDictionary
       let arry = dict.valueForKey("array") as NSArray
       print(arry.count)
       count = arry.count
+      }
     }
     return count
   }
@@ -284,6 +286,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       cell.textLabel.textColor = UIColor.grayColor()
       cell.textLabel.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
       return cell
+    }else {
+      cell.textLabel.text = ""
     }
     return cell
   }
@@ -435,15 +439,12 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     self.api.clsOutline(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       let arry = responseObject as NSArray
-      if(arry.count == 0){
-        
-      }else{
-        self.arrOutline = arry
-        let dict = self.arrOutline.objectAtIndex(0) as NSDictionary
-        let arry = dict.valueForKey("array") as NSArray
-        print(arry.count)
+      if(arry.count != 0){
+        self.arrOutline = responseObject as NSArray
+//        let dict = arry.objectAtIndex(0) as NSDictionary
+//        let arry = dict.valueForKey("array") as NSArray
+//        print(arry.count)
       }
-      
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
