@@ -38,7 +38,7 @@ class VideoTableViewCell: BaseTableViewCell {
   
   func setContentsProperties(aParam: NSDictionary){
     
-    let url = NSURL(string: aParam.objectForKey("image") as NSString)
+    let url = NSURL(string: aParam.objectForKey("image") as! String)
     cellImgView.layer.borderWidth = 0.3
     cellImgView.layer.borderColor = UIColor.grayColor().CGColor
     cellImgView.sd_setImageWithURL(url)
@@ -50,7 +50,7 @@ class VideoTableViewCell: BaseTableViewCell {
     
     lblText.numberOfLines = 5
     lblText.font = lblText.font.fontWithSize(13)
-    lblText.text = aParam.objectForKey("name") as NSString
+    lblText.text = aParam.objectForKey("name") as? String
     //lblText.backgroundColor = UIColor.yellowColor()
     lblText.textColor = UIColor.grayColor()
     
@@ -66,8 +66,8 @@ class VideoTableViewCell: BaseTableViewCell {
     btnComplete.layer.masksToBounds = true
     
     
-    //downloadProgress.setProgress(10, animated:true)
-    //celltxtView.addSubview(downloadProgress)
+//    downloadProgress.setProgress(10, animated:true)
+//    celltxtView.addSubview(downloadProgress)
     
    // btnplay.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)

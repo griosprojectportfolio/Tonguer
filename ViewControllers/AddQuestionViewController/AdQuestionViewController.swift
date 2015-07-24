@@ -77,7 +77,7 @@ class AdQuestionViewController: UIViewController {
   }
   
   func btnforwardTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PayID") as PayViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PayID") as! PayViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
 

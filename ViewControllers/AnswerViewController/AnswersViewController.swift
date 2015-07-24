@@ -90,13 +90,13 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     vWLine.backgroundColor = UIColor.lightGrayColor()
     scrollVW.addSubview(vWLine)
     
-    var strQuest = dictQues.valueForKey("question") as NSString
+    var strQuest = dictQues.valueForKey("question") as! NSString
     var rect: CGRect! = strQuest.boundingRectWithSize(CGSize(width:self.view.frame.size.width-40,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
     
    
   
     lblQuestion = UILabel(frame: CGRectMake(vWLine.frame.origin.x+5,vWLine.frame.origin.y,rect.width,rect.height))
-    lblQuestion.text = strQuest
+    lblQuestion.text = strQuest as String
     lblQuestion.numberOfLines = 0
     lblQuestion.textAlignment = NSTextAlignment.Justified
     lblQuestion.font = lblQuestion.font.fontWithSize(12)
@@ -109,8 +109,8 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     vWHori1.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     scrollVW.addSubview(vWHori1)
     
-    var strAns = dictUserAns.valueForKey("answer") as NSString
-    var strAnswer: NSString!
+    var strAns = dictUserAns.valueForKey("answer") as! NSString
+    var strAnswer: NSString
     if(strAns.isKindOfClass(NSNull)){
       strAnswer = ""
     }else{
@@ -130,7 +130,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     
     lblAnswer = UILabel(frame: CGRectMake(vWLine1.frame.origin.x+5,vWLine1.frame.origin.y,rectAns.width,rectAns.height))
     
-    lblAnswer.text = strAnswer
+    lblAnswer.text = strAnswer as String
     lblAnswer.numberOfLines = 0
     lblAnswer.textAlignment = NSTextAlignment.Justified
     lblAnswer.font = lblQuestion.font.fontWithSize(12)
@@ -173,7 +173,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     if let viewControllers = self.navigationController?.viewControllers {
       for viewController in viewControllers {
         if viewController.isKindOfClass(QesAndAnsViewController) {
-          self.navigationController?.popToViewController(viewController as QesAndAnsViewController, animated: true)
+          self.navigationController?.popToViewController(viewController as! QesAndAnsViewController, animated: true)
         }
       }
     }
@@ -214,12 +214,12 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell: UITableViewCell! = ansTableview.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+    var cell: UITableViewCell! = ansTableview.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
     if(arrComments.count>0){
-    var dict: NSDictionary! = arrComments.objectAtIndex(indexPath.row) as NSDictionary
-     cell.textLabel.text = dict.valueForKey("comment") as NSString
-     cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
-     cell.textLabel.textColor = UIColor.lightGrayColor()
+    var dict: NSDictionary! = arrComments.objectAtIndex(indexPath.row) as! NSDictionary
+     cell.textLabel!.text = dict.valueForKey("comment") as? String
+     cell.textLabel!.font = cell.textLabel!.font.fontWithSize(15)
+     cell.textLabel!.textColor = UIColor.lightGrayColor()
     }
     return cell
   }
@@ -228,15 +228,15 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   
   func getAdminCommentApiCall(){
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth_token")
     aParams.setValue(dictUserAns.valueForKey("id"), forKey: "answer_id")
-    self.api.clsAdminComment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.clsAdminComment(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
 
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-      let arryQuestion:NSArray = responseObject as NSArray
+      let arryQuestion:NSArray = responseObject as! NSArray
       if(arryQuestion.count>0){
         self.resetShowSetDataNofoundImg()
       self.dataFetchFromDataBaseComments(arryQuestion)
@@ -252,18 +252,18 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   
   func getUserAnswerApiCall(){
 
-    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as Int
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as! Int
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictQues.valueForKey("id"), forKey: "question_id")
     aParams.setValue(userId, forKey: "userId")
     println(aParams)
-    self.api.userAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userAnswer(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
 
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-      self.arryAnswer = responseObject as NSArray
+      self.arryAnswer = responseObject as! NSArray
       if(self.arryAnswer.count>0){
 
         self.resetShowSetDataNofoundImg()
@@ -279,7 +279,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
   func dataFetchFromDataBaseComments(arrFetchComment: NSArray ){
 
     for var index = 0 ; index < arrFetchComment.count ; index++ {
-      let clsObj: QuestionComment! = arrFetchComment.objectAtIndex(index) as QuestionComment
+      let clsObj: QuestionComment! = arrFetchComment.objectAtIndex(index) as! QuestionComment
       
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObj.comt_id, forKey: "id")
@@ -293,7 +293,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
 
       for var index = 0 ; index < arrFetchAnswer.count ; index++ {
       dictUserAns.removeAllObjects()
-      let ansObj: Answer! = arrFetchAnswer.objectAtIndex(index) as Answer
+      let ansObj: Answer! = arrFetchAnswer.objectAtIndex(index) as! Answer
       
       dictUserAns.setValue(ansObj.ans_id, forKey: "id")
       dictUserAns.setValue(ansObj.answer, forKey:"answer")

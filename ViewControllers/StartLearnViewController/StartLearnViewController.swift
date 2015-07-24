@@ -92,7 +92,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     print(dictClasses)
     
     imgVwblur = UIImageView(frame: CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+64,self.view.frame.width,180))
-    let url = NSURL(string:dictClasses.valueForKey("image") as NSString)
+    let url = NSURL(string:dictClasses.valueForKey("image") as! String)
     imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
     self.view.addSubview(imgVwblur)
     
@@ -112,7 +112,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     lblClassScoreDigit = UILabel(frame: CGRectMake((lblClassScore.frame.width-40)/2+10,lblClassScore.frame.origin.y+lblClassScore.frame.height, 40, 40))
     print(dictClasses.objectForKey("class_score")?.integerValue)
    // var str: NSString! =
-    lblClassScoreDigit.text = NSString(format: "%i",(dictClasses.objectForKey("score")?.integerValue)!)
+    lblClassScoreDigit.text = NSString(format: "%i",(dictClasses.objectForKey("score")?.integerValue)!) as String
     //lblClassScoreDigit.backgroundColor = UIColor.greenColor()
     lblClassScoreDigit.textAlignment = NSTextAlignment.Center
     lblClassScoreDigit.textColor = UIColor(red: 241.0/255.0, green: 132.0/255.0, blue: 131.0/255.0,alpha:1.0)
@@ -142,7 +142,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     imgVwAlpha.addSubview(lblDayLeft)
     
     lblDayLeftDigit = UILabel(frame: CGRectMake(lblDayLeft.frame.origin.x,lblDayLeft.frame.origin.y+lblDayLeft.frame.size.height,100, 40))
-    lblDayLeftDigit.text =  NSString(format: "%i",(dictClasses.objectForKey("days")?.integerValue)!)
+    lblDayLeftDigit.text =  NSString(format: "%i",(dictClasses.objectForKey("days")?.integerValue)!) as String
     //lblDayLeftDigit.backgroundColor = UIColor.greenColor()
     lblDayLeftDigit.textAlignment = NSTextAlignment.Center
     lblDayLeftDigit.textColor = UIColor(red: 241.0/255.0, green: 132.0/255.0, blue: 131.0/255.0,alpha:1.0)
@@ -160,7 +160,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     
     lblProNum = UILabel(frame: CGRectMake(lblprogress.frame.origin.x+5,lblprogress.frame.origin.y+20,50,50))
-    lblProNum.text = NSString(format: "%i",(dictClasses.objectForKey("progress")?.integerValue)!)
+    lblProNum.text = NSString(format: "%i",(dictClasses.objectForKey("progress")?.integerValue)!) as String
     //lblProNum.backgroundColor = UIColor.greenColor()
     lblProNum.textAlignment = NSTextAlignment.Center
     lblProNum.textColor = UIColor(red: 241.0/255.0, green: 132.0/255.0, blue: 131.0/255.0,alpha:1.0)
@@ -202,14 +202,14 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   }
   
   func btnFreeOpenTapped(){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassCenterID") as ClassCenterViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassCenterID") as! ClassCenterViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
   func btnStartLearnTapped(){
     //startLearningApiCall()
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
-    vc.classID = self.dictClasses.objectForKey("id") as NSInteger
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID")as! VideoViewControler
+    vc.classID = self.dictClasses.objectForKey("id") as! NSInteger
     vc.isActive = "Paied"
     self.navigationController?.pushViewController(vc, animated: true)
   }
@@ -222,11 +222,11 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell: StartLearnTableViewCell!
-    cell = sartlTableview.dequeueReusableCellWithIdentifier("cell") as StartLearnTableViewCell
+    cell = sartlTableview.dequeueReusableCellWithIdentifier("cell") as! StartLearnTableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
 
-    cell.defaultCellContent(dataArr.objectAtIndex(indexPath.row) as NSDictionary,index:indexPath.row)
+    cell.defaultCellContent(dataArr.objectAtIndex(indexPath.row) as! NSDictionary,index:indexPath.row)
     
     
     return cell
@@ -239,20 +239,20 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     switch (indexPath.row){
     case 0:
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
-       vc.classID = dictClasses.objectForKey("id") as NSInteger
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as! VideoViewControler
+       vc.classID = dictClasses.objectForKey("id") as! NSInteger
        vc.isActive = "Paied"
       self.navigationController?.pushViewController(vc, animated: true)
     case 1:
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID") as QesAndAnsViewController
-      vc.classID =  dictClasses.objectForKey("id") as NSInteger
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("QuesAnsID")as! QesAndAnsViewController
+      vc.classID =  dictClasses.objectForKey("id") as! NSInteger
       self.navigationController?.pushViewController(vc, animated: true)
     case 2:
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("DiscussID") as DiscussViewController
-      vc.classID = dictClasses.objectForKey("id") as NSInteger
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("DiscussID") as! DiscussViewController
+      vc.classID = dictClasses.objectForKey("id") as! NSInteger
       self.navigationController?.pushViewController(vc, animated: true)
     case 3:
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("NotesID") as NotesViewController
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("NotesID")as!NotesViewController
       self.navigationController?.pushViewController(vc, animated: true)
 
     default:
@@ -264,16 +264,16 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   
   func getClsTopicApiCall(){
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictClasses.valueForKey("id"), forKey: "class_id")
 
-    self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.discusAllTopic(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()//  
 
-      var dictresponse:NSDictionary = responseObject as NSDictionary
+      var dictresponse:NSDictionary = responseObject as! NSDictionary
       self.dataFetchFromDatabaseDiscus(dictresponse)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -287,8 +287,8 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
   //***************Fetching Data From Database Discus *********
   
   func dataFetchFromDatabaseDiscus(var dictData:NSDictionary){
-    let arrFetchAdmin: NSArray = dictData.objectForKey("Admin") as NSArray
-    let arrFetchUser: NSArray = dictData.objectForKey("User") as NSArray
+    let arrFetchAdmin: NSArray = dictData.objectForKey("Admin") as! NSArray
+    let arrFetchUser: NSArray = dictData.objectForKey("User")as! NSArray
     var count: NSInteger!
     count = arrFetchAdmin.count + arrFetchUser.count
     print(count)
@@ -303,7 +303,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     dataArr = [dict1,dict2,dict3,dict4]
     self.sartlTableview.reloadData()
     for var index = 0; index < arrFetchAdmin.count; ++index{
-      let clsObject: DisAdminTopic = arrFetchAdmin.objectAtIndex(index) as DisAdminTopic
+      let clsObject: DisAdminTopic = arrFetchAdmin.objectAtIndex(index) as! DisAdminTopic
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObject.topic_id, forKey: "id")
       dict.setValue(clsObject.topic_name, forKey: "name")
@@ -312,7 +312,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     }
     
     for var index = 0; index < arrFetchUser.count; ++index{
-      let clsObject: DisUserToic = arrFetchUser.objectAtIndex(index) as DisUserToic
+      let clsObject: DisUserToic = arrFetchUser.objectAtIndex(index)as! DisUserToic
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObject.topic_id, forKey: "id")
       dict.setValue(clsObject.topic_name, forKey: "name")

@@ -71,7 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.Tonguer.Apps.Tonguer" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as NSURL
+        return urls[urls.count-1] as! NSURL
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
@@ -94,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict as [NSObject : AnyObject])
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(error), \(error!.userInfo)")
@@ -153,7 +153,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     if let info = userInfo["aps"] as? NSDictionary
     {
       var mainstoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-      let nvc = mainstoryboard.instantiateViewControllerWithIdentifier("AlertID") as AlertViewController
+      let nvc = mainstoryboard.instantiateViewControllerWithIdentifier("AlertID") as! AlertViewController
       nvc.arryNotification.addObject(temp)
       self.window?.rootViewController?.presentViewController(nvc, animated: true, completion:nil)
     }

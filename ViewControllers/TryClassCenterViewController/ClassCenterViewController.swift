@@ -96,8 +96,8 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
-    var cellArr: NSArray! = dict.objectForKey("array") as NSArray
+    var dict: NSDictionary! = dataArr.objectAtIndex(section) as! NSDictionary
+    var cellArr: NSArray! = dict.objectForKey("array") as! NSArray
     return cellArr.count//subCatArr.count
   }
   
@@ -109,9 +109,9 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWheader.layer.borderWidth = 0.5
     vWheader.layer.borderColor = UIColor.lightGrayColor().CGColor
-    var dict:NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
+    var dict:NSDictionary! = dataArr.objectAtIndex(section) as! NSDictionary
     var lblTilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
-    lblTilte.text = dict.valueForKey("name") as NSString
+    lblTilte.text = dict.valueForKey("name") as? String
     lblTilte.font = lblTilte.font.fontWithSize(12)
     lblTilte.textColor = UIColor.whiteColor()
     vWheader.addSubview(lblTilte)
@@ -120,23 +120,23 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   }
   
   func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    var dict:NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
-    return dict.valueForKey("name") as NSString
+    var dict:NSDictionary! = dataArr.objectAtIndex(section) as! NSDictionary
+    return dict.valueForKey("name") as? String
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
      cell.selectionStyle = UITableViewCellSelectionStyle.None
-    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as NSDictionary
-    var cellArr: NSArray! = dict.objectForKey("array") as NSArray
+    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as! NSDictionary
+    var cellArr: NSArray! = dict.objectForKey("array") as! NSArray
     if(cellArr.count>0){
-      var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
-      cell.textLabel.text = dictSub.valueForKey("name") as NSString
-      cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+      var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as! NSDictionary
+      cell.textLabel!.text = dictSub.valueForKey("name") as? String
+      cell.textLabel!.font = cell.textLabel!.font.fontWithSize(12)
       return cell
 
     }else{
-      cell.textLabel.text = ""
+      cell.textLabel!.text = ""
       return cell
     }
     
@@ -148,11 +148,11 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
-    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as NSDictionary
-    var cellArr: NSArray! = dict.objectForKey("array") as NSArray
-    var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as NSDictionary
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassID") as ClassViewController
-    vc.sub_cat_id = dictSub.objectForKey("id") as NSInteger
+    var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as! NSDictionary
+    var cellArr: NSArray! = dict.objectForKey("array") as! NSArray
+    var dictSub: NSDictionary! = cellArr.objectAtIndex(indexPath.row) as! NSDictionary
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassID") as! ClassViewController
+    vc.sub_cat_id = dictSub.objectForKey("id") as! NSInteger
     vc.flgClass = "Free"
     self.navigationController?.pushViewController(vc, animated: true)
   }
@@ -173,9 +173,9 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     
     var aParams: NSDictionary = ["auth-token":auth_token[0]] //NSDictionary(objects: [auth_token], forKeys: ["auth_token"])
     
-    self.api.addvertiesment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.addvertiesment(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      let arry = responseObject as NSArray
+      let arry = responseObject as! NSArray
       self.advertiesmentFetchFromDataBase(arry)
       
       },
@@ -190,9 +190,9 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   func getFreeClassApiCall(){
     
     var aParams: NSDictionary = ["auth-token":auth_token[0]]
-    self.api.freeClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.freeClass(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as! NSDictionary
       self.dataFetchFromDataBase()
       self.tableview.reloadData()
       },
@@ -206,7 +206,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func advertiesmentFetchFromDataBase(arryAdd:NSArray){
     
-    let obj = arryAdd.objectAtIndex(0) as Addvertiesment
+    let obj = arryAdd.objectAtIndex(0) as! Addvertiesment
     
     if((obj.add_name) != nil){
       lbldeatil.text = obj.add_name
@@ -221,7 +221,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     scrollAdvertise.contentSize = CGSizeMake(scrollAdvertise.frame.size.width, imgVw.frame.size.height+lbldeatil.frame.size.height+15)
     
     if((obj.add_img) != nil){
-      let url: NSURL = NSURL(string: obj.add_img as NSString)!
+      let url: NSURL = NSURL(string: obj.add_img as String)!
       imgVw.sd_setImageWithURL(url, placeholderImage:UIImage(named:"defaultImg.png"))
     }else{
       let url: NSURL = NSURL(string:"http://www.popular.com.my/images/no_image.gif")!
@@ -237,20 +237,20 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index {
       //println("index is \(index)")
-      let catObject : FreeClsCat = arrFetchCat.objectAtIndex(index) as FreeClsCat
+      let catObject : FreeClsCat = arrFetchCat.objectAtIndex(index) as! FreeClsCat
       var str_cat_id = catObject.cat_id
       var strName = catObject.cat_name as NSString
        var dictData: NSMutableDictionary! = NSMutableDictionary()
       dictData.setObject(str_cat_id, forKey: "id")
       dictData.setObject(strName, forKey: "name")
       
-      let sub_CatFilter : NSPredicate = NSPredicate(format: "cat_id CONTAINS %@",str_cat_id)!
+      let sub_CatFilter : NSPredicate = NSPredicate(format: "cat_id CONTAINS %@",str_cat_id)
       let subcatData : NSArray = FreeSubCat.MR_findAllWithPredicate(sub_CatFilter)
       print(subcatData.count)
       if (subcatData.count > 0){
         var subCatArr: NSMutableArray! = NSMutableArray()
       for var index = 0; index < subcatData.count; ++index {
-        let subCatObject : FreeSubCat = subcatData.objectAtIndex(index) as FreeSubCat
+        let subCatObject : FreeSubCat = subcatData.objectAtIndex(index) as! FreeSubCat
         var catDict2: NSMutableDictionary! = NSMutableDictionary()
         if((subCatObject.sub_cat_id) != nil){
            var strID = subCatObject.sub_cat_id

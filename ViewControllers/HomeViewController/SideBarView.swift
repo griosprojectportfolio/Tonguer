@@ -64,11 +64,11 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
     
     if(cell == nil){
       
-      cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+      cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
       cell.backgroundColor = UIColor.clearColor()
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       var lbl :UILabel! = UILabel(frame: CGRectMake(50, 0, 100, 30))
-      lbl.text = arrname.objectAtIndex(indexPath.row) as NSString
+      lbl.text = arrname.objectAtIndex(indexPath.row) as! NSString as String
       lbl.textColor = UIColor.whiteColor()
       lbl.font = lbl.font.fontWithSize(12)
       cell.addSubview(lbl)
@@ -100,14 +100,14 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
         UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
-            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as! HomeViewController
             self.sideNavigation.pushViewController(vc, animated: false)
         })
         
         
       }
       
-      
+    
     case 1: //Pick up Center
       
       var lastViewcontroler: UIViewController! = self.sideNavigation.visibleViewController
@@ -125,7 +125,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             println(indexPath.row)
-            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("PickCenterID") as PickupCoursecenterViewController
+            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("PickCenterID") as! PickupCoursecenterViewController
             self.sideNavigation.pushViewController(vc, animated: false)
         })
         
@@ -152,7 +152,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             println(indexPath.row)
-            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("ChargeID") as ChargeViewController
+            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("ChargeID") as! ChargeViewController
             self.sideNavigation.pushViewController(vc, animated: false)
             
         })
@@ -177,7 +177,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             println(indexPath.row)
-            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("MyOderID") as MyOrderViewController
+            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("MyOderID") as! MyOrderViewController
             self.sideNavigation.pushViewController(vc, animated: false)
         })
         
@@ -236,7 +236,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             
-            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("SettingID") as SettingViewController
+            var vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("SettingID") as! SettingViewController
             self.sideNavigation.pushViewController(vc, animated:false)
             
         })
@@ -259,7 +259,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
           self.frame = CGRectMake(-(self.frame.width),self.frame.origin.y, self.frame.width, self.frame.height)
           }, completion: { (Bool) -> Void in
             println(indexPath.row)
-            let vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("AdminChatID") as AdminChatViewController
+            let vc = self.sideNavigation.storyboard?.instantiateViewControllerWithIdentifier("AdminChatID") as! AdminChatViewController
             self.sideNavigation.pushViewController(vc, animated:true)
         })
         

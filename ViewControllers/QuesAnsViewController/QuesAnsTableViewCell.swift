@@ -46,7 +46,7 @@ class QuesAnsTableViewCell: BaseTableViewCell {
     celllbltext.numberOfLines = 3
     //celllbltext.backgroundColor = UIColor.yellowColor()
     celllbltext.font = celllbltext.font.fontWithSize(13)
-    celllbltext.text = aParam.valueForKey("question") as NSString
+    celllbltext.text = aParam.valueForKey("question") as? String
     celllbltext.textColor = UIColor.grayColor()
     
     cellbtnAns.backgroundColor = UIColor(red: 235.0/255.0, green: 235.0/255.0, blue: 235.0/255.0,alpha:1.0)

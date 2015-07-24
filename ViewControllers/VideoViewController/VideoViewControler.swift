@@ -30,11 +30,10 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
-
+    api.progressVW = UIProgressView()
     arrClassVideo.removeAllObjects()
     self.title = "Videos"
     
-  
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -47,7 +46,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
     
-    var predicate:NSPredicate = NSPredicate (format: "cls_id CONTAINS %i", classID)!;
+    var predicate:NSPredicate = NSPredicate (format: "cls_id CONTAINS %i", classID);
     
    
     if(isActive.isEqualToString("Paied")){
@@ -113,15 +112,18 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as VideoTableViewCell
+    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as! VideoTableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(arrClassVideo.count>0){
-    cell.defaultUIDesign(arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
-    var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
+    cell.defaultUIDesign(arrClassVideo.objectAtIndex(indexPath.row) as! NSDictionary,frame: self.view.frame)
+    var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as! NSDictionary
     cell.btnplay.tag = indexPath.row
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-    cell.btnComplete.tag = dict.valueForKey("id") as NSInteger
+    cell.btnComplete.tag = dict.valueForKey("id") as! NSInteger
     cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    api.progressVW.frame = CGRectMake(5,cell.lblText.frame.origin.y+40,cell.btnComplete.frame.origin.x-20,5)
+    //api.progressVW.setProgress(1, animated:true)
+    //cell.celltxtView.addSubview(api.progressVW)
       if(btnpalyflag){
       cell.btnDownload.hidden = false
       }
@@ -130,7 +132,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       }
       
       if(isActive.isEqualToString("Paied")){
-        var finished_status = dict.valueForKey("finished_status") as NSNumber
+        var finished_status = dict.valueForKey("finished_status") as! NSNumber
         if(finished_status == 1){
           cell.btnComplete.userInteractionEnabled = false
           cell.btnComplete.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
@@ -144,10 +146,10 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     }
     
   
-      var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
+      var fileName: NSString = (dict.valueForKey("name") as! NSString as String) + ".mp4"
       let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-      let url: NSString = documentsPath.objectAtIndex(0) as NSString
-      let path: NSString! = url+"/"+fileName
+      let url: NSString = documentsPath.objectAtIndex(0) as! NSString
+      let path = (url as String)+"/"+(fileName as String)
       println(path)
       cell.btnplay.hidden = false
 
@@ -162,21 +164,21 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
-    var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as NSDictionary
+    var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as! NSDictionary
     
-    var fileName: NSString = dict.valueForKey("name") as NSString + ".mp4"
+    var fileName: NSString = (dict.valueForKey("name") as! NSString as String) + ".mp4"
     let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-    let url: NSString = documentsPath.objectAtIndex(0) as NSString
-    let path: NSString! = url+"/"+fileName
+    let url: NSString = documentsPath.objectAtIndex(0) as! NSString
+    let path = (url as String)+"/"+(fileName as String)
     let manager = NSFileManager.defaultManager()
     if (manager.fileExistsAtPath(path)){
       
-      var str: NSString = dict.valueForKey("name") as NSString
+      var str: NSString = dict.valueForKey("name") as! NSString
       
       var fileName: NSString! = str.stringByAppendingString(".mp4")
       let aParams : NSDictionary = ["fileName":fileName]
-      let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams)
-      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as VideoPalyViewController
+      let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams as [NSObject : AnyObject])
+      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as! VideoPalyViewController
        vc.viedoUrl = viedoUrl
        self.navigationController?.pushViewController(vc, animated: true)
   }
@@ -184,12 +186,12 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   
   
   func btnCompleteTapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     print(btn.tag)
-    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as Int
+    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as! Int
     var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,btn.tag,userId], forKeys: ["auth-token","cls_id","video_id", "userId"])
 
-    self.api.videoComplete(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.videoComplete(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
          btn.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
 
@@ -205,18 +207,18 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   func btnPalyTapped(sender:AnyObject){
     
       btnpalyflag = true
-      var btn = sender as UIButton
+      var btn = sender as! UIButton
       btn.hidden = false
       btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
-      var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as NSDictionary
-      var video_url: NSString! = dict.valueForKey("video_url") as NSString
-      var str: NSString = dict.valueForKey("name") as NSString
+      var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as! NSDictionary
+      var video_url: NSString! = dict.valueForKey("video_url") as! NSString
+      var str: NSString = dict.valueForKey("name") as! NSString
       var fileName: NSString! = str.stringByAppendingString(".mp4")
       let aPara : NSDictionary = ["fileName":fileName]
       
       var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName], forKeys: ["url","fileName"])
       
-      self.api.downloadMediaData(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      self.api.downloadMediaData(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
         println(responseObject)
         btn.hidden = true
        self.vdoDownloadFlag = true
@@ -234,7 +236,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   }
   
   func calculateVideofileSize(filePath:NSString){
-    var fileAttributes: NSDictionary = NSFileManager.defaultManager().attributesOfItemAtPath(filePath, error:nil)!
+    var fileAttributes: NSDictionary = NSFileManager.defaultManager().attributesOfItemAtPath(filePath as String, error:nil)!
     var fileSizeNumber: AnyObject? = fileAttributes.objectForKey(NSFileSize)
     var fileSize = fileSizeNumber?.doubleValue
     
@@ -242,20 +244,20 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     
     if(arry.count>0){
     
-    var obj = arry.objectAtIndex(0) as DownloadedData
+    var obj = arry.objectAtIndex(0) as! DownloadedData
     var prevData = obj.download_data.doubleValue
     
     var currtData = prevData + fileSize!
-      var aParam:NSMutableDictionary! = NSMutableDictionary()
+      var aParam:NSMutableDictionary = NSMutableDictionary()
       aParam.setValue(1, forKey: "id")
       aParam.setValue(currtData, forKey: "data")
-      api.saveDownloadedData(aParam)
+      api.saveDownloadedData(aParam as [NSObject : AnyObject])
 
     }else{
-      var aParam:NSMutableDictionary! = NSMutableDictionary()
+      var aParam:NSMutableDictionary = NSMutableDictionary()
       aParam.setValue(1, forKey: "id")
       aParam.setValue(0, forKey: "data")
-      api.saveDownloadedData(aParam)
+      api.saveDownloadedData(aParam as [NSObject : AnyObject])
       
     }
   
@@ -266,11 +268,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   func freeClsVideoApiCalling(){
     var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID], forKeys: ["auth-token","class_id"])
     
-    self.api.freeClsVideoList(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.freeClsVideoList(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-      let arryVideo:NSArray = responseObject as NSArray
+      let arryVideo:NSArray = responseObject as! NSArray
       self.dataFetchFreeClsDB(arryVideo)
       self.tableview.reloadData()
       if(arryVideo.count==0){
@@ -287,15 +289,15 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   
   func userClsVideoApiCalling(){
     
-    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as Int
+    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as! Int
     
     var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],classID,userId], forKeys: ["auth-token","class_id","userId"])
     
-    self.api.userClassVideo(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userClassVideo(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-      let arryVideo:NSArray = responseObject as NSArray
+      let arryVideo:NSArray = responseObject as! NSArray
       if(arryVideo.count>0){
         self.dataFetchUserClsDB(arryVideo)
         self.tableview.reloadData()
@@ -318,11 +320,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   
   func startLearningApiCall(){
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(classID, forKey: "cls_id")
     
-    self.api.startLearning(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.startLearning(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       
       },
@@ -338,7 +340,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     arrClassVideo.removeAllObjects()
      print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index{
-      let clsObject: FreeClssVideo = arrFetchCat.objectAtIndex(index) as FreeClssVideo
+      let clsObject: FreeClssVideo = arrFetchCat.objectAtIndex(index) as! FreeClssVideo
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
       var vdoId: NSNumber =  clsObject.video_id
       dictClass.setValue(vdoId, forKey:"id")
@@ -378,7 +380,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     if(arrFetchCat.count>0){
     arrClassVideo.removeAllObjects()
     for var index = 0; index < arrFetchCat.count; ++index{
-      let clsObject: UserClsVideo = arrFetchCat.objectAtIndex(index) as UserClsVideo
+      let clsObject: UserClsVideo = arrFetchCat.objectAtIndex(index) as! UserClsVideo
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
       var vdoId: NSNumber =  clsObject.vdo_id
       dictClass.setValue(vdoId, forKey:"id")

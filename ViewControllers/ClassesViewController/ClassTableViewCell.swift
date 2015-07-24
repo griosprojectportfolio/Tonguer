@@ -46,7 +46,7 @@ class ClassTableViewCell: BaseTableViewCell {
   
   func setContentProperties(aParam:NSDictionary){
     
-    let url = NSURL(string: aParam.objectForKey("image") as NSString)
+    let url = NSURL(string: aParam.objectForKey("image") as! String)
     imgVw.sd_setImageWithURL(url)
 
     //imgVw.image = UIImage(named: aParam.objectForKey("image") as NSString)
@@ -58,22 +58,22 @@ class ClassTableViewCell: BaseTableViewCell {
     vWcell.layer.borderWidth = 0.3
     vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
     
-    lblClassName.text = aParam.objectForKey("name") as NSString
+    lblClassName.text = aParam.objectForKey("name") as? String
     lblClassName.font = lblClassName.font.fontWithSize(13)
     lblClassName.textColor = UIColor.blackColor()
     lblClassName.numberOfLines = 0
     lblClassName.lineBreakMode = NSLineBreakMode.ByWordWrapping
     lblClassName.sizeToFit()
     
-    lblPriz.text = aParam.objectForKey("price") as NSString
+    lblPriz.text = aParam.objectForKey("price") as! NSString as String
     lblPriz.font = lblClassName.font.fontWithSize(12)
     lblPriz.textAlignment = NSTextAlignment.Center
     lblPriz.textColor = UIColor.whiteColor()
     lblPriz.backgroundColor =  UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     
     var strValid: NSString! = "Valid to "
-    var strDays: NSString! = aParam.objectForKey("valid_days") as NSString
-    lblDate.text = strValid+strDays+" Days"
+    var strDays: NSString! = aParam.objectForKey("valid_days") as! NSString
+    lblDate.text =  "\(strValid)\(strDays) Days"
     lblDate.font = lblDate.font.fontWithSize(12)
     lblDate.textColor = UIColor.grayColor()
     //lblDate.backgroundColor = UIColor.redColor()

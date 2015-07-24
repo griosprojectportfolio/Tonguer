@@ -165,7 +165,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   }
   
   func btnSelectCoursTapped(sender:AnyObject){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseListID") as CourselistViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseListID") as! CourselistViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
@@ -200,7 +200,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
 
   }
   
-  func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+  func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
     self.dismissViewControllerAnimated(true, completion: { () -> Void in
       
     })
@@ -241,7 +241,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
       base64String = ""
     }
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     
     aParams.setValue(txtVwContent.text, forKey: "note[content]")
@@ -249,7 +249,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     aParams.setValue(isEnable, forKey: "note[is_enable]")
     aParams.setValue(cls_id, forKey: "class_id")
     //aParams.setValue(cusTxtFieldCls.text, forKey: "note[cls_name]")
-    self.api.createUserNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.createUserNotes(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.actiIndecatorVw.removeFromSuperview()
       var alert: UIAlertView = UIAlertView(title: "Alert", message: "Note successfully created.", delegate:self, cancelButtonTitle:"OK")
@@ -283,7 +283,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
       base64String = imageData.base64EncodedStringWithOptions(.allZeros) as NSString
     }
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictNote.valueForKey("id"), forKey: "note_id")
     aParams.setValue(txtVwContent.text, forKey: "note[content]")
@@ -292,7 +292,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     aParams.setValue(cls_id, forKey: "note[a_class_id]")
     //aParams.setValue(cusTxtFieldCls.text, forKey: "note[cls_name]")
     
-    self.api.callNotesUpdateApi(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.callNotesUpdateApi(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.actiIndecatorVw.removeFromSuperview()
       var alert: UIAlertView = UIAlertView(title: "Alert", message: "Note successfully updated.", delegate:self, cancelButtonTitle:"OK")
@@ -335,16 +335,16 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   
   func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
     
-    var dict: NSDictionary! = arrclass.objectAtIndex(row) as NSDictionary
-    var strName: NSString! = dict.valueForKey("name") as NSString
+    var dict: NSDictionary = arrclass.objectAtIndex(row) as! NSDictionary
+    var strName = dict.valueForKey("name") as! String
 
     return strName
   }
   
   func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-     var dict: NSDictionary! = arrclass.objectAtIndex(row) as NSDictionary
-    cusTxtFieldCls.text = dict.valueForKey("name") as NSString
-    cls_id = dict.valueForKey("id") as NSInteger
+     var dict: NSDictionary! = arrclass.objectAtIndex(row) as! NSDictionary
+    cusTxtFieldCls.text = dict.valueForKey("name") as! String
+    cls_id = dict.valueForKey("id") as! NSInteger
     print(cls_id)
   }
   
@@ -357,7 +357,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     let arrFetchedData : NSArray = UserDefaultClsList.MR_findAll()
     
     for var index = 0; index < arrFetchedData.count; ++index {
-      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as UserDefaultClsList
+      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as! UserDefaultClsList
       var dict: NSMutableDictionary! = NSMutableDictionary()
       
       dict.setObject(userClsObj.cls_id, forKey: "id")
@@ -413,10 +413,10 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   
   func showNoteContentForUpdate(){
     if((dictNote) != nil){
-      txtVwContent.text = dictNote.valueForKey("content") as NSString
+      txtVwContent.text = dictNote.valueForKey("content") as! String
       lblTxtVwPlace.hidden = true
       
-      var state: NSNumber! = dictNote.valueForKey("isenable") as NSNumber
+      var state: NSNumber! = dictNote.valueForKey("isenable")as! NSNumber
       
       if(state == 0){
         swtPublish.setOn(false, animated:false)
@@ -424,12 +424,12 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
         swtPublish.setOn(true, animated:false)
       }
       
-      cusTxtFieldCls.text = dictNote.valueForKey("cls_name") as NSString
+      cusTxtFieldCls.text = dictNote.valueForKey("cls_name") as! String
       
-      var img = dictNote.objectForKey("image") as NSObject
+      var img = dictNote.objectForKey("image")as! NSObject
       
       if(img.isKindOfClass(NSDictionary)){
-        let url = NSURL(string: dictNote.objectForKey("image")?.valueForKey("url") as NSString)
+        let url = NSURL(string: (dictNote.objectForKey("image")?.valueForKey("url") as! NSString) as NSString as String)
         var data = NSData(contentsOfURL: url!)
         if((data) != nil){
           imagePick = UIImage(data: data!)
@@ -439,7 +439,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
         ImgVW.sd_setImageWithURL(url)
         
       }else if(img.isKindOfClass(NSString)){
-        let url = NSURL(string: dictNote.objectForKey("image") as NSString)
+        let url = NSURL(string: dictNote.objectForKey("image") as! String)
         var data = NSData(contentsOfURL: url!)
         if((data) != nil){
           imagePick = UIImage(data: data!)
@@ -450,7 +450,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
         
       }
       
-      cls_id = dictNote.valueForKey("cls_id") as NSInteger
+      cls_id = dictNote.valueForKey("cls_id")as! NSInteger
     }
   }
 
@@ -459,7 +459,7 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   func editNotesApiCall () {
     
     let param:NSDictionary = ["":""]
-    self.api.callNotesUpdateApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+    self.api.callNotesUpdateApi(param as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       var alertVw:UIAlertView = UIAlertView(title:"Message", message:"Notes updates successfully", delegate: nil, cancelButtonTitle:"OK")
       alertVw.show()
       }){ (operation: AFHTTPRequestOperation?,errro:NSError!) -> Void in

@@ -10,7 +10,7 @@ import UIKit
 
 class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate{
   
-  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
   
   @IBOutlet var myordertableview :UITableView!
   
@@ -132,7 +132,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   
   
   func btn1Tapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btnTag = btn.tag
     HorizVw.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     HorizVw2.backgroundColor = UIColor.lightGrayColor()
@@ -146,7 +146,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   }
   
   func btn2Tapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btnTag = btn.tag
     HorizVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     HorizVw.backgroundColor = UIColor.lightGrayColor()
@@ -177,24 +177,24 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     
     if(btnTag == 1){
       var cell:CourseOrderTableViewCell!
-      cell = myordertableview.dequeueReusableCellWithIdentifier("courseCell") as CourseOrderTableViewCell
+      cell = myordertableview.dequeueReusableCellWithIdentifier("courseCell") as! CourseOrderTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       if(arryFalse.count == 0){
         
       }else{
-        cell.defaultCellContents(arryFalse.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+        cell.defaultCellContents(arryFalse.objectAtIndex(indexPath.row) as! UserClassOrder, frame: self.view.frame)
         cell.btnNotPay.tag = indexPath.row
         cell.btnNotPay.addTarget(self, action:"btnNotPayTapped:", forControlEvents:UIControlEvents.TouchUpInside)
       }
       return cell
       }else if(btnTag == 2){
       var cell:CreditTableViewCell!
-      cell = myordertableview.dequeueReusableCellWithIdentifier("creditCell") as CreditTableViewCell
+      cell = myordertableview.dequeueReusableCellWithIdentifier("creditCell") as! CreditTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       if(arryTrue.count == 0){
         
       }else{
-      cell.defaultCellContents(arryTrue.objectAtIndex(indexPath.row) as UserClassOrder, frame: self.view.frame)
+      cell.defaultCellContents(arryTrue.objectAtIndex(indexPath.row) as! UserClassOrder, frame: self.view.frame)
       }
       return cell
     }
@@ -206,14 +206,14 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
     var height:CGFloat = 100
     if(btnTag == 2){
       if(arryTrue.count > 0){
-      var obj =  arryTrue.objectAtIndex(indexPath.row) as UserClassOrder
+      var obj =  arryTrue.objectAtIndex(indexPath.row) as! UserClassOrder
       var strMessage = obj.cls_name
       var rect: CGRect! = strMessage.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
         height = height+rect.height
       }
     }else if(btnTag == 1){
       if(arryFalse.count > 0){
-        var obj =  arryFalse.objectAtIndex(indexPath.row) as UserClassOrder
+        var obj =  arryFalse.objectAtIndex(indexPath.row) as! UserClassOrder
         var strMessage = obj.cls_name
         var rect: CGRect! = strMessage.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
         height = height+rect.height
@@ -229,9 +229,9 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   func userClassOrdersApiCall(){
     var aParam: NSDictionary = NSDictionary(objects: [auth_token[0]], forKeys: ["auth-token"])
     
-    self.api.userClassOrders(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userClassOrders(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      self.dataFetchFromDatabase(responseObject as NSDictionary)
+      self.dataFetchFromDatabase(responseObject as! NSDictionary)
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -241,8 +241,8 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   }
 
   func dataFetchFromDatabase(dicrOrders:NSDictionary){
-    arryTrue = dicrOrders.objectForKey("True") as NSArray
-    arryFalse = dicrOrders.objectForKey("False") as NSArray
+    arryTrue = dicrOrders.objectForKey("True") as! NSArray
+    arryFalse = dicrOrders.objectForKey("False") as! NSArray
     
     if(arryTrue.count > 0 || arryFalse.count > 0){
       myordertableview.reloadData()
@@ -252,7 +252,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
   
   func btnNotPayTapped(sender:UIButton){
     var btn = sender as UIButton
-    var obj = arryFalse.objectAtIndex(btn.tag) as UserClassOrder
+    var obj = arryFalse.objectAtIndex(btn.tag) as! UserClassOrder
     var dictCls:NSMutableDictionary = NSMutableDictionary()
     if((obj.cls_id) != nil){
       dictCls.setValue(obj.cls_id, forKey:"id")
@@ -280,7 +280,7 @@ class MyOrderViewController: BaseViewController, UITableViewDataSource, UITableV
       dictCls.setValue(0, forKey:"valid_days")
     }
     
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as OrderConfViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as! OrderConfViewController
     vc.clsDict = dictCls
     self.navigationController?.pushViewController(vc, animated: true)
   }

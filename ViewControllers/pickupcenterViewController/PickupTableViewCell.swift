@@ -32,17 +32,17 @@ class PickupTableViewCell: BaseTableViewCell {
   func setContentProperties(aParam:NSDictionary){
     
     var object:AnyObject! = aParam["image"]
-    var strImgUrl: NSString!
+    var strImgUrl: String!
     if(object.isKindOfClass(NSDictionary)){
       var img: NSString? = aParam.valueForKey("image")?.valueForKey("url") as? NSString
       
       if((img?.isKindOfClass(NSNull)) != nil){
-       strImgUrl = aParam.valueForKey("image")?.valueForKey("url") as String
+       strImgUrl = aParam.valueForKey("image")?.valueForKey("url") as! String
       }else{
         strImgUrl = ""
       }
     }else if(object.isKindOfClass(NSString)){
-      strImgUrl = aParam["image"] as String
+      strImgUrl = aParam["image"] as! String
     }
     
     if(strImgUrl == ""){
@@ -63,7 +63,7 @@ class PickupTableViewCell: BaseTableViewCell {
     
     
     lblClassName.frame =  CGRectMake(5,0,vWcell.frame.size.width,30)
-    lblClassName.text = aParam.objectForKey("name") as NSString
+    lblClassName.text = aParam.objectForKey("name") as? String
     //lblClassName.backgroundColor = UIColor.blueColor()
     lblClassName.font = lblClassName.font.fontWithSize(13)
     lblClassName.textColor = UIColor.blackColor()
@@ -74,7 +74,7 @@ class PickupTableViewCell: BaseTableViewCell {
     
     lblPriz.frame =  CGRectMake(vWcell.frame.width-50,vWcell.frame.height-30,50,30)
     if((aParam.objectForKey("price")?.integerValue) != nil){
-      lblPriz.text =  NSString(format: "%i",(aParam.objectForKey("price")?.integerValue)!)
+      lblPriz.text =  NSString(format: "%i",(aParam.objectForKey("price")?.integerValue)!) as String
     }else{
       lblPriz.text = "0.0"
     }
@@ -87,7 +87,7 @@ class PickupTableViewCell: BaseTableViewCell {
 
     var str: NSString = "Valid_days: "
     var strDays: NSString = NSString(format: "%i",(aParam.objectForKey("valid_days")?.integerValue)!)
-    var strCommon = str+strDays
+    var strCommon = (str as String)+(strDays as String)
 
     lblDate.frame =  CGRectMake(10,vWcell.frame.height-30,lblPriz.frame.origin.x-10,30)
     lblDate.text = strCommon //NSString(format: "%i",(aParam.objectForKey("valid_days")?.integerValue)!)    //aParam.objectForKey("valid_days") as NSString

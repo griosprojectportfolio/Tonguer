@@ -1,3 +1,4 @@
+
 //
 //  LearnedTableViewCell.swift
 //  Tonguer
@@ -60,11 +61,11 @@ class LearnedTableViewCell: UITableViewCell {
     
     print(aParam)
     cellContentReset()
-    let url = NSURL(string: aParam.objectForKey("image") as NSString)
+    let url = NSURL(string: aParam.objectForKey("image") as! String)
     imgVw.sd_setImageWithURL(url)
     lblTitle.frame = CGRectMake(5,3,vWcell.frame.width-10,30)
-    lblTitle.text = aParam.objectForKey("name") as NSString
-    var day: NSNumber! = aParam.objectForKey("days") as NSNumber
+    lblTitle.text = aParam.objectForKey("name") as? String
+    var day: NSNumber! = aParam.objectForKey("days") as! NSNumber
     lblDate.text = day.stringValue
   }
   

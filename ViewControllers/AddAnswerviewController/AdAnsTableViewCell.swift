@@ -31,7 +31,7 @@ class AdAnsTableViewCell: BaseTableViewCell {
       width = 414 - 60;
     }
     
-    var strAnswer = aParam.valueForKey("comment") as NSString
+    var strAnswer = aParam.valueForKey("comment") as! NSString
 
     var arry = self.contentView.subviews
     var vwSub: UIView!
@@ -43,8 +43,8 @@ class AdAnsTableViewCell: BaseTableViewCell {
     // lblname = UILabel(frame: CGRectMake(width - 150,rect.size.height+5,150, 20))
     
     
-    var strName: NSString! = aParam.valueForKey("by") as NSString
-    var strComment: NSString! = aParam.valueForKey("comment") as NSString
+    var strName: NSString! = aParam.valueForKey("by") as! NSString
+    var strComment: NSString! = aParam.valueForKey("comment")as! NSString
     
     var stringSize = strComment.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
 

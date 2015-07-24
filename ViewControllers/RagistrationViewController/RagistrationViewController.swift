@@ -17,7 +17,7 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   var actiIndecatorVw: ActivityIndicatorView!
   var api: AppApi!
   var custxtEmail,custxtPassword,custxtFname,custxtLname,custxtConpass,custxtDOB:CustomTextFieldBlurView!
-  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,7 +139,8 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   
   func signupApiCall(){
     let strDeviceToken = appDelegate.deviceTokenString
-    var dict: NSMutableDictionary! = NSMutableDictionary()
+    
+    var dict: NSMutableDictionary = NSMutableDictionary()
     dict.setObject(custxtEmail.text, forKey:"email")
     dict.setObject(custxtFname.text, forKey:"first_name")
     dict.setObject(custxtLname.text, forKey:"last_name")
@@ -147,22 +148,22 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
     dict.setObject(custxtConpass.text, forKey:"password_confirmation")
     dict.setObject(strDeviceToken, forKey:"device_token")
     
-    var aParam: NSMutableDictionary! = NSMutableDictionary()
+    var aParam: NSMutableDictionary = NSMutableDictionary()
     aParam.setObject(dict, forKey: "user")
     println(aParam)
     
     actiIndecatorVw = ActivityIndicatorView(frame:CGRectMake(0, 0,self.view.frame.width,self.view.frame.height))
     self.view.addSubview(actiIndecatorVw)
     
-    api.signUpUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    api.signUpUser(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var dict: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-      var aParam: NSDictionary = responseObject?.objectForKey("user") as NSDictionary
+      var dict: NSDictionary! = responseObject?.objectForKey("data") as! NSDictionary
+      var aParam: NSDictionary = responseObject?.objectForKey("user") as! NSDictionary
       CommonUtilities.addUserInformation(aParam)
-      var auth_token: NSString! = dict.objectForKey("auth_token") as NSString
+      var auth_token: NSString! = dict.objectForKey("auth_token") as! NSString
       self.auth_token = [auth_token]
       self.actiIndecatorVw.removeFromSuperview()
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as! HomeViewController
       self.navigationController?.pushViewController(vc, animated: true)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -209,14 +210,27 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
     self.signupApiCall()
   }
   
-    func isValidEmail(testStr:String) -> Bool {
+  func isValidEmail(testStr : String) -> Bool {
     println("validate calendar: \(testStr)")
-    let emailRegEx = "^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$"
+    let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
     
-    if let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx) {
-      return emailTest.evaluateWithObject(testStr)
+    let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+    
+    if emailTest.evaluateWithObject(testStr) {
+      return true
     }
     return false
   }
+  
+//    func isValidEmail(testStr:String) -> Bool {
+//    println("validate calendar: \(testStr)")
+//      
+//      let emailRegEx = "^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$"
+//    
+//    if let emailTest = NSPredicate(format:"SELF MATCHES %@",emailRegEx){
+//      return emailTest.evaluateWithObject(testStr)
+//    }
+//    return false
+//  }
   
 }

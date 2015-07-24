@@ -29,7 +29,7 @@ class SettingTableViewCell:BaseTableViewCell {
     
     
     lbltitle.frame = CGRectMake(5,5,200,50)
-    lbltitle.text = name
+    lbltitle.text = name as String
     lbltitle.font = lbltitle.font.fontWithSize(15)
     //lbltitle.backgroundColor = UIColor.redColor()
    
@@ -54,12 +54,12 @@ class SettingTableViewCell:BaseTableViewCell {
       lblFileSize.hidden = false
       
       if (arry.count > 0) {
-        var obj = arry.objectAtIndex(0) as DownloadedData
+        var obj = arry.objectAtIndex(0) as! DownloadedData
         var data = obj.download_data.doubleValue
         var dataKB = data/1024
         var dataMB = dataKB/1024
         var str: NSString = NSString(format: "%.2f",dataMB)
-        lblFileSize.text = str+" MB"
+        lblFileSize.text = (str as String)+" MB"
         //lblFileSize.backgroundColor = UIColor.redColor()
       }
     }

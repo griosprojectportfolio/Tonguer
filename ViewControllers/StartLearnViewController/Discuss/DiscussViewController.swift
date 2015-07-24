@@ -84,7 +84,7 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   }
 
   func btnAddtapped(sender:AnyObject){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddTopicID") as AddTopicViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddTopicID") as! AddTopicViewController
     vc.classID = classID
     self.navigationController?.pushViewController(vc, animated: true)
   }
@@ -92,8 +92,8 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
-     var dict:NSDictionary! = arrTopics.objectAtIndex(section) as NSDictionary
-    var arrTopic: NSArray! = dict.valueForKey("array") as NSArray
+     var dict:NSDictionary! = arrTopics.objectAtIndex(section)as! NSDictionary
+    var arrTopic: NSArray! = dict.valueForKey("array") as! NSArray
     return arrTopic.count
   }
   
@@ -102,22 +102,22 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tblDiscuss.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+    var cell = tblDiscuss.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(arrTopics.count>0){
     var dict:NSDictionary! = NSDictionary()
-         dict = arrTopics.objectAtIndex(indexPath.section) as NSDictionary
-    var arrTopc: NSArray! = dict.valueForKey("array") as NSArray
-    var aParams:NSDictionary! = arrTopc.objectAtIndex(indexPath.row) as NSDictionary
-    cell.textLabel.text = aParams.valueForKey("name") as NSString
-    cell.textLabel.font = cell.textLabel.font.fontWithSize(12)
+         dict = arrTopics.objectAtIndex(indexPath.section) as! NSDictionary
+    var arrTopc: NSArray! = dict.valueForKey("array")as! NSArray
+    var aParams:NSDictionary! = arrTopc.objectAtIndex(indexPath.row) as! NSDictionary
+    cell.textLabel!.text = aParams.valueForKey("name") as? String
+    cell.textLabel!.font = cell.textLabel!.font.fontWithSize(12)
     }
     return cell
   }
   
   func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    var dict:NSDictionary! = arrTopics.objectAtIndex(section) as NSDictionary
-    return dict.valueForKey("name") as NSString
+    var dict:NSDictionary! = arrTopics.objectAtIndex(section) as! NSDictionary
+    return dict.valueForKey("name") as? String
   }
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -127,8 +127,8 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     vWheader.layer.borderColor = UIColor.lightGrayColor().CGColor
     
     var lblTilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
-    var dict:NSDictionary! = arrTopics.objectAtIndex(section) as NSDictionary
-    lblTilte.text = dict.valueForKey("name") as NSString
+    var dict:NSDictionary! = arrTopics.objectAtIndex(section) as! NSDictionary
+    lblTilte.text = dict.valueForKey("name") as? String
     lblTilte.font = lblTilte.font.fontWithSize(12)
     lblTilte.textColor = UIColor.whiteColor()
     vWheader.addSubview(lblTilte)
@@ -138,13 +138,13 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddAnsID") as AddAnsViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddAnsID") as! AddAnsViewController
     var dict:NSDictionary! = NSDictionary()
-    dict = arrTopics.objectAtIndex(indexPath.section) as NSDictionary
-    var arrTopc: NSArray! = dict.valueForKey("array") as NSArray
-    var aParams:NSDictionary! = arrTopc.objectAtIndex(indexPath.row) as NSDictionary
+    dict = arrTopics.objectAtIndex(indexPath.section)as! NSDictionary
+    var arrTopc: NSArray! = dict.valueForKey("array") as! NSArray
+    var aParams:NSDictionary! = arrTopc.objectAtIndex(indexPath.row) as! NSDictionary
     vc.dictTopic = aParams
-    vc.title = aParams.valueForKey("name") as NSString
+    vc.title = aParams.valueForKey("name") as? String
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
@@ -154,7 +154,7 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     
     for var index = 0; index < arrSecton.count; ++index{
       var dict: NSMutableDictionary! = NSMutableDictionary()
-      dict.setValue(arrSecton.objectAtIndex(index) as NSString, forKey: "name")
+      dict.setValue(arrSecton.objectAtIndex(index) as! NSString, forKey: "name")
       dict.setValue(arrDatalist.objectAtIndex(index), forKey: "array")
       arrTopics.addObject(dict)
   }
@@ -165,11 +165,11 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
   //**************Discus topic Api Calling***********
   
   func getClsTopicApiCall(){
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(classID, forKey: "class_id")
     
-    self.api.discusAllTopic(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.discusAllTopic(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
@@ -189,7 +189,7 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     arrUser.removeAllObjects()
     arrAdmin.removeAllObjects()
     
-    var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)!
+    var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)
     
     let arrFetchAdmin: NSArray = DisAdminTopic.MR_findAllWithPredicate(predicate)
     let arrFetchUser: NSArray = DisUserToic.MR_findAllWithPredicate(predicate)
@@ -197,7 +197,7 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     print(count)
    
     for var index = 0; index < arrFetchAdmin.count; ++index{
-      let clsObject: DisAdminTopic = arrFetchAdmin.objectAtIndex(index) as DisAdminTopic
+      let clsObject: DisAdminTopic = arrFetchAdmin.objectAtIndex(index) as! DisAdminTopic
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObject.topic_id, forKey: "id")
       dict.setValue(clsObject.topic_name, forKey: "name")
@@ -206,7 +206,7 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     }
     
     for var index = 0; index < arrFetchUser.count; ++index{
-      let clsObject: DisUserToic = arrFetchUser.objectAtIndex(index) as DisUserToic
+      let clsObject: DisUserToic = arrFetchUser.objectAtIndex(index)as! DisUserToic
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObject.topic_id, forKey: "id")
       dict.setValue(clsObject.topic_name, forKey: "name")

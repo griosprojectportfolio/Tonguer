@@ -11,7 +11,7 @@ import Foundation
 
 class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITableViewDelegate, UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
-  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
 
  @IBOutlet var hometableVw : UITableView!
@@ -85,7 +85,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.hometableVw.reloadData()
     if(arrClsLearn.count > 0 || arrClsLearned.count > 0){
       totalLearnCls = arrClsLearned.count + arrClsLearn.count
-      lblAleday.text = NSString(format: "%i",totalLearnCls)
+      lblAleday.text = NSString(format: "%i",totalLearnCls) as String
     }
     
     if(arrclass.count == 0){
@@ -136,7 +136,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   //When App come into forground from background
    func checkInButton(notification: NSNotification){
     
-    let previousCheckDate = NSUserDefaults.standardUserDefaults().valueForKey("checkIns") as NSDate
+    let previousCheckDate = NSUserDefaults.standardUserDefaults().valueForKey("checkIns") as! NSDate
     var calendar: NSCalendar = NSCalendar.currentCalendar()
     let dateCheckIn = calendar.startOfDayForDate(previousCheckDate)
     let dateCurrent = calendar.startOfDayForDate(NSDate())
@@ -359,7 +359,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   
   
   func alredayTapGuesture(){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LearnStatusID") as LearnStatusViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("LearnStatusID") as! LearnStatusViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
 
@@ -383,7 +383,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       btnMiddleNavi.backgroundColor = UIColor.grayColor()
       return;
     }
-    let previousCheckDate = NSUserDefaults.standardUserDefaults().valueForKey("checkIns") as NSDate
+    let previousCheckDate = NSUserDefaults.standardUserDefaults().valueForKey("checkIns") as! NSDate
 
     var calendar: NSCalendar = NSCalendar.currentCalendar()
     let dateCheckIn = calendar.startOfDayForDate(previousCheckDate)
@@ -412,12 +412,12 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
 
   func btnFreeOpenTryClasstapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassCenterID") as ClassCenterViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassCenterID") as! ClassCenterViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
 
   func btnDefaultTapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btnTag = btn.tag
     print("Default List")
     HorizVw.backgroundColor  = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
@@ -436,7 +436,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
 
   func btnLearnlistTapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btnTag = btn.tag
     print("Learn List")
     HorizVw.backgroundColor  = UIColor.lightGrayColor()
@@ -454,7 +454,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
 
   func btnLearnedTapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btnTag = btn.tag
     print("Learn List")
 
@@ -488,24 +488,24 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell: UITableViewCell!
     if(btnTag == 1){
-      var cell:HomeTableViewCell! = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath:indexPath) as HomeTableViewCell
+      var cell:HomeTableViewCell! = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath:indexPath) as! HomeTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       cell.configureCellView(self.view.frame)
-      cell.defaultCellContent(arrclass.objectAtIndex(indexPath.row)as NSDictionary)
+      cell.defaultCellContent(arrclass.objectAtIndex(indexPath.row)as! NSDictionary)
       print(arrclass.objectAtIndex(indexPath.row))
       return cell
     } else if (btnTag == 2){
       var cell:LearnTableViewCell!
-      cell = tableView.dequeueReusableCellWithIdentifier("LearnCell") as LearnTableViewCell
+      cell = tableView.dequeueReusableCellWithIdentifier("LearnCell") as! LearnTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       cell.configureCellView(self.view.frame)
-      cell.defaultCellContent(arrClsLearn.objectAtIndex(indexPath.row)as NSDictionary)
+      cell.defaultCellContent(arrClsLearn.objectAtIndex(indexPath.row)as! NSDictionary)
       return cell
     } else if (btnTag == 3){
-      var  cell = tableView.dequeueReusableCellWithIdentifier("LearnedCell") as LearnedTableViewCell
+      var  cell = tableView.dequeueReusableCellWithIdentifier("LearnedCell") as! LearnedTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       cell.configureCellView(self.view.frame)
-      cell.defaultCellContent(arrClsLearned.objectAtIndex(indexPath.row)as NSDictionary)
+      cell.defaultCellContent(arrClsLearned.objectAtIndex(indexPath.row)as! NSDictionary)
       return cell
     }
 
@@ -522,15 +522,15 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     var dict: NSDictionary!
 
     if(btnTag == 1){
-      dict = arrclass.objectAtIndex(indexPath.row) as NSDictionary
+      dict = arrclass.objectAtIndex(indexPath.row) as! NSDictionary
     }else if(btnTag == 2){
-      dict = arrClsLearn.objectAtIndex(indexPath.row) as NSDictionary
+      dict = arrClsLearn.objectAtIndex(indexPath.row) as! NSDictionary
     }else if(btnTag == 3){
-      dict = arrClsLearned.objectAtIndex(indexPath.row) as NSDictionary
+      dict = arrClsLearned.objectAtIndex(indexPath.row) as! NSDictionary
         isLearnd = true
     }
 
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("LearnID") as StartLearnViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("LearnID") as! StartLearnViewController
     vc.isLearnd = isLearnd
     vc.dictClasses = dict
     vc.useImgUrl = useImgUrl
@@ -552,7 +552,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   }
 
-  func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+  func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
     self.dismissViewControllerAnimated(true, completion: { () -> Void in
 
     })
@@ -562,7 +562,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
 
   func btnAlertTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AlertID") as AlertViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AlertID") as! AlertViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
 
@@ -577,9 +577,9 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     aParam.setValue(self.auth_token[0], forKey: "auth-token")
     aParam.setValue(base64String, forKey: "user[image]")
     
-    self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.updateUser(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary = responseObject?.objectForKey("user") as NSDictionary
+      var aParam: NSDictionary = responseObject?.objectForKey("user") as! NSDictionary
       CommonUtilities.addUserInformation(aParam)
       self.fetchDataFromdataBase()
       },
@@ -614,18 +614,18 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
   func fetchDataFromdataBase(){
     var userDefault:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-    var data:NSData = userDefault.objectForKey("user") as NSData
-    var dictFetchedData:NSDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data) as NSDictionary
+    var data:NSData = userDefault.objectForKey("user") as! NSData
+    var dictFetchedData:NSDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data)as! NSDictionary
 
     CommonUtilities.sharedDelegate().dictUserInfo = dictFetchedData
     print(dictFetchedData)
 
     if(dictFetchedData.count>0){
       print(dictFetchedData)
-      let fname = dictFetchedData.valueForKey("first_name") as String
-      let lname = dictFetchedData.valueForKey("last_name")as String
+      let fname = dictFetchedData.valueForKey("first_name") as! String
+      let lname = dictFetchedData.valueForKey("last_name")as! String
 
-      var name: NSString!
+      var name: String!
       if((fname.isEmpty == false && lname.isEmpty == false )){
         name = fname+" "+lname
       }else{
@@ -633,28 +633,28 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       }
       lblblurVwtextTitle.text = name
 
-      if((dictFetchedData.valueForKey("money") as String).isEmpty == false){
+      if((dictFetchedData.valueForKey("money") as! String).isEmpty == false){
         lblMoney.text = dictFetchedData.valueForKey("money") as? String
       } else{
         lblMoney.text = "0.0"
       }
       
-      var img = dictFetchedData.valueForKey("image") as NSObject
+      var img = dictFetchedData.valueForKey("image") as! NSObject
       if(img.isKindOfClass(NSDictionary)){
-     var dict = dictFetchedData.valueForKey("image") as NSDictionary
-      var strim:NSObject = dict.valueForKey("url") as NSObject
+     var dict = dictFetchedData.valueForKey("image") as! NSDictionary
+      var strim:NSObject = dict.valueForKey("url") as! NSObject
       
       if (strim.isKindOfClass(NSNull)){
         useImgUrl = "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png"
-        let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
+        let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString as String)
         imgVwProfilrPic.sd_setImageWithURL(url)
       }else if((strim.isKindOfClass(NSString))){
-        let url = NSURL(string:strim as NSString)
+        let url = NSURL(string:strim as! String)
         imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
         imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
       }
       }else if(img.isKindOfClass(NSString)){
-        let url = NSURL(string:img as NSString)
+        let url = NSURL(string:img as! String)
         imgVwProfilrPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
         imgVwblur.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
 
@@ -670,7 +670,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     arrclass.removeAllObjects()
 
     for var index = 0; index < arrFetchedData.count; ++index {
-      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as UserDefaultClsList
+      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as! UserDefaultClsList
       var dict: NSMutableDictionary! = NSMutableDictionary()
 
       dict.setObject(userClsObj.cls_id, forKey: "id")
@@ -732,7 +732,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     arrClsLearn.removeAllObjects()
 
     for var index = 0; index < arrFetchedData.count; ++index {
-      let userClsObj : UserLearnClsList = arrFetchedData.objectAtIndex(index) as UserLearnClsList
+      let userClsObj : UserLearnClsList = arrFetchedData.objectAtIndex(index) as! UserLearnClsList
       var dict: NSMutableDictionary! = NSMutableDictionary()
 
       dict.setObject(userClsObj.cls_id, forKey: "id")
@@ -796,7 +796,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     arrClsLearned.removeAllObjects()
 
     for var index = 0; index < arrFetchedData.count; ++index {
-      let userClsObj : UserLearnedClsList = arrFetchedData.objectAtIndex(index) as UserLearnedClsList
+      let userClsObj : UserLearnedClsList = arrFetchedData.objectAtIndex(index) as! UserLearnedClsList
       var dict: NSMutableDictionary! = NSMutableDictionary()
 
       dict.setObject(userClsObj.cls_id, forKey: "id")
@@ -852,9 +852,9 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   func userLearnClsApiCall(){
 
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
-    self.api.userLearnCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userLearnCls(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      let data = responseObject as NSArray
+      let data = responseObject as! NSArray
       if data.count != 0 {
         self.resetShowSetDataNofoundImg()
       }
@@ -870,9 +870,9 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
 
-    self.api.userLearnedCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userLearnedCls(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      let data = responseObject as NSArray
+      let data = responseObject as! NSArray
       if data.count != 0 {
         self.resetShowSetDataNofoundImg()
       }
@@ -888,7 +888,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
 
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
 
-    self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userDefaultCls(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
 //      let data = responseObject as NSDictionary
 //      if data  {
@@ -906,11 +906,12 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
     
-    self.api.getUserScore(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.getUserScore(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var dict  = responseObject?.valueForKey("data") as NSDictionary
+      var dict  = responseObject?.valueForKey("data") as! NSDictionary
       if((dict.valueForKey("score")) != nil){
-        self.lblScore.text = NSString(format: "%i",dict.valueForKey("score") as NSInteger)
+        var strscore = dict.valueForKey("score")?.integerValue
+        self.lblScore.text = NSString(format: "%i",strscore!) as String
       }else{
         self.lblScore.text = ""
       }

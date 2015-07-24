@@ -10,15 +10,15 @@ import Foundation
 
 class CommonUtilities: NSObject {
     
-    class func isValidEmail(testStr:String) -> Bool {
-        println("validate calendar: \(testStr)")
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
-        
-        if let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx) {
-            return emailTest.evaluateWithObject(testStr)
-        }
-        return false
-    }
+//    class func isValidEmail(testStr:String) -> Bool {
+//        println("validate calendar: \(testStr)")
+//      var emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}" as String
+//      
+//        if let emailTest = NSPredicate(format:"SELF MATCHES %@",emailRegEx) {
+//            return emailTest.evaluateWithObject(testStr)
+//        }
+//        return false
+//    }
   
   class func checkNetconnection() ->Bool {
     
@@ -31,7 +31,7 @@ class CommonUtilities: NSObject {
 
 
   class func sharedDelegate ()-> AppDelegate! {
-  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
   return appDelegate
 
   }

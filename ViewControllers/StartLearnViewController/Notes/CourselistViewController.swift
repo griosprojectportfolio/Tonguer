@@ -61,11 +61,11 @@ class CourselistViewController: UIViewController, UITableViewDataSource,UITableV
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tblVwCourse.dequeueReusableCellWithIdentifier("cell") as CourselistTableViewCell
-    var dict: NSDictionary! = arrclass.objectAtIndex(indexPath.row) as NSDictionary
-    cell.textLabel.text = dict.valueForKey("name") as NSString
-    cell.textLabel.textColor = UIColor.grayColor()
-    cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
+    var cell = tblVwCourse.dequeueReusableCellWithIdentifier("cell") as! CourselistTableViewCell
+    var dict: NSDictionary! = arrclass.objectAtIndex(indexPath.row)as! NSDictionary
+    cell.textLabel!.text = dict.valueForKey("name") as? String
+    cell.textLabel!.textColor = UIColor.grayColor()
+    cell.textLabel!.font = cell.textLabel!.font.fontWithSize(15)
     
     return cell
   }
@@ -89,7 +89,7 @@ class CourselistViewController: UIViewController, UITableViewDataSource,UITableV
     let arrFetchedData : NSArray = UserDefaultClsList.MR_findAll()
     
     for var index = 0; index < arrFetchedData.count; ++index {
-      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as UserDefaultClsList
+      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as! UserDefaultClsList
       var dict: NSMutableDictionary! = NSMutableDictionary()
       
       dict.setObject(userClsObj.cls_id, forKey: "id")

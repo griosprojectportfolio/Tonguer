@@ -10,7 +10,7 @@ import UIKit
 
 class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
   
-  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
   
   var btntag: NSInteger = 1
   
@@ -53,7 +53,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     super.viewWillAppear(animated)
     getHostPayClsApiCall()
     getPayClassApiCall()
-   // pickupTableView.reloadData()
+    pickupTableView.reloadData()
   }
   
   override func viewDidAppear(animated: Bool) {
@@ -171,7 +171,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     listingShow = "Host"
     horiVw.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     horiVw1.backgroundColor = UIColor.grayColor()
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btntag = btn.tag
     print(btntag)
     setTableContentinset()
@@ -190,7 +190,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     listingShow = "All"
     horiVw1.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     horiVw.backgroundColor = UIColor.grayColor()
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btntag = btn.tag
     print(btntag)
     pickupTableView.contentInset = UIEdgeInsets(top:0, left: 0, bottom: 0, right: 0)
@@ -220,8 +220,8 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
           count = arrHost.count
         }
       }else if(btntag == 2){
-         var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
-        var arr: NSArray! = dict.objectForKey("array") as NSArray
+         var dict: NSDictionary! = dataArr.objectAtIndex(section) as! NSDictionary
+        var arr: NSArray! = dict.objectForKey("array") as! NSArray
         count = arr.count
       }
     return count
@@ -248,9 +248,9 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       vWheader.layer.borderWidth = 0.5
       vWheader.layer.borderColor = UIColor.lightGrayColor().CGColor
       vWheader.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
-      var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
+      var dict: NSDictionary! = dataArr.objectAtIndex(section) as! NSDictionary
       var lbltilte: UILabel! = UILabel(frame: CGRectMake(10, 2, 100,20))
-      lbltilte.text = dict.objectForKey("name") as NSString
+      lbltilte.text = dict.objectForKey("name") as? String
       lbltilte.font = lbltilte.font.fontWithSize(12)
       lbltilte.textColor = UIColor.whiteColor()
       vWheader.addSubview(lbltilte)
@@ -262,14 +262,11 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   }
   
   func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    var str:NSString!
     if(btntag == 1){
-      str = ""
-      return str
+      return ""
     }else if (btntag == 2){
-      var dict: NSDictionary! = dataArr.objectAtIndex(section) as NSDictionary
-      str = dict.objectForKey("name") as NSString
-      return str
+      var dict: NSDictionary! = dataArr.objectAtIndex(section) as! NSDictionary
+      return dict.objectForKey("name") as? String
     }
     return ""
   }
@@ -280,36 +277,36 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     var cell: UITableViewCell!
     
     if(btntag == 1){
-      var hostCell = pickupTableView.dequeueReusableCellWithIdentifier("cell") as PickupTableViewCell
+      var hostCell = pickupTableView.dequeueReusableCellWithIdentifier("cell") as! PickupTableViewCell
       hostCell.selectionStyle = UITableViewCellSelectionStyle.None
       if (isSearch == false) {
-        hostCell.defaultCellContents(arrHost.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
+        hostCell.defaultCellContents(arrHost.objectAtIndex(indexPath.row) as! NSDictionary,frame: self.view.frame)
       } else {
-        hostCell.defaultCellContents(arrySearch.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
+        hostCell.defaultCellContents(arrySearch.objectAtIndex(indexPath.row) as! NSDictionary,frame: self.view.frame)
       }
       hostCell.selectionStyle = UITableViewCellSelectionStyle.None
       return hostCell
     }else if(btntag == 2){
       var allCell: UITableViewCell!
       if(allCell == nil){
-        allCell = pickupTableView.dequeueReusableCellWithIdentifier("allcell") as UITableViewCell
+        allCell = pickupTableView.dequeueReusableCellWithIdentifier("allcell") as! UITableViewCell
         allCell.selectionStyle = UITableViewCellSelectionStyle.None
         var dict: NSDictionary!
         if (isSearch == false) {
-           dict = dataArr.objectAtIndex(indexPath.section) as NSDictionary
+           dict = dataArr.objectAtIndex(indexPath.section) as! NSDictionary
         } else {
-          dict = arrySearch.objectAtIndex(indexPath.row) as NSDictionary
+          dict = arrySearch.objectAtIndex(indexPath.row) as! NSDictionary
         }
-        var arr: NSArray! = dict.objectForKey("array") as NSArray
+        var arr: NSArray! = dict.objectForKey("array") as! NSArray
          allCell.selectionStyle = UITableViewCellSelectionStyle.None
         if(arr.count>0){
-          var subDict: NSDictionary! = arr.objectAtIndex(indexPath.row) as NSDictionary
-          allCell.textLabel.text = subDict.objectForKey("name") as NSString
-          allCell.textLabel.font = allCell.textLabel.font.fontWithSize(12)
+          var subDict: NSDictionary! = arr.objectAtIndex(indexPath.row) as! NSDictionary
+          allCell.textLabel!.text = subDict.objectForKey("name") as? String
+          allCell.textLabel!.font = allCell.textLabel!.font.fontWithSize(12)
           return allCell
         }else{
-          allCell.textLabel.text = ""
-          allCell.textLabel.font = allCell.textLabel.font.fontWithSize(12)
+          allCell.textLabel!.text = ""
+          allCell.textLabel!.font = allCell.textLabel!.font.fontWithSize(12)
           return allCell
         }
       }
@@ -329,28 +326,28 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     if(btntag == 1){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as! CourseDetailViewController
     vc.callVw = "Pay"
       vc.isSearch = false
       if (isSearch == false) {
-        vc.clsDictDe = arrHost.objectAtIndex(indexPath.row) as NSDictionary
+        vc.clsDictDe = arrHost.objectAtIndex(indexPath.row) as! NSDictionary
       } else {
         println(arrySearch.objectAtIndex(indexPath.row))
-        vc.clsDictDe  = arrySearch.objectAtIndex(indexPath.row)as NSDictionary
+        vc.clsDictDe  = arrySearch.objectAtIndex(indexPath.row)as! NSDictionary
         vc.isSearch = true
       }
       self.navigationController?.pushViewController(vc, animated: true)
     }else if(btntag == 2){
-      var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section) as NSDictionary
-      var cellArr: NSArray! = dict.objectForKey("array") as NSArray
+      var dict: NSDictionary! = dataArr.objectAtIndex(indexPath.section)as! NSDictionary
+      var cellArr: NSArray! = dict.objectForKey("array") as! NSArray
       var dictSub: NSDictionary!
       if (isSearch == false) {
-       dictSub = cellArr.objectAtIndex(indexPath.row) as NSDictionary
+       dictSub = cellArr.objectAtIndex(indexPath.row) as! NSDictionary
       } else {
-        dictSub = arrySearch.objectAtIndex(indexPath.row)as NSDictionary
+        dictSub = arrySearch.objectAtIndex(indexPath.row)as! NSDictionary
       }
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassID") as ClassViewController
-      vc.sub_cat_id = dictSub.objectForKey("id") as NSInteger
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ClassID") as! ClassViewController
+      vc.sub_cat_id = dictSub.objectForKey("id") as! NSInteger
       vc.flgClass = "Pay"
       self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -362,9 +359,9 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   func getPayClassApiCall(){
     
     var aParams: NSDictionary = ["auth-token":auth_token[0]]
-    self.api.payClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.payClass(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as! NSDictionary
       if aParam.isKindOfClass(NSNull){
         self.reSetshowSetDataNofoundImg()
       }
@@ -390,9 +387,9 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   func getHostPayClsApiCall(){
     
     var aParams: NSDictionary = ["auth-token":auth_token[0]]
-    self.api.hostpayClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.hostpayClass(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
+      var aParam: NSDictionary! = responseObject?.objectForKey("data") as! NSDictionary
       if(aParam.isKindOfClass(NSNull)){
         self.reSetshowSetDataNofoundImg()
       }
@@ -422,19 +419,19 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index {
       //println("index is \(index)")
-      let catObject : PayClsCat = arrFetchCat.objectAtIndex(index) as PayClsCat
+      let catObject : PayClsCat = arrFetchCat.objectAtIndex(index) as! PayClsCat
       var str_cat_id = catObject.cat_id
       var strName = catObject.cat_name as NSString
       var dictData: NSMutableDictionary! = NSMutableDictionary()
       dictData.setObject(str_cat_id, forKey: "id")
       dictData.setObject(strName, forKey: "name")
       
-      let sub_CatFilter : NSPredicate = NSPredicate(format:"cat_id CONTAINS %@",str_cat_id)!
+      let sub_CatFilter : NSPredicate = NSPredicate(format:"cat_id CONTAINS %@",str_cat_id)
       let subcatData : NSArray = PaySubCat.MR_findAllWithPredicate(sub_CatFilter)
       if (subcatData.count > 0){
         var subCatArr: NSMutableArray! = NSMutableArray()
       for var index = 0; index < subcatData.count; ++index {
-        let subCatObject : PaySubCat = subcatData.objectAtIndex(index) as PaySubCat
+        let subCatObject : PaySubCat = subcatData.objectAtIndex(index) as! PaySubCat
         var strID = subCatObject.sub_cat_id
         var strName = subCatObject.sub_cat_name as NSString
         var catDict2: NSMutableDictionary! = NSMutableDictionary()
@@ -461,7 +458,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     let arrFetchCat : NSArray = HostPayCls.MR_findAll()
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index{
-      let clsObject: HostPayCls = arrFetchCat.objectAtIndex(index) as HostPayCls
+      let clsObject: HostPayCls = arrFetchCat.objectAtIndex(index) as! HostPayCls
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
       
       if((clsObject.cls_name) != nil){
@@ -571,7 +568,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
 
     for var index = 0; index < arrFetchCat.count; ++index {
 
-      let catObject : NSDictionary = arrFetchCat.objectAtIndex(index) as NSDictionary
+      let catObject : NSDictionary = arrFetchCat.objectAtIndex(index) as! NSDictionary
       print(catObject)
 //      var str_cat_id = catObject.objectForKey("") as NSInteger
 //      var strName = catObject.objectForKey("") as NSString
@@ -579,12 +576,12 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
 //      dictData.setObject(str_cat_id, forKey: "id")
 //      dictData.setObject(strName, forKey: "name")
 
-      let subcatData : NSArray = catObject.objectForKey("") as NSArray
+      let subcatData : NSArray = catObject.objectForKey("") as! NSArray
 
       for var index = 0; index < subcatData.count; ++index {
-        let subCatObject : NSDictionary = subcatData.objectAtIndex(index) as NSDictionary
-        var strID = subCatObject.objectForKey("") as NSInteger
-        var strName = subCatObject.objectForKey("") as NSString
+        let subCatObject : NSDictionary = subcatData.objectAtIndex(index) as! NSDictionary
+        var strID = subCatObject.objectForKey("") as! NSInteger
+        var strName = subCatObject.objectForKey("") as! NSString
         var catDict2: NSMutableDictionary! = NSMutableDictionary()
         catDict2.setObject(strID, forKey: "id")
         catDict2.setObject(strName, forKey: "name")
@@ -615,7 +612,7 @@ extension PickupCoursecenterViewController:UISearchBarDelegate {
   //***********Search Api Call****************
   func searchBarSearchButtonClicked(searchBar: UISearchBar) {
     let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text], forKeys: ["auth-token","cls_key_word"])
-    self.api.callSearchClassApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+    self.api.callSearchClassApi(param as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
       searchBar.resignFirstResponder()
      // self.arrySearch = responseObject as NSMutableArray
@@ -626,9 +623,9 @@ extension PickupCoursecenterViewController:UISearchBarDelegate {
       }else{
         self.isSearch = true
         if (self.btntag == 2) {
-          self.convertResponseIntoSectionData(responseObject as NSMutableArray)
+          self.convertResponseIntoSectionData(responseObject as! NSMutableArray)
         } else {
-          self.arrySearch = responseObject as NSMutableArray
+          self.arrySearch = responseObject as! NSMutableArray
           print(self.arrySearch.count)
           self.pickupTableView.reloadData()
         }

@@ -57,7 +57,7 @@ class PayViewController: BaseViewController {
     
     var str1: NSString = "$"
     lblmoney = UILabel(frame: CGRectMake(lblText.frame.origin.x,lblText.frame.origin.y+lblText.frame.size.height,200, 50))
-    lblmoney.text = str1 + " " + NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
+    lblmoney.text = (str1 as String) + " " + (NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!) as String)
     lblmoney.font = lblmoney.font.fontWithSize(30)
     lblmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblmoney)
@@ -71,7 +71,7 @@ class PayViewController: BaseViewController {
     
     var arryItem: NSArray = NSArray(objects: "Wallet","PayPal")
     
-    segment = UISegmentedControl(items: arryItem)
+    segment = UISegmentedControl(items: arryItem as! [String])
     segment.frame = CGRectMake(self.view.frame.origin.x+20,lblmoney.frame.origin.y+lblmoney.frame.size.height+20, self.view.frame.width-40,40)
     segment.tintColor =  UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     segment.selectedSegmentIndex = 0
@@ -95,7 +95,7 @@ class PayViewController: BaseViewController {
     if(choosMethod == 0){
       walletApiCall()
     }else if(choosMethod == 1){
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PaypalVC") as PayPalViewController
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PaypalVC") as! PayPalViewController
       vc.dictCls = clsDict
       vc.method = "payment"
       self.navigationController?.pushViewController(vc, animated: true)
@@ -108,7 +108,7 @@ class PayViewController: BaseViewController {
   }
   
   func btnforwardTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as OrderConfViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as! OrderConfViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
@@ -121,7 +121,7 @@ class PayViewController: BaseViewController {
         aParams.setValue(clsDict.valueForKey("id"), forKey: "cls_id")
         aParams.setValue(clsDict.valueForKey("price"), forKey: "money")
     
-    self.api.walletApi(aParams as NSDictionary,success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.walletApi(aParams as NSDictionary as [NSObject : AnyObject],success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.UserUpadteApiCall()
       var alert: UIAlertView = UIAlertView(title: "Alert", message: "Your Transaction Successfully", delegate:self, cancelButtonTitle:"OK")
@@ -145,8 +145,8 @@ class PayViewController: BaseViewController {
 
     let userObject:NSDictionary = CommonUtilities.sharedDelegate().dictUserInfo
 
-    if(userObject.valueForKey("money") as String).isEmpty == false {
-      var strmoney = userObject.valueForKey("money") as NSString
+    if(userObject.valueForKey("money") as! String).isEmpty == false {
+      var strmoney = userObject.valueForKey("money") as! NSString
       money = strmoney.integerValue
     }
     remainingMoney = money - cls_amount
@@ -161,8 +161,8 @@ class PayViewController: BaseViewController {
   func updateUserRecode(money:NSString){
     
     var userDefault:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-    var data:NSData = userDefault.objectForKey("user") as NSData
-    var dictFetchedData:NSDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data) as NSDictionary
+    var data:NSData = userDefault.objectForKey("user") as! NSData
+    var dictFetchedData:NSDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! NSDictionary
     
     CommonUtilities.sharedDelegate().dictUserInfo = dictFetchedData
     print(dictFetchedData)
@@ -178,7 +178,7 @@ class PayViewController: BaseViewController {
     userDict.setValue(money, forKey: "money")
     userDict.setValue(dictFetchedData.valueForKey("updated_at"), forKey: "updated_at")
     
-    var img = dictFetchedData.valueForKey("image") as NSObject
+    var img = dictFetchedData.valueForKey("image") as! NSObject
     if(img.isKindOfClass(NSDictionary)){
       userDict.setValue(dictFetchedData.valueForKey("image")?.valueForKey("url"), forKey: "image")
     }else if(img.isKindOfClass(NSString)){

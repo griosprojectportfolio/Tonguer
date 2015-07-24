@@ -57,7 +57,7 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     // Setting languageOrLocale to a particular language (e.g., @"es" for Spanish) or
     // locale (e.g., @"es_MX" for Mexican Spanish) forces the PayPalPaymentViewController
     // to use that language/locale.
-    payPalConfig.languageOrLocale = NSLocale.preferredLanguages()[0] as String
+    payPalConfig.languageOrLocale = NSLocale.preferredLanguages()[0] as! String
 
     // Setting the payPalShippingAddressOption property is optional.
     payPalConfig.payPalShippingAddressOption = .PayPal;
@@ -96,7 +96,7 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     resultText = ""
 
     // Optional: include multiple items
-    var item1 = PayPalItem(name: "course", withQuantity: 1, withPrice: NSDecimalNumber(string: self.moneyQuantity), withCurrency: "USD", withSku: "Hip-0037")
+    var item1 = PayPalItem(name: "course", withQuantity: 1, withPrice: NSDecimalNumber(string: self.moneyQuantity as? String), withCurrency: "USD", withSku: "Hip-0037")
 
     let items = [item1]
     let subtotal = PayPalItem.totalPriceForItems(items)
@@ -131,7 +131,7 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     println("PayPal Payment Cancelled")
     resultText = ""
     paymentViewController?.dismissViewControllerAnimated(true, completion: nil)
-    let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+    let viewControllers: [UIViewController] = self.navigationController!.viewControllers as! [UIViewController];
     self.navigationController!.popToViewController(viewControllers[1], animated: true);
   }
 
@@ -160,7 +160,7 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     println("PayPal Future Payment Authorizaiton Canceled")
     successView.hidden = true
     //futurePaymentViewController?.dismissViewControllerAnimated(true, completion: nil)
-    let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+    let viewControllers: [UIViewController] = self.navigationController!.viewControllers as! [UIViewController];
     self.navigationController!.popToViewController(viewControllers[1], animated: true);
   }
 
@@ -216,12 +216,12 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     aParam.setValue(self.auth_token[0], forKey: "auth-token")
     aParam.setValue(moneyQuantity, forKey: "user[money]")
     
-    self.api.updateUser(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.updateUser(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var dict = responseObject?.valueForKey("user") as NSDictionary
+      var dict = responseObject?.valueForKey("user") as! NSDictionary
       //var userDict = dict.valueForKey("user") as NSDictionary
       CommonUtilities.addUserInformation(dict)
-      let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+      let viewControllers: [UIViewController] = self.navigationController!.viewControllers as! [UIViewController];
       self.navigationController!.popToViewController(viewControllers[1], animated: true);
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -240,9 +240,9 @@ class PayPalViewController: BaseViewController, PayPalPaymentDelegate, PayPalFut
     aParam.setValue(dictCls.valueForKey("id"), forKey: "class_id")
     aParam.setValue(is_buy, forKey: "is_buy")
     
-    self.api.paypalApi(aParam, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.paypalApi(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController];
+      let viewControllers: [UIViewController] = self.navigationController!.viewControllers as! [UIViewController];
       self.navigationController!.popToViewController(viewControllers[1], animated: true);
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in

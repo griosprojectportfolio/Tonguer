@@ -17,7 +17,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   var actiIndecatorVw: ActivityIndicatorView!
   var custxtEmail,custxtPassword:CustomTextFieldBlurView!
   
-  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -26,7 +26,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     if (self.auth_token.count != 0) {
       var authToken:NSString = self.auth_token[0]
       if (authToken.length != 0) {
-        var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+        var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as! HomeViewController
         self.navigationController?.pushViewController(vc, animated:false)
         return;
       }
@@ -134,7 +134,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   }
 
   func signupButtonTapped(){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("RagistrationID") as RagistrationViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("RagistrationID") as!RagistrationViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
 
@@ -159,7 +159,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   }
 
   func forgotpassButtonTapped(){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ForgotpassID") as ForgotpasswordViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("ForgotpassID") as! ForgotpasswordViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
 
@@ -184,13 +184,13 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
 
-    self.api.loginUser(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.loginUser(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
 
         println(responseObject)
-        var dict: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
-        var aParam: NSDictionary = responseObject?.objectForKey("user") as NSDictionary
+        var dict: NSDictionary! = responseObject?.objectForKey("data") as! NSDictionary
+        var aParam: NSDictionary = responseObject?.objectForKey("user") as! NSDictionary
 
-        self.auth_token = [dict.objectForKey("auth_token") as NSString];
+        self.auth_token = [dict.objectForKey("auth_token") as! NSString];
         CommonUtilities.addUserInformation(aParam)
 
       self.getFreeClassApiCall()
@@ -272,7 +272,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
 
-    self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userDefaultCls(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       
       },
@@ -287,7 +287,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
 
-    self.api.userLearnCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userLearnCls(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       
 
@@ -303,7 +303,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
 
-    self.api.userLearnedCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userLearnedCls(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       
 
@@ -318,7 +318,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   func getFreeClassApiCall(){
 
     var aParams: NSDictionary = ["auth-token":auth_token[0]]
-    self.api.freeClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.freeClass(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -330,7 +330,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   func getPayClassApiCall(){
 
     var aParams: NSDictionary = ["auth-token":auth_token[0]]
-    self.api.payClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.payClass(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -343,14 +343,14 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   func getHostPayClsApiCall(){
 
     var aParams: NSDictionary = ["auth-token":auth_token[0]]
-    self.api.hostpayClass(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.hostpayClass(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       
       self.delay(4, closure: { () -> () in
 
         self.actiIndecatorVw.loadingIndicator.stopAnimating()
         self.actiIndecatorVw.removeFromSuperview()
-        var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+        var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as! HomeViewController
         self.navigationController?.pushViewController(vc, animated: true)
       })
       },
@@ -360,7 +360,7 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
           
           self.actiIndecatorVw.loadingIndicator.stopAnimating()
           self.actiIndecatorVw.removeFromSuperview()
-          var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as HomeViewController
+          var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as! HomeViewController
           self.navigationController?.pushViewController(vc, animated: true)
         })
 
@@ -370,9 +370,9 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   func getAddvertiesmentApiCall(){
     
     var aParams: NSDictionary = ["auth-token":auth_token[0]]
-    self.api.addvertiesment(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.addvertiesment(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      let arry = responseObject as NSArray
+      let arry = responseObject as! NSArray
       
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in

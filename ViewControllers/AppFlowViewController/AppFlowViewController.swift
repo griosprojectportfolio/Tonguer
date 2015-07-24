@@ -99,7 +99,7 @@ class AppFlowViewController: BaseViewController {
     self.view.bringSubviewToFront(btnplay)
     
     lblDescrip = UILabel(frame: CGRectMake(scrollVW.frame.origin.x+20,VwimgBG.frame.origin.y+VwimgBG.frame.size.height+10,scrollVW.frame.width-40,rect.height))
-    lblDescrip.text = strMessage
+    lblDescrip.text = strMessage as String
     lblDescrip.numberOfLines = 0
     lblDescrip.textAlignment = NSTextAlignment.Justified
     lblDescrip.font = lblDescrip.font.fontWithSize(12)
@@ -109,11 +109,11 @@ class AppFlowViewController: BaseViewController {
     
     var str: NSString = "Video"
     
-    var fileName: NSString! = str.stringByAppendingString(".mp4")
+    var fileName = str.stringByAppendingString(".mp4") as String
     
     let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-    let url: NSString = documentsPath.objectAtIndex(0) as NSString
-    let path: NSString! = url+"/"+fileName
+    let url = documentsPath.objectAtIndex(0) as! String
+    let path = (url)+"/"+fileName
     
     let manager = NSFileManager.defaultManager()
     if (manager.fileExistsAtPath(path)){
@@ -133,15 +133,15 @@ class AppFlowViewController: BaseViewController {
     
     var fileName: NSString! = str.stringByAppendingString(".mp4")
     let aParams : NSDictionary = ["fileName":fileName]
-    let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams)
+    let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams as [NSObject : AnyObject])
     
     let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-    let url: NSString = documentsPath.objectAtIndex(0) as NSString
-    let path: NSString! = url.stringByAppendingString("/Video.mp4")
+    let url = documentsPath.objectAtIndex(0) as! String
+    let path = url.stringByAppendingString("/Video.mp4") as String!
     
     let manager = NSFileManager.defaultManager()
     if (manager.fileExistsAtPath(path)){
-      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as VideoPalyViewController
+      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as! VideoPalyViewController
       vc.viedoUrl = viedoUrl
       self.navigationController?.pushViewController(vc, animated: true)
     }else {
@@ -162,7 +162,7 @@ class AppFlowViewController: BaseViewController {
     
     var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName], forKeys: ["url","fileName"])
     
-    self.api.downloadMediaData(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.downloadMediaData(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.btnplay.hidden = true
       },
@@ -181,7 +181,7 @@ class AppFlowViewController: BaseViewController {
     
     self.api.aboutUS(nil, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      var arry = responseObject as NSArray
+      var arry = responseObject as! NSArray
       if(arry.count>0){
       self.dataFetchFromDatabase(arry)
       }
@@ -194,7 +194,7 @@ class AppFlowViewController: BaseViewController {
   }
   
   func dataFetchFromDatabase(arry:NSArray){
-    let obj = arry.objectAtIndex(0) as Aboutus
+    let obj = arry.objectAtIndex(0)as! Aboutus
     let data = obj.ab_content
     self.strMessage = data
     self.video_url = obj.ab_videourl as NSString

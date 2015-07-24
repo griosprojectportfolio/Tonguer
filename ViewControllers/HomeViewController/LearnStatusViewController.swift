@@ -99,7 +99,7 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var  cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+    var  cell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
     
     var arry = cell.contentView.subviews
     var vwSub: UIView!
@@ -113,13 +113,13 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
         lblStatus.textAlignment = NSTextAlignment.Center
     cell.contentView.addSubview(lblStatus)
     if(statusData.count > 0){
-      var dict:NSDictionary = statusData.objectAtIndex(indexPath.row) as NSDictionary
+      var dict:NSDictionary = statusData.objectAtIndex(indexPath.row) as! NSDictionary
       var strStatus = NSString(format: "%i",dict.valueForKey("learn_status")!.integerValue!)
-      var strClsname = dict.valueForKey("a_class")?.valueForKey("name") as NSString
-      lblStatus.text = strStatus
+      var strClsname = dict.valueForKey("a_class")?.valueForKey("name")as! NSString
+      lblStatus.text = strStatus as String
       var lblClsName: UILabel! = UILabel(frame: CGRectMake(10,15,lblStatus.frame.origin.x+10,20))
       lblClsName.textColor = UIColor.darkGrayColor()
-      lblClsName.text = strClsname
+      lblClsName.text = strClsname as String
       lblClsName.font = lblStatus.font.fontWithSize(15)
       lblClsName.numberOfLines = 0
       lblClsName.lineBreakMode = NSLineBreakMode.ByWordWrapping
@@ -134,10 +134,10 @@ class LearnStatusViewController: BaseViewController,UITableViewDataSource,UITabl
     
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0]], forKeys: ["auth-token"])
     
-    self.api.userDefaultCls(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userDefaultCls(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      let dictCls = responseObject?.valueForKey("data") as NSDictionary
-      self.statusData = dictCls.valueForKey("classes") as NSArray
+      let dictCls = responseObject?.valueForKey("data") as! NSDictionary
+      self.statusData = dictCls.valueForKey("classes") as! NSArray
       if( self.statusData.count > 0){
         self.tblStatus.reloadData()
       }

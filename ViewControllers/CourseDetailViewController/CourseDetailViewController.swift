@@ -37,21 +37,21 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     self.defaultUIDesign()
     print(clsDictDe)
     
-    var strName: NSString! = clsDictDe.objectForKey("name") as NSString
+    var strName: NSString! = clsDictDe.objectForKey("name") as! NSString
     //var price: NSString! = NSString(format: "%i",(clsDictDe.objectForKey("price")?.integerValue)!)
-    var price: NSObject = clsDictDe.objectForKey("price") as NSObject
+    var price: NSObject = clsDictDe.objectForKey("price") as! NSObject
     var strPrice: NSString!
     if price.isKindOfClass(NSString){
-     strPrice = clsDictDe.objectForKey("price") as NSString
+     strPrice = clsDictDe.objectForKey("price") as! NSString
     }else if price.isKindOfClass(NSNumber) {
       strPrice =  NSString(format: "%i",(clsDictDe.objectForKey("price")?.integerValue)!)
     }
         
-    dict1 = NSDictionary(objects: [clsDictDe.objectForKey("name") as NSString,strPrice,"0"], forKeys: ["coursename","courserate","id"])
-    dict2 = NSDictionary(objects: ["course.png","Arrange",clsDictDe.valueForKey("arrange") as NSString,"1"], forKeys: ["image","tilte","data","id"])
-    dict3 = NSDictionary(objects: ["userred.png","Suitable for user",clsDictDe.valueForKey("suitable") as NSString,"2"], forKeys: ["image","tilte","data","id"])
+    dict1 = NSDictionary(objects: [clsDictDe.objectForKey("name") as! NSString,strPrice,"0"], forKeys: ["coursename","courserate","id"])
+    dict2 = NSDictionary(objects: ["course.png","Arrange",clsDictDe.valueForKey("arrange") as! NSString,"1"], forKeys: ["image","tilte","data","id"])
+    dict3 = NSDictionary(objects: ["userred.png","Suitable for user",clsDictDe.valueForKey("suitable") as! NSString,"2"], forKeys: ["image","tilte","data","id"])
     if(clsDictDe.valueForKey("target") != nil) {
-      dict4 = NSDictionary(objects: ["target.png","Target for",clsDictDe.valueForKey("target") as NSString,"3"], forKeys: ["image","tilte","data","id"])
+      dict4 = NSDictionary(objects: ["target.png","Target for",clsDictDe.valueForKey("target") as! NSString,"3"], forKeys: ["image","tilte","data","id"])
       dataArr = NSArray(objects: dict1,dict2,dict3,dict4)
     } else {
       dataArr = NSArray(objects: dict1,dict2,dict3)
@@ -82,9 +82,9 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
 
     var url:NSURL!
     if (isSearch == true) {
-      url = NSURL(string: clsDictDe.objectForKey("image")?.objectForKey("url") as NSString)
+      url = NSURL(string: clsDictDe.objectForKey("image")?.objectForKey("url") as! String)
     } else {
-      url = NSURL(string: clsDictDe.objectForKey("image") as NSString)
+      url = NSURL(string: clsDictDe.objectForKey("image") as! String)
     }
 
     imgVw.sd_setImageWithURL(url, placeholderImage:UIImage(named:"defaultImg"))
@@ -207,8 +207,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       count = dataArr.count
     }else if(btnTag == 2){
       if(arrOutline.count != 0){
-       let dict = arrOutline.objectAtIndex(section) as NSDictionary
-      let arry = dict.valueForKey("array") as NSArray
+       let dict = arrOutline.objectAtIndex(section) as! NSDictionary
+      let arry = dict.valueForKey("array") as! NSArray
       print(arry.count)
       count = arry.count
       }
@@ -241,8 +241,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       if(indexPath.row==0){
          height = 70
       }else{
-        let dictData = dataArr.objectAtIndex(indexPath.row) as NSDictionary
-        let str = dictData.valueForKey("data") as NSString
+        let dictData = dataArr.objectAtIndex(indexPath.row) as! NSDictionary
+        let str = dictData.valueForKey("data") as! NSString
        
         var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
 
@@ -250,9 +250,9 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       }
       
     }else if(btnTag == 2){
-      let dict = arrOutline.objectAtIndex(indexPath.section) as NSDictionary
-      let arry = dict.valueForKey("array") as NSArray
-      let obj = arry.objectAtIndex(indexPath.row) as ClsModElement
+      let dict = arrOutline.objectAtIndex(indexPath.section) as! NSDictionary
+      let arry = dict.valueForKey("array") as! NSArray
+      let obj = arry.objectAtIndex(indexPath.row) as! ClsModElement
       var str = obj.mod_element_content
       var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
       height = 50+rect.height
@@ -265,29 +265,29 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     var cell:UITableViewCell!
     var dictDetail:NSDictionary!
     if(btnTag == 1){
-      var cell: CourseDetailTableViewCell  = tableview.dequeueReusableCellWithIdentifier("cell") as CourseDetailTableViewCell
+      var cell: CourseDetailTableViewCell  = tableview.dequeueReusableCellWithIdentifier("cell") as! CourseDetailTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
-      dictDetail = dataArr.objectAtIndex(indexPath.row) as NSDictionary
+      dictDetail = dataArr.objectAtIndex(indexPath.row) as! NSDictionary
       cell.defaultCellContentForCourseDetail(dictDetail, btnIndex: btnTag,frame: self.view.frame)
       return cell
 
     } else if(btnTag == 2){
-      var cell: CourseListCell!  = tableview.dequeueReusableCellWithIdentifier("CourseList") as CourseListCell
+      var cell: CourseListCell!  = tableview.dequeueReusableCellWithIdentifier("CourseList") as! CourseListCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       if(arrOutline.count>0){
-        let dict = arrOutline.objectAtIndex(indexPath.section) as NSDictionary
-        let arry = dict.valueForKey("array") as NSArray
-        let obj = arry.objectAtIndex(indexPath.row) as ClsModElement
-        cell.textLabel.text = obj.mod_element_content
-        cell.textLabel.numberOfLines = 0
+        let dict = arrOutline.objectAtIndex(indexPath.section) as! NSDictionary
+        let arry = dict.valueForKey("array") as! NSArray
+        let obj = arry.objectAtIndex(indexPath.row) as! ClsModElement
+        cell.textLabel!.text = obj.mod_element_content
+        cell.textLabel!.numberOfLines = 0
       }else{
-        cell.textLabel.text = ""
+        cell.textLabel!.text = ""
       }
-      cell.textLabel.textColor = UIColor.grayColor()
-      cell.textLabel.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
+      cell.textLabel!.textColor = UIColor.grayColor()
+      cell.textLabel!.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
       return cell
     }else {
-      cell.textLabel.text = ""
+      cell.textLabel!.text = ""
     }
     return cell
   }
@@ -312,8 +312,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       vWheader.addSubview(lbltilte)
       
       if(arrOutline.count>0){
-        let dict = arrOutline.objectAtIndex(section) as NSDictionary
-        let obj = dict.valueForKey("module") as ClsOutLineModule
+        let dict = arrOutline.objectAtIndex(section) as! NSDictionary
+        let obj = dict.valueForKey("module") as! ClsOutLineModule
         lbltilte.text = obj.mod_content
       }
       
@@ -324,14 +324,12 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   }
   
   func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    
-    var strTitle: NSString!
     if(btnTag == 1){
-      strTitle = ""
+      return ""
     }else if(btnTag == 2){
-      strTitle = "Module"
+      return "Module"
     }
-    return strTitle
+    return nil
   }
 
   
@@ -341,14 +339,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   }
   
   func btnBuyTapped(sender:AnyObject){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as OrderConfViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("OrderConfID") as! OrderConfViewController
     vc.clsDict = clsDictDe
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
   func btnHaveClasstapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as VideoViewControler
-        vc.classID = self.clsDictDe.valueForKey("id") as NSInteger
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("VideoID") as! VideoViewControler
+        vc.classID = self.clsDictDe.valueForKey("id") as! NSInteger
         vc.isActive = "Free"
         self.navigationController?.pushViewController(vc, animated: true)
   }
@@ -359,14 +357,13 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   }
   
   func btnforwardTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("FeedbackID") as FeedbackViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("FeedbackID") as! FeedbackViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
   func btnCourseDetailtapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btnTag = btn.tag
-    println(btnTag)
     horiVw.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     horiVw1.backgroundColor = UIColor.lightGrayColor()
     horiVw2.backgroundColor = UIColor.lightGrayColor()
@@ -375,7 +372,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   }
   
   func btnCourseListapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btnTag = btn.tag
     println(btnTag)
     
@@ -387,7 +384,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   }
   
   func btnCourseAskingTapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     btnTag = btn.tag
     println(btnTag)
     
@@ -403,7 +400,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   
   
   func skypeIntegrationMethode(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AdminChatID") as AdminChatViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AdminChatID") as! AdminChatViewController
     self.navigationController?.pushViewController(vc, animated:true)
 
 //    var installed = UIApplication.sharedApplication().canOpenURL(NSURL(string: "skype:")!)
@@ -433,14 +430,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   
   func classOutlineApiCall(){
     
-    var cls_id:NSInteger = self.clsDictDe.valueForKey("id") as NSInteger
+    var cls_id:NSInteger = self.clsDictDe.valueForKey("id") as! NSInteger
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],cls_id], forKeys: ["auth-token","cls_id"])
     
-    self.api.clsOutline(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.clsOutline(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      let arry = responseObject as NSArray
+      let arry = responseObject as! NSArray
       if(arry.count != 0){
-        self.arrOutline = responseObject as NSArray
+        self.arrOutline = responseObject as! NSArray
 //        let dict = arry.objectAtIndex(0) as NSDictionary
 //        let arry = dict.valueForKey("array") as NSArray
 //        print(arry.count)
@@ -459,7 +456,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     
     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
-    self.api.getAdminContact(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.getAdminContact(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.dataFetchAdminContact()
       },
@@ -472,7 +469,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
   func dataFetchAdminContact(){
     var arry = AdminContact .MR_findAll() as NSArray
     if(arry.count>0){
-    var obj = arry.objectAtIndex(0) as AdminContact
+    var obj = arry.objectAtIndex(0) as! AdminContact
     serviceCallNo = obj.admin_contact_no
       print(serviceCallNo)
     }

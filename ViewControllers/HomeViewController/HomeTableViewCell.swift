@@ -71,11 +71,11 @@ class HomeTableViewCell: UITableViewCell {
     
     print(aParam)
     cellContentReset()
-    let url = NSURL(string: aParam.objectForKey("image") as NSString)
+    let url = NSURL(string: aParam.objectForKey("image") as! String)
     imgVw.sd_setImageWithURL(url)
-    lblTitle.text = aParam.objectForKey("name") as NSString
+    lblTitle.text = aParam.objectForKey("name") as? String
     lblTitle.sizeToFit()
-    var day: NSNumber! = aParam.objectForKey("days") as NSNumber
+    var day: NSNumber! = aParam.objectForKey("days") as! NSNumber
     lblDate.text = day.stringValue
   }
   

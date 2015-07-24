@@ -158,7 +158,7 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],custxtFname.text,txtViewComment.text], forKeys: ["auth-token","feedback[name]","feedback[content]"])
     
-    self.api.feedback(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.feedback(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
     self.txtViewComment.text = ""
     self.custxtFname.text = ""

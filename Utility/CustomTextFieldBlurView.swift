@@ -1,3 +1,4 @@
+
 //
 //  CustomTextFieldBlurView.swift
 //  Monitoring
@@ -25,7 +26,7 @@ class CustomTextFieldBlurView: UITextField {
     func addBlurViewWithTextField(imgName: String) {
 
       self.text = ""
-         if (countElements(imgName) != 0) {
+         if (count(imgName) != 0) {
 
             var imageName = imgName
             var image = UIImage(named:imageName)

@@ -100,10 +100,10 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as SettingTableViewCell
+    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as! SettingTableViewCell
     cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
     cell.selectionStyle = UITableViewCellSelectionStyle.None
-    cell.defaultUICellContent(arrSettData.objectAtIndex(indexPath.row) as NSString, index: indexPath.row,frame: self.view.frame)
+    cell.defaultUICellContent(arrSettData.objectAtIndex(indexPath.row) as! NSString, index: indexPath.row,frame: self.view.frame)
     cell.swtRemind.addTarget(self, action: "setDownloadReminder:", forControlEvents:UIControlEvents.ValueChanged)
     return cell
   }
@@ -120,7 +120,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     
    case 2://Feedback
     print(arrSettData.objectAtIndex(indexPath.row))
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("FeedbackID") as FeedbackViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("FeedbackID") as! FeedbackViewController
     self.navigationController?.pushViewController(vc, animated: true)
    case 3://Recommand to friend
     print(arrSettData.objectAtIndex(indexPath.row))
@@ -134,7 +134,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     
    case 4: //About us
     print(arrSettData.objectAtIndex(indexPath.row))
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AppFlowID") as AppFlowViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AppFlowID") as! AppFlowViewController
     self.navigationController?.pushViewController(vc, animated: true)
    default:
      print("******** Error**********")
@@ -164,7 +164,7 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     
     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
-    self.api.signOutUser(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.signOutUser(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       //var aParam: NSDictionary! = responseObject?.objectForKey("data") as NSDictionary
 
@@ -184,9 +184,9 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
 
     let userObject:NSDictionary = CommonUtilities.sharedDelegate().dictUserInfo
 
-    let fname = userObject.valueForKey("first_name") as String
-      let lname = userObject.valueForKey("last_name") as String
-      var name: NSString!
+    let fname = userObject.valueForKey("first_name") as! String
+      let lname = userObject.valueForKey("last_name") as! String
+      var name: String!
       if((fname.isEmpty == false && lname.isEmpty == false )){
         name = fname+" "+lname
         lblname.text = name
@@ -194,21 +194,21 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
         name = ""
       }
     
-    var img = userObject.valueForKey("image") as NSObject
+    var img = userObject.valueForKey("image") as! NSObject
     if(img.isKindOfClass(NSDictionary)){
-      var dict = userObject.valueForKey("image") as NSDictionary
-      var strim:NSObject = dict.valueForKey("url") as NSObject
+      var dict = userObject.valueForKey("image") as! NSDictionary
+      var strim:NSObject = dict.valueForKey("url") as! NSObject
       
       if (strim.isKindOfClass(NSNull)){
-        let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as NSString)
+        let url = NSURL(string: "http://idebate.org/sites/live/files/imagecache/150x150/default_profile.png" as String)
         imgVwPPic.sd_setImageWithURL(url)
       }else if((strim.isKindOfClass(NSString))){
-        let url = NSURL(string:strim as NSString)
+        let url = NSURL(string:strim as! String)
         imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
         
       }
     }else if(img.isKindOfClass(NSString)){
-      let url = NSURL(string:img as NSString)
+      let url = NSURL(string:img as! String)
       imgVwPPic.sd_setImageWithURL(url, placeholderImage:UIImage(named: "User.png"))
       
     }

@@ -1,3 +1,4 @@
+
 //
 //  AlertViewController.swift
 //  Tonguer
@@ -13,7 +14,7 @@ class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDe
   var barBackBtn :UIBarButtonItem!
   var barRigthBtn :UIBarButtonItem!
   var tblNotification: UITableView!
-  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
   var arryNotification: NSMutableArray! = NSMutableArray()
   
   override func viewDidLoad() {
@@ -53,9 +54,9 @@ class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDe
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     
-    var dict = arryNotification.objectAtIndex(indexPath.row) as NSDictionary
-    var dictAlert = dict.valueForKey("aps") as NSDictionary
-    var strNotification = dictAlert.valueForKey("alert") as NSString
+    var dict = arryNotification.objectAtIndex(indexPath.row) as! NSDictionary
+    var dictAlert = dict.valueForKey("aps") as! NSDictionary
+    var strNotification = dictAlert.valueForKey("alert") as! NSString
     
     var rect: CGRect! = strNotification.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(18)], context: nil)
     return (rect.height+40)
@@ -66,17 +67,19 @@ class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDe
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(arryNotification.count > 0){
-      var dict = arryNotification.objectAtIndex(indexPath.row) as NSDictionary
-      var dictAlert = dict.valueForKey("aps") as NSDictionary
-      cell.textLabel.text = dictAlert.valueForKey("alert") as NSString
-      cell.textLabel.font = cell.textLabel.font.fontWithSize(15)
-      cell.textLabel.textColor = UIColor.darkGrayColor()
-      cell.textLabel.numberOfLines = 0
+      var dict = arryNotification.objectAtIndex(indexPath.row)as! NSDictionary
+      var dictAlert = dict.valueForKey("aps") as! NSDictionary
+      cell.textLabel!.text = dictAlert.valueForKey("alert") as? String
+      cell.textLabel!.font = cell.textLabel!.font.fontWithSize(15)
+      cell.textLabel!.textColor = UIColor.darkGrayColor()
+      cell.textLabel!.numberOfLines = 0
     }else{
-      cell.textLabel.text = ""
+      cell.textLabel!.text = ""
+      
+      
     }
     //cell.backgroundColor = UIColor.redColor()
     return cell

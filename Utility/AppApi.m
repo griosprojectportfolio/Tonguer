@@ -42,6 +42,9 @@
 //static NSString * const kAppMediaBaseURLString = @"http://192.168.10.30:1234";
  static NSString * const kAppAPIBaseURLString = @"http://52.25.127.168/api/v1";
 
+UIProgressView *progressVW;
+NSInteger vdoProgress;
+
 @interface AppApi ()
 
 @end
@@ -69,6 +72,7 @@
 
 -(id)initWithBaseURL:(NSURL *)url {
     self = [super initWithBaseURL:url];
+  
     if (!self) {
         return nil;
     }
@@ -892,7 +896,7 @@
 //  NSString *strFileNameWithExt = [[NSString alloc] initWithFormat:@"%@",[aParams objectForKey:@"fileName"]];
 //  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
- 
+  //progressVW = [[UIProgressView alloc] init];
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
   AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -916,6 +920,7 @@
     
     successBlock(operation, responseObject);
   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    
     NSLog(@"Error: %@", error);
     
  
@@ -927,6 +932,7 @@
      [self.progressVW setProgress:progress animated:true];
       [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
       NSLog(@"Progress: %.2f", progress);
+      vdoProgress = progress;
       
     }];
  }

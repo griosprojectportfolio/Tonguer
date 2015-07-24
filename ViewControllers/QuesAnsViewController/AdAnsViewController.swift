@@ -72,7 +72,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
     toolBar = UIToolbar(frame: CGRectMake(0, 0, self.view.frame.width,50))
     toolBar.items = [barSpace,barBtnDone]
 
-    var strQuest = dictQus.valueForKey("question") as NSString
+    var strQuest = dictQus.valueForKey("question") as! NSString
     var rect: CGRect! = strQuest.boundingRectWithSize(CGSize(width:self.view.frame.size.width-40,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
     scrollview.contentSize = CGSize(width: self.view.frame.width, height: 180+rect.height)
     
@@ -87,7 +87,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
     
     lblQues = UILabel(frame: CGRectMake(vWLine.frame.origin.x+5,vWLine.frame.origin.y,rect.width,rect.height))
     
-    lblQues.text = strQuest
+    lblQues.text = strQuest as String
     lblQues.numberOfLines = 0
     lblQues.textAlignment = NSTextAlignment.Justified
     lblQues.font = lblQues.font.fontWithSize(12)
@@ -113,8 +113,8 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
     scrollview.addSubview(txtViewAddAns)
     
     if(arryAnswer.count > 0){
-      var obj = arryAnswer.objectAtIndex(0) as Answer
-      txtViewAddAns.text = obj.answer as NSString
+      var obj = arryAnswer.objectAtIndex(0) as! Answer
+      txtViewAddAns.text = obj.answer as String
       self.btnSend.setTitle("Update Your Answer", forState: UIControlState.Normal)
       btnSend.addTarget(self, action: "btnUpadteButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     }else{
@@ -172,12 +172,12 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
   
   func postAddAnswerApiCall(){
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
    
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictQus.valueForKey("id"),forKey: "question_id")
     aParams.setValue(txtViewAddAns.text, forKey: "answer[answer]")
-    self.api.clsQueaAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.clsQueaAnswer(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
        self.alertSend = UIAlertView(title: "Alert", message: "Answer Send Successfully.", delegate: self, cancelButtonTitle: "Ok")
         self.alertSend.show()
@@ -193,7 +193,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
   func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
 
     if (alertView == alertSend) {
-      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AnswerID") as AnswersViewController
+      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AnswerID") as! AnswersViewController
       vc.dictQues = self.dictQus
       self.navigationController?.pushViewController(vc, animated:true)
     }
@@ -201,12 +201,12 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
   
   func updateAddAnswerApiCall(){
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
-    var obj = arryAnswer.objectAtIndex(0) as Answer
+    var aParams: NSMutableDictionary = NSMutableDictionary()
+    var obj = arryAnswer.objectAtIndex(0) as! Answer
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(obj.ans_id,forKey: "answer_id")
     aParams.setValue(txtViewAddAns.text, forKey: "answer")
-    self.api.userAnswerUpdateApi(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userAnswerUpdateApi(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.alertSend = UIAlertView(title: "Alert", message: "Answer Update Successfully.", delegate: self, cancelButtonTitle: "Ok")
       self.alertSend.show()
@@ -223,15 +223,15 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
   
   func getUserAnswerApiCall(){
     
-    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as Int
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var userId:Int = CommonUtilities.sharedDelegate().dictUserInfo.objectForKey("id") as! Int
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictQus.valueForKey("id"), forKey: "question_id")
     aParams.setValue(userId, forKey: "userId")
     println(aParams)
-    self.api.userAnswer(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.userAnswer(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
-      self.arryAnswer = responseObject as NSArray
+      self.arryAnswer = responseObject as! NSArray
       if(self.arryAnswer.count>0){
        print(self.arryAnswer.count)
       }

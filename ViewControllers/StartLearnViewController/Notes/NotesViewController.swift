@@ -201,7 +201,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
   
   func btnSearchTapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     DataFilterTag = btn.tag
     self.navigationItem.rightBarButtonItems = nil
     self.navigationItem.leftBarButtonItem = nil
@@ -209,13 +209,13 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   }
   
   func btnAddTapped(sender:AnyObject){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddNotesID") as AddNotesViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("AddNotesID") as! AddNotesViewController
     vc.is_Call = "Save"
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
   func btnFilterTapped(sender:AnyObject){
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     DataFilterTag = btn.tag
     vwPicker.hidden = false
     self.view.bringSubviewToFront(vwPicker)
@@ -223,7 +223,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func btnMyNotesTapped(sender:AnyObject){
     scopeSearch = "user"
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     tapTag = btn.tag
     vWHori1.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     vWHori2.backgroundColor = UIColor.lightGrayColor()
@@ -243,7 +243,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func btnNotesTapped(sender:AnyObject){
     scopeSearch = "all"
-    var btn = sender as UIButton
+    var btn = sender as! UIButton
     tapTag = btn.tag
     isSearch = false
     vWHori2.backgroundColor =  UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
@@ -289,13 +289,13 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     var cell: UITableViewCell! = nil
     if(tapTag == 1){
       var cell: MyNotesTableViewCell!
-      cell = tblVwNotes.dequeueReusableCellWithIdentifier("MyNotesCell") as MyNotesTableViewCell
+      cell = tblVwNotes.dequeueReusableCellWithIdentifier("MyNotesCell") as! MyNotesTableViewCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       self.searchCellMyNotes(indexPath.row, cell1:cell)
        return cell
     } else if(tapTag == 2){
       var cell: NotesTableViewCell!
-       cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as NotesTableViewCell
+       cell = tblVwNotes.dequeueReusableCellWithIdentifier("NotesCell") as! NotesTableViewCell
       self.searchCellNotes(indexPath.row, cell1:cell)
        cell.selectionStyle = UITableViewCellSelectionStyle.None
       return cell
@@ -307,11 +307,11 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
     if (isSearch == true || isFilter == true) {
       if(arrySearchNotes.count>0){
-        cell1.defaultUIDesign(arrySearchNotes.objectAtIndex(rowIndex) as NSDictionary, Frame: self.view.frame)
+        cell1.defaultUIDesign(arrySearchNotes.objectAtIndex(rowIndex) as! NSDictionary, Frame: self.view.frame)
       }
     } else{
       if(arrNotes.count>0){
-        cell1.defaultUIDesign(arrNotes.objectAtIndex(rowIndex) as NSDictionary, Frame: self.view.frame)
+        cell1.defaultUIDesign(arrNotes.objectAtIndex(rowIndex) as! NSDictionary, Frame: self.view.frame)
         }
     }
   }
@@ -319,11 +319,11 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   func searchCellMyNotes(var rowIndex:Int , var cell1:MyNotesTableViewCell) {
       if (isSearch == true || isFilter == true) {
         if(arrySearchNotes.count>0){
-          cell1.defaultUIDesign(arrySearchNotes.objectAtIndex(rowIndex) as NSDictionary, Frame: self.view.frame)
+          cell1.defaultUIDesign(arrySearchNotes.objectAtIndex(rowIndex) as! NSDictionary, Frame: self.view.frame)
         }
       } else {
         if(arrUserNotes.count>0){
-          cell1.defaultUIDesign(arrUserNotes.objectAtIndex(rowIndex) as NSDictionary, Frame: self.view.frame)
+          cell1.defaultUIDesign(arrUserNotes.objectAtIndex(rowIndex) as! NSDictionary, Frame: self.view.frame)
         }
       }
   }
@@ -334,34 +334,34 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("NotesDetailID") as NotesDetailViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("NotesDetailID") as! NotesDetailViewController
     vc.isShow = tapTag
     if(tapTag == 1){
       if(isSearch == true){
-        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary
+        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as! NSDictionary
         self.navigationController?.pushViewController(vc, animated: true)
         return
       }
       if(isFilter == true){
-        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary
+        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as! NSDictionary
         self.navigationController?.pushViewController(vc, animated: true)
         return
       }
-      vc.dictNotes = arrUserNotes.objectAtIndex(indexPath.row) as NSDictionary
+      vc.dictNotes = arrUserNotes.objectAtIndex(indexPath.row) as! NSDictionary
       self.navigationController?.pushViewController(vc, animated: true)
       
     }else if(tapTag == 2){
       if(isSearch == true){
-        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary
+        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as! NSDictionary
         self.navigationController?.pushViewController(vc, animated: true)
         return
       }
       if(isFilter == true){
-        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as NSDictionary
+        vc.dictNotes = arrySearchNotes.objectAtIndex(indexPath.row) as! NSDictionary
         self.navigationController?.pushViewController(vc, animated: true)
         return
       }
-      vc.dictNotes = arrNotes.objectAtIndex(indexPath.row) as NSDictionary
+      vc.dictNotes = arrNotes.objectAtIndex(indexPath.row) as! NSDictionary
       self.navigationController?.pushViewController(vc, animated: true)
     }
    // self.navigationController?.pushViewController(vc, animated: true)
@@ -372,25 +372,25 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func getNotesApiCall(){
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
 
-    self.api.getUserNotes(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.getUserNotes(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
 
         self.actiIndecatorVw.loadingIndicator.stopAnimating()
         self.actiIndecatorVw.removeFromSuperview()
-        var dictResponse:NSDictionary = responseObject as NSDictionary
-        var arrUserNotes = dictResponse.objectForKey("UserNotes") as NSArray
-        var arrNotes = dictResponse.objectForKey("Notes") as NSArray
+        var dictResponse:NSDictionary = responseObject as! NSDictionary
+        var arrUserNotes = dictResponse.objectForKey("UserNotes") as! NSArray
+        var arrNotes = dictResponse.objectForKey("Notes") as! NSArray
        if(arrUserNotes.count != 0){
        self.reSetshowSetDataNofoundImg()
        }
       if(arrUserNotes.count != 0){
         self.reSetshowSetDataNofoundImg()
       }
-        self.dataFetchFromDatabaseGetUserlNotes(dictResponse.objectForKey("UserNotes") as NSArray)
-        self.dataFetchFromDatabaseGetNotes(dictResponse.objectForKey("Notes") as NSArray)
+        self.dataFetchFromDatabaseGetUserlNotes(dictResponse.objectForKey("UserNotes") as! NSArray)
+        self.dataFetchFromDatabaseGetNotes(dictResponse.objectForKey("Notes") as! NSArray)
         self.tblVwNotes.reloadData()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -404,7 +404,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
     arrUserNotes.removeAllObjects()
     for var index = 0; index < arrFetchAdmin.count; ++index{
-      let notesObj: UserNotes = arrFetchAdmin.objectAtIndex(index) as UserNotes
+      let notesObj: UserNotes = arrFetchAdmin.objectAtIndex(index) as! UserNotes
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(notesObj.notes_id, forKey: "id")
       dict.setValue(notesObj.notes_cls_id, forKey: "cls_id")
@@ -462,7 +462,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
     arrNotes.removeAllObjects()
     for var index = 0; index < arrFetchAdmin.count; ++index{
-      let notesObj: Notes = arrFetchAdmin.objectAtIndex(index) as Notes
+      let notesObj: Notes = arrFetchAdmin.objectAtIndex(index) as! Notes
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(notesObj.notes_id, forKey: "id")
       dict.setValue(notesObj.notes_cls_id, forKey: "cls_id")
@@ -525,30 +525,30 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
   func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
 
-    var dict: NSDictionary! = arrclass.objectAtIndex(row) as NSDictionary
-    var strName: NSString! = dict.valueForKey("name") as NSString
+    var dict: NSDictionary! = arrclass.objectAtIndex(row) as! NSDictionary
+    var strName = dict.valueForKey("name") as! String
     //id filter
     return strName
   }
 
   func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
-    var dict: NSDictionary! = arrclass.objectAtIndex(row) as NSDictionary
-    var name:NSString =  dict.valueForKey("name") as NSString
-    var classId:NSInteger =  dict.valueForKey("id") as NSInteger
+    var dict: NSDictionary! = arrclass.objectAtIndex(row) as! NSDictionary
+    var name:NSString =  dict.valueForKey("name") as! NSString
+    var classId:NSInteger =  dict.valueForKey("id") as! NSInteger
     vwPicker.hidden = true
     self.filterApiCall(classId) //call filter api
   }
 
   func filterApiCall (classId:NSInteger) {
     let param:NSDictionary = NSDictionary(objects: [auth_token[0],classId,scopeSearch], forKeys: ["auth-token","cls_id","scope"])
-    self.api.callFilterNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+    self.api.callFilterNotesApi(param as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
       
       let arryNot = responseObject as? NSArray
       self.arrySearchNotes.removeAllObjects()
       for var index = 0; index < arryNot?.count; ++index{
-        var dictData = arryNot?.objectAtIndex(index) as NSDictionary
+        var dictData = arryNot?.objectAtIndex(index) as! NSDictionary
         print(dictData)
         
         var dict: NSMutableDictionary! = NSMutableDictionary()
@@ -594,7 +594,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
         }
         
         if((dictData.valueForKey("a_class")?.valueForKey("name")!) != nil){
-          dict.setValue(dictData.valueForKey("a_class")?.valueForKey("name")?, forKey:"cls_name")
+          dict.setValue(dictData.valueForKey("a_class")?.valueForKey("name"), forKey:"cls_name")
         }else{
           dict.setValue("", forKey:"cls_name")
         }
@@ -620,7 +620,7 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     let arrFetchedData : NSArray = UserDefaultClsList.MR_findAll()
 
     for var index = 0; index < arrFetchedData.count; ++index {
-      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as UserDefaultClsList
+      let userClsObj : UserDefaultClsList = arrFetchedData.objectAtIndex(index) as! UserDefaultClsList
       var dict: NSMutableDictionary! = NSMutableDictionary()
 
       dict.setObject(userClsObj.cls_id, forKey: "id")
@@ -688,14 +688,14 @@ extension NotesViewController:UISearchBarDelegate {
 
   func searchBarSearchButtonClicked(searchBar: UISearchBar) {
     let param:NSDictionary = NSDictionary(objects: [auth_token[0],searchBar.text,scopeSearch], forKeys: ["auth-token","notes_key_word","scope"])
-    self.api.callSearchNotesApi(param, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
+    self.api.callSearchNotesApi(param as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject?) -> Void in
       print(responseObject)
       searchBar.resignFirstResponder()
       let arryNotes = responseObject as? NSArray
       self.arrySearchNotes.removeAllObjects()
 
       for var index = 0; index < arryNotes?.count; ++index{
-       var dictData = arryNotes?.objectAtIndex(index) as NSDictionary
+       var dictData = arryNotes?.objectAtIndex(index) as! NSDictionary
         print(dictData)
         var dict: NSMutableDictionary! = NSMutableDictionary()
 
@@ -708,7 +708,7 @@ extension NotesViewController:UISearchBarDelegate {
           dict.setValue("", forKey:"content")
         }
         
-        if((dictData.valueForKey("image")?.valueForKey("url")?) != nil){
+        if((dictData.valueForKey("image")?.valueForKey("url")) != nil){
           dict.setValue(dictData.valueForKey("image")?.valueForKey("url"), forKey:"image")
         }else{
           dict.setValue("http://www.popular.com.my/images/no_image.gif", forKey:"image")
@@ -739,7 +739,7 @@ extension NotesViewController:UISearchBarDelegate {
         }
         
         if((dictData.valueForKey("a_class")?.valueForKey("name")!) != nil){
-          dict.setValue(dictData.valueForKey("a_class")?.valueForKey("name")?, forKey:"cls_name")
+          dict.setValue(dictData.valueForKey("a_class")?.valueForKey("name"), forKey:"cls_name")
         }else{
           dict.setValue("", forKey:"cls_name")
         }

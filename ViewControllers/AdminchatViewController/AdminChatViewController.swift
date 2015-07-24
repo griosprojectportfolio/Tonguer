@@ -82,7 +82,7 @@ class AdminChatViewController:BaseViewController {
     
     var aParams: NSDictionary = NSDictionary(objects: self.auth_token, forKeys: ["auth-token"])
     
-    self.api.getAdminContact(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.getAdminContact(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.dataFetchAdminContact()
       },
@@ -95,7 +95,7 @@ class AdminChatViewController:BaseViewController {
   func dataFetchAdminContact(){
     var arry = AdminContact .MR_findAll() as NSArray
     if(arry.count>0){
-      var obj = arry.objectAtIndex(0) as AdminContact
+      var obj = arry.objectAtIndex(0) as! AdminContact
       var skypeid = obj.admin_email
       txtViewID.text = skypeid
       txtViewID.font = UIFont(name: txtViewID.font.fontName, size: 18)

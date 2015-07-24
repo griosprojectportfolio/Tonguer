@@ -10,7 +10,7 @@ import UIKit
 
 class ChargeViewController: UIViewController,UITextFieldDelegate {
   
-  let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+  let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
   var barBackBtn :UIBarButtonItem!
   var lblAmount: UILabel!
   var lbl$: UILabel!
@@ -79,8 +79,8 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
 //    var btnBaCancel: UIBarButtonItem! = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: nil, action: nil)
 
     var toolbar: UIToolbar! = UIToolbar(frame: CGRectMake(0, 0,self.view.frame.width, 50))
-    var arrItems: NSArray! = NSArray(objects:btnFlexSpace,btnBarDone)
-    toolbar.items = arrItems
+    var arrItems: NSArray = NSArray(objects:btnFlexSpace,btnBarDone)
+    toolbar.items = arrItems as [AnyObject]
     toolbar.sizeToFit()
     
     
@@ -134,7 +134,7 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
 
     var money:NSString = cusTxtQuantity.text as NSString
     if (money.length != 0) {
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PaypalVC") as PayPalViewController
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PaypalVC") as! PayPalViewController
       vc.moneyQuantity = cusTxtQuantity.text
       vc.method = "charge"
       self.navigationController?.pushViewController(vc, animated: true)
@@ -160,7 +160,7 @@ class ChargeViewController: UIViewController,UITextFieldDelegate {
     let userObject:NSDictionary = CommonUtilities.sharedDelegate().dictUserInfo
 
     println(userObject)
-      if(userObject.valueForKey("money") as String).isEmpty == false {
+      if(userObject.valueForKey("money") as! String).isEmpty == false {
         lblMoney.text = userObject.valueForKey("money") as? String
       } else  {
         lblMoney.text = "0.0"

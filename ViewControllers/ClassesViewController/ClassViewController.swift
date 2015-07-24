@@ -44,7 +44,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     self.actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
     setDataNofoundImg()
-    var predicate:NSPredicate = NSPredicate (format: "cls_subcategory_Id CONTAINS %i", sub_cat_id)!;
+    var predicate:NSPredicate = NSPredicate (format: "cls_subcategory_Id CONTAINS %i", sub_cat_id);
     var arrFetchCat:NSArray;
     if (flgClass.isEqualToString("Free")){
       arrFetchCat  = FreeCls.MR_findAllWithPredicate(predicate);
@@ -102,24 +102,25 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell: ClassTableViewCell!
-     cell = tblClass.dequeueReusableCellWithIdentifier("cell") as ClassTableViewCell
+     cell = tblClass.dequeueReusableCellWithIdentifier("cell") as! ClassTableViewCell
      cell.selectionStyle = UITableViewCellSelectionStyle.None
-     cell.defaultCellContents(arrClasses.objectAtIndex(indexPath.row) as NSDictionary,frame: self.view.frame)
+     cell.defaultCellContents(arrClasses.objectAtIndex(indexPath.row)as! NSDictionary,frame: self.view.frame)
     return cell
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     if(flgClass .isEqualToString("Pay")){
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as! CourseDetailViewController
       vc.callVw = flgClass
       vc.isSearch = isSearch
-      vc.clsDictDe = self.arrClasses.objectAtIndex(indexPath.row) as NSDictionary
+      vc.clsDictDe = self.arrClasses.objectAtIndex(indexPath.row) as! NSDictionary
       self.navigationController?.pushViewController(vc, animated: true)
     }else if (flgClass.isEqualToString("Free")){      
-      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID") as CourseDetailViewController
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailID")as!
+      CourseDetailViewController
       vc.callVw = flgClass
       vc.isSearch = isSearch
-      vc.clsDictDe = self.arrClasses.objectAtIndex(indexPath.row) as NSDictionary
+      vc.clsDictDe = self.arrClasses.objectAtIndex(indexPath.row) as! NSDictionary
       self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -132,11 +133,11 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     
     var aParams: NSDictionary = NSDictionary(objects: [self.auth_token[0],sub_cat_id], forKeys: ["auth-token","sub_category_id"])
     
-    self.api.freeClsList(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.freeClsList(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-      let arry:NSArray = responseObject as NSArray
+      let arry:NSArray = responseObject as! NSArray
       self.dataFetchFromDatabaseFreeCls(arry)
       if self.arrClasses.count == 0{
 //        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
@@ -160,11 +161,11 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     
     var aParams: NSDictionary = NSDictionary(objects: [auth_token[0],sub_cat_id], forKeys: ["auth-token","sub_category_id"])
     
-    self.api.payClsList(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.payClsList(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
-      let arry:NSArray = responseObject as NSArray
+      let arry:NSArray = responseObject as! NSArray
       self.dataFetchFromDatabasePayCls(arry)
       if(self.arrClasses.count == 0){
 //        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate:self, cancelButtonTitle:"OK")
@@ -187,7 +188,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
     for var index = 0; index < arryClass.count; ++index {
 
-      var clsObject:FreeCls = arryClass.objectAtIndex(index) as FreeCls
+      var clsObject:FreeCls = arryClass.objectAtIndex(index) as! FreeCls
       println(clsObject.cls_arrange)
       var dictClass: NSMutableDictionary! = NSMutableDictionary()
       if((clsObject.cls_name) != nil){
@@ -249,7 +250,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
 
     for var index = 0; index < arryClass.count; ++index {
 
-      var clsObject:PayCls = arryClass.objectAtIndex(index) as PayCls
+      var clsObject:PayCls = arryClass.objectAtIndex(index) as! PayCls
 
       println(clsObject.cls_arrange)
       var dictClass: NSMutableDictionary! = NSMutableDictionary()

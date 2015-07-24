@@ -43,7 +43,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   func defaultUIDesign(){
   
     imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x+30, self.view.frame.origin.y+84, 80, 60))
-    let url = NSURL(string: clsDict.objectForKey("image") as NSString)
+    let url = NSURL(string: clsDict.objectForKey("image") as!  String)
     imgVw.sd_setImageWithURL(url, placeholderImage:UIImage(named:"defaultImg.png"))
     self.view.addSubview(imgVw)
     
@@ -52,20 +52,20 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     //lblDetail.backgroundColor = UIColor.redColor()
     lblDetail.textColor = UIColor.darkGrayColor()
     lblDetail.font = lblDetail.font.fontWithSize(15)
-    let strName = clsDict.valueForKey("name") as? NSString
+    let strName = clsDict.valueForKey("name") as! String
     lblDetail.text = strName
     self.view.addSubview(lblDetail)
     
-     var str: NSString = "$"
+     var str = "$" as String
     lblmoney = UILabel(frame: CGRectMake(imgVw.frame.origin.x+(imgVw.frame.width - 70)/2,imgVw.frame.origin.y+imgVw.frame.height+5,100,50))
-    lblmoney.text = str + "  " + NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
+    lblmoney.text = str + "  " + (NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!) as String)
     lblmoney.font = lblmoney.font.fontWithSize(20)
     lblmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblmoney)
     
     var strValid: NSString = "Vaild to days:"
     lblVaild = UILabel(frame: CGRectMake((self.view.frame.width-150)-20, lblmoney.frame.origin.y,150, 40))
-    lblVaild.text = strValid + "  " + NSString(format: "%i",(clsDict.objectForKey("valid_days")?.integerValue)!)
+    lblVaild.text = (strValid as String) + "  " + (NSString(format: "%i",(clsDict.objectForKey("valid_days")?.integerValue)!) as String)
     lblVaild.font = lblmoney.font.fontWithSize(12)
     lblVaild.textColor = UIColor.grayColor()
     self.view.addSubview(lblVaild)
@@ -75,7 +75,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     txtFieldMoney = CustomTextFieldBlurView(frame:txtmoneyframe, imgName:"")
     txtFieldMoney.attributedPlaceholder = NSAttributedString(string:"Money",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
     // custxtEmail.returnKeyType = UIReturnType.Done
-    txtFieldMoney.text =  NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
+    txtFieldMoney.text =  NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!) as String
     txtFieldMoney.userInteractionEnabled = false
     txtFieldMoney.delegate = self;
     txtFieldMoney.returnKeyType = UIReturnKeyType.Done
@@ -100,7 +100,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
     
     var str1: NSString = "$"
     lblNeedmoney = UILabel(frame: CGRectMake(txtFieldContact.frame.width-40, lblNeed.frame.origin.y,100,40))
-    lblNeedmoney.text = str1 + "  " + NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!)
+    lblNeedmoney.text = (str1 as String) + "  " + (NSString(format: "%i",(clsDict.objectForKey("price")?.integerValue)!) as String)
     lblNeedmoney.font = lblmoney.font.fontWithSize(20)
     lblNeedmoney.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
     self.view.addSubview(lblNeedmoney)
@@ -115,7 +115,7 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   }
   
   func btnConfirmpayTapped(){
-    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PayID") as PayViewController
+    var vc = self.storyboard?.instantiateViewControllerWithIdentifier("PayID") as! PayViewController
         vc.clsDict = clsDict
     self.navigationController?.pushViewController(vc, animated: true)
   }

@@ -31,11 +31,11 @@ class StartLearnTableViewCell: BaseTableViewCell {
 
     
     imgVw = UIImageView(frame: CGRectMake(0,20, 30, 30))
-    imgVw.image = UIImage(named: dict.objectForKey("image") as NSString)
+    imgVw.image = UIImage(named: dict.objectForKey("image") as! String)
     self.contentView.addSubview(imgVw)
     
     lblTilte = UILabel(frame: CGRectMake(imgVw.frame.origin.x+imgVw.frame.width+10,imgVw.frame.origin.y-5,200, 40))
-    lblTilte.text = dict.objectForKey("name") as NSString
+    lblTilte.text = dict.objectForKey("name") as? String
     //lblTilte.textAlignment = NSTextAlignment.Center
     //lblTilte.backgroundColor = UIColor.redColor()
     lblTilte.textColor = UIColor.darkGrayColor()
@@ -52,7 +52,7 @@ class StartLearnTableViewCell: BaseTableViewCell {
           lbldiscount.frame = CGRectMake(414-90, 20, 20, 20)
       }
       
-      lbldiscount.text = NSString(format: "%i",(dict.objectForKey("count")?.integerValue)!)
+      lbldiscount.text = NSString(format: "%i",(dict.objectForKey("count")?.integerValue)!) as String
       lbldiscount.textAlignment = NSTextAlignment.Center
       //lbldiscount.backgroundColor = UIColor.redColor()
       lbldiscount.textColor = UIColor.darkGrayColor()

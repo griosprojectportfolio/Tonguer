@@ -88,7 +88,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     toolBar = UIToolbar(frame: CGRectMake(0, 0, self.view.frame.width,50))
     toolBar.items = [barSpace,barBtnDone]
     
-    var strContent: NSString = dictTopic.valueForKey("content") as NSString
+    var strContent = dictTopic.valueForKey("content") as! String
     
      var rect: CGRect! = strContent.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
     
@@ -158,11 +158,11 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     
       var cell:AdAnsTableViewCell! = nil
     
-       cell = adAnstableView.dequeueReusableCellWithIdentifier("cell") as AdAnsTableViewCell
+       cell = adAnstableView.dequeueReusableCellWithIdentifier("cell") as! AdAnsTableViewCell
       // cell.backgroundColor = UIColor.redColor()
        cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(arrCommentData.count>0){
-       cell.defaultUIDesign(arrCommentData.objectAtIndex(indexPath.row) as NSDictionary)
+       cell.defaultUIDesign(arrCommentData.objectAtIndex(indexPath.row) as! NSDictionary)
     }
     
     return cell
@@ -170,9 +170,9 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     
-    var dict: NSDictionary! = arrCommentData.objectAtIndex(indexPath.row) as NSDictionary
+    var dict: NSDictionary! = arrCommentData.objectAtIndex(indexPath.row)as! NSDictionary
     
-    var data: NSString! = dict.valueForKey("comment") as NSString
+    var data: NSString! = dict.valueForKey("comment") as! NSString
     data = data.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
     var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(11)], context: nil)
     
@@ -192,9 +192,9 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
     var tbleHeight:CGFloat = 0
     for var iLoop = 0 ; iLoop<arrCommentData.count ; iLoop++ {
    
-      var dict: NSDictionary! = arrCommentData.objectAtIndex(iLoop) as NSDictionary
+      var dict = arrCommentData.objectAtIndex(iLoop) as! NSDictionary
       
-      var data: NSString! = dict.valueForKey("comment") as NSString
+      var data: NSString! = dict.valueForKey("comment") as! NSString
        data = data.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
       var rect: CGRect! = data.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
    
@@ -270,12 +270,12 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   
   func getCommentTopicApiCall(){
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictTopic.valueForKey("id"), forKey:"topic_id")
     //aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
-    self.api.discusTopicComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
-      self.dataFetchFromDatabaseDiscus(responseObject as NSArray)
+    self.api.discusTopicComments(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+      self.dataFetchFromDatabaseDiscus(responseObject as! NSArray)
       self.dynamicHeightOfTbleView()
       self.adAnstableView.reloadData()
       if(self.arrCommentData.count>0){
@@ -293,11 +293,11 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   
   func postCommentTopicApiCall(){
     
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(dictTopic.valueForKey("id"), forKey:"topic_id")
     aParams.setValue(txtViewAddAns.text, forKey:"comment[comment]")
-    self.api.discusTopicPostComments(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.discusTopicPostComments(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
@@ -311,7 +311,7 @@ class AddAnsViewController: BaseViewController,UITextViewDelegate,UITableViewDat
   func dataFetchFromDatabaseDiscus(arrFetchAdmin: NSArray){
       arrCommentData.removeAllObjects()
       for var index = 0; index < arrFetchAdmin.count; ++index{
-      let clsObject: DisTopicComments = arrFetchAdmin.objectAtIndex(index) as DisTopicComments
+      let clsObject: DisTopicComments = arrFetchAdmin.objectAtIndex(index) as! DisTopicComments
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObject.comment_id, forKey: "id")
       dict.setValue(clsObject.commment, forKey: "comment")

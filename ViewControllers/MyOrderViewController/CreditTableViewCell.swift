@@ -33,7 +33,7 @@ class CreditTableViewCell: UITableViewCell {
     var price:NSString = NSString(format:"%i",obj.cls_amount.integerValue)
     
     lblPrice.frame = CGRectMake(vwCell.frame.width-60,0,50,40)
-    lblPrice.text = "$"+price
+    lblPrice.text = "$"+(price as String)
     lblPrice.font = lblPrice.font.fontWithSize(18)
     lblPrice.textColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
 

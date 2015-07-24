@@ -37,7 +37,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     self.arrQuestion.removeAllObjects()
     self.defaultUIDesign()
     self.setDataNofoundImg()
-    var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)!
+    var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)
     var arry:NSArray = Questions.MR_findAllWithPredicate(predicate)
     self.dataFetchFromDataBaseQuestion(arry)
     
@@ -81,10 +81,10 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as QuesAnsTableViewCell
+    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as! QuesAnsTableViewCell
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(arrQuestion.count>0){
-    cell.defaultUIDesign(arrQuestion.objectAtIndex(indexPath.row) as NSDictionary,frame:self.view.frame)
+    cell.defaultUIDesign(arrQuestion.objectAtIndex(indexPath.row) as! NSDictionary,frame:self.view.frame)
     cell.cellbtnAddAns.tag = indexPath.row
     cell.cellbtnAddAns.addTarget(self, action: "btnAddAnswerTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.cellbtnAns.tag = indexPath.row
@@ -98,10 +98,10 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   }
   
   func btnAddAnswerTapped(sender:AnyObject){
-    let btn = sender as UIButton
+    let btn = sender as! UIButton
     print(btn.tag)
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AdAnswerID") as AdAnsViewController
-    var dict :NSDictionary! = arrQuestion.objectAtIndex(btn.tag) as NSDictionary
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AdAnswerID") as! AdAnsViewController
+    var dict :NSDictionary! = arrQuestion.objectAtIndex(btn.tag)as! NSDictionary
      vc.dictQus = dict
     self.navigationController?.pushViewController(vc, animated:true)
   }
@@ -109,10 +109,10 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   
   func btnAnswerTapped(sender:AnyObject){
     
-    let btn = sender as UIButton
+    let btn = sender as! UIButton
     print(btn.tag)
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AnswerID") as AnswersViewController
-     var dict :NSDictionary! = arrQuestion.objectAtIndex(btn.tag) as NSDictionary
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AnswerID")as!AnswersViewController
+     var dict :NSDictionary! = arrQuestion.objectAtIndex(btn.tag) as! NSDictionary
     vc.dictQues = dict
     self.navigationController?.pushViewController(vc, animated:true)
   }
@@ -127,17 +127,17 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   
   func getQuestionApiCall(){
 
-    var aParams: NSMutableDictionary! = NSMutableDictionary()
+    var aParams: NSMutableDictionary = NSMutableDictionary()
     aParams.setValue(auth_token[0], forKey: "auth-token")
     aParams.setValue(classID, forKey: "class_id")
-    self.api.clsQuestion(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.clsQuestion(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
 
       println(responseObject)
       self.arrQuestion.removeAllObjects()
       self.actiIndecatorVw.loadingIndicator.stopAnimating()
       self.actiIndecatorVw.removeFromSuperview()
 
-      var arry:NSArray = responseObject as NSArray
+      var arry:NSArray = responseObject as! NSArray
       print(arry.count)
       self.dataFetchFromDataBaseQuestion(arry)
       if(arry.count == 0){
@@ -156,7 +156,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
   func dataFetchFromDataBaseQuestion(var arrFetchQues:NSArray){
     arrQuestion.removeAllObjects()
     for var index = 0 ; index < arrFetchQues.count ; index++ {
-      let clsObj: Questions! = arrFetchQues.objectAtIndex(index) as Questions
+      let clsObj: Questions! = arrFetchQues.objectAtIndex(index) as! Questions
       
       var dict: NSMutableDictionary! = NSMutableDictionary()
       dict.setValue(clsObj.ques_id, forKey: "id")
