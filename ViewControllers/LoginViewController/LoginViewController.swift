@@ -114,17 +114,30 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
   }
   
   func textFieldDidBeginEditing(textField: UITextField) {
+    if(self.isiPhone5orLower){
+      var frame:CGRect = self.view.frame
+      frame.origin.y = frame.origin.y - 110
+      self.view.frame = frame
+    }else{
+//      var frame:CGRect = self.view.frame
+//      frame.origin.y = frame.origin.y - 100
+//      self.view.frame = frame
+    }
     
-    var frame:CGRect = self.view.frame
-    frame.origin.y = frame.origin.y - 40
-    self.view.frame = frame
   }
 
   func textFieldDidEndEditing(textField: UITextField) {
     
-    var frame:CGRect = self.view.frame
-    frame.origin.y = frame.origin.y + 40
-    self.view.frame = frame
+    if(self.isiPhone5orLower){
+      var frame:CGRect = self.view.frame
+      frame.origin.y = frame.origin.y + 110
+      self.view.frame = frame
+    }else{
+      //      var frame:CGRect = self.view.frame
+      //      frame.origin.y = frame.origin.y - 100
+      //      self.view.frame = frame
+    }
+
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -178,8 +191,8 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     
   let strDeviceToken = appDelegate.deviceTokenString
    
-   // var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
-     var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
+   var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
+    // var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)

@@ -14,6 +14,8 @@ class BaseViewController: UIViewController {
     let isiPhone5orLower    =   UIScreen.mainScreen().bounds.size.width == 320
     let isiPhone6           =   UIScreen.mainScreen().bounds.size.width == 375
     let isiPhone6plus       =   UIScreen.mainScreen().bounds.size.width == 414
+    let isiPhone4orLower    =   UIScreen.mainScreen().bounds.size.height == 480
+  
     
   
     var auth_token : [NSString] {
@@ -48,6 +50,7 @@ class BaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        println(isiPhone4orLower)
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 52.0/255.0, green: 119.0/255.0, blue: 162.0/255.0, alpha: 1.0)
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
     }

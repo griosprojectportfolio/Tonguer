@@ -61,6 +61,7 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
     
     println(scrollview)
     scrollview.showsHorizontalScrollIndicator = true
+    scrollview.showsVerticalScrollIndicator = false
     scrollview.scrollEnabled = true
     scrollview.userInteractionEnabled = true
     //scrollview.backgroundColor = UIColor.grayColor()
@@ -74,7 +75,11 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
 
     var strQuest = dictQus.valueForKey("question") as! NSString
     var rect: CGRect! = strQuest.boundingRectWithSize(CGSize(width:self.view.frame.size.width-40,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
-    scrollview.contentSize = CGSize(width: self.view.frame.width, height: 180+rect.height)
+    if(self.isiPhone5orLower){
+      scrollview.contentSize = CGSize(width: self.view.frame.width, height: 450+rect.height)
+    }else{
+      scrollview.contentSize = CGSize(width: self.view.frame.width, height: 180+rect.height)
+    }
     
     imgVw = UIImageView(frame: CGRectMake(5,5, 20, 20))
     //imgVw.backgroundColor = UIColor.grayColor()
@@ -132,7 +137,12 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
   func textViewDidBeginEditing(textView: UITextView) {
     println((self.view.frame.size.height - 280))
     if txtViewAddAns.frame.origin.y + txtViewAddAns.frame.size.height > (scrollview.frame.size.height - 280) {
-      scrollview.contentOffset = CGPoint(x:0, y:(lblQues.frame.size.height-30))
+      
+      if(isiPhone5orLower){
+        scrollview.contentOffset = CGPoint(x:0, y:(lblQues.frame.size.height+40))
+      }else{
+        scrollview.contentOffset = CGPoint(x:0, y:(lblQues.frame.size.height-30))
+      }
       //scrollview.contentSize = CGSizeMake(scrollview.frame.size.width,scrollview.frame.size.height + txtViewAddAns.frame.origin.y)
       isTecxtViewUp = true;
     }
@@ -144,7 +154,14 @@ class AdAnsViewController: BaseViewController,UITextViewDelegate, UIAlertViewDel
       scrollview.contentOffset = CGPoint(x:0, y:-(lblQues.frame.size.height+30))
     }
   }
+  
+//  func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+//    var rect: CGRect! = text.boundingRectWithSize(CGSize(width:self.view.frame.size.width-40,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(12)], context: nil)
+//    scrollview.contentSize = CGSize(width: self.view.frame.width, height: 250+rect.height)
+//    return true
+//  }
 
+  
   func btnSendButtonTapped(sender: AnyObject){
     
     if(txtViewAddAns.text == ""){

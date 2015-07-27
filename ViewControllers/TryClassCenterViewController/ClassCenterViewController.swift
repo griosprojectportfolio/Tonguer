@@ -85,10 +85,11 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
     lbldeatil.textColor = UIColor.blackColor()
     scrollAdvertise.addSubview(lbldeatil)
    
-    tableview = UITableView(frame: CGRectMake(scrollAdvertise.frame.origin.x,scrollAdvertise.frame.origin.y+scrollAdvertise.frame.height, scrollAdvertise.frame.width, self.view.frame.height-scrollAdvertise.frame.origin.y))
+    tableview = UITableView(frame: CGRectMake(scrollAdvertise.frame.origin.x,scrollAdvertise.frame.origin.y+scrollAdvertise.frame.height, scrollAdvertise.frame.width, self.view.frame.height-(scrollAdvertise.frame.origin.y+scrollAdvertise.frame.height+60)))
     //tableview.backgroundColor = UIColor.grayColor()
     tableview.delegate = self
     tableview.dataSource = self
+    tableview.showsVerticalScrollIndicator = false
     self.view.addSubview(tableview)
    tableview.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
    tableview.tableFooterView = UIView(frame: CGRectZero)

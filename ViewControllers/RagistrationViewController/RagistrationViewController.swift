@@ -43,8 +43,11 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
     
     scrollview = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64, self.view.frame.width, self.view.frame.height))
     //scrollview.backgroundColor = UIColor.grayColor()
+    scrollview.showsVerticalScrollIndicator = false
     scrollview.userInteractionEnabled = true
+    if(self.isiPhone5orLower){
     scrollview.contentSize = CGSize(width: self.view.frame.width, height:self.view.frame.height+100)
+    }
     self.view.addSubview(scrollview)
     
     imgVwLogo = UIImageView()
@@ -129,7 +132,11 @@ class RagistrationViewController: BaseViewController,UITextFieldDelegate {
   }
   
   func textFieldDidBeginEditing(textField: UITextField) {
-    scrollview.contentOffset = CGPoint(x: 0, y: 80)
+    if(self.isiPhone5orLower){
+    scrollview.contentOffset = CGPoint(x: 0, y:160)
+    }else{
+      scrollview.contentOffset = CGPoint(x: 0, y:80)
+    }
   }
   
   

@@ -145,7 +145,7 @@ class AnswersViewController: BaseViewController,UITableViewDataSource,UITableVie
     scrollVW.addSubview(vWHori2)
     
     
-    ansTableview = UITableView(frame: CGRectMake(scrollVW.frame.origin.x,vWHori2.frame.height+vWHori2.frame.origin.y+20,scrollVW.frame.width,200))
+    ansTableview = UITableView(frame: CGRectMake(scrollVW.frame.origin.x,vWHori2.frame.height+vWHori2.frame.origin.y+20,scrollVW.frame.width,scrollVW.frame.height-(vWHori2.frame.origin.y+30)))
      ansTableview.delegate = self
      ansTableview.dataSource = self
     ansTableview.scrollEnabled = true

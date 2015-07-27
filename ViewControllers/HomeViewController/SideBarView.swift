@@ -39,7 +39,7 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
     
     println((blackVw))
     
-    imgVwLogo = UIImageView(frame: CGRectMake((blackVw.frame.width-90)/2,(blackVw.frame.height-140), 90, 100))
+    imgVwLogo = UIImageView(frame: CGRectMake((blackVw.frame.width-90)/2,(blackVw.frame.height-120), 90, 100))
     imgVwLogo.image = UIImage(named: "Logo.png")
     self.addSubview(imgVwLogo)
     self.bringSubviewToFront(imgVwLogo)

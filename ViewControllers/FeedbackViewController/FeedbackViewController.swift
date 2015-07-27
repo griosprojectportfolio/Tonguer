@@ -46,12 +46,16 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
     
     scrollVW = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y,self.view.frame.size.width,self.view.frame.size.height))
-    
-    scrollVW.showsHorizontalScrollIndicator = true
+    scrollVW.showsVerticalScrollIndicator = false
     scrollVW.scrollEnabled = true
     scrollVW.userInteractionEnabled = true
    // scrollVW.backgroundColor = UIColor.grayColor()
-    scrollVW.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+20)
+    if(isiPhone4orLower){
+      scrollVW.contentSize = CGSize(width: self.view.frame.width, height:500)
+    }else{
+      scrollVW.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height+20)
+    }
+    
     
     self.view.addSubview(scrollVW)
 
@@ -124,13 +128,27 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     }
   }
   
-  func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-  return true
-  }
+  
   
   func textViewDidBeginEditing(textView: UITextView) {
     lblComment.hidden = true
-    scrollVW.contentOffset = CGPoint(x:0, y:btnSend.frame.height+50)
+    if isiPhone4orLower{
+       scrollVW.contentOffset = CGPoint(x:0, y:btnSend.frame.height+100)
+       scrollVW.contentSize = CGSize(width: self.view.frame.width, height:800)
+    }else{
+       scrollVW.contentOffset = CGPoint(x:0, y:btnSend.frame.height+50)
+    }
+   
+  }
+  
+  func textViewDidEndEditing(textView: UITextView) {
+    if isiPhone4orLower{
+      scrollVW.contentOffset = CGPoint(x:0, y:-50)
+      scrollVW.contentSize = CGSize(width: self.view.frame.width, height:500)
+    }else{
+      scrollVW.contentOffset = CGPoint(x:0, y:-50)
+    }
+
   }
 
 
@@ -138,10 +156,6 @@ class FeedbackViewController: BaseViewController,UITextFieldDelegate,UITextViewD
         super.didReceiveMemoryWarning()
        
     }
-  
-  func textViewDidChange(textView: UITextView) {
-    
-  }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
     textField.resignFirstResponder()

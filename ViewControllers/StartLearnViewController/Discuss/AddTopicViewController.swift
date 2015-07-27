@@ -16,6 +16,7 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   var lblTxtVwPlace: UILabel!
   var classID: NSInteger!
   var toolBar: UIToolbar!
+  var scrollVW: UIScrollView!
   var api: AppApi!
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -48,7 +49,17 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     
     self.navigationItem.setRightBarButtonItem(btnBarPost, animated: true)
     
-    var frameTitle:CGRect = CGRectMake(self.view.frame.origin.x+10,self.view.frame.origin.y+84, self.view.frame.width-20, 40)
+    scrollVW = UIScrollView(frame: CGRectMake(self.view.frame.origin.x,0, self.view.frame.size.width, self.view.frame.height))
+    scrollVW.showsVerticalScrollIndicator = false
+    //scrollVW.userInteractionEnabled = true
+    //scrollVW.backgroundColor = UIColor.grayColor()
+    if(self.isiPhone5orLower){
+      scrollVW.contentSize = CGSize(width:0,height:500)
+    }
+    
+    self.view.addSubview(scrollVW)
+    
+    var frameTitle:CGRect = CGRectMake(scrollVW.frame.origin.x+10,20,scrollVW.frame.width-20, 40)
 
     txtTitle = CustomTextFieldBlurView(frame:frameTitle, imgName:"")
     txtTitle.attributedPlaceholder = NSAttributedString(string:"Title",attributes:[NSForegroundColorAttributeName: UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)])
@@ -56,7 +67,7 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     txtTitle.delegate = self;
     txtTitle.returnKeyType = UIReturnKeyType.Done
     txtTitle.clearButtonMode = UITextFieldViewMode.Always
-    self.view.addSubview(txtTitle)
+    scrollVW.addSubview(txtTitle)
     
     var barBtnDone: UIBarButtonItem! = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: "barBtnDonTapped:")
     var barSpace: UIBarButtonItem! = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target:self, action: nil)
@@ -69,7 +80,7 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     txtVwContent.layer.borderWidth = 1
     txtVwContent.inputAccessoryView = toolBar
     txtVwContent.layer.borderColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0).CGColor
-    self.view.addSubview(txtVwContent)
+    scrollVW.addSubview(txtVwContent)
     
     lblTxtVwPlace = UILabel(frame: CGRectMake((self.txtVwContent.frame.width-200)/2,(self.txtVwContent.frame.height-30)/2,200, 30))
     //lblTxtVwPlace.backgroundColor = UIColor.redColor()
@@ -83,6 +94,7 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
   
   func barBtnDonTapped(sender:UIBarButtonItem){
     txtVwContent.resignFirstResponder()
+    //scrollVW.contentOffset = CGPoint(x: 0, y: 0)
   }
   
   func btnBackTapped(){
@@ -94,15 +106,25 @@ class AddTopicViewController: BaseViewController,UITextFieldDelegate,UITextViewD
     return false
   }
   
-  func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-  
-    return true
-  }
   
   func textViewShouldBeginEditing(textView: UITextView) -> Bool {
     lblTxtVwPlace.hidden = true
+    
     return true
   }
+  
+  func textViewDidBeginEditing(textView: UITextView) {
+    if(isiPhone4orLower){
+    scrollVW.contentOffset = CGPoint(x: 0, y:30)
+    }
+  }
+  
+  func textViewDidEndEditing(textView: UITextView) {
+    if(isiPhone4orLower){
+    scrollVW.contentOffset = CGPoint(x: 0, y:-60)
+    }
+  }
+  
   
   func btnBarPostTapped(sender:AnyObject){
     

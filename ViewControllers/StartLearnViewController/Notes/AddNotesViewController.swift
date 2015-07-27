@@ -83,7 +83,9 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
     scrollVW.scrollEnabled = true
     scrollVW.userInteractionEnabled = true
    // scrollVW.backgroundColor = UIColor.grayColor()
+    if(isiPhone4orLower){
     scrollVW.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
+    }
     self.view.addSubview(scrollVW)
 
   
@@ -172,6 +174,18 @@ class AddNotesViewController: BaseViewController,UITextViewDelegate,UIImagePicke
   func textFieldShouldReturn(textField: UITextField) -> Bool {
     textField.resignFirstResponder()
     return false
+  }
+  
+  func textFieldDidBeginEditing(textField: UITextField) {
+    if(isiPhone4orLower){
+      scrollVW.contentOffset = CGPoint(x: 0,y:20)
+    }
+  }
+  
+  func textFieldDidEndEditing(textField: UITextField) {
+    if(isiPhone4orLower){
+      scrollVW.contentOffset = CGPoint(x:0,y:-60)
+    }
   }
   
   
