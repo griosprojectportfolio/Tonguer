@@ -44,6 +44,7 @@
 
 UIProgressView *progressVW;
 NSInteger vdoProgress;
+BOOL vdoDownlodFalg = false;
 
 @interface AppApi ()
 
@@ -906,6 +907,7 @@ NSInteger vdoProgress;
   
   [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
     NSLog(@"Successfully downloaded file to %@", path);
+    vdoDownlodFalg = true;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     NSUserDefaults *defaults = [[NSUserDefaults alloc]init];
     BOOL state = [defaults boolForKey:@"state"];

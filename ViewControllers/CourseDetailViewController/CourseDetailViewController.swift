@@ -286,8 +286,6 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       cell.textLabel!.textColor = UIColor.grayColor()
       cell.textLabel!.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
       return cell
-    }else {
-      cell.textLabel!.text = ""
     }
     return cell
   }

@@ -41,9 +41,19 @@ class OrderConfViewController: BaseViewController,UITextFieldDelegate {
   
   
   func defaultUIDesign(){
-  
+    
+    var img = clsDict.objectForKey("image") as! NSObject
+    var strimg:String!
+    
+    if(img.isKindOfClass(NSString)){
+      strimg = clsDict.objectForKey("image") as! String
+    }else if(img.isKindOfClass(NSDictionary)){
+      strimg = clsDict.objectForKey("image")?.valueForKey("url") as! String
+    }
+    
+    
     imgVw = UIImageView(frame: CGRectMake(self.view.frame.origin.x+30, self.view.frame.origin.y+84, 80, 60))
-    let url = NSURL(string: clsDict.objectForKey("image") as!  String)
+    let url = NSURL(string:strimg)
     imgVw.sd_setImageWithURL(url, placeholderImage:UIImage(named:"defaultImg.png"))
     self.view.addSubview(imgVw)
     
