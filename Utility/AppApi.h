@@ -14,10 +14,13 @@
 #import <UIProgressView+AFNetworking.h>
 #import "Netconection.h"
 
-@interface AppApi : AFHTTPRequestOperationManager
+@interface AppApi : AFHTTPRequestOperationManager <NSURLConnectionDelegate,NSURLConnectionDataDelegate>
 
 
 @property UIProgressView *progressVW;
+@property (nonatomic, retain) NSOperationQueue *downloadQueue;
+@property (nonatomic, retain) AFHTTPRequestOperation *operation;
+@property (nonatomic, retain) NSMutableData *receivedData;
 + (AppApi *)sharedClient ;
 + (AppApi *)sharedAuthorizedClient;
 - (id)initWithBaseURL:(NSURL *)url;

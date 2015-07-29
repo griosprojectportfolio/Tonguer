@@ -21,6 +21,10 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    var state:Bool = false
+    let userDefaults = NSUserDefaults.standardUserDefaults()
+    userDefaults.setValue(state, forKey: "state")
+    userDefaults.synchronize()
     self.defaultUIDesign()
 
     if (self.auth_token.count != 0) {
@@ -191,8 +195,8 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     
   let strDeviceToken = appDelegate.deviceTokenString
    
-   var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
-    // var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
+   //var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text,"user[device_token]":strDeviceToken]
+     var aParams: NSDictionary = ["user[email]" : custxtEmail.text, "user[password]" : custxtPassword.text]
 
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)

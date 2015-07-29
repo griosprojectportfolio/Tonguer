@@ -119,7 +119,15 @@ class AppFlowViewController: BaseViewController {
     if (manager.fileExistsAtPath(path)){
       btnplay.hidden = true
     }
-
+    
+    var filenameD: NSString! = str.stringByAppendingString(".mp4")
+    var strNameD: String = "/"+"temp" + (fileName as String)
+    let urlD = documentsPath.objectAtIndex(0) as! String
+    let pathD = (urlD)+strNameD
+    let managerD = NSFileManager.defaultManager()
+    if (managerD.fileExistsAtPath(pathD)){
+      btnplay.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
+    }
     
   }
   
@@ -158,9 +166,10 @@ class AppFlowViewController: BaseViewController {
     var str: NSString = "Video"
     
     var fileName: NSString! = str.stringByAppendingString(".mp4")
-    let aPara : NSDictionary = ["fileName":fileName]
+    var strName: String = "/"+"temp" + (fileName as String)
     
-    var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName], forKeys: ["url","fileName"])
+    
+    var aParams: NSDictionary = NSDictionary(objects: [video_url,strName], forKeys: ["url","fileName"])
     
     self.api.downloadMediaData(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)

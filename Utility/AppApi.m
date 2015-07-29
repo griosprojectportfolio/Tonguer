@@ -72,6 +72,7 @@ BOOL vdoDownlodFalg = false;
 /* API Initialization */
 
 -(id)initWithBaseURL:(NSURL *)url {
+  [self initializeOperationQueueForDownload];
     self = [super initWithBaseURL:url];
   
     if (!self) {
@@ -84,6 +85,13 @@ BOOL vdoDownlodFalg = false;
 
 -(void)dealloc {
     
+}
+
+
+-(void)initializeOperationQueueForDownload{
+  self.downloadQueue = [[NSOperationQueue alloc] init];
+  self.downloadQueue.maxConcurrentOperationCount = 3;
+  self.downloadQueue.name = @"com.Tounger.app.downloadQueue";
 }
 
 #pragma mark- Login User
@@ -887,6 +895,44 @@ BOOL vdoDownlodFalg = false;
 
 #pragma mark Method to Downloading Media Data from server
 
+//- (void)downloadMediaData:(NSDictionary *)aParams
+//                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+//                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+//  
+//  NSString *url = [NSString stringWithFormat:@"%@",[aParams objectForKey:@"url"]];
+//  NSURL *movieUrl = [[NSURL alloc]initWithString:url];
+//  
+//  NSURLRequest *theRequest = [NSURLRequest requestWithURL:movieUrl cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60];
+//  _receivedData = [[NSMutableData alloc] initWithLength:0];
+//  NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self startImmediately:YES];
+//  
+//}
+//
+//- (void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+//  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+//  [_receivedData setLength:0];
+//  NSLog(@"%@",_receivedData);
+//}
+//
+//- (void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+//  [_receivedData appendData:data];
+//}
+//
+//- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+//  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//  }
+//
+//- (NSCachedURLResponse *) connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+//  return nil;
+//}
+//
+//- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+//  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//  //[self movieReceived];
+//}
+
+
+
 
 - (void)downloadMediaData:(NSDictionary *)aParams
                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
@@ -899,22 +945,40 @@ BOOL vdoDownlodFalg = false;
 //  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
   //progressVW = [[UIProgressView alloc] init];
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-  AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+   _operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
   NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[aParams objectForKey:@"fileName"]];
-  operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+  _operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
   
-  [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-    NSLog(@"Successfully downloaded file to %@", path);
-    vdoDownlodFalg = true;
+  [self.operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//    NSLog(@"Successfully downloaded file to %@", path);
+//    NSLog(@"Successfully downloaded file to %@",path.lastPathComponent);
+    NSString *strOld = path.lastPathComponent;
+    
+    NSArray* foo = [strOld componentsSeparatedByString: @"temp"];
+    NSString* strFile = [foo objectAtIndex:1];
+    NSFileManager *filemaneger = [NSFileManager defaultManager];
+    
+    if([filemaneger fileExistsAtPath:path]){
+      NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+      NSString *pathNew = [[paths objectAtIndex:0] stringByAppendingPathComponent:strFile];
+      NSLog(@"Successfully downloaded file to %@", pathNew);
+      BOOL fm = [filemaneger moveItemAtPath:path toPath:pathNew error:nil];
+      if(fm){
+        NSLog(@"********Success");
+      }else{
+        NSLog(@"********Fail");
+      }
+    }
+    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     NSUserDefaults *defaults = [[NSUserDefaults alloc]init];
     BOOL state = [defaults boolForKey:@"state"];
     
     if(state == true){
       UILocalNotification* localNotification = [[UILocalNotification alloc] init];
-      localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:30];
+      localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
       localNotification.alertBody = @"Video Downloaded Successfully";
       localNotification.timeZone = [NSTimeZone defaultTimeZone];
       [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
@@ -923,20 +987,20 @@ BOOL vdoDownlodFalg = false;
     successBlock(operation, responseObject);
   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     
-    NSLog(@"Error: %@", error);
+     NSLog(@"Error: %@", error);
     
  
   }];
-  
-  [operation start];
-    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+  [self.downloadQueue addOperation:self.operation];
+  [self.operation start];
+    [self.operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
       double progress = (double)totalBytesRead / totalBytesExpectedToRead;
-     [self.progressVW setProgress:progress animated:true];
       [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
       NSLog(@"Progress: %.2f", progress);
       vdoProgress = progress;
       
     }];
+  
  }
 
 

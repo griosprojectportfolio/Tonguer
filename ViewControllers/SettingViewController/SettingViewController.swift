@@ -46,6 +46,8 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     barBackBtn = UIBarButtonItem(customView: backbtn)
     
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+
+
     
     VwUserDetail = UIView(frame: CGRectMake(self.view.frame.origin.x+20, self.view.frame.origin.y+74, self.view.frame.width-50, 60))
     VwUserDetail.layer.borderWidth = 0.5
@@ -105,6 +107,13 @@ class SettingViewController: BaseViewController,UITableViewDataSource,UITableVie
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     cell.defaultUICellContent(arrSettData.objectAtIndex(indexPath.row) as! NSString, index: indexPath.row,frame: self.view.frame)
     cell.swtRemind.addTarget(self, action: "setDownloadReminder:", forControlEvents:UIControlEvents.ValueChanged)
+    let userDefaults = NSUserDefaults.standardUserDefaults()
+    var state = userDefaults.objectForKey("state") as! Bool
+    if(state){
+      cell.swtRemind.setOn(true, animated:false)
+    }else{
+      cell.swtRemind.setOn(false, animated:false)
+    }
     return cell
   }
   

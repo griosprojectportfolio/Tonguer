@@ -122,14 +122,6 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     cell.btnComplete.tag = dict.valueForKey("id") as! NSInteger
     cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     api.progressVW.frame = CGRectMake(5,cell.lblText.frame.origin.y+40,cell.btnComplete.frame.origin.x-20,5)
-    //api.progressVW.setProgress(1, animated:true)
-    //cell.celltxtView.addSubview(api.progressVW)
-      if(btnpalyflag){
-      cell.btnDownload.hidden = false
-      }
-      if(vdoDownloadFlag){
-      cell.btnDownload.hidden = true
-      }
       
       if(isActive.isEqualToString("Paied")){
         var finished_status = dict.valueForKey("finished_status") as! NSNumber
@@ -138,32 +130,39 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
           cell.btnComplete.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
         }
       }
-    
-   
     //cell.downloadProgress.setProgress(0, animated:false)
     if (isActive.isEqualToString("Free")){
        cell.btnComplete.hidden = true
     }
-    
-  
-      var fileName: NSString = (dict.valueForKey("name") as! NSString as String) + ".mp4"
-      let documentsPath: NSArray = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-      let url: NSString = documentsPath.objectAtIndex(0) as! NSString
-      let path = (url as String)+"/"+(fileName as String)
-      println(path)
+     
+      var documentsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory,NSSearchPathDomainMask.UserDomainMask,true) as NSArray
+    //************video downloading  check*********
+      var str: NSString = dict.valueForKey("name") as! NSString
+      var strName: String = "/"+"temp" + (str as String)
+      var filen: String! = strName.stringByAppendingString(".mp4")
+      var strPathD = documentsPath.objectAtIndex(0) as! String
+      var fileD = strPathD.stringByAppendingString(filen) as String
+      let managerD = NSFileManager.defaultManager()
+      if (managerD.fileExistsAtPath(fileD)){
+        cell.btnplay.setImage(UIImage(named: "download.png"), forState: UIControlState.Normal)
+      }
+      
+     //************Original Video Path check*********
+      var fileName:String = "/"+(dict.valueForKey("name")  as! String) + ".mp4"
+      var strPath = documentsPath.objectAtIndex(0) as! String
+      var file = strPath.stringByAppendingString(fileName) as String
       cell.btnplay.hidden = false
-
       let manager = NSFileManager.defaultManager()
-      if (manager.fileExistsAtPath(path)){
+      if (manager.fileExistsAtPath(file)){
         cell.btnplay.hidden = true
-        self.calculateVideofileSize(path)
+        self.calculateVideofileSize(file)
       }
     }
     return cell
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    if(vdoDownloadFlag){
+    
     var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as! NSDictionary
     
     var fileName: NSString = (dict.valueForKey("name") as! NSString as String) + ".mp4"
@@ -177,11 +176,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       
       var fileName: NSString! = str.stringByAppendingString(".mp4")
       let aParams : NSDictionary = ["fileName":fileName]
-      let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams as [NSObject : AnyObject])
+      let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams as[NSObject : AnyObject])
       let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as! VideoPalyViewController
        vc.viedoUrl = viedoUrl
        self.navigationController?.pushViewController(vc, animated: true)
-   }
+  
   }
 }
   
@@ -207,14 +206,14 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   
   func btnPalyTapped(sender:AnyObject){
     
-      btnpalyflag = true
+     // btnpalyflag = true
       var btn = sender as! UIButton
-      btn.hidden = false
       btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
       var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as! NSDictionary
       var video_url: NSString! = dict.valueForKey("video_url") as! NSString
       var str: NSString = dict.valueForKey("name") as! NSString
-      var fileName: NSString! = str.stringByAppendingString(".mp4")
+      var strName: String = "temp" + (str as String)
+      var fileName: NSString! = strName.stringByAppendingString(".mp4")
       let aPara : NSDictionary = ["fileName":fileName]
       
       var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName], forKeys: ["url","fileName"])
@@ -222,8 +221,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       self.api.downloadMediaData(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
         println(responseObject)
         btn.hidden = true
-       self.vdoDownloadFlag = true
-       self.tableview.reloadData()
+       
         var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloaded successfully.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
         },
@@ -369,7 +367,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
         var videoUrl: NSString = ""
         dictClass.setValue(videoUrl, forKey: "video_url")
       }
-
+      
+      if((clsObject.cls_id) != nil){
+        var videoClsID: NSNumber = clsObject.cls_id
+        dictClass.setValue(videoClsID, forKey: "class_id")
+      }
       arrClassVideo.addObject(dictClass)
     }
     }else{
