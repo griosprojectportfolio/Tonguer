@@ -17,10 +17,21 @@ class VideoTableViewCell: BaseTableViewCell {
  @IBOutlet var btnComplete:UIButton!
  @IBOutlet var btnDownload:UIButton!
  @IBOutlet var downloadProgress: UIProgressView!
-  
+  var circle:UIView!
+  var blackView:UIView!
+  var progressCircle:CAShapeLayer!
   override func awakeFromNib() {
     super.awakeFromNib()
     // Initialization code
+  }
+  
+  override init(style: UITableViewCellStyle, reuseIdentifier: String!) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+  }
+
+  
+  required init(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
   }
   
   func defaultUIDesign(aParm:NSDictionary,frame:CGRect){
@@ -41,7 +52,7 @@ class VideoTableViewCell: BaseTableViewCell {
     let url = NSURL(string: aParam.objectForKey("image") as! String)
     cellImgView.layer.borderWidth = 0.3
     cellImgView.layer.borderColor = UIColor.grayColor().CGColor
-    cellImgView.sd_setImageWithURL(url)
+    cellImgView.sd_setImageWithURL(url, placeholderImage:UIImage(named: "vdoDefault.png"))
 
     
     celltxtView.layer.borderWidth = 0.3
@@ -65,9 +76,8 @@ class VideoTableViewCell: BaseTableViewCell {
     btnComplete.layer.borderColor = UIColor.whiteColor().CGColor
     btnComplete.layer.masksToBounds = true
     
-    
-//    downloadProgress.setProgress(10, animated:true)
-//    celltxtView.addSubview(downloadProgress)
+   //downloadProgress.setProgress(10, animated:true)
+  // celltxtView.addSubview(downloadProgress)
     
    // btnplay.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
@@ -94,7 +104,39 @@ class VideoTableViewCell: BaseTableViewCell {
     btnDownload.layer.borderColor = UIColor.clearColor().CGColor
     btnDownload.layer.masksToBounds = true
     btnDownload.hidden = true
+    //setVideoDownloadingProgessbar(btnplay.frame)
   }
+  
+  func setVideoDownloadingProgessbar(frame:CGRect,stokend:CGFloat){
+     circle = UIView();
+    
+   // circle.bounds = CGRectMake((cellImgView.frame.width-40)/2,(cellImgView.frame.height-40)/2,50,50)
+    circle.frame = CGRectMake((cellImgView.frame.width-50)/2,(cellImgView.frame.height-50)/2,50,50)
+    circle.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+    circle.layer.cornerRadius = 25
+    circle.hidden = true
+    circle.layoutIfNeeded()
+    
+     progressCircle = CAShapeLayer();
+    
+    let centerPoint = CGPoint (x: circle.bounds.width / 2, y: circle.bounds.width / 2);
+    let circleRadius : CGFloat = circle.bounds.width / 2 * 0.7;
+    
+    var circlePath = UIBezierPath(arcCenter: centerPoint, radius: circleRadius, startAngle: CGFloat(-0.5 * M_PI), endAngle: CGFloat(1.5 * M_PI), clockwise: true    );
+    
+    progressCircle = CAShapeLayer ();
+    progressCircle.path = circlePath.CGPath;
+    progressCircle.strokeColor = UIColor.whiteColor().CGColor
+    progressCircle.fillColor = UIColor.clearColor().CGColor;
+    progressCircle.lineWidth = 5.0;
+    progressCircle.strokeStart = 0;
+    progressCircle.strokeEnd = stokend;
+    
+    circle.layer.addSublayer(progressCircle);
+    
+    cellImgView.addSubview(circle)
+  }
+
   
   override func setSelected(selected: Bool, animated: Bool) {
     super.setSelected(selected, animated: animated)

@@ -40,7 +40,7 @@ class NotesTableViewCell:BaseTableViewCell {
       strImgUrl = aParam["image"] as! String
     }
     let url = NSURL(string:strImgUrl)
-    self.imageVW.sd_setImageWithURL(url)
+    self.imageVW.sd_setImageWithURL(url, placeholderImage: UIImage(named: "vdoDefault.png"))
     print(Frame.width)
     vwCell.frame = CGRectMake(imageVW.frame.origin.x+imageVW.frame.width,imageVW.frame.origin.y,(Frame.width)-(imageVW.frame.width+40),imageVW.frame.height)
     vwCell.layer.borderWidth = 0.5

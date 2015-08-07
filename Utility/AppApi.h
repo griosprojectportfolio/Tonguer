@@ -220,6 +220,7 @@
 
 -(void)saveDownloadedData:(NSDictionary *)aParams;
 -(void)userMoneyUpdate:(NSDictionary *)aParams;
+-(UIImage *)generateThumbImage:(NSString *)imgUrl;
 
 
 

@@ -57,8 +57,8 @@ class NotesViewController: BaseViewController,UITableViewDataSource,UITableViewD
     //self.view.addSubview(actiIndecatorVw)
     self.defaultUIDesign()
     setDataNofoundImg()
-    var arryUserNotes:NSArray = UserNotes.MR_findAll()
-    var arryNotes:NSArray = Notes.MR_findAll()
+    var arryUserNotes:NSArray = UserNotes.MR_findAllSortedBy("notes_id", ascending:true)
+    var arryNotes:NSArray = Notes.MR_findAllSortedBy("notes_id", ascending: true)
     
     self.dataFetchFromDatabaseGetNotes(arryNotes)
     self.dataFetchFromDatabaseGetUserlNotes(arryUserNotes)

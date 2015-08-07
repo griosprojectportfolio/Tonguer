@@ -191,8 +191,8 @@ class DiscussViewController: BaseViewController,UITableViewDataSource,UITableVie
     
     var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)
     
-    let arrFetchAdmin: NSArray = DisAdminTopic.MR_findAllWithPredicate(predicate)
-    let arrFetchUser: NSArray = DisUserToic.MR_findAllWithPredicate(predicate)
+    let arrFetchAdmin: NSArray = DisAdminTopic.MR_findAllSortedBy("topic_name", ascending:true, withPredicate: predicate)
+    let arrFetchUser: NSArray = DisUserToic.MR_findAllSortedBy("topic_name", ascending:true, withPredicate: predicate)
     var count: NSInteger = arrFetchAdmin.count + arrFetchUser.count
     print(count)
    

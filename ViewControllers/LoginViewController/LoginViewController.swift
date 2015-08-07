@@ -30,9 +30,18 @@ class LoginViewController:BaseViewController,UITextFieldDelegate {
     if (self.auth_token.count != 0) {
       var authToken:NSString = self.auth_token[0]
       if (authToken.length != 0) {
-        var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as! HomeViewController
-        self.navigationController?.pushViewController(vc, animated:false)
-        return;
+        if(appDelegate.temp == nil){
+          var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as! HomeViewController
+          self.navigationController?.pushViewController(vc, animated:false)
+          return;
+        }else{
+          var nvc = self.storyboard?.instantiateViewControllerWithIdentifier("AlertID") as! AlertViewController
+           nvc.arryNotification.addObject(appDelegate.temp)
+          self.navigationController?.pushViewController(nvc, animated:false)
+          return;
+        }
+        
+        
       }
     }
   }

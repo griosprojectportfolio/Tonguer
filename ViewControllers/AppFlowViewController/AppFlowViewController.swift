@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class AppFlowViewController: BaseViewController {
   
@@ -20,6 +21,9 @@ class AppFlowViewController: BaseViewController {
   var scrollVW: UIScrollView!
   var api: AppApi!
   var strMessage: NSString = ""
+  var circle:UIView!
+  var progressCircle:CAShapeLayer!
+
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -93,6 +97,7 @@ class AppFlowViewController: BaseViewController {
     btnplay.tintColor = UIColor.redColor()
     btnplay.layer.cornerRadius = 25
     btnplay.layer.borderWidth = 1
+    btnplay.hidden = false
     btnplay.layer.borderColor = UIColor.clearColor().CGColor
     btnplay.addTarget(self, action: "btnPlayTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     imgVwAlpha.addSubview(btnplay)
@@ -126,12 +131,16 @@ class AppFlowViewController: BaseViewController {
     let pathD = (urlD)+strNameD
     let managerD = NSFileManager.defaultManager()
     if (managerD.fileExistsAtPath(pathD)){
-      btnplay.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
+      btnplay.hidden = true
+      self.setVideoDownloadingProgessbar(self.view.frame, stokend:0)
+      let notificationCenter = NSNotificationCenter.defaultCenter()
+      NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
     }
     
   }
   
   func btnBackTapped(){
+    NSNotificationCenter.defaultCenter().removeObserver(self)
     self.navigationController?.popViewControllerAnimated(true)
   }
   
@@ -149,9 +158,13 @@ class AppFlowViewController: BaseViewController {
     
     let manager = NSFileManager.defaultManager()
     if (manager.fileExistsAtPath(path)){
-      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as! VideoPalyViewController
-      vc.viedoUrl = viedoUrl
-      self.navigationController?.pushViewController(vc, animated: true)
+      var player:MPMoviePlayerViewController!
+      player = MPMoviePlayerViewController(contentURL: viedoUrl)
+      self.presentMoviePlayerViewControllerAnimated(player)
+
+//      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as! VideoPalyViewController
+//      vc.viedoUrl = viedoUrl
+//      self.navigationController?.pushViewController(vc, animated: true)
     }else {
       
     }
@@ -162,25 +175,87 @@ class AppFlowViewController: BaseViewController {
   
   func btnPlayTapped(sender:AnyObject){
     print("Tapped")
-    btnplay.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
+    //btnplay.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
+    btnplay.hidden = true
     var str: NSString = "Video"
     
     var fileName: NSString! = str.stringByAppendingString(".mp4")
     var strName: String = "/"+"temp" + (fileName as String)
-    
-    
+    self.setVideoDownloadingProgessbar(self.view.frame, stokend:0)
+    let notificationCenter = NSNotificationCenter.defaultCenter()
+    NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
     var aParams: NSDictionary = NSDictionary(objects: [video_url,strName], forKeys: ["url","fileName"])
     
     self.api.downloadMediaData(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       self.btnplay.hidden = true
+      self.circle.removeFromSuperview()
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloading successfully.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        
+        self.btnplay.hidden = false
+        self.circle.removeFromSuperview()
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloading failed.", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
     })
 
   }
+  
+  
+  func updateCellProgrssbarStatus(notification: NSNotification){
+    
+    var dict:NSDictionary! = notification.userInfo
+    var obj = notification.object as! NSDictionary
+    print("%@*******",dict.valueForKey("progress"))
+    print(obj)
+    self.circle.hidden = false
+    var cgf  = dict.valueForKey("progress")?.floatValue
+    var cgflo:CGFloat = CGFloat(cgf!)
+    self.progressCircle.strokeEnd = cgflo
+    if(cgflo==1.0){
+      NSNotificationCenter.defaultCenter().removeObserver(self)
+      self.circle.removeFromSuperview()
+    }else{
+      self.circle.hidden = false
+    }
+
+    }
+  
+  
+  func setVideoDownloadingProgessbar(frame:CGRect,stokend:CGFloat){
+    circle = UIView();
+    
+    // circle.bounds = CGRectMake((cellImgView.frame.width-40)/2,(cellImgView.frame.height-40)/2,50,50)
+    circle.frame = CGRectMake((imgVwAlpha.frame.width-50)/2,(imgVwAlpha.frame.height-50)/2,50,50)
+    circle.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+    circle.layer.cornerRadius = 25
+    circle.hidden = true
+    circle.layoutIfNeeded()
+    
+    progressCircle = CAShapeLayer();
+    
+    let centerPoint = CGPoint (x: circle.bounds.width / 2, y: circle.bounds.width / 2);
+    let circleRadius : CGFloat = circle.bounds.width / 2 * 0.7;
+    
+    var circlePath = UIBezierPath(arcCenter: centerPoint, radius: circleRadius, startAngle: CGFloat(-0.5 * M_PI), endAngle: CGFloat(1.5 * M_PI), clockwise: true    );
+    
+    progressCircle = CAShapeLayer ();
+    progressCircle.path = circlePath.CGPath;
+    progressCircle.strokeColor = UIColor.whiteColor().CGColor
+    progressCircle.fillColor = UIColor.clearColor().CGColor;
+    progressCircle.lineWidth = 5.0;
+    progressCircle.strokeStart = 0;
+    progressCircle.strokeEnd = stokend;
+    
+    circle.layer.addSublayer(progressCircle);
+    
+    imgVwAlpha.addSubview(circle)
+  }
+
+
+  
   
   //************Api methode Call Post Comments*********
   

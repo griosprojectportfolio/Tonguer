@@ -12,11 +12,12 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
 
   var btnMyClass,btnPickUp: UIButton!
   var imgVw1,imgVwLogo: UIImageView!
+  var lblbuildVersion: UILabel!
   
   var sideNavigation: UINavigationController!
   
   
-  var arrname: NSArray = NSArray(objects: "My Class","Pick up Center","Charge","My Order","Setting","Chat")
+  var arrname: NSArray = NSArray(objects: "My Class","Course Center","Charge","My Order","Setting","Chat")
   
   var tableview: UITableView!
   
@@ -43,6 +44,13 @@ class SideBarView: UIView,UITableViewDataSource,UITableViewDelegate{
     imgVwLogo.image = UIImage(named: "Logo.png")
     self.addSubview(imgVwLogo)
     self.bringSubviewToFront(imgVwLogo)
+    
+    lblbuildVersion = UILabel(frame: CGRectMake(imgVwLogo.frame.origin.x,imgVwLogo.frame.origin.y+imgVwLogo.frame.height-10, 100, 30))
+    lblbuildVersion.text = "Build Version 2.2"
+    lblbuildVersion.textColor = UIColor.whiteColor()
+    lblbuildVersion.font = lblbuildVersion.font.fontWithSize(12)
+    self.addSubview(lblbuildVersion)
+    self.bringSubviewToFront(lblbuildVersion)
     
     tableview = UITableView(frame: CGRectMake(0,blackVw.frame.origin.y+100, blackVw.frame.width,300))
     tableview.delegate = self

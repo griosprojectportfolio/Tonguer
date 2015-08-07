@@ -38,7 +38,7 @@ class QesAndAnsViewController: BaseViewController,UITableViewDataSource,UITableV
     self.defaultUIDesign()
     self.setDataNofoundImg()
     var predicate:NSPredicate = NSPredicate (format: "class_id CONTAINS %i", classID)
-    var arry:NSArray = Questions.MR_findAllWithPredicate(predicate)
+    var arry:NSArray = Questions.MR_findAllSortedBy("ques_id", ascending:true, withPredicate:predicate)
     self.dataFetchFromDataBaseQuestion(arry)
     
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)

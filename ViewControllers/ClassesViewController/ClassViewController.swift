@@ -47,11 +47,11 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     var predicate:NSPredicate = NSPredicate (format: "cls_subcategory_Id CONTAINS %i", sub_cat_id);
     var arrFetchCat:NSArray;
     if (flgClass.isEqualToString("Free")){
-      arrFetchCat  = FreeCls.MR_findAllWithPredicate(predicate);
+      arrFetchCat  = FreeCls.MR_findAllSortedBy("cls_name", ascending:true, withPredicate:predicate)
       self.dataFetchFromDatabaseFreeCls(arrFetchCat)
 
     } else if (flgClass.isEqualToString("Pay")) {
-      arrFetchCat  = PayCls.MR_findAllWithPredicate(predicate);
+      arrFetchCat  = PayCls.MR_findAllSortedBy("cls_name", ascending:true, withPredicate:predicate);
       self.dataFetchFromDatabasePayCls(arrFetchCat)
 
     }

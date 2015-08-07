@@ -50,6 +50,7 @@ class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDe
   
   func btnBackTapped(){
     self.navigationController?.popViewControllerAnimated(true)
+
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

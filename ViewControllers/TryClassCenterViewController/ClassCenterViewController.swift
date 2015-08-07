@@ -234,7 +234,7 @@ class ClassCenterViewController: BaseViewController,UITableViewDataSource,UITabl
   
   func dataFetchFromDataBase(){
     dataArr.removeAllObjects()
-    let arrFetchCat : NSArray = FreeClsCat.MR_findAll()
+    let arrFetchCat : NSArray = FreeClsCat.MR_findAllSortedBy("cat_name", ascending:true)
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index {
       //println("index is \(index)")

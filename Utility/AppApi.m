@@ -36,6 +36,7 @@
 #import "DownloadedData.h"
 #import "VideoDone.h"
 #import "AdminContact.h"
+#import <AVFoundation/AVFoundation.h>
 
 /* API Constants */
 //static NSString * const kAppAPIBaseURLString = @"https://tonguer.herokuapp.com/api/v1";
@@ -136,23 +137,61 @@ BOOL vdoDownlodFalg = false;
 
 #pragma mark Update User
 
+//- (AFHTTPRequestOperation *)updateUser:(NSDictionary *)aParams
+//                               success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+//                               failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+//    
+//    [self.requestSerializer setValue:[aParams objectForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
+//    NSMutableDictionary *dictParams = [[NSMutableDictionary alloc] initWithDictionary:aParams];
+//   [dictParams removeObjectForKey:@"auth-token"];
+//  
+////         [self.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+////         [self.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Accept"];
+//  
+//    return [self baseRequestWithHTTPMethod:@"PATCH" URLString:@"update" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
+//      
+//      dispatch_async(dispatch_get_main_queue(), ^{
+//        successBlock(task, responseObject);
+//      });
+//    } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+//      if(failureBlock){
+//        failureBlock(task, error);
+//      }
+//    }];
+//}
+
+//******
 - (AFHTTPRequestOperation *)updateUser:(NSDictionary *)aParams
                                success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
-    
-    [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   
-    return [self baseRequestWithHTTPMethod:@"PATCH" URLString:@"/update" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
-      
-      dispatch_async(dispatch_get_main_queue(), ^{
-        successBlock(task, responseObject);
-      });
-    } failure:^(AFHTTPRequestOperation *task, NSError *error) {
-      if(failureBlock){
-        failureBlock(task, error);
-      }
-    }];
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
+  NSMutableDictionary *dictParams = [[NSMutableDictionary alloc] initWithDictionary:aParams];
+  [dictParams removeObjectForKey:@"auth-token"];
+  NSDictionary *disct = [[NSDictionary alloc]initWithDictionary:dictParams];
+  
+  NSString *url = [NSString stringWithFormat:@"%@/update",kAppAPIBaseURLString];
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  
+  return [self PATCH:url parameters:disct success:^(AFHTTPRequestOperation *task, id responseObject) {
+    NSLog(@"%@",responseObject);
+    dispatch_async(dispatch_get_main_queue(), ^{
+      successBlock(task, responseObject);
+    });
+    
+      } failure:^(AFHTTPRequestOperation *task, NSError *error) {
+    if(failureBlock){
+      ;
+      failureBlock(task, error);
+      NSLog(@"%@",task.responseString);
+      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
+  }];
 }
+
+
+
+
 
 #pragma mark- Forgot password
 
@@ -240,19 +279,22 @@ BOOL vdoDownlodFalg = false;
       NSLog(@"%@",error);
       failureBlock(task,error);
     };
-    
+    AFHTTPRequestOperation *requestOperation;
     NSString *url = [NSString stringWithFormat:@"%@/%@",kAppAPIBaseURLString,URLString];
     if([method isEqualToString:@"GET"]){
-      return [self GET:url parameters:parameters success:baseSuccessBlock failure:baseFailureBlock];
+      requestOperation =[self GET:url parameters:parameters success:baseSuccessBlock failure:baseFailureBlock];
     }else if ([method isEqualToString:@"POST"]){
-      return [self POST:url parameters:parameters success:baseSuccessBlock failure:baseFailureBlock];
+      requestOperation = [self POST:url parameters:parameters success:baseSuccessBlock failure:baseFailureBlock];
     }else if ([method isEqualToString:@"PATCH"]){
-      return [self PATCH:url parameters:parameters success:baseSuccessBlock failure:baseFailureBlock];
+      requestOperation = [self PATCH:url parameters:parameters success:baseSuccessBlock failure:baseFailureBlock];
     }else if ([method isEqualToString:@"DELETE"]){
-      return [self DELETE:url parameters:parameters success:baseSuccessBlock failure:baseFailureBlock];
+      requestOperation = [self DELETE:url parameters:parameters success:baseSuccessBlock failure:baseFailureBlock];
     }else{
-      return nil;
+      requestOperation = nil;
     }
+    //requestOperation
+    
+    return requestOperation;
   }
 }
 
@@ -361,7 +403,7 @@ BOOL vdoDownlodFalg = false;
       [FreeCls entityFromArray:arrClsList withSubcategoryId:subCategoryId inContext:localContext];
     } completion:^(BOOL success, NSError *error) {
       NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cls_subcategory_Id CONTAINS %i", subCategoryId.integerValue];
-      NSArray *arrFetchCat  = [FreeCls MR_findAllWithPredicate:predicate];
+      NSArray *arrFetchCat  = [FreeCls MR_findAllSortedBy:@"cls_name" ascending:true withPredicate:predicate];
       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
       successBlock(task, arrFetchCat);
     }];
@@ -464,7 +506,7 @@ BOOL vdoDownlodFalg = false;
       [PayCls entityFromArray:arrClsList withSubcategoryId:subCategoryId inContext:localContext];
     } completion:^(BOOL success, NSError *error) {
       NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cls_subcategory_Id CONTAINS %i", subCategoryId.integerValue];
-      NSArray *arrFetchCat  = [PayCls MR_findAllWithPredicate:predicate];
+      NSArray *arrFetchCat  = [PayCls MR_findAllSortedBy:@"cls_name" ascending:true withPredicate:predicate];
       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
       successBlock(task, arrFetchCat);
     }];
@@ -526,7 +568,8 @@ BOOL vdoDownlodFalg = false;
       [UserClsVideo entityFromArray:arrVideoList inContext:localContext];
     }completion:^(BOOL success, NSError *error) {
       NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cls_id CONTAINS %i",[[aParams objectForKey:@"class_id"]integerValue]];
-      NSArray *arryAdmin = [UserClsVideo MR_findAllWithPredicate:predicate];
+      //NSArray *arryAdmin = [UserClsVideo MR_findAllWithPredicate:predicate];
+      NSArray *arryAdmin = [UserClsVideo MR_findAllSortedBy:@"vdo_id" ascending:true withPredicate:predicate];
       successBlock(task, arryAdmin);
     }];
     
@@ -716,7 +759,7 @@ BOOL vdoDownlodFalg = false;
       [Questions entityFromArray:arrQues inContext:localContext];
     }completion:^(BOOL success, NSError *error) {
        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"class_id CONTAINS %i",[[aParams valueForKey:@"class_id"]integerValue]];
-      NSArray *arry = [Questions MR_findAllWithPredicate:predicate];
+      NSArray *arry = [Questions MR_findAllSortedBy:@"ques_id" ascending:true withPredicate:predicate];
       successBlock(task, arry);
     }];
   } failure:failureBlock];
@@ -838,8 +881,8 @@ BOOL vdoDownlodFalg = false;
       [Notes entityFromArray:arrOtherUserNotes inContext:localContext];
     } completion:^(BOOL success, NSError *error) {
 
-      NSArray *arrNotes = [Notes MR_findAll];
-      NSArray *arrUserNotes = [UserNotes MR_findAll];
+      NSArray *arrNotes = [Notes MR_findAllSortedBy:@"notes_id" ascending:true];
+      NSArray *arrUserNotes = [UserNotes MR_findAllSortedBy:@"notes_id" ascending:true];
 
       NSDictionary *dictResponse = @{@"Notes":arrNotes,
                              @"UserNotes":arrUserNotes};
@@ -895,45 +938,6 @@ BOOL vdoDownlodFalg = false;
 
 #pragma mark Method to Downloading Media Data from server
 
-//- (void)downloadMediaData:(NSDictionary *)aParams
-//                 success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
-//                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
-//  
-//  NSString *url = [NSString stringWithFormat:@"%@",[aParams objectForKey:@"url"]];
-//  NSURL *movieUrl = [[NSURL alloc]initWithString:url];
-//  
-//  NSURLRequest *theRequest = [NSURLRequest requestWithURL:movieUrl cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60];
-//  _receivedData = [[NSMutableData alloc] initWithLength:0];
-//  NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self startImmediately:YES];
-//  
-//}
-//
-//- (void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-//  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-//  [_receivedData setLength:0];
-//  NSLog(@"%@",_receivedData);
-//}
-//
-//- (void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-//  [_receivedData appendData:data];
-//}
-//
-//- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-//  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-//  }
-//
-//- (NSCachedURLResponse *) connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
-//  return nil;
-//}
-//
-//- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
-//  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-//  //[self movieReceived];
-//}
-
-
-
-
 - (void)downloadMediaData:(NSDictionary *)aParams
                   success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                   failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
@@ -943,7 +947,7 @@ BOOL vdoDownlodFalg = false;
 //  NSString *strFileNameWithExt = [[NSString alloc] initWithFormat:@"%@",[aParams objectForKey:@"fileName"]];
 //  NSArray *docDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //  NSString *mediaPath = [[docDirPath objectAtIndex:0] stringByAppendingPathComponent:strFileNameWithExt];
-  //progressVW = [[UIProgressView alloc] init];
+
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
    _operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -996,12 +1000,14 @@ BOOL vdoDownlodFalg = false;
     [self.operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
       double progress = (double)totalBytesRead / totalBytesExpectedToRead;
       [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-      NSLog(@"Progress: %.2f", progress);
+     // NSLog(@"Progress: %.2f", progress);
       vdoProgress = progress;
-      
+       [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_PROGRESS" object:aParams userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%f",progress] forKey:@"progress"]];
     }];
   
  }
+
+
 
 
 #pragma mark - Search Class Api call
@@ -1265,8 +1271,8 @@ BOOL vdoDownlodFalg = false;
         } completion:^(BOOL success, NSError *error) {
           NSPredicate *predicate = [NSPredicate predicateWithFormat:@"is_buy CONTAINS %i",0];
           NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"is_buy CONTAINS %i",1];
-          NSArray *arryTrue = [UserClassOrder MR_findAllWithPredicate:predicate1];
-          NSArray *arryFail = [UserClassOrder MR_findAllWithPredicate:predicate];
+          NSArray *arryTrue = [UserClassOrder MR_findAllSortedBy:@"cls_name" ascending:true withPredicate:predicate1];
+          NSArray *arryFail = [UserClassOrder MR_findAllSortedBy:@"cls_name" ascending:true withPredicate:predicate];
           NSDictionary *dict = [[NSDictionary alloc]initWithObjects:@[arryTrue,arryFail] forKeys:@[@"True",@"False"]];
           successBlock(task, dict);
     
@@ -1334,5 +1340,24 @@ BOOL vdoDownlodFalg = false;
   }];
   }
 }
+
+-(UIImage *)generateThumbImage:(NSString *)imgUrl
+{
+  NSURL *Url = [[NSURL alloc]initWithString:imgUrl];
+  AVAsset *asset = [AVAsset assetWithURL:Url];
+  AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+  CMTime time = CMTimeMake(0,300);
+  CGSize maxSize = CGSizeMake(320, 180);
+  imageGenerator.maximumSize = maxSize;
+  CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
+  UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+  CGImageRelease(imageRef);
+  
+  
+  return thumbnail;
+}
+
+
+
 
 @end

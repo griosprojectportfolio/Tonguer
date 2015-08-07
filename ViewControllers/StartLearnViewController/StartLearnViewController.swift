@@ -177,7 +177,7 @@ class StartLearnViewController: BaseViewController,UITableViewDataSource,UITable
     
     btnFreeOpen = UIButton(frame: CGRectMake(self.view.frame.origin.x+20, self.view.frame.height-50,self.view.frame.width-40, 40))
     
-    btnFreeOpen.setTitle("Free Open try Class", forState: UIControlState.Normal)
+    btnFreeOpen.setTitle("Try lesson", forState: UIControlState.Normal)
     btnFreeOpen.backgroundColor = UIColor(red: 71.0/255.0, green: 168.0/255.0, blue: 184.0/255.0,alpha:1.0)
     btnFreeOpen.tintColor = UIColor.whiteColor()
     btnFreeOpen.addTarget(self, action:"btnFreeOpenTapped", forControlEvents: UIControlEvents.TouchUpInside)

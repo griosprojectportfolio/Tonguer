@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreData
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var objSideBar:SideBarView!
   var deviceTokenString:NSString!
   var arryNotification:NSMutableArray = NSMutableArray()
-    var dictUserInfo:NSDictionary!
+  var dictUserInfo:NSDictionary!
+  var temp : NSDictionary!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
@@ -32,6 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
       MagicalRecord.setupCoreDataStack()
       
+      // Set up Fabric
+      Fabric.with([Crashlytics()])
 
       // For Push Notification
       var types: UIUserNotificationType = UIUserNotificationType.Badge | UIUserNotificationType.Alert | UIUserNotificationType.Sound
@@ -149,7 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     println("Recived: \(userInfo)")
     //Parsing userinfo:
-    var temp : NSDictionary = userInfo
+    temp  = userInfo
     if let info = userInfo["aps"] as? NSDictionary
     {
       var mainstoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle:nil)

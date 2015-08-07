@@ -105,7 +105,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
     self.navigationItem.setRightBarButtonItem(barforwordBtn, animated: true)
     
     btnHost = UIButton(frame: CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y+64,(self.view.frame.width/2)-2, 40))
-    btnHost.setTitle("Host", forState: UIControlState.Normal)
+    btnHost.setTitle("Hot", forState: UIControlState.Normal)
     btnHost.setTitleColor(UIColor.grayColor(),forState: UIControlState.Normal)
     btnHost.tag = 1
     //btnHost.backgroundColor = UIColor.redColor()
@@ -415,7 +415,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   func allDataFetchFromDataBase(){
     dataArr.removeAllObjects()
-    let arrFetchCat : NSArray = PayClsCat.MR_findAll()
+    let arrFetchCat : NSArray = PayClsCat.MR_findAllSortedBy("cat_name", ascending: true)
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index {
       //println("index is \(index)")
@@ -427,7 +427,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
       dictData.setObject(strName, forKey: "name")
       
       let sub_CatFilter : NSPredicate = NSPredicate(format:"cat_id CONTAINS %@",str_cat_id)
-      let subcatData : NSArray = PaySubCat.MR_findAllWithPredicate(sub_CatFilter)
+      let subcatData : NSArray = PaySubCat.MR_findAllSortedBy("sub_cat_name", ascending:true, withPredicate:sub_CatFilter)
       if (subcatData.count > 0){
         var subCatArr: NSMutableArray! = NSMutableArray()
       for var index = 0; index < subcatData.count; ++index {
@@ -455,7 +455,7 @@ class PickupCoursecenterViewController: BaseViewController,UITableViewDataSource
   
   func hostDataFetchFromDataBase(){
     arrHost.removeAllObjects()
-    let arrFetchCat : NSArray = HostPayCls.MR_findAll()
+    let arrFetchCat : NSArray = HostPayCls.MR_findAllSortedBy("cls_name", ascending:true)
     print(arrFetchCat.count)
     for var index = 0; index < arrFetchCat.count; ++index{
       let clsObject: HostPayCls = arrFetchCat.objectAtIndex(index) as! HostPayCls

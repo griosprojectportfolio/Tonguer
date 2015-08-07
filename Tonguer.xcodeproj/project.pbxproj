@@ -51,6 +51,8 @@
 		0A9FC4B71AE527BC008BF6FC /* QesAndAnsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9FC4B61AE527BC008BF6FC /* QesAndAnsViewController.swift */; };
 		0AA0C7D71AEA78C4004A0215 /* FreeClsCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA0C7D61AEA78C4004A0215 /* FreeClsCat.m */; };
 		0AA27B851B3BFF44001D83DB /* VideoPalyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA27B841B3BFF44001D83DB /* VideoPalyViewController.swift */; };
+		0AA4FD8C1B6F941A00F5CED2 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA4FD8A1B6F941A00F5CED2 /* Fabric.framework */; };
+		0AA4FD8D1B6F941A00F5CED2 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA4FD8B1B6F941A00F5CED2 /* Crashlytics.framework */; };
 		0AAA25F31B1F1E8900EB82FC /* DownloadedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAA25F21B1F1E8900EB82FC /* DownloadedData.m */; };
 		0AAB801F1B3536AD0087B721 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB801E1B3536AD0087B721 /* Reachability.m */; };
 		0AAFC7D01B12F8D200426D22 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAFC7AD1B12F8D200426D22 /* MKAnnotationView+WebCache.m */; };
@@ -210,6 +212,8 @@
 		0AA0C7D51AEA78C4004A0215 /* FreeClsCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeClsCat.h; sourceTree = SOURCE_ROOT; };
 		0AA0C7D61AEA78C4004A0215 /* FreeClsCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeClsCat.m; sourceTree = SOURCE_ROOT; };
 		0AA27B841B3BFF44001D83DB /* VideoPalyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPalyViewController.swift; sourceTree = "<group>"; };
+		0AA4FD8A1B6F941A00F5CED2 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		0AA4FD8B1B6F941A00F5CED2 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		0AAA25F11B1F1E8900EB82FC /* DownloadedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadedData.h; sourceTree = SOURCE_ROOT; };
 		0AAA25F21B1F1E8900EB82FC /* DownloadedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadedData.m; sourceTree = SOURCE_ROOT; };
 		0AAB801D1B3536AD0087B721 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -333,8 +337,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0ACB02961B0DD720009CAD57 /* MediaPlayer.framework in Frameworks */,
+				0AA4FD8C1B6F941A00F5CED2 /* Fabric.framework in Frameworks */,
 				0ACB02941B0DD707009CAD57 /* AVFoundation.framework in Frameworks */,
 				0A89DAA71B1476A000CB0AE9 /* libPayPalMobile.a in Frameworks */,
+				0AA4FD8D1B6F941A00F5CED2 /* Crashlytics.framework in Frameworks */,
 				AA95E13E70BA724B812D8B0A /* libPods-Tonguer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -692,6 +698,8 @@
 		174531B11ACD145400E6DF2E = {
 			isa = PBXGroup;
 			children = (
+				0AA4FD8A1B6F941A00F5CED2 /* Fabric.framework */,
+				0AA4FD8B1B6F941A00F5CED2 /* Crashlytics.framework */,
 				0A78B1391AE684FC002AC651 /* TonguerPrefixHeader.pch */,
 				0A5F29C51AD7C96400BDA404 /* Tonguer-Bridging-Header.h */,
 				174531EE1ACD15AE00E6DF2E /* BaseClasses */,
@@ -1012,7 +1020,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tonguer/Pods-Tonguer-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tonguer/Pods-Tonguer-resources.sh\"\n./Fabric.framework/run b2123e71e2046415f2b2afec340abcdd9c99f9e5 cddac9de3cee3efb0dcb8acc1ffda81219ae9ea23f3a970b4ad07d1a65a0670c";
 			showEnvVarsInLog = 0;
 		};
 		D0C2FC5559F1711CCDF6565E /* Check Pods Manifest.lock */ = {
@@ -1287,6 +1295,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Tonguer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1308,6 +1320,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jingkai Lu (HYPB4EPT95)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Tonguer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

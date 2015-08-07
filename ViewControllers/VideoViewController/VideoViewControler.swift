@@ -17,7 +17,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var isActive: NSString!
   var barBackBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
-@IBOutlet  var tableview: UITableView!
+@IBOutlet  var tblView: UITableView!
   var arrClassVideo: NSMutableArray = NSMutableArray()
   var actiIndecatorVw: ActivityIndicatorView!
   var moviePlayerController:MPMoviePlayerController!
@@ -65,38 +65,48 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     
     self.defaultUIDesign()
   
+    if(isActive.isEqualToString("Paied")){
+      self.userClsVideoApiCalling()
+      startLearningApiCall()
+    }else if (isActive.isEqualToString("Free")){
+      self.freeClsVideoApiCalling()
+    }
   }
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
-    tableview.reloadData()
+    //tblView.reloadData()
   }
 
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
     self.view.bringSubviewToFront(self.actiIndecatorVw)
     //self.defaultUIDesign()
-    
+    /*
       if(isActive.isEqualToString("Paied")){
         self.userClsVideoApiCalling()
         startLearningApiCall()
       }else if (isActive.isEqualToString("Free")){
         self.freeClsVideoApiCalling()
       }
+*/
+    
   }
 
   func defaultUIDesign(){
     
-    tableview.frame =  CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width,self.view.frame.height)
-    tableview.delegate = self
-    tableview.dataSource = self
-    tableview.separatorStyle = UITableViewCellSeparatorStyle.None
+    tblView.frame =  CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.width,self.view.frame.height)
+    tblView.delegate = self
+    tblView.dataSource = self
+    tblView.separatorStyle = UITableViewCellSeparatorStyle.None
     
   }
 
   func btnBackTapped(){
+    NSNotificationCenter.defaultCenter().removeObserver(self)
     self.navigationController?.popViewControllerAnimated(true)
   }
+  
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -112,7 +122,15 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tableview.dequeueReusableCellWithIdentifier("cell") as! VideoTableViewCell
+    //var cell = tblView.dequeueReusableCellWithIdentifier("cell") as! VideoTableViewCell
+    
+    
+    var cell = tblView.dequeueReusableCellWithIdentifier("cell") as! VideoTableViewCell!
+    if cell == nil {
+      cell = VideoTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
+    }
+
+    
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(arrClassVideo.count>0){
     cell.defaultUIDesign(arrClassVideo.objectAtIndex(indexPath.row) as! NSDictionary,frame: self.view.frame)
@@ -121,7 +139,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.btnComplete.tag = dict.valueForKey("id") as! NSInteger
     cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-    api.progressVW.frame = CGRectMake(5,cell.lblText.frame.origin.y+40,cell.btnComplete.frame.origin.x-20,5)
+      
       
       if(isActive.isEqualToString("Paied")){
         var finished_status = dict.valueForKey("finished_status") as! NSNumber
@@ -130,7 +148,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
           cell.btnComplete.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
         }
       }
-    //cell.downloadProgress.setProgress(0, animated:false)
+    
     if (isActive.isEqualToString("Free")){
        cell.btnComplete.hidden = true
     }
@@ -142,9 +160,12 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       var filen: String! = strName.stringByAppendingString(".mp4")
       var strPathD = documentsPath.objectAtIndex(0) as! String
       var fileD = strPathD.stringByAppendingString(filen) as String
+      cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0)
       let managerD = NSFileManager.defaultManager()
       if (managerD.fileExistsAtPath(fileD)){
-        cell.btnplay.setImage(UIImage(named: "download.png"), forState: UIControlState.Normal)
+        cell.btnplay.setImage(UIImage(named: ""), forState: UIControlState.Normal)
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
       }
       
      //************Original Video Path check*********
@@ -177,11 +198,43 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       var fileName: NSString! = str.stringByAppendingString(".mp4")
       let aParams : NSDictionary = ["fileName":fileName]
       let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams as[NSObject : AnyObject])
-      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as! VideoPalyViewController
-       vc.viedoUrl = viedoUrl
-       self.navigationController?.pushViewController(vc, animated: true)
+      var player:MPMoviePlayerViewController!
+      player = MPMoviePlayerViewController(contentURL: viedoUrl)
+      self.presentMoviePlayerViewControllerAnimated(player)
+      
+//      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as! VideoPalyViewController
+//       vc.viedoUrl = viedoUrl
+//       self.navigationController?.pushViewController(vc, animated: true)
   
   }
+}
+  
+  
+  func updateCellProgrssbarStatus(notification: NSNotification){
+    
+    var dict:NSDictionary! = notification.userInfo
+    var obj = notification.object as! NSDictionary
+    print("%@*******",dict.valueForKey("progress"))
+    print(obj)
+    var cellIndex = obj.valueForKey("video_index") as! NSInteger
+    var  selectedIndexPath = NSIndexPath(forRow: cellIndex, inSection: 0) as NSIndexPath
+   
+      var row = selectedIndexPath.row
+   
+    if(self.tblView.cellForRowAtIndexPath(selectedIndexPath) != nil)
+    {
+        var cell = self.tblView.cellForRowAtIndexPath(selectedIndexPath) as! VideoTableViewCell
+      cell.circle.hidden = false
+      var cgf  = dict.valueForKey("progress")?.floatValue
+      var cgflo:CGFloat = CGFloat(cgf!)
+      //cell.progressCircle.strokeEnd = cgflo
+      cell.setVideoDownloadingProgessbar(self.view.frame, stokend: cgflo)
+      if(cgflo==1.0){
+        cell.circle.hidden = true
+      }else{
+        cell.circle.hidden = false
+      }
+    }
 }
   
   
@@ -203,30 +256,47 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     })
   }
   
+   
   
   func btnPalyTapped(sender:AnyObject){
     
-     // btnpalyflag = true
-      var btn = sender as! UIButton
-      btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
+    let notificationCenter = NSNotificationCenter.defaultCenter()
+    NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
+
+    var btn = sender as! UIButton
+    btn.hidden = true
+    btn.userInteractionEnabled = false
+    var  selectedIndexPath = NSIndexPath(forRow: btn.tag, inSection: 0) as NSIndexPath
+    var cell = self.tblView.cellForRowAtIndexPath(selectedIndexPath) as! VideoTableViewCell
+     cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0.00)
+      //btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
       var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as! NSDictionary
+      var video_index: NSInteger! = btn.tag
+      var video_id: NSInteger! = dict.valueForKey("id") as! NSInteger
       var video_url: NSString! = dict.valueForKey("video_url") as! NSString
       var str: NSString = dict.valueForKey("name") as! NSString
       var strName: String = "temp" + (str as String)
       var fileName: NSString! = strName.stringByAppendingString(".mp4")
       let aPara : NSDictionary = ["fileName":fileName]
       
-      var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName], forKeys: ["url","fileName"])
+      var aParams: NSDictionary = NSDictionary(objects: [video_url,fileName,video_id,video_index], forKeys: ["url","fileName","video_id","video_index"])
       
       self.api.downloadMediaData(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
         println(responseObject)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
         btn.hidden = true
-       
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloaded successfully.", delegate:self, cancelButtonTitle:"OK")
+       cell.circle.removeFromSuperview()
+        var alert: UIAlertView = UIAlertView(title:str as String, message: "Downloaded successfully.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
         },
         failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
           println(error)
+          NSNotificationCenter.defaultCenter().removeObserver(self)
+          btn.userInteractionEnabled = true
+          cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0.00)
+          btn.hidden = false
+          cell.circle.removeFromSuperview()
+          btn.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
           var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloading failed.", delegate:self, cancelButtonTitle:"OK")
           alert.show()
           
@@ -273,7 +343,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       self.actiIndecatorVw.removeFromSuperview()
       let arryVideo:NSArray = responseObject as! NSArray
       self.dataFetchFreeClsDB(arryVideo)
-      self.tableview.reloadData()
+      self.tblView.reloadData()
       if(arryVideo.count==0){
 //        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no video found.", delegate:self, cancelButtonTitle:"OK")
 //        alert.show()
@@ -299,7 +369,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       let arryVideo:NSArray = responseObject as! NSArray
       if(arryVideo.count>0){
         self.dataFetchUserClsDB(arryVideo)
-        self.tableview.reloadData()
+        self.tblView.reloadData()
       }else{
 //        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry no video found.", delegate:self, cancelButtonTitle:"OK")
 //        alert.show()

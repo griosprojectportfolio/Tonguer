@@ -45,7 +45,7 @@ class HomeTableViewCell: UITableViewCell {
     vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
     
     
-    lblTitle.frame = CGRectMake(5,3,vWcell.frame.width-10,30)
+    lblTitle.frame = CGRectMake(5,5,vWcell.frame.width-10,30)
     lblTitle.textColor = UIColor.blackColor()
     lblTitle.font = lblTitle.font.fontWithSize(15)
     lblTitle.numberOfLines = 0
@@ -72,7 +72,7 @@ class HomeTableViewCell: UITableViewCell {
     print(aParam)
     cellContentReset()
     let url = NSURL(string: aParam.objectForKey("image") as! String)
-    imgVw.sd_setImageWithURL(url)
+    imgVw.sd_setImageWithURL(url, placeholderImage: UIImage(named: "vdoDefault.png"))
     lblTitle.text = aParam.objectForKey("name") as? String
     lblTitle.sizeToFit()
     var day: NSNumber! = aParam.objectForKey("days") as! NSNumber

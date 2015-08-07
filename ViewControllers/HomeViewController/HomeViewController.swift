@@ -276,7 +276,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     imgVwAlpha.addSubview(lblAleday)
 
     lblAledaytext = UILabel(frame: CGRectMake(lblAleday.frame.origin.x, lblAleday.frame.origin.y+lblAleday.frame.size.height,lblAleday.frame.width,15))
-    lblAledaytext.text = "Already"
+    lblAledaytext.text = "Finished"
     lblAledaytext.textAlignment = NSTextAlignment.Center
     lblAledaytext.font = lblMoney.font.fontWithSize(12)
     lblAledaytext.textColor = UIColor.grayColor()
@@ -341,7 +341,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.view.addSubview(HorizVw3)
 
     btnFreeOpentryCls = UIButton(frame: CGRectMake(self.view.frame.origin.x+10,self.view.frame.height-50, self.view.frame.width-20, 40))
-    btnFreeOpentryCls.setTitle("Free Open Try class", forState: UIControlState.Normal)
+    btnFreeOpentryCls.setTitle("Try lesson", forState: UIControlState.Normal)
     btnFreeOpentryCls.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
     btnFreeOpentryCls.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
     btnFreeOpentryCls.addTarget(self, action: "btnFreeOpenTryClasstapped", forControlEvents: UIControlEvents.TouchUpInside)
@@ -540,7 +540,6 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   }
   //****** Update User Profile Pic ************
   func btnProfileTapped(){
-    print("212112")
     if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.SavedPhotosAlbum){
 
       imagePicker.delegate = self
@@ -565,19 +564,26 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AlertID") as! AlertViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
+  
+  
+  
+  
+  
+  
 
   //****** Update User Recodes ans Api call ************
 
   func UserUpadteApiCall(image:UIImage){
-    var imageData = UIImagePNGRepresentation(image)
+    
+    var imag:UIImage = self.compressForUpload(image, withHeightLimit:40, andWidthLimit:40) as UIImage
+    var imageData : NSData = UIImageJPEGRepresentation(image,4.0)
     let base64String = imageData.base64EncodedStringWithOptions(.allZeros)
-    //println(base64String)
+    println(base64String)
+    var auth_token = self.auth_token[0]
     
-    var aParam:NSMutableDictionary = NSMutableDictionary()
-    aParam.setValue(self.auth_token[0], forKey: "auth-token")
-    aParam.setValue(base64String, forKey: "user[image]")
+    var aParams: NSDictionary! = ["auth-token" :auth_token, "user[image]" : base64String]
     
-    self.api.updateUser(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.updateUser(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
       var aParam: NSDictionary = responseObject?.objectForKey("user") as! NSDictionary
       CommonUtilities.addUserInformation(aParam)
@@ -587,6 +593,33 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
         println(operation?.responseString)
     })
   }
+  
+  
+  func compressForUpload(original:UIImage, withHeightLimit heightLimit:CGFloat, andWidthLimit widthLimit:CGFloat)->UIImage{
+    
+    let originalSize = original.size
+    var newSize = originalSize
+    
+    if originalSize.width > widthLimit && originalSize.width > originalSize.height {
+      
+      newSize.width = widthLimit
+      newSize.height = originalSize.height*(widthLimit/originalSize.width)
+    }else if originalSize.height > heightLimit && originalSize.height > originalSize.width {
+      
+      newSize.height = heightLimit
+      newSize.width = originalSize.width*(heightLimit/originalSize.height)
+    }
+    
+    // Scale the original image to match the new size.
+    UIGraphicsBeginImageContext(newSize)
+    original.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+    let compressedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return compressedImage
+  }
+
+  
   
 //  func updateDeviceTokenCall(){
 //    
@@ -665,7 +698,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   //****** User Data fetch from database for user default class ************
 
   func fetchDataFromDBforDefaultCls(){
-    let arrFetchedData : NSArray = UserDefaultClsList.MR_findAll()
+    let arrFetchedData : NSArray = UserDefaultClsList.MR_findAllSortedBy("cls_name", ascending:true)
 
     arrclass.removeAllObjects()
 
@@ -727,7 +760,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   //****** User Data fetch from database for user Learn class ************
 
   func fetchDataFromDBforLearnCls(){
-    let arrFetchedData : NSArray = UserLearnClsList.MR_findAll()
+    let arrFetchedData : NSArray = UserLearnClsList.MR_findAllSortedBy("cls_name", ascending:true)
 
     arrClsLearn.removeAllObjects()
 
@@ -792,7 +825,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
   //****** User Data fetch from database for user Learned class ************
 
   func fetchDataFromDBforLearnedCls(){
-    let arrFetchedData : NSArray = UserLearnedClsList.MR_findAll()
+    let arrFetchedData : NSArray = UserLearnedClsList.MR_findAllSortedBy("cls_name", ascending: true)
     arrClsLearned.removeAllObjects()
 
     for var index = 0; index < arrFetchedData.count; ++index {

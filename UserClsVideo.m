@@ -48,9 +48,10 @@
     
     obj.vdo_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
     obj.cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"a_class_id"] integerValue]];
-
-    if (![[[aDictionary objectForKey:@"image"] valueForKey:@"url"] isKindOfClass:[NSNull class]])
-      obj.vdo_img = [[aDictionary valueForKey:@"image"] valueForKey:@"url"] ;
+    
+    NSDictionary *dict = [[aDictionary valueForKey:@"video"] valueForKey:@"thumb"];
+    if (![[dict objectForKey:@"url"] isKindOfClass:[NSNull class]])
+      obj.vdo_img = [dict valueForKey:@"url"] ;
     
     if (![[[aDictionary objectForKey:@"video"] objectForKey:@"url"] isKindOfClass:[NSNull class]])
       obj.vdo_url = [[aDictionary valueForKey:@"video"] objectForKey:@"url"] ;

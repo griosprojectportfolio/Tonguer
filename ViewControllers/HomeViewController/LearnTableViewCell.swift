@@ -34,12 +34,12 @@ class LearnTableViewCell: UITableViewCell {
     vWcell.layer.borderColor = UIColor.lightGrayColor().CGColor
     
     
-    lblTitle.frame = CGRectMake(5,3,vWcell.frame.width-10,30)
+    lblTitle.frame = CGRectMake(5,5,vWcell.frame.width-10,30)
     lblTitle.textColor = UIColor.blackColor()
     lblTitle.font = lblTitle.font.fontWithSize(15)
     lblTitle.numberOfLines = 0
     lblTitle.lineBreakMode = NSLineBreakMode.ByWordWrapping
-    lblTitle.sizeToFit()
+    
     
     
     lblVaild.frame = CGRectMake(lblTitle.frame.origin.x,vWcell.frame.height-30,100, 30)
@@ -61,9 +61,9 @@ class LearnTableViewCell: UITableViewCell {
     print(aParam)
     cellContentReset()
     let url = NSURL(string: aParam.objectForKey("image") as! String)
-    imgVw.sd_setImageWithURL(url)
-    lblTitle.frame = CGRectMake(5,3,vWcell.frame.width-10,30)
+    imgVw.sd_setImageWithURL(url, placeholderImage: UIImage(named: "vdoDefault.png"))
     lblTitle.text = aParam.objectForKey("name") as? String
+    lblTitle.sizeToFit()
     var day: NSNumber! = aParam.objectForKey("days") as! NSNumber
     lblDate.text = day.stringValue
   }
