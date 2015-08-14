@@ -41,11 +41,11 @@
   
   if (![[aDictionary objectForKey:@"id"] isKindOfClass:[NSNull class]]){
     
-    VideoDone *obj = (VideoDone*)[self findOrCreateByID:[aDictionary objectForKey:@"id"] inContext:localContext];
+    VideoDone *obj = (VideoDone*)[self findOrCreateByID:[aDictionary objectForKey:@"video_id"] inContext:localContext];
     
-    obj.video_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"id"] integerValue]];
+    obj.video_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"video_id"] integerValue]];
     obj.video_cls_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"cls_id"] integerValue]];
-    obj.user_id = userid;
+    obj.user_id = [NSNumber numberWithInteger:[[aDictionary objectForKey:@"userId"] integerValue]];;
       NSNumber *done = [[NSNumber alloc]initWithDouble:1];
       obj.video_is = done;//[NSNumber numberWithInteger:[[aDictionary objectForKey:@"video_is"]boolValue]];
     

@@ -23,6 +23,9 @@ class AppFlowViewController: BaseViewController {
   var strMessage: NSString = ""
   var circle:UIView!
   var progressCircle:CAShapeLayer!
+  var dwonCompleteImgView:UIImageView!
+  var lbldwonComplete:UILabel!
+
 
   
   override func viewDidLoad() {
@@ -91,6 +94,22 @@ class AppFlowViewController: BaseViewController {
     imgVwAlpha.addGestureRecognizer(tapGuesture)
     VwimgBG.addSubview(imgVwAlpha)
     
+    lbldwonComplete = UILabel(frame: CGRectMake(imgVwAlpha.frame.width-100,0,100,30))
+    lbldwonComplete.text = "Downloaded"
+    lbldwonComplete.font = lbldwonComplete.font.fontWithSize(13)
+    lbldwonComplete.textAlignment = NSTextAlignment.Center
+    lbldwonComplete.textColor = UIColor.whiteColor()
+    lbldwonComplete.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:1.0)
+    lbldwonComplete.hidden = true
+    imgVwAlpha.addSubview(lbldwonComplete)
+    
+    dwonCompleteImgView = UIImageView(frame:CGRectMake((imgVwAlpha.frame.width-50)/2,(imgVwAlpha.frame.height-50)/2,50,50))
+    dwonCompleteImgView.image = UIImage(named: "downComplete")
+    dwonCompleteImgView.backgroundColor = UIColor.whiteColor()
+    dwonCompleteImgView.layer.cornerRadius = 25
+    dwonCompleteImgView.hidden = true
+    imgVwAlpha.addSubview(dwonCompleteImgView)
+    
     btnplay = UIButton(frame: CGRectMake((imgVwAlpha.frame.width-50)/2,(imgVwAlpha.frame.height-50)/2,50,50))
     btnplay.backgroundColor = UIColor.clearColor()
     btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
@@ -123,6 +142,8 @@ class AppFlowViewController: BaseViewController {
     let manager = NSFileManager.defaultManager()
     if (manager.fileExistsAtPath(path)){
       btnplay.hidden = true
+      dwonCompleteImgView.hidden = false
+      lbldwonComplete.hidden = false
     }
     
     var filenameD: NSString! = str.stringByAppendingString(".mp4")
@@ -132,6 +153,7 @@ class AppFlowViewController: BaseViewController {
     let managerD = NSFileManager.defaultManager()
     if (managerD.fileExistsAtPath(pathD)){
       btnplay.hidden = true
+      dwonCompleteImgView.hidden = true
       self.setVideoDownloadingProgessbar(self.view.frame, stokend:0)
       let notificationCenter = NSNotificationCenter.defaultCenter()
       NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
@@ -196,6 +218,8 @@ class AppFlowViewController: BaseViewController {
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
         self.btnplay.hidden = false
+        self.dwonCompleteImgView.hidden = true
+        self.lbldwonComplete.hidden = true
         self.circle.removeFromSuperview()
         var alert: UIAlertView = UIAlertView(title: "Alert", message: "Downloading failed.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
@@ -215,6 +239,8 @@ class AppFlowViewController: BaseViewController {
     var cgflo:CGFloat = CGFloat(cgf!)
     self.progressCircle.strokeEnd = cgflo
     if(cgflo==1.0){
+      dwonCompleteImgView.hidden = false
+      lbldwonComplete.hidden = false
       NSNotificationCenter.defaultCenter().removeObserver(self)
       self.circle.removeFromSuperview()
     }else{
@@ -229,7 +255,7 @@ class AppFlowViewController: BaseViewController {
     
     // circle.bounds = CGRectMake((cellImgView.frame.width-40)/2,(cellImgView.frame.height-40)/2,50,50)
     circle.frame = CGRectMake((imgVwAlpha.frame.width-50)/2,(imgVwAlpha.frame.height-50)/2,50,50)
-    circle.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+    circle.backgroundColor = UIColor.whiteColor()
     circle.layer.cornerRadius = 25
     circle.hidden = true
     circle.layoutIfNeeded()
@@ -239,13 +265,13 @@ class AppFlowViewController: BaseViewController {
     let centerPoint = CGPoint (x: circle.bounds.width / 2, y: circle.bounds.width / 2);
     let circleRadius : CGFloat = circle.bounds.width / 2 * 0.7;
     
-    var circlePath = UIBezierPath(arcCenter: centerPoint, radius: circleRadius, startAngle: CGFloat(-0.5 * M_PI), endAngle: CGFloat(1.5 * M_PI), clockwise: true    );
+    var circlePath = UIBezierPath(arcCenter: centerPoint, radius: circleRadius, startAngle: CGFloat(-0.5 * M_PI), endAngle: CGFloat(1.5 * M_PI), clockwise: true);
     
     progressCircle = CAShapeLayer ();
     progressCircle.path = circlePath.CGPath;
-    progressCircle.strokeColor = UIColor.whiteColor().CGColor
+    progressCircle.strokeColor = UIColor.greenColor().CGColor
     progressCircle.fillColor = UIColor.clearColor().CGColor;
-    progressCircle.lineWidth = 5.0;
+    progressCircle.lineWidth = 3.0;
     progressCircle.strokeStart = 0;
     progressCircle.strokeEnd = stokend;
     

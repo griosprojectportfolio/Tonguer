@@ -990,9 +990,9 @@ BOOL vdoDownlodFalg = false;
     
     successBlock(operation, responseObject);
   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    
+    failureBlock(operation,error);
      NSLog(@"Error: %@", error);
-    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
  
   }];
   [self.downloadQueue addOperation:self.operation];
@@ -1105,6 +1105,54 @@ BOOL vdoDownlodFalg = false;
 }
 
 
+#pragma mark - Video Delete api
+
+- (AFHTTPRequestOperation *)videoDelete:(NSDictionary *)aParams 
+                                       success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                       failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock{
+  
+  [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
+  NSString * classActive = [aParams valueForKey:@"active"];
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:aParams];
+  [dict removeObjectForKey:@"active"];
+  [dict removeObjectForKey:@"auth-token"];
+  NSDictionary *aDict = [[NSDictionary alloc]initWithDictionary:dict];
+  
+  return [self baseRequestWithHTTPMethod:@"DELETE" URLString:@"delete_users_videos" parameters:aDict success:^(AFHTTPRequestOperation *task, id responseObject) {
+    // Magical recodes delete functionality
+    NSLog(@"%@",responseObject);
+    NSString *strObj = [aParams valueForKey:@"video_ids"];
+    NSArray *arrVieodObj = [strObj componentsSeparatedByString:@","];
+    
+    for (int i=0;i<arrVieodObj.count; i++) {
+      if([classActive  isEqual: @"Paied"]){
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"vdo_id CONTAINS %i",[[arrVieodObj objectAtIndex:i]integerValue]];
+        NSArray *arryModEle = [UserClsVideo MR_findAllWithPredicate:predicate];
+        
+        UserClsVideo *deleteEntity = [arryModEle objectAtIndex:0];
+        [deleteEntity MR_deleteEntity];
+        [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+        
+      }else{
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"video_id CONTAINS %i",[[arrVieodObj objectAtIndex:i]integerValue]];
+        NSArray *arryModEle = [FreeClssVideo MR_findAllWithPredicate:predicate];
+        
+        FreeClssVideo *deleteEntity = [arryModEle objectAtIndex:0];
+        [deleteEntity MR_deleteEntity];
+        [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+
+      }
+    }
+   
+    successBlock(task, responseObject);
+    
+  } failure:failureBlock];
+}
+
+
+
+
+
 #pragma mark - Add Note Api call
 - (AFHTTPRequestOperation *)addNotes:(NSDictionary *)aParams
                                        success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
@@ -1134,7 +1182,7 @@ BOOL vdoDownlodFalg = false;
   [self.requestSerializer setValue:[aParams valueForKey:@"auth-token"] forHTTPHeaderField:@"auth-token"];
   return [self baseRequestWithHTTPMethod:@"GET" URLString:@"/about_us" parameters:aParams success:^(AFHTTPRequestOperation *task, id responseObject) {
     NSDictionary *dictAbout = [[responseObject valueForKey:@"data"]valueForKey:@"about_us"];
-    if(dictAbout != [NSNull null]){
+    if(dictAbout != nil){
       [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         NSNumber *ab_id = [[NSNumber alloc]initWithDouble:1];
         [Aboutus entityWithDictionaty:dictAbout inContext:localContext about_id:ab_id];
@@ -1219,6 +1267,14 @@ BOOL vdoDownlodFalg = false;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
     successBlock(task, responseObject);
+    
+//    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+//      [VideoDone entityFromDictionary:aParams inContext:localContext];
+//      
+//    } completion:^(BOOL success, NSError *error) {
+//      
+//    }];
+    
   } failure:failureBlock];
 }
 

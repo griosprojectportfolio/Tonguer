@@ -50,7 +50,7 @@ class PickupTableViewCell: BaseTableViewCell {
       imgVw.sd_setImageWithURL(url)
     }else{
       let url = NSURL(string: strImgUrl)
-      imgVw.sd_setImageWithURL(url, placeholderImage: UIImage(named: "vdoDefault.png"))
+      imgVw.sd_setImageWithURL(url, placeholderImage: UIImage(named: "defaultImg.png"))
     }
     //imgVw.backgroundColor = UIColor.redColor()
     imgVw.layer.borderWidth = 0.3

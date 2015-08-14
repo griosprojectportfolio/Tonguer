@@ -63,6 +63,11 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     super.viewWillAppear(animated)
     classOutlineApiCall()
     adminContactApi()
+    if(btnTag == 1){
+      
+    }else if(btnTag == 2){
+      
+    }
   }
   
   func defaultUIDesign(){
@@ -256,6 +261,14 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       var str = obj.mod_element_content
       var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
       height = 50+rect.height
+    }else if(btnTag == 3){
+      let dict = arrOutline.objectAtIndex(indexPath.section) as! NSDictionary
+      let arry = dict.valueForKey("array") as! NSArray
+      let obj = arry.objectAtIndex(indexPath.row) as! ClsModElement
+      var str = obj.mod_element_content
+      var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
+      height = 50+rect.height
+
     }
     
     return height
@@ -272,6 +285,21 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       return cell
 
     } else if(btnTag == 2){
+      var cell: CourseListCell!  = tableview.dequeueReusableCellWithIdentifier("CourseList") as! CourseListCell
+      cell.selectionStyle = UITableViewCellSelectionStyle.None
+      if(arrOutline.count>0){
+        let dict = arrOutline.objectAtIndex(indexPath.section) as! NSDictionary
+        let arry = dict.valueForKey("array") as! NSArray
+        let obj = arry.objectAtIndex(indexPath.row) as! ClsModElement
+        cell.textLabel!.text = obj.mod_element_content
+        cell.textLabel!.numberOfLines = 0
+      }else{
+        cell.textLabel!.text = ""
+      }
+      cell.textLabel!.textColor = UIColor.grayColor()
+      cell.textLabel!.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
+      return cell
+    }else if(btnTag == 3){
       var cell: CourseListCell!  = tableview.dequeueReusableCellWithIdentifier("CourseList") as! CourseListCell
       cell.selectionStyle = UITableViewCellSelectionStyle.None
       if(arrOutline.count>0){
@@ -387,8 +415,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     println(btnTag)
     
     horiVw.backgroundColor = UIColor.lightGrayColor()
-    horiVw1.backgroundColor = UIColor.lightGrayColor()
-    horiVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    horiVw1.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    horiVw2.backgroundColor = UIColor.lightGrayColor()
     skypeIntegrationMethode()
   }
   

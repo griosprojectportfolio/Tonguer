@@ -72,7 +72,7 @@ class HomeTableViewCell: UITableViewCell {
     print(aParam)
     cellContentReset()
     let url = NSURL(string: aParam.objectForKey("image") as! String)
-    imgVw.sd_setImageWithURL(url, placeholderImage: UIImage(named: "vdoDefault.png"))
+    imgVw.sd_setImageWithURL(url, placeholderImage: UIImage(named: "defaultImg"))
     lblTitle.text = aParam.objectForKey("name") as? String
     lblTitle.sizeToFit()
     var day: NSNumber! = aParam.objectForKey("days") as! NSNumber

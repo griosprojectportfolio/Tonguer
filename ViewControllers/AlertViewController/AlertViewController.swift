@@ -49,7 +49,17 @@ class AlertViewController:BaseViewController,UITableViewDataSource,UITableViewDe
   }
   
   func btnBackTapped(){
-    self.navigationController?.popViewControllerAnimated(true)
+    
+     var arryVwController:NSArray = self.navigationController?.viewControllers as! AnyObject as! NSArray
+    print(arryVwController)
+  
+    if arryVwController.objectAtIndex(1).isKindOfClass(AlertViewController){
+      var vc = self.storyboard?.instantiateViewControllerWithIdentifier("HomeID") as! HomeViewController
+      self.navigationController?.pushViewController(vc, animated:false)
+      return;
+    }else if arryVwController.objectAtIndex(1).isKindOfClass(HomeViewController){
+       self.navigationController?.popViewControllerAnimated(true)
+    }
 
   }
   

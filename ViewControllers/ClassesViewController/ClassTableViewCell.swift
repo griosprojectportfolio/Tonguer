@@ -47,7 +47,7 @@ class ClassTableViewCell: BaseTableViewCell {
   func setContentProperties(aParam:NSDictionary){
     
     let url = NSURL(string: aParam.objectForKey("image") as! String)
-    imgVw.sd_setImageWithURL(url, placeholderImage: UIImage(named: "vdoDefault.png"))
+    imgVw.sd_setImageWithURL(url, placeholderImage: UIImage(named: "defaultImg.png"))
 
     //imgVw.image = UIImage(named: aParam.objectForKey("image") as NSString)
     //imgVw.backgroundColor = UIColor.redColor()

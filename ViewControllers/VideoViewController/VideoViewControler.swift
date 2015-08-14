@@ -10,12 +10,14 @@ import UIKit
 import MediaPlayer
 
 
-class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDelegate {
+class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDelegate{
   
   var classID:NSInteger!
   var api: AppApi!
   var isActive: NSString!
+  var btnDelete: UIButton!
   var barBackBtn :UIBarButtonItem!
+  var barDeleteBtn :UIBarButtonItem!
   var barforwordBtn :UIBarButtonItem!
 @IBOutlet  var tblView: UITableView!
   var arrClassVideo: NSMutableArray = NSMutableArray()
@@ -27,6 +29,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var lblNoData: UILabel!
   var vdoDownloadFlag:Bool = false
   var btnpalyflag:Bool = false
+  var arrDeleteObject:NSMutableArray = NSMutableArray()
+  var arrVideoSelect:NSMutableArray = NSMutableArray()
+  var longPress: UILongPressGestureRecognizer!
+
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     api = AppApi.sharedClient()
@@ -34,30 +41,38 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     arrClassVideo.removeAllObjects()
     self.title = "Videos"
     
+    
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
     backbtn.setImage(UIImage(named: "whiteback.png"), forState: UIControlState.Normal)
     backbtn.addTarget(self, action: "btnBackTapped", forControlEvents: UIControlEvents.TouchUpInside)
-    
     barBackBtn = UIBarButtonItem(customView: backbtn)
-    
     self.navigationItem.setLeftBarButtonItem(barBackBtn, animated: true)
+    
+    
+    btnDelete = UIButton(frame: CGRectMake(0, 0, 25, 25))
+    btnDelete.setImage(UIImage(named: "deleteicon.png"), forState: UIControlState.Normal)
+    btnDelete.addTarget(self, action: "btnDeleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+    barDeleteBtn = UIBarButtonItem(customView: btnDelete)
+    self.navigationItem.setRightBarButtonItem(barDeleteBtn, animated:true)
+    
     actiIndecatorVw = ActivityIndicatorView(frame: self.view.frame)
     self.view.addSubview(actiIndecatorVw)
     
-    var predicate:NSPredicate = NSPredicate (format: "cls_id CONTAINS %i", classID);
-    
-   
-    if(isActive.isEqualToString("Paied")){
-      let arryVideo:NSArray = UserClsVideo.MR_findAllWithPredicate(predicate)
-      self.dataFetchUserClsDB(arryVideo)
-      
-    } else if (isActive.isEqualToString("Free")){
-     let arryVideo:NSArray = FreeClssVideo.MR_findAllWithPredicate(predicate)
-      self.dataFetchFreeClsDB(arryVideo)
-  
-    }
+//    var predicate:NSPredicate = NSPredicate (format: "cls_id CONTAINS %i", classID);
+//    
+//   
+//    if(isActive.isEqualToString("Paied")){
+//      let arryVideo:NSArray = UserClsVideo.MR_findAllWithPredicate(predicate)
+//      self.dataFetchUserClsDB(arryVideo)
+//      
+//    } else if (isActive.isEqualToString("Free")){
+//     let arryVideo:NSArray = FreeClssVideo.MR_findAllWithPredicate(predicate)
+//      self.dataFetchFreeClsDB(arryVideo)
+//  
+//    }
+    self.datafetching()
     
     let userDefaults = NSUserDefaults.standardUserDefaults()
     userDefaults.setValue(doenloadedData, forKey: "downloadedData")
@@ -92,6 +107,23 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
 */
     
   }
+  
+  func datafetching(){
+    var predicate:NSPredicate = NSPredicate (format: "cls_id CONTAINS %i", classID);
+    
+    
+    if(isActive.isEqualToString("Paied")){
+      let arryVideo:NSArray = UserClsVideo.MR_findAllWithPredicate(predicate)
+      self.dataFetchUserClsDB(arryVideo)
+      
+    } else if (isActive.isEqualToString("Free")){
+      let arryVideo:NSArray = FreeClssVideo.MR_findAllWithPredicate(predicate)
+      self.dataFetchFreeClsDB(arryVideo)
+      
+    }
+
+  }
+  
 
   func defaultUIDesign(){
     
@@ -122,14 +154,19 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    //var cell = tblView.dequeueReusableCellWithIdentifier("cell") as! VideoTableViewCell
-    
     
     var cell = tblView.dequeueReusableCellWithIdentifier("cell") as! VideoTableViewCell!
     if cell == nil {
       cell = VideoTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
     }
-
+    
+    cell.cellIndex = indexPath.row
+    
+    if (arrVideoSelect.containsObject(indexPath.row)){
+      cell.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:0.5)
+    }else{
+      cell.backgroundColor = UIColor.clearColor()
+    }
     
     cell.selectionStyle = UITableViewCellSelectionStyle.None
     if(arrClassVideo.count>0){
@@ -139,7 +176,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.btnComplete.tag = dict.valueForKey("id") as! NSInteger
     cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-      
+   
       
       if(isActive.isEqualToString("Paied")){
         var finished_status = dict.valueForKey("finished_status") as! NSNumber
@@ -176,13 +213,21 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       let manager = NSFileManager.defaultManager()
       if (manager.fileExistsAtPath(file)){
         cell.btnplay.hidden = true
+        cell.dwonCompleteImgView.hidden = false
+        cell.lbldwonComplete.hidden = false
         self.calculateVideofileSize(file)
       }
     }
+    
+    longPress = UILongPressGestureRecognizer(target: self, action: "cellLongPressed:")
+    longPress.minimumPressDuration = 0.5
+    cell.addGestureRecognizer(longPress)
+
     return cell
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    
     
     var dict: NSDictionary = arrClassVideo.objectAtIndex(indexPath.row) as! NSDictionary
     
@@ -206,7 +251,10 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
 //       vc.viedoUrl = viedoUrl
 //       self.navigationController?.pushViewController(vc, animated: true)
   
-  }
+    }else{
+      var alert: UIAlertView = UIAlertView(title: "Alert", message:"Pleae download this video after that you will able to play this video.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
+    }
 }
   
   
@@ -227,15 +275,84 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       cell.circle.hidden = false
       var cgf  = dict.valueForKey("progress")?.floatValue
       var cgflo:CGFloat = CGFloat(cgf!)
-      //cell.progressCircle.strokeEnd = cgflo
       cell.setVideoDownloadingProgessbar(self.view.frame, stokend: cgflo)
       if(cgflo==1.0){
         cell.circle.hidden = true
+        cell.dwonCompleteImgView.hidden = false
+        cell.lbldwonComplete.hidden = false
       }else{
-        cell.circle.hidden = false
+       //cell.circle.hidden = false
+       cell.dwonCompleteImgView.hidden = true
       }
     }
 }
+  
+  
+  func cellLongPressed(gestureRecognizer:UILongPressGestureRecognizer) {
+   
+    var objVideoCell : VideoTableViewCell = gestureRecognizer.view as! VideoTableViewCell
+    let cellIndex : Int = objVideoCell.cellIndex as Int
+    var dict: NSDictionary! = arrClassVideo.objectAtIndex(cellIndex) as! NSDictionary
+    var video_id: NSInteger! = dict.valueForKey("id") as! NSInteger
+    
+    if(gestureRecognizer.state == UIGestureRecognizerState.Ended) {
+      if (arrDeleteObject.containsObject(video_id)){
+        arrDeleteObject.removeObject(video_id)
+        arrVideoSelect.removeObject(cellIndex)
+      }else{
+        arrVideoSelect.addObject(cellIndex)
+        arrDeleteObject.addObject(video_id)
+      }
+      println(arrDeleteObject)
+      println(arrVideoSelect)
+      
+    }else if(gestureRecognizer.state == UIGestureRecognizerState.Began) {
+      
+      if (arrDeleteObject.containsObject(video_id)){
+        objVideoCell.backgroundColor = UIColor.clearColor()
+      }else{
+        objVideoCell.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:0.5)
+      }
+      
+    }
+  }
+  
+  
+  func btnDeleteTapped(sender:AnyObject){
+    print(arrDeleteObject)
+     println(self.arrClassVideo)
+    
+    if(arrDeleteObject.count != 0){
+      
+      let arrIds : NSArray = arrDeleteObject
+      var strIds : String = arrIds.componentsJoinedByString(",")
+      
+      var aParam: NSDictionary = NSDictionary(objects: [auth_token[0],strIds,isActive], forKeys: ["auth-token","video_ids","active"])
+      
+      self.api.videoDelete(aParam as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+        println(responseObject)
+        print(self.arrVideoSelect)
+        for var index = 0; index < self.arrVideoSelect.count; ++index {
+          var cellindex = self.arrVideoSelect.objectAtIndex(index) as! NSInteger
+          self.arrClassVideo.removeObjectAtIndex(cellindex)
+          self.tblView.reloadData()
+        }
+        var alert: UIAlertView = UIAlertView(title: "Alert", message:"Video Deleted successfully.", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
+        },
+        failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
+          println(error)
+          var alert: UIAlertView = UIAlertView(title: "Alert", message:"Video Delete fail.", delegate:self, cancelButtonTitle:"OK")
+          alert.show()
+      })
+
+    }else{
+      var alert: UIAlertView = UIAlertView(title: "Alert", message:"You do not select any video please select videos after that you able to perform this function.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
+    }
+    
+  }
+  
   
   
   func btnCompleteTapped(sender:AnyObject){
@@ -285,7 +402,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
         println(responseObject)
         NSNotificationCenter.defaultCenter().removeObserver(self)
         btn.hidden = true
-       cell.circle.removeFromSuperview()
+        cell.circle.hidden = true
         var alert: UIAlertView = UIAlertView(title:str as String, message: "Downloaded successfully.", delegate:self, cancelButtonTitle:"OK")
         alert.show()
         },
@@ -294,6 +411,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
           NSNotificationCenter.defaultCenter().removeObserver(self)
           btn.userInteractionEnabled = true
           cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0.00)
+         
           btn.hidden = false
           cell.circle.removeFromSuperview()
           btn.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
@@ -445,7 +563,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       arrClassVideo.addObject(dictClass)
     }
     }else{
-      //setDataNofoundImg()
+      self.tblView.reloadData()
     }
     }
   
@@ -494,7 +612,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
      
     }
     }else{
-      //setDataNofoundImg()
+      self.tblView.reloadData()
     }
 
   }

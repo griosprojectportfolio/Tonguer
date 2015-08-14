@@ -214,6 +214,10 @@
                                  success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
                                  failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
 
+- (AFHTTPRequestOperation *)videoDelete:(NSDictionary *)aParams
+                                    success:(void (^)(AFHTTPRequestOperation *task, id responseObject))successBlock
+                                    failure:(void (^)(AFHTTPRequestOperation *task, NSError *error))failureBlock;
+
 
 
 -(NSURL *)getDocumentDirectoryFileURL:(NSDictionary *)aParams;
