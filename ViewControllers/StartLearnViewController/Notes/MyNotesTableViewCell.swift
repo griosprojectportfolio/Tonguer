@@ -41,7 +41,7 @@ class MyNotesTableViewCell:BaseTableViewCell  {
       imageVW.image = UIImage(named:"defaultImg")!
     }else{
       let url = NSURL(string: strImgUrl)
-      imageVW.sd_setImageWithURL(url, placeholderImage: UIImage(named: "vdoDefault.png"))
+      imageVW.sd_setImageWithURL(url, placeholderImage: UIImage(named: "defaultImg"))
     }
     print(Frame.width)
     vwCell.frame = CGRectMake(imageVW.frame.origin.x+imageVW.frame.width,imageVW.frame.origin.y,(Frame.width)-(imageVW.frame.width+40),imageVW.frame.height)

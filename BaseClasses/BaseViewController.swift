@@ -17,6 +17,11 @@ class BaseViewController: UIViewController {
     let isiPhone4orLower    =   UIScreen.mainScreen().bounds.size.height == 480
   
     
+  override func shouldAutorotate() -> Bool {
+    return false
+  }
+  
+  
   
     var auth_token : [NSString] {
         get {

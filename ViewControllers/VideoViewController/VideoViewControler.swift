@@ -32,7 +32,10 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
   var arrDeleteObject:NSMutableArray = NSMutableArray()
   var arrVideoSelect:NSMutableArray = NSMutableArray()
   var longPress: UILongPressGestureRecognizer!
-
+  let notificationCenter = NSNotificationCenter.defaultCenter()
+  var player:MPMoviePlayerViewController!
+  
+  var arrVdoDownIndex:NSMutableArray = NSMutableArray()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -95,6 +98,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
 
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
+    restrictRotation(true)
     self.view.bringSubviewToFront(self.actiIndecatorVw)
     //self.defaultUIDesign()
     /*
@@ -133,6 +137,11 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     tblView.separatorStyle = UITableViewCellSeparatorStyle.None
     
   }
+  
+  func restrictRotation(restriction:Bool) {
+    var appDelegate:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    appDelegate.restrictRotation = restriction;
+  }
 
   func btnBackTapped(){
     NSNotificationCenter.defaultCenter().removeObserver(self)
@@ -160,7 +169,13 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       cell = VideoTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
     }
     
+    if cell.circle != nil{
+     cell.circle.removeFromSuperview()
+    }
+    
+    
     cell.cellIndex = indexPath.row
+    print(cell.cellIndex)
     
     if (arrVideoSelect.containsObject(indexPath.row)){
       cell.backgroundColor = UIColor(red: 237.0/255.0, green: 62.0/255.0, blue: 61.0/255.0,alpha:0.5)
@@ -176,7 +191,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     cell.btnplay.addTarget(self, action: "btnPalyTapped:", forControlEvents: UIControlEvents.TouchUpInside)
     cell.btnComplete.tag = dict.valueForKey("id") as! NSInteger
     cell.btnComplete.addTarget(self, action: "btnCompleteTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-   
+    cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0)
       
       if(isActive.isEqualToString("Paied")){
         var finished_status = dict.valueForKey("finished_status") as! NSNumber
@@ -197,24 +212,40 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       var filen: String! = strName.stringByAppendingString(".mp4")
       var strPathD = documentsPath.objectAtIndex(0) as! String
       var fileD = strPathD.stringByAppendingString(filen) as String
-      cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0)
+      
       let managerD = NSFileManager.defaultManager()
       if (managerD.fileExistsAtPath(fileD)){
-        cell.btnplay.setImage(UIImage(named: ""), forState: UIControlState.Normal)
-        let notificationCenter = NSNotificationCenter.defaultCenter()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
+        //cell.btnplay.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
+        //let notificationCenter = NSNotificationCenter.defaultCenter()
+       NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
+      }
+      
+      
+      
+      
+      if arrVdoDownIndex.count != 0 {
+        print(arrVdoDownIndex)
+        if arrVdoDownIndex.containsObject(indexPath.row) {
+          cell.circle.removeFromSuperview()
+          
+          cell.dwonCompleteImgView.hidden = false
+          cell.lbldwonComplete.hidden = false
+          
+        }
       }
       
      //************Original Video Path check*********
       var fileName:String = "/"+(dict.valueForKey("name")  as! String) + ".mp4"
       var strPath = documentsPath.objectAtIndex(0) as! String
       var file = strPath.stringByAppendingString(fileName) as String
-      cell.btnplay.hidden = false
+       cell.btnplay.hidden = false
       let manager = NSFileManager.defaultManager()
       if (manager.fileExistsAtPath(file)){
         cell.btnplay.hidden = true
         cell.dwonCompleteImgView.hidden = false
         cell.lbldwonComplete.hidden = false
+        cell.circle.removeFromSuperview()
+        //NSNotificationCenter.defaultCenter().removeObserver(self)
         self.calculateVideofileSize(file)
       }
     }
@@ -237,15 +268,18 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
     let path = (url as String)+"/"+(fileName as String)
     let manager = NSFileManager.defaultManager()
     if (manager.fileExistsAtPath(path)){
-      
+      restrictRotation(false)
       var str: NSString = dict.valueForKey("name") as! NSString
       
       var fileName: NSString! = str.stringByAppendingString(".mp4")
       let aParams : NSDictionary = ["fileName":fileName]
       let viedoUrl: NSURL = api.getDocumentDirectoryFileURL(aParams as[NSObject : AnyObject])
-      var player:MPMoviePlayerViewController!
+      
       player = MPMoviePlayerViewController(contentURL: viedoUrl)
+      player.moviePlayer.scalingMode = MPMovieScalingMode.Fill
       self.presentMoviePlayerViewControllerAnimated(player)
+      
+      NSNotificationCenter.defaultCenter().addObserver(self, selector:"doneButtonClick:", name:MPMoviePlayerPlaybackDidFinishNotification, object:nil)
       
 //      let vc = self.storyboard?.instantiateViewControllerWithIdentifier("PalyVideoVW") as! VideoPalyViewController
 //       vc.viedoUrl = viedoUrl
@@ -256,6 +290,17 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       alert.show()
     }
 }
+  
+  func doneButtonClick(aNotification:NSNotification){
+    
+    var reason = aNotification.userInfo![MPMoviePlayerPlaybackDidFinishReasonUserInfoKey] as! NSNumber
+    
+    let reasonValue = MPMovieFinishReason(rawValue: reason.integerValue)
+     restrictRotation(true)
+     NSNotificationCenter.defaultCenter().removeObserver(self)
+    self.dismissMoviePlayerViewControllerAnimated()
+    
+  }
   
   
   func updateCellProgrssbarStatus(notification: NSNotification){
@@ -271,12 +316,17 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
    
     if(self.tblView.cellForRowAtIndexPath(selectedIndexPath) != nil)
     {
-        var cell = self.tblView.cellForRowAtIndexPath(selectedIndexPath) as! VideoTableViewCell
+      if(cellIndex == row){
+      var cell = self.tblView.cellForRowAtIndexPath(selectedIndexPath) as! VideoTableViewCell
       cell.circle.hidden = false
       var cgf  = dict.valueForKey("progress")?.floatValue
       var cgflo:CGFloat = CGFloat(cgf!)
-      cell.setVideoDownloadingProgessbar(self.view.frame, stokend: cgflo)
+      //cell.setVideoDownloadingProgessbar(self.view.frame, stokend: cgflo)
+        cell.progressCircle.strokeEnd = cgflo
       if(cgflo==1.0){
+        arrVdoDownIndex.addObject(row)
+        print(arrVdoDownIndex)
+        cell.btnplay.hidden = true
         cell.circle.hidden = true
         cell.dwonCompleteImgView.hidden = false
         cell.lbldwonComplete.hidden = false
@@ -284,6 +334,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
        //cell.circle.hidden = false
        cell.dwonCompleteImgView.hidden = true
       }
+    }
     }
 }
   
@@ -376,17 +427,16 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
    
   
   func btnPalyTapped(sender:AnyObject){
-    
-    let notificationCenter = NSNotificationCenter.defaultCenter()
-    NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
+     var btn = sender as! UIButton
 
-    var btn = sender as! UIButton
+    NSNotificationCenter.defaultCenter().addObserver(self, selector:"updateCellProgrssbarStatus:", name:"DOWNLOAD_PROGRESS", object:nil)
     btn.hidden = true
     btn.userInteractionEnabled = false
     var  selectedIndexPath = NSIndexPath(forRow: btn.tag, inSection: 0) as NSIndexPath
     var cell = self.tblView.cellForRowAtIndexPath(selectedIndexPath) as! VideoTableViewCell
-     cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0.00)
+     //cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0.00)
       //btn.setImage(UIImage(named:"download.png"), forState: UIControlState.Normal)
+    
       var dict: NSDictionary! = arrClassVideo.objectAtIndex(btn.tag) as! NSDictionary
       var video_index: NSInteger! = btn.tag
       var video_id: NSInteger! = dict.valueForKey("id") as! NSInteger
@@ -400,7 +450,7 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       
       self.api.downloadMediaData(aParams as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
         println(responseObject)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        //NSNotificationCenter.defaultCenter().removeObserver(self)
         btn.hidden = true
         cell.circle.hidden = true
         var alert: UIAlertView = UIAlertView(title:str as String, message: "Downloaded successfully.", delegate:self, cancelButtonTitle:"OK")
@@ -410,8 +460,8 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
           println(error)
           NSNotificationCenter.defaultCenter().removeObserver(self)
           btn.userInteractionEnabled = true
-          cell.setVideoDownloadingProgessbar(self.view.frame, stokend:0.00)
-         
+          cell.circle.removeFromSuperview()
+          
           btn.hidden = false
           cell.circle.removeFromSuperview()
           btn.setImage(UIImage(named: "playicon.png"), forState: UIControlState.Normal)
@@ -517,8 +567,8 @@ class VideoViewControler: BaseViewController,UITableViewDataSource,UITableViewDe
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry Somethig Worng", delegate:self, cancelButtonTitle:"OK")
-        alert.show()
+//        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Sorry Somethig Worng", delegate:self, cancelButtonTitle:"OK")
+//        alert.show()
     })
   }
 

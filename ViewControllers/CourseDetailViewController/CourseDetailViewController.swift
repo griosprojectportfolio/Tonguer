@@ -68,6 +68,12 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     }else if(btnTag == 2){
       
     }
+    restrictRotation(true)
+  }
+  
+  func restrictRotation(restriction:Bool) {
+    var appDelegate:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    appDelegate.restrictRotation = restriction;
   }
   
   func defaultUIDesign(){
@@ -162,6 +168,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     self.view.addSubview(tableview)
     tableview.registerClass(CourseDetailTableViewCell.self, forCellReuseIdentifier: "cell")
     tableview.registerClass(CourseListCell.self, forCellReuseIdentifier: "CourseList")
+    tableview.registerClass(UITableViewCell.self, forCellReuseIdentifier: "emptycell")
   }
   
   
@@ -210,6 +217,7 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     var count: NSInteger = 0
     if(btnTag == 1){
       count = dataArr.count
+      return count
     }else if(btnTag == 2){
       if(arrOutline.count != 0){
        let dict = arrOutline.objectAtIndex(section) as! NSDictionary
@@ -217,6 +225,10 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       print(arry.count)
       count = arry.count
       }
+      return count
+    }else if(btnTag == 3){
+      count = 1
+    return count
     }
     return count
   }
@@ -225,8 +237,13 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     var count: NSInteger = 0
     if(btnTag == 1){
       count = 1
+      return count
     }else if(btnTag == 2){
       count = arrOutline.count
+      return count
+    }else if (btnTag == 3){
+      count = 0
+      return count
     }
     return count
   }
@@ -262,15 +279,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
       height = 50+rect.height
     }else if(btnTag == 3){
-      let dict = arrOutline.objectAtIndex(indexPath.section) as! NSDictionary
-      let arry = dict.valueForKey("array") as! NSArray
-      let obj = arry.objectAtIndex(indexPath.row) as! ClsModElement
-      var str = obj.mod_element_content
-      var rect: CGRect! = str.boundingRectWithSize(CGSize(width:self.view.frame.size.width-60,height:300), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)], context: nil)
-      height = 50+rect.height
-
+      height = 50
     }
-    
     return height
   }
   
@@ -300,19 +310,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       cell.textLabel!.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
       return cell
     }else if(btnTag == 3){
-      var cell: CourseListCell!  = tableview.dequeueReusableCellWithIdentifier("CourseList") as! CourseListCell
-      cell.selectionStyle = UITableViewCellSelectionStyle.None
-      if(arrOutline.count>0){
-        let dict = arrOutline.objectAtIndex(indexPath.section) as! NSDictionary
-        let arry = dict.valueForKey("array") as! NSArray
-        let obj = arry.objectAtIndex(indexPath.row) as! ClsModElement
-        cell.textLabel!.text = obj.mod_element_content
-        cell.textLabel!.numberOfLines = 0
-      }else{
-        cell.textLabel!.text = ""
-      }
-      cell.textLabel!.textColor = UIColor.grayColor()
-      cell.textLabel!.frame = CGRectMake(2, 2, self.view.frame.width-20,30)
+      var cell = tableview.dequeueReusableCellWithIdentifier("emptycell") as! UITableViewCell
+      cell.textLabel?.text = ""
       return cell
     }
     return cell
@@ -344,6 +343,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       }
       
       return vWheader
+    }else if(btnTag == 3){
+    return vWheader
     }
     return vWheader
     
@@ -354,6 +355,8 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
       return ""
     }else if(btnTag == 2){
       return "Module"
+    }else if(btnTag == 3){
+      return ""
     }
     return nil
   }
@@ -415,8 +418,9 @@ class CourseDetailViewController: BaseViewController,UITextFieldDelegate,UITable
     println(btnTag)
     
     horiVw.backgroundColor = UIColor.lightGrayColor()
-    horiVw1.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
-    horiVw2.backgroundColor = UIColor.lightGrayColor()
+    horiVw1.backgroundColor = UIColor.lightGrayColor()
+    horiVw2.backgroundColor = UIColor(red: 66.0/255.0, green: 150.0/255.0, blue: 173.0/255.0,alpha:1.0)
+    self.tableview.reloadData()
     skypeIntegrationMethode()
   }
   

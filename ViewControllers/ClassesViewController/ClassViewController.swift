@@ -89,7 +89,12 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
     tblClass.separatorStyle = UITableViewCellSeparatorStyle.None
     tblClass.contentInset = UIEdgeInsets(top: -64, left: 0, bottom: 0, right: 0)
     //tblClass.registerClass(ClassTableViewCell.self, forCellReuseIdentifier: "cell")
+    restrictRotation(true)
+  }
   
+  func restrictRotation(restriction:Bool) {
+    var appDelegate:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    appDelegate.restrictRotation = restriction;
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -150,7 +155,7 @@ class ClassViewController: BaseViewController,UITableViewDataSource,UITableViewD
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
-        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry some technical problem.", delegate: self, cancelButtonTitle: "Ok")
+        var alert: UIAlertView! = UIAlertView(title: "Alert", message: "Sorry no class found.", delegate: self, cancelButtonTitle: "Ok")
         alert.show()
         self.actiIndecatorVw.loadingIndicator.stopAnimating()
         self.actiIndecatorVw.removeFromSuperview()

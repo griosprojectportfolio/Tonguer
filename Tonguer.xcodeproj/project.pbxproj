@@ -16,6 +16,7 @@
 		0A08B3581AF0F97D0076226C /* PickupCoursecenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B3541AF0F97D0076226C /* PickupCoursecenterViewController.swift */; };
 		0A08B3591AF0F97D0076226C /* PickupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B3551AF0F97D0076226C /* PickupTableViewCell.swift */; };
 		0A08B35F1AF1019E0076226C /* NotesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A08B35E1AF1019E0076226C /* NotesDetailViewController.swift */; };
+		0A0BA0041B90397600981A36 /* AppApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0BA0031B90397600981A36 /* AppApi.m */; };
 		0A1D45B31B45140E00BF5A8C /* AdminContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1D45B21B45140E00BF5A8C /* AdminContact.m */; };
 		0A32585B1AFB534D00B897DA /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A32585A1AFB534D00B897DA /* User.m */; };
 		0A4145241B0B196500B3183D /* UserNotes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4145231B0B196500B3183D /* UserNotes.m */; };
@@ -23,7 +24,6 @@
 		0A43E8FB1AF200C4009D3787 /* DiscussViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43E8FA1AF200C4009D3787 /* DiscussViewController.swift */; };
 		0A43E8FD1AF204A4009D3787 /* AddTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A43E8FC1AF204A4009D3787 /* AddTopicViewController.swift */; };
 		0A5370141ADE6AA100ACE5C0 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5370131ADE6AA100ACE5C0 /* SettingViewController.swift */; };
-		0A5F29C81AD80CA900BDA404 /* AppApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5F29C71AD80CA900BDA404 /* AppApi.m */; };
 		0A65251A1AD3D64F00762BBD /* AdAnsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6525191AD3D64E00762BBD /* AdAnsTableViewCell.swift */; };
 		0A65251D1AD3DFA600762BBD /* AppFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A65251C1AD3DFA600762BBD /* AppFlowViewController.swift */; };
 		0A6525211AD3EEF700762BBD /* MyOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6525201AD3EEF700762BBD /* MyOrderViewController.swift */; };
@@ -147,6 +147,8 @@
 		0A08B3541AF0F97D0076226C /* PickupCoursecenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickupCoursecenterViewController.swift; sourceTree = "<group>"; };
 		0A08B3551AF0F97D0076226C /* PickupTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickupTableViewCell.swift; sourceTree = "<group>"; };
 		0A08B35E1AF1019E0076226C /* NotesDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesDetailViewController.swift; sourceTree = "<group>"; };
+		0A0BA0021B90397600981A36 /* AppApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppApi.h; sourceTree = "<group>"; };
+		0A0BA0031B90397600981A36 /* AppApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppApi.m; sourceTree = "<group>"; };
 		0A1D45B11B45140E00BF5A8C /* AdminContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdminContact.h; sourceTree = SOURCE_ROOT; };
 		0A1D45B21B45140E00BF5A8C /* AdminContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdminContact.m; sourceTree = SOURCE_ROOT; };
 		0A3258591AFB534D00B897DA /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = SOURCE_ROOT; };
@@ -159,8 +161,6 @@
 		0A43E8FC1AF204A4009D3787 /* AddTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTopicViewController.swift; sourceTree = "<group>"; };
 		0A5370131ADE6AA100ACE5C0 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		0A5F29C51AD7C96400BDA404 /* Tonguer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tonguer-Bridging-Header.h"; sourceTree = "<group>"; };
-		0A5F29C61AD80CA900BDA404 /* AppApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppApi.h; sourceTree = "<group>"; };
-		0A5F29C71AD80CA900BDA404 /* AppApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppApi.m; sourceTree = "<group>"; };
 		0A6525191AD3D64E00762BBD /* AdAnsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdAnsTableViewCell.swift; sourceTree = "<group>"; };
 		0A65251C1AD3DFA600762BBD /* AppFlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppFlowViewController.swift; sourceTree = "<group>"; };
 		0A6525201AD3EEF700762BBD /* MyOrderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyOrderViewController.swift; sourceTree = "<group>"; };
@@ -838,11 +838,11 @@
 		174531E61ACD14F300E6DF2E /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				0A0BA0021B90397600981A36 /* AppApi.h */,
+				0A0BA0031B90397600981A36 /* AppApi.m */,
 				0AAB801C1B3536AD0087B721 /* Reachability */,
 				0A89DA961B1476A000CB0AE9 /* PayPalMobile */,
 				0AAFC7AB1B12F8D200426D22 /* SDWebImage */,
-				0A5F29C61AD80CA900BDA404 /* AppApi.h */,
-				0A5F29C71AD80CA900BDA404 /* AppApi.m */,
 				0A8B5EAB1AF8A81A0015C536 /* ActivityIndicatorView.swift */,
 				0AE94C2D1AD25FD900CBEA76 /* CustomTextFieldBlurView.swift */,
 				174531F31ACD162F00E6DF2E /* CommonUtilities.swift */,
@@ -1118,12 +1118,12 @@
 				0A5370141ADE6AA100ACE5C0 /* SettingViewController.swift in Sources */,
 				0A78B1301AE62D61002AC651 /* SettingTableViewCell.swift in Sources */,
 				0AF2C00B1AFB9BB800DCBFDA /* LearnedTableViewCell.swift in Sources */,
-				0A5F29C81AD80CA900BDA404 /* AppApi.m in Sources */,
 				0ADD8B241B01DA5200B73AC8 /* Questions.m in Sources */,
 				0A88B2051AFCB81800003AFE /* HostPayCls.m in Sources */,
 				0ABA489A1B15F5A500EDE728 /* UserClassOrder.m in Sources */,
 				0AAFC7D31B12F8D200426D22 /* SDWebImageCompat.m in Sources */,
 				0A08B3511AF0ECC30076226C /* CourselistTableViewCell.swift in Sources */,
+				0A0BA0041B90397600981A36 /* AppApi.m in Sources */,
 				0AE94C251AD25F8C00CBEA76 /* FeedbackViewController.swift in Sources */,
 				0AAFC7D61B12F8D200426D22 /* SDWebImageDownloaderOperation.m in Sources */,
 				0A32585B1AFB534D00B897DA /* User.m in Sources */,

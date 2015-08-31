@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var dictUserInfo:NSDictionary!
   var temp : NSDictionary!
 
+  var restrictRotation:Bool = true
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
       var frame1:CGRect = UIScreen.mainScreen().bounds
@@ -71,6 +72,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
 
+  func application(application: UIApplication, supportedInterfaceOrientationsForWindow window: UIWindow?) -> Int {
+   
+    if(restrictRotation) {
+    return Int (UIInterfaceOrientationMask.Portrait.rawValue)
+  } else {
+      return Int (UIInterfaceOrientationMask.Landscape.rawValue|UIInterfaceOrientationMask.Portrait.rawValue)
+  }
+    
+  }
+  
+  
+//  -(NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+//  {
+//  if(self.restrictRotation)
+//  return UIInterfaceOrientationMaskPortrait;
+//  else
+//  return UIInterfaceOrientationMaskAll;
+//  }
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {

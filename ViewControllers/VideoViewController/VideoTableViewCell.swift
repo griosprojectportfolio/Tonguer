@@ -23,6 +23,7 @@ class VideoTableViewCell: BaseTableViewCell{
   var circle:UIView!
   var blackView:UIView!
   var progressCircle:CAShapeLayer!
+  var circlePath:UIBezierPath!
   var cellIndex:NSInteger!
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -129,12 +130,13 @@ class VideoTableViewCell: BaseTableViewCell{
     lbldwonComplete.layer.borderWidth = 1
     lbldwonComplete.layer.borderColor = UIColor.whiteColor().CGColor
     lbldwonComplete.layer.masksToBounds = true
-
+    circle = UIView();
+    progressCircle = CAShapeLayer ();
     
   }
   
   func setVideoDownloadingProgessbar(frame:CGRect,stokend:CGFloat){
-     circle = UIView();
+    
     //circle.bounds = CGRectMake(celltxtView.frame.width-40,10,30,30)
     circle.frame = CGRectMake(celltxtView.frame.width-40,10,30,30)
     circle.backgroundColor = UIColor.whiteColor()
@@ -142,20 +144,20 @@ class VideoTableViewCell: BaseTableViewCell{
     circle.hidden = true
     circle.layoutIfNeeded()
     
-     progressCircle = CAShapeLayer();
+     //progressCircle = CAShapeLayer();
     
     let centerPoint = CGPoint (x: circle.bounds.width / 2, y: circle.bounds.width / 2);
     let circleRadius : CGFloat = circle.bounds.width / 2 * 0.7;
     
-    var circlePath = UIBezierPath(arcCenter: centerPoint, radius: circleRadius, startAngle: CGFloat(-0.5 * M_PI), endAngle: CGFloat(1.5 * M_PI), clockwise:true);
+     circlePath = UIBezierPath(arcCenter: centerPoint, radius: circleRadius, startAngle: CGFloat(-0.5 * M_PI), endAngle: CGFloat(1.5 * M_PI), clockwise:true);
     
-    progressCircle = CAShapeLayer ();
+    
     progressCircle.path = circlePath.CGPath;
     progressCircle.strokeColor = UIColor.greenColor().CGColor
     progressCircle.fillColor = UIColor.clearColor().CGColor;
     progressCircle.lineWidth = 3.0;
     progressCircle.strokeStart = 0;
-    progressCircle.strokeEnd = stokend;
+    progressCircle.strokeEnd = 0;
     
     circle.layer.addSublayer(progressCircle);
     

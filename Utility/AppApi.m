@@ -1128,10 +1128,11 @@ BOOL vdoDownlodFalg = false;
       if([classActive  isEqual: @"Paied"]){
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"vdo_id CONTAINS %i",[[arrVieodObj objectAtIndex:i]integerValue]];
         NSArray *arryModEle = [UserClsVideo MR_findAllWithPredicate:predicate];
-        
+        if(arryModEle.count != 0){
         UserClsVideo *deleteEntity = [arryModEle objectAtIndex:0];
         [deleteEntity MR_deleteEntity];
         [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+        }
         
       }else{
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"video_id CONTAINS %i",[[arrVieodObj objectAtIndex:i]integerValue]];
