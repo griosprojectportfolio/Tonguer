@@ -66,6 +66,7 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
     self.fetchDataFromDBforLearnedCls()
    //self.hometableVw.reloadData()
     
+    
 
     if (NSUserDefaults.standardUserDefaults().valueForKey("checkIns") == nil) {
       return;
@@ -77,7 +78,26 @@ class HomeViewController:BaseViewController,UIGestureRecognizerDelegate, UITable
       object: nil)
     
     findDifferenceIndates() //difference in date
+    
   }
+
+  func restrictRotation(restriction:Bool) {
+    var appDelegate:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    appDelegate.restrictRotation = restriction;
+  }
+  
+//  override func supportedInterfaceOrientations() -> Int {
+//    return Int(UIInterfaceOrientation.PortraitUpsideDown.rawValue)
+//  }
+//  
+//  override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+//    return UIInterfaceOrientation.PortraitUpsideDown
+//  }
+  
+  override func shouldAutorotate() -> Bool {
+    return true
+  }
+
 
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
