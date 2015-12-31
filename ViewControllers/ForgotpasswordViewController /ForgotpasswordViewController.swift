@@ -28,8 +28,7 @@ class ForgotpasswordViewController: BaseViewController,UITextFieldDelegate {
   
   func defaultUIDesign(){
     self.title = "Forgot password"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
-    
+
     self.navigationItem.setHidesBackButton(true, animated:false)
     
     var backbtn:UIButton = UIButton(frame: CGRectMake(0, 0,25,25))
@@ -71,7 +70,13 @@ class ForgotpasswordViewController: BaseViewController,UITextFieldDelegate {
   }
   
   func btnSendTapped(){
-    self.forgotpasswordApiCall()
+    if(custxtEmail.text.isEmpty){
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "Please enter your mail address.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
+
+    }else{
+     self.forgotpasswordApiCall()
+    }
   }
   
   func btnBackTapped(){
@@ -79,22 +84,26 @@ class ForgotpasswordViewController: BaseViewController,UITextFieldDelegate {
   }
   
   func btnforwardTapped(){
-    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AppFlowID") as AppFlowViewController
+    let vc = self.storyboard?.instantiateViewControllerWithIdentifier("AppFlowID") as! AppFlowViewController
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
   func forgotpasswordApiCall(){
     var dict: NSMutableDictionary! = NSMutableDictionary()
-    dict.setObject(custxtEmail.text, forKey: "email")
+    dict.setObject(custxtEmail.text, forKey: "user")
     
-    var aParams: NSMutableDictionary = NSMutableDictionary()
-    aParams.setObject(dict, forKey: "user")
+//    var aParams: NSMutableDictionary = NSMutableDictionary()
+//    aParams.setObject(dict, forKey: "user")
     
-    self.api.forgotPassword(aParams, success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
+    self.api.forgotPassword(dict as [NSObject : AnyObject], success: { (operation: AFHTTPRequestOperation?, responseObject: AnyObject? ) in
       println(responseObject)
+      var alert: UIAlertView = UIAlertView(title: "Alert", message: "Password is successfully send your mail address.", delegate:self, cancelButtonTitle:"OK")
+      alert.show()
       },
       failure: { (operation: AFHTTPRequestOperation?, error: NSError? ) in
         println(error)
+        var alert: UIAlertView = UIAlertView(title: "Alert", message: "Password is not send your mail address(Mail address is worng).", delegate:self, cancelButtonTitle:"OK")
+        alert.show()
     })
 
     
@@ -104,5 +113,35 @@ class ForgotpasswordViewController: BaseViewController,UITextFieldDelegate {
     textField.resignFirstResponder()
     return false
   }
+  
+  func textFieldDidBeginEditing(textField: UITextField) {
+    if(self.isiPhone5orLower){
+      var frame:CGRect = self.view.frame
+      frame.origin.y = frame.origin.y - 100
+      self.view.frame = frame
+    }else{
+      //      var frame:CGRect = self.view.frame
+      //      frame.origin.y = frame.origin.y - 100
+      //      self.view.frame = frame
+    }
+    
+  }
+  
+  func textFieldDidEndEditing(textField: UITextField) {
+    
+    if(self.isiPhone5orLower){
+      var frame:CGRect = self.view.frame
+      frame.origin.y = frame.origin.y + 100
+      self.view.frame = frame
+    }else{
+      //      var frame:CGRect = self.view.frame
+      //      frame.origin.y = frame.origin.y - 100
+      //      self.view.frame = frame
+    }
+    
+  }
+
+  
+  
   
 }
